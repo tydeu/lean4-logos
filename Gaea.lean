@@ -1,2 +1,3 @@
-def main : IO Unit :=
-  IO.println "Hello, world!"
+import Gaea.Logic
+import Gaea.Math
+import Gaea.Peano
