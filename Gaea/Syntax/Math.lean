@@ -1,18 +1,17 @@
-namespace Gaea.Math
+namespace Gaea.Syntax
 
 class Zero (N : Sort u) := 
   (zero : N)
 
 export Zero (zero)
 
+@[defaultInstance 1]
 instance {N : Type u} [C : Zero N] : OfNat N (natLit! 0) := 
   {ofNat := C.zero}
 
 class Succ (N : Sort u) :=
-  (succ : N -> N)
+  (S : N -> N)
 
-export Succ (succ)
+export Succ (S)
 
-@[reducible] def Shorthand.S {N : Type u} [Succ N] (n : N) := succ n
-
-end Gaea.Math
+end Gaea.Syntax
