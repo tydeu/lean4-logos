@@ -17,21 +17,21 @@ export False (false)
 -- Connectives
 
 class LIf (prop : Sort u) :=
-  (lif : prop -> prop -> prop)
+  (lIf : prop -> prop -> prop)
 
 class LIff (prop : Sort u) :=
-  (liff : prop -> prop -> prop)
+  (lIff : prop -> prop -> prop)
 
 class LAnd (prop : Sort u):=
-  (land : prop -> prop -> prop)
+  (lAnd : prop -> prop -> prop)
 
 class LOr (prop : Sort u) :=
-  (lor : prop -> prop -> prop)
+  (lOr : prop -> prop -> prop)
 
 -- Equality
 
 class LEq (prop : Sort u) (form : Sort v) :=
-  (leq : form -> form -> prop)
+  (lEq : form -> form -> prop)
 
 -- Quantifiers
 

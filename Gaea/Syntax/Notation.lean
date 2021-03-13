@@ -3,26 +3,31 @@ import Gaea.Syntax.Logic
 
 open Gaea.Syntax
 
--- Functions
+-- Math
 
 export Gaea.Syntax.Succ (S)
 
+infix:50 " < "  => LT.lt
+
+infix:50 " <= " => LE.le
+infix:50 " ≤ "  => LE.le
+
 -- Connectives
 
-infixr:25 " -> "  => LIf.lif
-infixr:25 " ⇒ "   => LIf.lif
+infixr:25 " -> "  => LIf.lIf
+infixr:25 " ⇒ "   => LIf.lIf
 
-infix:20 " <-> "  => LIff.liff
-infix:20 " ⇔ "   => LIff.liff
+infix:20 " <-> "  => LIff.lIff
+infix:20 " ⇔ "   => LIff.lIff
 
-infixr:35 " /\\ " => LAnd.land
-infixr:35 " ∧ "   => LAnd.land
-infixr:30 " \\/ " => LOr.lor
-infixr:30 " ∨ "   => LOr.lor
+infixr:35 " /\\ " => LAnd.lAnd
+infixr:35 " ∧ "   => LAnd.lAnd
+infixr:30 " \\/ " => LOr.lOr
+infixr:30 " ∨ "   => LOr.lOr
 
 -- Equality
 
-infix:50 " = "  => LEq.leq
+infix:50 " = "  => LEq.lEq
 
 -- Quantifiers
 
