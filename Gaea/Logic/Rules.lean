@@ -1,4 +1,4 @@
-import Gaea.Logic
+import Gaea.Logic.Basic
 import Gaea.Syntax.Logic
 import Gaea.Logic.Notation
 import Gaea.Syntax.Notation
@@ -7,64 +7,83 @@ universes u v
 
 open Gaea.Syntax
 
-namespace Gaea.Logic.Rules
+namespace Gaea.Logic
 
 -- Forall
 
-def ForallIntro {P : Sort u} {T : Sort v} (L : Logic P) (Fa : LForall P T) := 
-  (f : T -> P) -> ((a : T) -> (L |- f a)) -> (L |- lForall f) 
+class ForallIntro {P : Sort u} {T : Sort v} (L : Logic P) (Fa : LForall P T) := 
+  (forallIntro : (f : T -> P) -> ((a : T) -> (L |- f a)) -> (L |- lForall f))
 
-def ForallElim {P : Sort u} {T : Sort v} (L : Logic P) (Fa : LForall P T) := 
-  (f : T -> P) -> (L |- lForall f) -> ((a : T) -> (L |- f a))  
+def forallIntro {P : Sort u} {T : Sort v} {L : Logic P} [Fa : LForall P T]  
+  [C : ForallIntro L Fa] {f : T -> P} := C.forallIntro f
+
+class ForallElim {P : Sort u} {T : Sort v} (L : Logic P) (Fa : LForall P T) := 
+  (forallElim : (f : T -> P) -> (L |- lForall f) -> ((a : T) -> (L |- f a)))  
+
+def forallElim {P : Sort u} {T : Sort v} {L : Logic P} [Fa : LForall P T]  
+  [C : ForallElim L Fa] {f : T -> P} := C.forallElim f
 
 -- Exists
 
-def ExistsIntro {P : Sort u} {T : Sort v} (L : Logic P) (X : LExists P T) := 
-  (f : T -> P) -> (a : T) -> (L |- f a) -> (L |- lExists f) 
+class ExistsIntro {P : Sort u} {T : Sort v} (L : Logic P) (X : LExists P T) := 
+  (existsIntro : (f : T -> P) -> (a : T) -> (L |- f a) -> (L |- lExists f))
 
-def ExistsElim {P : Sort u} {T : Sort v} (L : Logic P) (X : LExists P T) := 
-  (f : T -> P) -> (p : P) -> (L |- lExists f) -> 
-    ((a : T) -> (L |- f a) -> (L |- p)) -> (L |- p)
+def existsIntro {P : Sort u} {T : Sort v} {L : Logic P} [X : LExists P T]  
+  [C : ExistsIntro L X] {f : T -> P} := C.existsIntro f
+
+class ExistsElim {P : Sort u} {T : Sort v} (L : Logic P) (X : LExists P T) := 
+  (existsElim : (f : T -> P) -> (p : P) -> (L |- lExists f) -> 
+    ((a : T) -> (L |- f a) -> (L |- p)) -> (L |- p))
+
+def existsElim {P : Sort u} {T : Sort v} {L : Logic P} [X : LExists P T]  
+  [C : ExistsElim L X] {f : T -> P} {p : P} := C.existsElim f p
 
 -- If
 
-def IfIntro {P : Sort u} (L : Logic P) (If : LIf P) := 
-  (p q : P) -> ((L |- p) -> (L |- q)) -> (L |- p -> q) 
+class IfIntro {P : Sort u} (L : Logic P) (If : LIf P) := 
+  (ifIntro : (p q : P) -> ((L |- p) -> (L |- q)) -> (L |- p -> q)) 
 
-def IfElim {P : Sort u} (L : Logic P) (If : LIf P) := 
-  (p q : P) -> (L |- p -> q) -> ((L |- p) -> (L |- q))  
+def ifIntro {P : Sort u} {L : Logic P} [If : LIf P] [C : IfIntro L If] 
+  {p q : P} := C.ifIntro p q
+
+class IfElim {P : Sort u} (L : Logic P) (If : LIf P) := 
+  (ifElim : (p q : P) -> (L |- p -> q) -> ((L |- p) -> (L |- q)))
+
+def ifElim {P : Sort u} {L : Logic P} [If : LIf P] [C : IfElim L If] 
+  {p q : P} := C.ifElim p q
 
 -- Iff
 
-def IfFIntro {P : Sort u} (L : Logic P) (Iff : LIff P) (If : LIf P) := 
-  (p q : P) -> (L |- p -> q) -> (L |- p -> q) -> (L |- p <-> q) 
+class IfFIntro {P : Sort u} (L : Logic P) (Iff : LIff P) (If : LIf P) := 
+  (iffIntro : (p q : P) -> (L |- p -> q) -> (L |- p -> q) -> (L |- p <-> q))
 
-def IffTo {P : Sort u} (L : Logic P) (Iff : LIff P) (If : LIf P) := 
-  (p q : P) -> (L |- p <-> q) -> (L |- p -> q)  
+export IfFIntro (iffIntro)
 
-def IffFrom {P : Sort u} (L : Logic P) (Iff : LIff P) (If : LIf P) := 
-  (p q : P) -> (L |- p <-> q) -> (L |- q -> p)  
+class IffTo {P : Sort u} (L : Logic P) (Iff : LIff P) (If : LIf P) := 
+  (iffTo : (p q : P) -> (L |- p <-> q) -> (L |- p -> q))
+
+export IffTo (iffTo)
+
+class IffFrom {P : Sort u} (L : Logic P) (Iff : LIff P) (If : LIf P) := 
+  (iffFrom : (p q : P) -> (L |- p <-> q) -> (L |- q -> p))
+
+export IffFrom (iffFrom)
 
 -- And
 
-def AndIntro {P : Sort u} (L : Logic P) (And : LAnd P) := 
-  (p q : P) -> (L |- p) -> (L |- q) -> (L |- p /\ q) 
+class AndIntro {P : Sort u} (L : Logic P) (And : LAnd P) := 
+  (andIntro : (p q : P) -> (L |- p) -> (L |- q) -> (L |- p /\ q)) 
 
-def AndLeft {P : Sort u} (L : Logic P) (And : LAnd P) := 
-  (p q : P) -> (L |- p /\ q) -> (L |- p)  
+export AndIntro (andIntro)
 
-def AndRight {P : Sort u} (L : Logic P) (And : LAnd P) := 
-  (p q : P) -> (L |- p /\ q) -> (L |- q)  
+class AndLeft {P : Sort u} (L : Logic P) (And : LAnd P) := 
+  (andLeft : (p q : P) -> (L |- p /\ q) -> (L |- p))
 
--- Equality
+export AndLeft (andLeft)
 
-def EqRefl {P : Sort u} {T : Sort v} (L : Logic P) (Eq : LEq P T) :=
-  (x : T) -> L |- x = x
+class AndRight {P : Sort u} (L : Logic P) (And : LAnd P) := 
+  (andRight : (p q : P) -> (L |- p /\ q) -> (L |- q))
 
-def EqSymm {P : Sort u} {T : Sort v} (L : Logic P) (Eq : LEq P T) :=
-  (x y : T) -> (L |- x = y) -> (L |- y = x)
+export AndRight (andRight)
 
-def EqTrans {P : Sort u} {T : Sort v} (L : Logic P) (Eq : LEq P T) :=
-  (x y z : T) -> (L |- x = y) -> (L |- y = z) -> (L |- x = z)
-
-end Gaea.Logic.Rules
+end Gaea.Logic

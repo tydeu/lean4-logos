@@ -1,4 +1,6 @@
-namespace Gaea.Logic
+namespace Gaea
+
+namespace Logic
 
 def Logic.{u,v} (prop : Sort u) 
   := prop -> Sort v
@@ -16,6 +18,10 @@ def Judgment.{u,v} {P : Sort u} (L : Logic.{u,v} P) (prop : P) : Sort v
 
 end Logic
 
-export Logic (prop Proof Judgment)
+export Logic (Proof Judgment)
 
-end Gaea.Logic
+end Logic
+
+export Logic (Logic)
+
+end Gaea
