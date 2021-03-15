@@ -63,7 +63,7 @@ def eqSuccToEqNat {P : Sort u} (T : Sort v)
 
 -- Axiom 8
 def succNatEqZeroFalse {P : Sort u} (T : Type v) 
-  [IsNat P T] [LEq P T] [False P] [Zero T] [Succ T] [LIf P] [LAnd P] [LForall P T] : P :=
+  [IsNat P T] [LEq P T] [LFalse P] [Zero T] [Succ T] [LIf P] [LAnd P] [LForall P T] : P :=
   forall (m n : T) => nat m /\ nat n -> (S n = 0 -> false)
 
 -- Axiom 9

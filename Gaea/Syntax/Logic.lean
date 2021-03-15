@@ -4,15 +4,11 @@ namespace Gaea.Syntax
 
 -- Constants
 
-class True (prop : Sort u) :=
-  (true : prop)
+class LTrue (prop : Sort u) :=
+  (lTrue : prop)
 
-export True (true)
-
-class False (prop : Sort u) :=
-  (false : prop)
-
-export False (false)
+class LFalse (prop : Sort u) :=
+  (lFalse : prop)
 
 -- Connectives
 

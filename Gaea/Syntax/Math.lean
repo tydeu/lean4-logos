@@ -18,6 +18,9 @@ namespace Succ
 abbrev S {N : Sort u} [C : Succ N] := C.succ
 end Succ
 
+instance (N : Type u) [C : Succ N] (n : Nat) [T : OfNat N n] 
+  : OfNat N (Nat.succ n) := {ofNat := C.succ T.ofNat}
+
 -- Inequalities
 
 class LT (P : Sort u) (N : Sort v) :=

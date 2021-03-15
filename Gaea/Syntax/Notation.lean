@@ -12,6 +12,11 @@ infix:50 " < "  => LT.lt
 infix:50 " <= " => LE.le
 infix:50 " ≤ "  => LE.le
 
+-- Boolean Constants
+
+def true {P : Sort u} [C : LTrue P] := C.lTrue
+def false {P : Sort u} [C : LFalse P] := C.lFalse
+
 -- Connectives
 
 infixr:25 " -> "  => LIf.lIf
