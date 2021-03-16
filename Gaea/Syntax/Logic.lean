@@ -24,6 +24,9 @@ class LAnd (prop : Sort u):=
 class LOr (prop : Sort u) :=
   (lOr : prop -> prop -> prop)
 
+class LNot (prop : Sort u) :=
+  (lNot : prop -> prop)
+
 -- Equality
 
 class LEq (prop : Sort u) (form : Sort v) :=

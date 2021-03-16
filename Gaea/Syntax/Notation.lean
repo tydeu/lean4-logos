@@ -30,6 +30,9 @@ infixr:35 " ∧ "   => LAnd.lAnd
 infixr:30 " \\/ " => LOr.lOr
 infixr:30 " ∨ "   => LOr.lOr
 
+prefix "~" => LNot.lNot
+prefix "¬" => LNot.lNot
+
 -- Equality
 
 infix:50 " = "  => LEq.lEq
