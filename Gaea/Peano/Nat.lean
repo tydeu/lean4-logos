@@ -7,11 +7,11 @@ open Gaea.Syntax
 namespace Gaea.Peano
 
 class IsNat (prop : Sort u) (form : Sort v) := 
-  (is_nat : form -> prop)
+  (isNat : form -> prop)
 
 namespace IsNat
 
-abbrev nat {P : Sort u} {T : Sort v} [C : IsNat P T] := C.is_nat
+abbrev nat {P : Sort u} {T : Sort v} [C : IsNat P T] := C.isNat
 
 def prop {P : Sort u} {T : Sort v} (N : IsNat P T) := P
 def form {P : Sort u} {T : Sort v} (N : IsNat P T) := T
@@ -29,10 +29,10 @@ def prop {P : Sort u} {T : Sort v} (N : Nat P T) := P
 def form {P : Sort u} {T : Sort v} (N : Nat P T) := T
 def pred {P : Sort u} {T : Sort v} (N : Nat P T) := T -> P
 
-def nat {P : Sort u} {T : Sort v} (N : Nat P T) := N.toIsNat.is_nat
-def is_nat {P : Sort u} {T : Sort v} (N : Nat P T) := N.toIsNat.is_nat
+def nat {P : Sort u} {T : Sort v} (N : Nat P T) := N.toIsNat.isNat
+def isNat {P : Sort u} {T : Sort v} (N : Nat P T) := N.toIsNat.isNat
 def zero {P : Sort u} {T : Sort v} (N : Nat P T) := N.toZero.zero
-def succ {P : Sort u} {T : Sort v} (N : Nat P T) := N.toSucc.S
+def succ {P : Sort u} {T : Sort v} (N : Nat P T) := N.toSucc.succ
 
 end Nat
 
