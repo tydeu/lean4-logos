@@ -21,19 +21,19 @@ end IsNat
 
 export IsNat (nat)
 
-class Nat (P : Sort u) (T : Sort v) extends IsNat P T, Zero T, Succ T
+class PNat (P : Sort u) (T : Sort v) extends IsNat P T, Zero T, Succ T
 
-namespace Nat
+namespace PNat
 
-def prop {P : Sort u} {T : Sort v} (N : Nat P T) := P
-def form {P : Sort u} {T : Sort v} (N : Nat P T) := T
-def pred {P : Sort u} {T : Sort v} (N : Nat P T) := T -> P
+def prop {P : Sort u} {T : Sort v} (N : PNat P T) := P
+def form {P : Sort u} {T : Sort v} (N : PNat P T) := T
+def pred {P : Sort u} {T : Sort v} (N : PNat P T) := T -> P
 
-def nat {P : Sort u} {T : Sort v} (N : Nat P T) := N.toIsNat.isNat
-def isNat {P : Sort u} {T : Sort v} (N : Nat P T) := N.toIsNat.isNat
-def zero {P : Sort u} {T : Sort v} (N : Nat P T) := N.toZero.zero
-def succ {P : Sort u} {T : Sort v} (N : Nat P T) := N.toSucc.succ
+def nat {P : Sort u} {T : Sort v} (N : PNat P T) := N.toIsNat.isNat
+def isNat {P : Sort u} {T : Sort v} (N : PNat P T) := N.toIsNat.isNat
+def zero {P : Sort u} {T : Sort v} (N : PNat P T) := N.toZero.zero
+def succ {P : Sort u} {T : Sort v} (N : PNat P T) := N.toSucc.succ
 
-end Nat
+end PNat
 
 end Gaea.Peano

@@ -126,36 +126,36 @@ def eqSuccToEqNat {P : Sort u} {T : Sort v}
 
 -- Axiom 8
 class SuccNatEqZeroFalse {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : Nat P T) (Q : LEq P T) (F : LFalse P) :=
+  (L : Logic P) (N : PNat P T) (Q : LEq P T) (F : LFalse P) :=
   (succNatEqZeroFalse : (m n : T) -> (L |- nat m) -> (L |- nat n) -> 
     (L |- S n = 0) -> (L |- false))
 
 def succNatEqZeroFalse {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : Nat P T] [Q : LEq P T] [F : LFalse P]
+  {L : Logic P} [N : PNat P T] [Q : LEq P T] [F : LFalse P]
   [C : SuccNatEqZeroFalse L N Q F] {m n : T} := C.succNatEqZeroFalse m n
 
 -- Axiom 9
 -- Induction over predicates
 class NatInduction {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : Nat P T) := 
+  (L : Logic P) (N : PNat P T) := 
   (natInduction : 
     (f : T -> P) -> (L |- f 0) -> 
     ((n : T) -> (L |- nat n) -> (L |- f n) -> (L |- f (S n))) ->
     ((n : T) -> (L |- nat n) -> (L |- f n)))
 
 def natInduction {P : Sort u} {T : Type v} {L : Logic P} 
-  [N : Nat P T] [I : NatInduction L N] {f : T -> P} := I.natInduction f
+  [N : PNat P T] [I : NatInduction L N] {f : T -> P} := I.natInduction f
 
 -- Axiom 9 (Alt)
 -- Induction over schemas
 class NatInduction' {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : Nat P T) := 
+  (L : Logic P) (N : PNat P T) := 
   (natInduction' : (f : T -> Sort w) -> f 0 ->
     ((n : T) -> (L |- nat n) -> (f n -> f (S n))) ->
     ((n : T) -> (L |- nat n) -> f n))
 
 def natInduction' {P : Sort u} {T : Type v} 
-  (L : Logic P) [N : Nat P T] [I : NatInduction' L N] := I.natInduction'
+  (L : Logic P) [N : PNat P T] [I : NatInduction' L N] := I.natInduction'
 
 --------------------------------------------------------------------------------
 -- Addition Rules

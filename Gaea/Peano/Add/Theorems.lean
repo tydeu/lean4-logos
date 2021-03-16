@@ -61,7 +61,7 @@ instance natAddZeroNat_spec {P : Sort u} {T : Type v}
 
 -- Uses standard (predicate) induction 
 def natAddNat_induct {P : Sort u} {T : Type v} {L : Logic P}
-[N : Nat P T] [Q : LEq P T] [A : PAdd L N Q] [Fa : MForall L T] [If : MIf L]
+[N : PNat P T] [Q : LEq P T] [A : PAdd L N Q] [Fa : MForall L T] [If : MIf L]
 [NatInduction L N] [NatEqNat L N.toIsNat Q] [NatSuccNat L N.toIsNat N.toSucc]
 : (b : T) -> (L |- nat b) -> (L |- forall (a : T) => nat a -> nat (a + b))
 := by
@@ -75,20 +75,20 @@ def natAddNat_induct {P : Sort u} {T : Type v} {L : Logic P}
   exact natEq (natS NAba) AbSa_eq_SAba
 
 def natAddNat_proof {P : Sort u} {T : Type v} {L : Logic P} 
-[N : Nat P T] [Q : LEq P T] [A : PAdd L N Q] [Fa : MForall L T] [If : MIf L]
+[N : PNat P T] [Q : LEq P T] [A : PAdd L N Q] [Fa : MForall L T] [If : MIf L]
 [NatInduction L N] [NatEqNat L N.toIsNat Q] [NatSuccNat L N.toIsNat N.toSucc]
 : (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat (a + b))
 := fun a b Na Nb => forallNatElim (natAddNat_induct b Nb) Na
 
 instance natAddNat_inst {P : Sort u} {T : Type v} {L : Logic P} 
-  [N : Nat P T] [Q : LEq P T] [A : PAdd L N Q] [Fa : MForall L T] [If : MIf L]
+  [N : PNat P T] [Q : LEq P T] [A : PAdd L N Q] [Fa : MForall L T] [If : MIf L]
   [NatInduction L N] [NatEqNat L N.toIsNat Q] [NatSuccNat L N.toIsNat N.toSucc]
   : NatAddNat L N.toIsNat A.toAdd := {natAddNat := natAddNat_proof}
 
 -- Uses schema induction
 def natAddNat_schema_proof
 {P : Sort u} {T : Type v} {L : Logic.{u,w} P}
-[N : Nat P T] [Q : LEq P T]  [A : PAdd L N Q]
+[N : PNat P T] [Q : LEq P T]  [A : PAdd L N Q]
 [NatInduction'.{u,v,(imax (v+1) w)} L N]
 [NatEqNat L N.toIsNat Q] [NatSuccNat L N.toIsNat N.toSucc] 
 : (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat (a + b))
@@ -109,7 +109,7 @@ def natAddNat_schema_proof
 
 instance natAddNat_schema_inst 
   {P : Sort u} {T : Type v} {L : Logic.{u,w} P}
-  [N : Nat P T] [Q : LEq P T]  [A : PAdd L N Q]
+  [N : PNat P T] [Q : LEq P T]  [A : PAdd L N Q]
   [NatInduction'.{u,v,(imax (v+1) w)} L N]
   [NatEqNat L N.toIsNat Q] [NatSuccNat L N.toIsNat N.toSucc] 
   : NatAddNat L N.toIsNat A.toAdd := {natAddNat := natAddNat_schema_proof}
@@ -138,7 +138,7 @@ instance addZeroEqZero_spec_addZeroNat
 
 def addZeroNatEqNat_proof
 {P : Sort u} {T : Type v} {L : Logic P} 
-[N : Nat P T] [Q : LEq P T] [A : Add T] 
+[N : PNat P T] [Q : LEq P T] [A : Add T] 
 [NatInduction L N]
 [NatZero L N.toIsNat N.toZero] 
 [NatSuccNat L N.toIsNat N.toSucc]
@@ -161,7 +161,7 @@ def addZeroNatEqNat_proof
 
 instance addZeroNatEqNat_inst 
   {P : Sort u} {T : Type v} {L : Logic P} 
-  [N : Nat P T] [Q : LEq P T] [A : Add T] 
+  [N : PNat P T] [Q : LEq P T] [A : Add T] 
   [NatInduction L N]
   [NatZero L N.toIsNat N.toZero] 
   [NatSuccNat L N.toIsNat N.toSucc]
@@ -177,7 +177,7 @@ instance addZeroNatEqNat_inst
 
 def addSuccNatEqSucc_induct
 {P : Sort u} {T : Type v} {L : Logic P} 
-[N : Nat P T] [Q : LEq P T] [A : Add T] [MForall L T] [MIf L]
+[N : PNat P T] [Q : LEq P T] [A : Add T] [MForall L T] [MIf L]
 [NatInduction L N]
 [NatSuccNat L N.toIsNat N.toSucc]
 [EqNatTrans L N.toIsNat Q]
@@ -218,7 +218,7 @@ def addSuccNatEqSucc_induct
 
 def addSuccNatEqSucc_proof
 {P : Sort u} {T : Type v} {L : Logic P} 
-[N : Nat P T] [Q : LEq P T] [A : Add T] [MForall L T] [MIf L]
+[N : PNat P T] [Q : LEq P T] [A : Add T] [MForall L T] [MIf L]
 [NatInduction L N]
 [NatSuccNat L N.toIsNat N.toSucc]
 [EqNatTrans L N.toIsNat Q]
@@ -235,7 +235,7 @@ def addSuccNatEqSucc_proof
   exact forallNatElim h Na
 
 instance addSuccNatEqSucc_inst {P : Sort u} {T : Type v} {L : Logic P} 
-  [N : Nat P T] [Q : LEq P T] [A : Add T] [MForall L T] [MIf L]
+  [N : PNat P T] [Q : LEq P T] [A : Add T] [MForall L T] [MIf L]
   [NatInduction L N]
   [NatSuccNat L N.toIsNat N.toSucc]
   [EqNatTrans L N.toIsNat Q]
@@ -275,7 +275,7 @@ instance addNatZeroComm_inst
 -- a + b = b + a
 
 def addNatComm_induct {P : Sort u} {T : Type v} {L : Logic P} 
-[N : Nat P T] [Q : LEq P T] [A : Add T] [Fa : MForall L T] [If : MIf L]
+[N : PNat P T] [Q : LEq P T] [A : Add T] [Fa : MForall L T] [If : MIf L]
 [NatInduction L N]
 [NatSuccNat L N.toIsNat N.toSucc]
 [EqNatLeftEuc L N.toIsNat Q]
@@ -309,7 +309,7 @@ def addNatComm_induct {P : Sort u} {T : Type v} {L : Logic P}
     exact eqNatToEqSucc NAab NAba Aab_comm
 
 def addNatComm_proof {P : Sort u} {T : Type v} {L : Logic P} 
-[N : Nat P T] [Q : LEq P T] [A : Add T] [Fa : MForall L T] [If : MIf L]
+[N : PNat P T] [Q : LEq P T] [A : Add T] [Fa : MForall L T] [If : MIf L]
 [NatInduction L N]
 [NatSuccNat L N.toIsNat N.toSucc]
 [EqNatLeftEuc L N.toIsNat Q]
@@ -328,7 +328,7 @@ def addNatComm_proof {P : Sort u} {T : Type v} {L : Logic P}
 
 instance addNatComm_inst 
   {P : Sort u} {T : Type v} {L : Logic P} 
-  [N : Nat P T] [Q : LEq P T] [A : Add T] 
+  [N : PNat P T] [Q : LEq P T] [A : Add T] 
   [Fa : MForall L T] [If : MIf L]
   [NatInduction L N]
   [NatSuccNat L N.toIsNat N.toSucc]
@@ -350,7 +350,7 @@ instance addNatComm_inst
 -- (a + b) + c = a + (b + c)
 
 def addNatAssoc_induct {P : Sort u} {T : Type v} {L : Logic P} 
-[N : Nat P T] [Q : LEq P T] [A : Add T] [Fa : MForall L T] [If : MIf L]
+[N : PNat P T] [Q : LEq P T] [A : Add T] [Fa : MForall L T] [If : MIf L]
 [NatInduction L N]
 [NatSuccNat L N.toIsNat N.toSucc]
 [EqNatTrans L N.toIsNat Q] 
@@ -419,7 +419,7 @@ def addNatAssoc_induct {P : Sort u} {T : Type v} {L : Logic P}
       exact addNatSuccEqSucc Na NAbc
 
 def addNatAssoc_proof {P : Sort u} {T : Type v} {L : Logic P} 
-[N : Nat P T] [Q : LEq P T] [A : Add T] [Fa : MForall L T] [If : MIf L]
+[N : PNat P T] [Q : LEq P T] [A : Add T] [Fa : MForall L T] [If : MIf L]
 [NatInduction L N]
 [NatSuccNat L N.toIsNat N.toSucc]
 [EqNatTrans L N.toIsNat Q] 
@@ -443,7 +443,7 @@ def addNatAssoc_proof {P : Sort u} {T : Type v} {L : Logic P}
   exact forallNatElim (forallNatElim h Na) Nc
 
 instance addNatAssoc_inst {P : Sort u} {T : Type v} {L : Logic P} 
-[N : Nat P T] [Q : LEq P T] [A : Add T] [Fa : MForall L T] [If : MIf L]
+[N : PNat P T] [Q : LEq P T] [A : Add T] [Fa : MForall L T] [If : MIf L]
 [NatInduction L N]
 [NatSuccNat L N.toIsNat N.toSucc]
 [EqNatTrans L N.toIsNat Q] 
