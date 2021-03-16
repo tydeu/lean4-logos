@@ -1,8 +1,10 @@
 import Gaea.Logic
 import Gaea.Syntax
 import Gaea.Peano.Rules
-import Gaea.Peano.Rules2
-import Gaea.Peano.Modules
+import Gaea.Peano.Eq.Rules
+import Gaea.Peano.Eq.Theorems
+import Gaea.Peano.Add.Rules
+import Gaea.Peano.Add.Module
 
 universes u v w
 
@@ -12,38 +14,7 @@ open Gaea.Syntax
 namespace Gaea.Peano
 
 --------------------------------------------------------------------------------
--- General Theorems
---------------------------------------------------------------------------------
-
-def natCases 
-{P : Sort u} {T : Type v} {L : Logic P} [N : Nat P T] [NatInduction L N]
-: (f : T -> P) -> 
-  (L |- f 0) -> ((n : T) -> (L |- nat n) -> (L |- f (S n))) -> 
-    ((n : T) -> (L |- nat n) -> (L |- f n))
-:= by
-  intro f f0 fS n Nn
-  have ih : (n : T) -> (L |- nat n) -> (L |- f n) -> (L |- f (S n)) := 
-    fun n Nn fn => fS n Nn
-  exact natInduction f0 ih n Nn
-
--- (b = a) /\ (c = a) -> (b = c)
-
-def eqNatLeftEuc_proof {P : Sort u} {T : Type v} {L : Logic P}
-[N : IsNat P T] [Q : LEq P T] [EqNatSymm L N Q] [EqNatTrans L N Q]
-: (a b c : T) -> 
-    (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
-    (L |- b = a) -> (L |- c = a) -> (L |- b = c)
-:= by
-  intro a b c Na Nb Nc Qba Qca
-  have Qac := eqNatSymm Nc Na Qca
-  exact eqNatTrans Nb Na Nc Qba Qac
-
-instance eqNatLeftEuc_inst {P : Sort u} {T : Type v} {L : Logic P}
-  [N : IsNat P T] [Q : LEq P T] [EqNatSymm L N Q] [EqNatTrans L N Q]
-  : EqNatLeftEuc L N Q := {eqNatLeftEuc := eqNatLeftEuc_proof}
-
---------------------------------------------------------------------------------
--- Theorems related to Peano Addition being closed over the Naturals
+-- Closure
 --------------------------------------------------------------------------------
 
 -- nat (a + 0)
@@ -144,7 +115,7 @@ instance natAddNat_schema_inst
   : NatAddNat L N.toIsNat A.toAdd := {natAddNat := natAddNat_schema_proof}
 
 --------------------------------------------------------------------------------
--- Theorems related to Peano Addition being commutative
+-- Commutativity & Related Theorems
 --------------------------------------------------------------------------------
 
 -- 0 + 0 = 0
@@ -183,10 +154,10 @@ def addZeroNatEqNat_proof
     intro a Na A0a_eq_a
     have NSa := natS Na
     have NA0a := natAdd nat0 Na
-    have A0Sa_eq_SA0a := addNatSuccEqSucc nat0 Na
-    have AS0a_eq_Sa := eqNatToEqSucc NA0a Na A0a_eq_a
-    exact eqNatTrans (natAddZeroNat NSa) (natS NA0a) NSa 
-      A0Sa_eq_SA0a AS0a_eq_Sa
+    apply eqNatTrans' (natS NA0a) 
+      (natAddZeroNat NSa) NSa
+    exact addNatSuccEqSucc nat0 Na
+    exact eqNatToEqSucc NA0a Na A0a_eq_a
 
 instance addZeroNatEqNat_inst 
   {P : Sort u} {T : Type v} {L : Logic P} 
@@ -240,7 +211,7 @@ def addSuccNatEqSucc_induct
     have AaSb_eq_SAab := addNatSuccEqSucc Na Nb
     have ASaSb_eq_SASab := addNatSuccEqSucc NSa Nb
     have SASab_eq_SSAab := eqNatToEqSucc NASab NSAab ASab_eq_SAab
-    have ASaSb_eq_SSAab := eqNatTrans NASaSb NSASab NSSAab 
+    have ASaSb_eq_SSAab := eqNatTrans' NSASab NASaSb NSSAab 
       ASaSb_eq_SASab SASab_eq_SSAab
     have SAaSb_eq_SSAab := eqNatToEqSucc NAaSb NSAab AaSb_eq_SAab
     exact eqNatLeftEuc NSSAab NASaSb NSAaSb ASaSb_eq_SSAab SAaSb_eq_SSAab
@@ -373,7 +344,7 @@ instance addNatComm_inst
   := {addNatComm := addNatComm_proof}
 
 --------------------------------------------------------------------------------
--- Theorems related to Peano Addition being assocative
+-- Associativity
 --------------------------------------------------------------------------------
 
 -- (a + b) + c = a + (b + c)
@@ -432,18 +403,18 @@ def addNatAssoc_induct {P : Sort u} {T : Type v} {L : Logic P}
       have NASAabc := natAdd NSAab Nc
       have NAAabc := natAdd NAab Nc
       have NSAAabc := natS NAAabc
-      apply eqNatTrans NAAaSbc NASAabc NSAaAbc
-      apply eqNatAddNatRight NAaSb NSAab Nc
+      apply eqNatTrans' NASAabc NAAaSbc NSAaAbc
+      apply eqNatAddNatRight' Nc NAaSb NSAab 
       exact addNatSuccEqSucc Na Nb
-      apply eqNatTrans NASAabc NSAAabc NSAaAbc
+      apply eqNatTrans' NSAAabc NASAabc NSAaAbc
       exact addSuccNatEqSucc NAab Nc
       apply eqNatToEqSucc NAAabc NAaAbc
       exact forallNatElim (forallNatElim p_Ambn_assoc Na) Nc
     case AaASbc_eq_SAaAbc =>
       have NSAbc := natS NAbc
       have NAaSAbc := natAdd Na NSAbc
-      apply eqNatTrans NAaASbc NAaSAbc NSAaAbc
-      apply eqNatAddNatLeft NASbc NSAbc Na
+      apply eqNatTrans' NAaSAbc NAaASbc NSAaAbc
+      apply eqNatAddNatLeft' Na NASbc NSAbc 
       exact addSuccNatEqSucc Nb Nc
       exact addNatSuccEqSucc Na NAbc
 

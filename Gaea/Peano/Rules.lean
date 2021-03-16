@@ -73,6 +73,11 @@ def eqNatTrans {P : Sort u} {T : Sort v}
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [C : EqNatTrans L N Q]
   {x y z : T} := C.eqNatTrans x y z
 
+def eqNatTrans' {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [C : EqNatTrans L N Q]
+  {y x z : T} (Ny : L |- nat y) (Nx : L |- nat x) (Nz : L |- nat z)  
+  := C.eqNatTrans x y z Nx Ny Nz
+
 -- Axiom 5
 class NatEqNat {P : Sort u} {T : Sort v} 
   (L : Logic P) (N : IsNat P T) (Q : LEq P T) :=
@@ -203,7 +208,9 @@ class MulNatZeroEqZero {P : Sort u} {T : Type v}
   (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (Z : Zero T)  :=
   (mulNatZeroEqZero : (a : T) -> (L |- nat a) -> (L |- a * 0 = 0))
 
-export MulNatZeroEqZero (mulNatZeroEqZero)
+def mulNatZeroEqZero {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [Z : Zero T] 
+  [C : MulNatZeroEqZero L N Q M Z] {a : T} := C.mulNatZeroEqZero a
 
 -- Axiom 2
 class MulNatSuccEqAddMul {P : Sort u} {T : Type v} 
@@ -211,6 +218,27 @@ class MulNatSuccEqAddMul {P : Sort u} {T : Type v}
   (mulNatSuccEqAddMul : (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
     (L |- a + S b = a + S (a * b)))
 
-export MulNatSuccEqAddMul (mulNatSuccEqAddMul)
+def mulNatSuccEqAddMul {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [Su : Succ T]
+  [C : MulNatSuccEqAddMul L N Q M A Su] {a b : T} := C.mulNatSuccEqAddMul a b
+
+-- Axiom 1 Commuted
+class MulZeroNatEqZero {P : Sort u} {T : Type v} 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (Z : Zero T)  :=
+  (mulZeroNatEqZero : (a : T) -> (L |- nat a) -> (L |- 0 * a = 0))
+
+def mulZeroNatEqZero {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [Z : Zero T] 
+  [C : MulZeroNatEqZero L N Q M Z] {a : T} := C.mulZeroNatEqZero a
+
+-- Axiom 2 Commuted
+class MulSuccNatEqAddMul {P : Sort u} {T : Type v} 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (A : Add T) (Su : Succ T) := 
+  (mulSuccNatEqAddMul : (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
+    (L |- S a + b = a + S (a * b)))
+
+def mulSuccNatEqAddMul {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [Su : Succ T]
+  [C : MulSuccNatEqAddMul L N Q M A Su] {a b : T} := C.mulSuccNatEqAddMul a b
 
 end Gaea.Peano
