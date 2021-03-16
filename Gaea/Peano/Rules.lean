@@ -127,7 +127,7 @@ class SuccNatEqZeroFalse {P : Sort u} {T : Type v}
 
 def succNatEqZeroFalse {P : Sort u} {T : Type v} 
   {L : Logic P} [N : Nat P T] [Q : LEq P T] [F : LFalse P]
-  [C : SuccNatEqZeroFalse L N Q F] := C.succNatEqZeroFalse
+  [C : SuccNatEqZeroFalse L N Q F] {m n : T} := C.succNatEqZeroFalse m n
 
 -- Axiom 9
 -- Induction over predicates
