@@ -29,10 +29,10 @@ instance {P : Sort u} {T : Type v} {L : Logic P} [N : PNat P T] [Q : LEq P T]
   {addNatSuccEqSucc := A.toAddNatSuccEqSucc.addNatSuccEqSucc}
 
 namespace PAdd
-def addNatZeroEqNat {P : Sort u} {T : Type v} 
+abbrev addNatZeroEqNat {P : Sort u} {T : Type v} 
   {L : Logic P} {N : PNat P T} {Q : LEq P T} (A : PAdd L N Q) 
   := A.toAddNatZeroEqNat.addNatZeroEqNat
-def addNatSuccEqSucc {P : Sort u} {T : Type v} 
+abbrev addNatSuccEqSucc {P : Sort u} {T : Type v} 
   {L : Logic P} [N : PNat P T] [Q : LEq P T] (A : PAdd L N Q)
   := A.toAddNatSuccEqSucc.addNatSuccEqSucc
 end PAdd

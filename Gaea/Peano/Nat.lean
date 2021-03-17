@@ -29,10 +29,10 @@ def prop {P : Sort u} {T : Sort v} (N : PNat P T) := P
 def form {P : Sort u} {T : Sort v} (N : PNat P T) := T
 def pred {P : Sort u} {T : Sort v} (N : PNat P T) := T -> P
 
-def nat {P : Sort u} {T : Sort v} (N : PNat P T) := N.toIsNat.isNat
-def isNat {P : Sort u} {T : Sort v} (N : PNat P T) := N.toIsNat.isNat
-def zero {P : Sort u} {T : Sort v} (N : PNat P T) := N.toZero.zero
-def succ {P : Sort u} {T : Sort v} (N : PNat P T) := N.toSucc.succ
+abbrev nat {P : Sort u} {T : Sort v} (N : PNat P T) := N.toIsNat.isNat
+abbrev isNat {P : Sort u} {T : Sort v} (N : PNat P T) := N.toIsNat.isNat
+abbrev zero {P : Sort u} {T : Sort v} (N : PNat P T) := N.toZero.zero
+abbrev succ {P : Sort u} {T : Sort v} (N : PNat P T) := N.toSucc.succ
 
 end PNat
 

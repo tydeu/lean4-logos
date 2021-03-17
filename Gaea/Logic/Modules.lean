@@ -27,9 +27,9 @@ instance {P : Sort u} {T : Sort v} {L : Logic P} [C : MForall L T] :
   ForallElim L C.toLForall := {forallElim := C.toForallElim.forallElim}
 
 namespace MForall
-def forallIntro {P : Sort u} {T : Sort v} {L : Logic P} (C : MForall L T) 
+abbrev forallIntro {P : Sort u} {T : Sort v} {L : Logic P} (C : MForall L T) 
   := C.toForallIntro.forallIntro
-def ForallElim {P : Sort u} {T : Sort v} {L : Logic P} (C : MForall L T) 
+abbrev ForallElim {P : Sort u} {T : Sort v} {L : Logic P} (C : MForall L T) 
   := C.toForallElim.forallElim
 end MForall
 
@@ -50,9 +50,9 @@ instance {P : Sort u} {T : Sort v} {L : Logic P} [C : MExists L T] :
   ExistsElim L C.toLExists := {existsElim := C.toExistsElim.existsElim}
 
 namespace MExists
-def existsIntro {P : Sort u} {T : Sort v} {L : Logic P} (C : MExists L T) 
+abbrev existsIntro {P : Sort u} {T : Sort v} {L : Logic P} (C : MExists L T) 
   := C.toExistsIntro.existsIntro
-def ExistsElim {P : Sort u} {T : Sort v} {L : Logic P} (C : MExists L T) 
+abbrev ExistsElim {P : Sort u} {T : Sort v} {L : Logic P} (C : MExists L T) 
   := C.toExistsElim.existsElim
 end MExists
 
@@ -73,9 +73,9 @@ instance {P : Sort u} {L : Logic P} {C : MIf L} :
   IfElim L C.toLIf := {ifElim := C.toIfElim.ifElim}
 
 namespace MIf
-def ifIntro {P : Sort u} {L : Logic P} (C : MIf L) 
+abbrev ifIntro {P : Sort u} {L : Logic P} (C : MIf L) 
   := C.toIfIntro.ifIntro
-def ifElim {P : Sort u} {L : Logic P} (C : MIf L) 
+abbrev ifElim {P : Sort u} {L : Logic P} (C : MIf L) 
   := C.toIfElim.ifElim
 end MIf
 
@@ -100,11 +100,11 @@ instance {P : Sort u} {L : Logic P} [If : LIf P] [C : MIff L If] :
   IffFrom L C.toLIff If := {iffFrom := C.toIffFrom.iffFrom}
 
 namespace MIff
-def iffIntro {P : Sort u} {L : Logic P} {If : LIf P} (C : MIff L If) 
+abbrev iffIntro {P : Sort u} {L : Logic P} {If : LIf P} (C : MIff L If) 
   := C.toIffIntro.iffIntro
-def IffTo {P : Sort u} {L : Logic P} {If : LIf P} (C : MIff L If) 
+abbrev IffTo {P : Sort u} {L : Logic P} {If : LIf P} (C : MIff L If) 
   := C.toIffTo.iffTo
-def IffFrom {P : Sort u} {L : Logic P} {If : LIf P} (C : MIff L If) 
+abbrev IffFrom {P : Sort u} {L : Logic P} {If : LIf P} (C : MIff L If) 
   := C.toIffFrom.iffFrom
 end MIff
 
@@ -129,11 +129,11 @@ instance {P : Sort u} {L : Logic P} [C : MAnd L] :
   AndRight L C.toLAnd := {andRight := C.toAndRight.andRight}
 
 namespace MAnd
-def andIntro {P : Sort u} {L : Logic P} (C : MAnd L) 
+abbrev andIntro {P : Sort u} {L : Logic P} (C : MAnd L) 
   := C.toAndIntro.andIntro
-def andLeft {P : Sort u} {L : Logic P} (C : MAnd L)
+abbrev andLeft {P : Sort u} {L : Logic P} (C : MAnd L)
   := C.toAndLeft.andLeft
-def andRight {P : Sort u} {L : Logic P} (C : MAnd L) 
+abbrev andRight {P : Sort u} {L : Logic P} (C : MAnd L) 
   := C.toAndRight.andRight
 end MAnd
 
@@ -157,10 +157,10 @@ instance {P : Sort u} {L : Logic P}
   NotElim L C.toLNot If F := {notElim := C.toNotElim.notElim}
 
 namespace MNot
-def notIntro {P : Sort u} {L : Logic P} 
+abbrev notIntro {P : Sort u} {L : Logic P} 
   {If : LIf P} {F : LFalse P} (C : MNot L If F) 
   := C.toNotIntro.notIntro
-def notElim {P : Sort u} {L : Logic P} 
+abbrev notElim {P : Sort u} {L : Logic P} 
   {If : LIf P} {F : LFalse P} (C : MNot L If F) 
   := C.toNotElim.notElim
 end MNot

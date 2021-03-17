@@ -39,19 +39,29 @@ class NatZero {P : Sort u} {T : Type v}
   (natZero : L |- nat (0 : T))
 
 def natZero {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Z : Zero T] [C : NatZero L N Z] := C.natZero
+  {L : Logic P} [N : IsNat P T] [Z : Zero T] [K : NatZero L N Z] := K.natZero
 
 def nat0 {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Z : Zero T] [C : NatZero L N Z] := C.natZero
+  {L : Logic P} [N : IsNat P T] [Z : Zero T] [K : NatZero L N Z] := K.natZero
 
 -- Axiom 2
 class EqNatRefl {P : Sort u} {T : Sort v} 
   (L : Logic P) (N : IsNat P T) (Q : LEq P T) :=
   (eqNatRefl : (x : T) -> (L |- nat x) -> (L |- x = x))
 
+instance {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T]
+  [K : EqNatRefl L N Q] : EqMemRefl L Q N.isNat 
+  := {eqMemRefl := K.eqNatRefl}
+
+instance {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] 
+  [K : EqMemRefl L Q N.isNat] : EqNatRefl L N Q
+  := {eqNatRefl := K.eqMemRefl}
+
 def eqNatRefl {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [C : EqNatRefl L N Q]
-  {x : T} := C.eqNatRefl x
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [K : EqNatRefl L N Q]
+  {x : T} := K.eqNatRefl x
 
 -- Axiom 3
 class EqNatSymm {P : Sort u} {T : Sort v} 
@@ -59,9 +69,19 @@ class EqNatSymm {P : Sort u} {T : Sort v}
   (eqNatSymm : (x y : T) -> (L |- nat x) -> (L |- nat y) ->
     (L |- x = y) -> (L |- y = x))
 
+instance {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T]
+  [K : EqNatSymm L N Q] : EqMemSymm L Q N.isNat 
+  := {eqMemSymm := K.eqNatSymm}
+
+instance {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] 
+  [K : EqMemSymm L Q N.isNat] : EqNatSymm L N Q
+  := {eqNatSymm := K.eqMemSymm}
+
 def eqNatSymm {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [C : EqNatSymm L N Q]
-  {x y : T} := C.eqNatSymm x y
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [K : EqNatSymm L N Q]
+  {x y : T} := K.eqNatSymm x y
 
 -- Axiom 4
 class EqNatTrans {P : Sort u} {T : Sort v} 
@@ -69,14 +89,24 @@ class EqNatTrans {P : Sort u} {T : Sort v}
   (eqNatTrans : (x y z : T) -> (L |- nat x) -> (L |- nat y) -> (L |- nat z) -> 
     (L |- x = y) -> (L |- y = z) -> (L |- x = z))
 
+instance {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T]
+  [K : EqNatTrans L N Q] : EqMemTrans L Q N.isNat 
+  := {eqMemTrans := K.eqNatTrans}
+
+instance {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] 
+  [K : EqMemTrans L Q N.isNat] : EqNatTrans L N Q
+  := {eqNatTrans := K.eqMemTrans}
+
 def eqNatTrans {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [C : EqNatTrans L N Q]
-  {x y z : T} := C.eqNatTrans x y z
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [K : EqNatTrans L N Q]
+  {x y z : T} := K.eqNatTrans x y z
 
 def eqNatTrans' {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [C : EqNatTrans L N Q]
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [K : EqNatTrans L N Q]
   {y x z : T} (Ny : L |- nat y) (Nx : L |- nat x) (Nz : L |- nat z)  
-  := C.eqNatTrans x y z Nx Ny Nz
+  := K.eqNatTrans x y z Nx Ny Nz
 
 -- Axiom 5
 class NatEqNat {P : Sort u} {T : Sort v} 
@@ -84,12 +114,12 @@ class NatEqNat {P : Sort u} {T : Sort v}
   (natEqNat : (a b : T) -> (L |- nat b) -> (L |- a = b) -> (L |- nat a))
 
 def natEqNat {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [C : NatEqNat L N Q] 
-  {a b : T} := C.natEqNat a b
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [K : NatEqNat L N Q] 
+  {a b : T} := K.natEqNat a b
 
 def natEq {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [C : NatEqNat L N Q] 
-  {a b : T} := C.natEqNat a b
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [K : NatEqNat L N Q] 
+  {a b : T} := K.natEqNat a b
 
 -- Axiom 6
 class NatSuccNat {P : Sort u} {T : Sort v} 
@@ -97,12 +127,12 @@ class NatSuccNat {P : Sort u} {T : Sort v}
   (natSuccNat : (n : T) -> (L |- nat n) -> (L |- nat (S n)))
 
 def natSuccNat {P : Sort u} {T : Sort v} 
-{L : Logic P} [N : IsNat P T] [Su : Succ T] [C : NatSuccNat L N Su] 
-{n : T} := C.natSuccNat n
+{L : Logic P} [N : IsNat P T] [Su : Succ T] [K : NatSuccNat L N Su] 
+{n : T} := K.natSuccNat n
 
 def natS {P : Sort u} {T : Sort v} 
-{L : Logic P} [N : IsNat P T] [Su : Succ T] [C : NatSuccNat L N Su] 
-{n : T} := C.natSuccNat n
+{L : Logic P} [N : IsNat P T] [Su : Succ T] [K : NatSuccNat L N Su] 
+{n : T} := K.natSuccNat n
 
 -- Axiom 7a
 class EqNatToEqSucc {P : Sort u} {T : Sort v} 
@@ -110,9 +140,19 @@ class EqNatToEqSucc {P : Sort u} {T : Sort v}
   (eqNatToEqSucc : (m n : T) -> (L |- nat m) -> (L |- nat n) -> 
     (L |- m = n) -> (L |- S m = S n))
 
+instance {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [Su : Succ T]
+  [K : EqNatToEqSucc L N Q Su] : EqMemToEqFun L Q N.isNat Su.succ 
+  := {eqMemToEqFun := K.eqNatToEqSucc}
+
+instance {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [Su : Succ T]
+  [K : EqMemToEqFun L Q N.isNat Su.succ] : EqNatToEqSucc L N Q Su
+  := {eqNatToEqSucc := K.eqMemToEqFun}
+
 def eqNatToEqSucc {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [Su : Succ T]
-  [C : EqNatToEqSucc L N Q Su] {m n : T} := C.eqNatToEqSucc m n
+  [K : EqNatToEqSucc L N Q Su] {m n : T} := K.eqNatToEqSucc m n
 
 -- Axiom 7b
 class EqSuccToEqNat {P : Sort u} {T : Sort v} 
@@ -122,7 +162,7 @@ class EqSuccToEqNat {P : Sort u} {T : Sort v}
 
 def eqSuccToEqNat {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [Su : Succ T]
-  [C : EqSuccToEqNat L N Q Su] {m n : T} := C.eqSuccToEqNat
+  [K : EqSuccToEqNat L N Q Su] {m n : T} := K.eqSuccToEqNat
 
 -- Axiom 8
 class SuccNatEqZeroFalse {P : Sort u} {T : Type v} 
@@ -132,7 +172,7 @@ class SuccNatEqZeroFalse {P : Sort u} {T : Type v}
 
 def succNatEqZeroFalse {P : Sort u} {T : Type v} 
   {L : Logic P} [N : PNat P T] [Q : LEq P T] [F : LFalse P]
-  [C : SuccNatEqZeroFalse L N Q F] {m n : T} := C.succNatEqZeroFalse m n
+  [K : SuccNatEqZeroFalse L N Q F] {m n : T} := K.succNatEqZeroFalse m n
 
 -- Axiom 9
 -- Induction over predicates
@@ -168,7 +208,7 @@ class AddNatZeroEqNat {P : Sort u} {T : Type v}
 
 def addNatZeroEqNat {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] [Z : Zero T] 
-  [C : AddNatZeroEqNat L N Q A Z] {a : T} := C.addNatZeroEqNat a
+  [K : AddNatZeroEqNat L N Q A Z] {a : T} := K.addNatZeroEqNat a
 
 -- Axiom 2
 class AddNatSuccEqSucc {P : Sort u} {T : Type v} 
@@ -178,7 +218,7 @@ class AddNatSuccEqSucc {P : Sort u} {T : Type v}
 
 def addNatSuccEqSucc {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] [Su : Succ T]
-  [C : AddNatSuccEqSucc L N Q A Su] {a b : T} := C.addNatSuccEqSucc a b
+  [K : AddNatSuccEqSucc L N Q A Su] {a b : T} := K.addNatSuccEqSucc a b
 
 -- Axiom 1 Commuted
 class AddZeroNatEqNat {P : Sort u} {T : Type v} 
@@ -187,7 +227,7 @@ class AddZeroNatEqNat {P : Sort u} {T : Type v}
 
 def addZeroNatEqNat {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] [Z : Zero T] 
-  [C : AddZeroNatEqNat L N Q A Z] {a : T} := C.addZeroNatEqNat a
+  [K : AddZeroNatEqNat L N Q A Z] {a : T} := K.addZeroNatEqNat a
 
 -- Axiom 2 Commuted
 class AddSuccNatEqSucc {P : Sort u} {T : Type v} 
@@ -197,7 +237,7 @@ class AddSuccNatEqSucc {P : Sort u} {T : Type v}
 
 def addSuccNatEqSucc {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] [Su : Succ T]
-  [C : AddSuccNatEqSucc L N Q A Su] {a b : T} := C.addSuccNatEqSucc a b
+  [K : AddSuccNatEqSucc L N Q A Su] {a b : T} := K.addSuccNatEqSucc a b
 
 --------------------------------------------------------------------------------
 -- Multiplication Rules
@@ -210,7 +250,7 @@ class MulNatZeroEqZero {P : Sort u} {T : Type v}
 
 def mulNatZeroEqZero {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [Z : Zero T] 
-  [C : MulNatZeroEqZero L N Q M Z] {a : T} := C.mulNatZeroEqZero a
+  [K : MulNatZeroEqZero L N Q M Z] {a : T} := K.mulNatZeroEqZero a
 
 -- Axiom 2
 class MulNatSuccEqAddMul {P : Sort u} {T : Type v} 
@@ -220,7 +260,7 @@ class MulNatSuccEqAddMul {P : Sort u} {T : Type v}
 
 def mulNatSuccEqAddMul {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [Su : Succ T]
-  [C : MulNatSuccEqAddMul L N Q M A Su] {a b : T} := C.mulNatSuccEqAddMul a b
+  [K : MulNatSuccEqAddMul L N Q M A Su] {a b : T} := K.mulNatSuccEqAddMul a b
 
 -- Axiom 1 Commuted
 class MulZeroNatEqZero {P : Sort u} {T : Type v} 
@@ -229,7 +269,7 @@ class MulZeroNatEqZero {P : Sort u} {T : Type v}
 
 def mulZeroNatEqZero {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [Z : Zero T] 
-  [C : MulZeroNatEqZero L N Q M Z] {a : T} := C.mulZeroNatEqZero a
+  [K : MulZeroNatEqZero L N Q M Z] {a : T} := K.mulZeroNatEqZero a
 
 -- Axiom 2 Commuted
 class MulSuccNatEqAddMul {P : Sort u} {T : Type v} 
@@ -239,6 +279,6 @@ class MulSuccNatEqAddMul {P : Sort u} {T : Type v}
 
 def mulSuccNatEqAddMul {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [Su : Succ T]
-  [C : MulSuccNatEqAddMul L N Q M A Su] {a b : T} := C.mulSuccNatEqAddMul a b
+  [K : MulSuccNatEqAddMul L N Q M A Su] {a b : T} := K.mulSuccNatEqAddMul a b
 
 end Gaea.Peano
