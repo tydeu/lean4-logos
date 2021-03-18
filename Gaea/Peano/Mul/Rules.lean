@@ -1,5 +1,5 @@
 import Gaea.Logic.Eq
-import Gaea.Logic.Basic
+import Gaea.Logic.Logic
 import Gaea.Math.Notation
 import Gaea.Peano.Nat
 

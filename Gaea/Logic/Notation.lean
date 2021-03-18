@@ -1,5 +1,6 @@
-import Gaea.Logic.Basic
-import Gaea.Logic.Syntax
+import Gaea.Logic.Logic
+import Gaea.Logic.Eq.Syntax
+import Gaea.Logic.Classic.Syntax
 
 open Gaea.Logic
 

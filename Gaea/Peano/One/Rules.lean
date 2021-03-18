@@ -1,4 +1,4 @@
-import Gaea.Logic.Basic
+import Gaea.Logic.Logic
 import Gaea.Logic.Notation
 import Gaea.Math.Notation
 import Gaea.Peano.Nat

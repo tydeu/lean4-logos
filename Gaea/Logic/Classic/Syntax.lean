@@ -27,11 +27,6 @@ class LOr (prop : Sort u) :=
 class LNot (prop : Sort u) :=
   (lNot : prop -> prop)
 
--- Equality
-
-class LEq (prop : Sort u) (form : Sort v) :=
-  (lEq : form -> form -> prop)
-
 -- Quantifiers
 
 class LForall (prop : Sort u) (form : Sort v) :=

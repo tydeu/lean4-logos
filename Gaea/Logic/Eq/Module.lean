@@ -1,4 +1,4 @@
-import Gaea.Logic.Eq
+import Gaea.Logic.Eq.Rules
 
 universes u v
 
