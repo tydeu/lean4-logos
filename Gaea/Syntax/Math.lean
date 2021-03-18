@@ -8,18 +8,26 @@ namespace Gaea.Syntax
 class Zero (N : Sort u) :=
   (zero : N)
 
-instance (N : Type u) [C : Zero N] : OfNat N (natLit! 0)
-  := {ofNat := C.zero}
+@[defaultInstance 1]
+instance (N : Type u) [K : Zero N] : OfNat N (natLit! 0)
+  := {ofNat := K.zero}
+
+class One (N : Sort u) :=
+  (one : N)
+
+@[defaultInstance 1]
+instance (N : Type u) [K : One N] : OfNat N (natLit! 1)
+  := {ofNat := K.one}
 
 class Succ (N : Sort u) :=
   (succ : N -> N)
 
 namespace Succ
-abbrev S {N : Sort u} [C : Succ N] := C.succ
+abbrev S {N : Sort u} [K : Succ N] := K.succ
 end Succ
 
-instance (N : Type u) [C : Succ N] (n : Nat) [T : OfNat N n] 
-  : OfNat N (Nat.succ n) := {ofNat := C.succ T.ofNat}
+instance (N : Type u) [K : Succ N] (n : Nat) [T : OfNat N n] 
+  : OfNat N (Nat.succ n) := {ofNat := K.succ T.ofNat}
 
 -- Inequalities
 

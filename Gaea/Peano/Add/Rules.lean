@@ -10,6 +10,10 @@ open Gaea.Syntax
 
 namespace Gaea.Peano
 
+--------------------------------------------------------------------------------
+-- Special Cases
+--------------------------------------------------------------------------------
+
 -- 0 + 0 = 0
 
 class AddZeroEqZero {P : Sort u} {T : Type v} 
@@ -19,6 +23,30 @@ class AddZeroEqZero {P : Sort u} {T : Type v}
 def addZeroEqZero {P : Sort u} {T : Type v} 
   {L : Logic P} [Q : LEq P T] [A : Add T] [Z : Zero T] 
   [C : AddZeroEqZero L Q A Z] := C.addZeroEqZero
+
+-- a + 1 = S a
+
+class AddNatOneEqSucc {P : Sort u} {T : Type v} 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) (N1 : One T) (NS : Succ T) :=
+  (addNatOneEqSucc : (a : T) -> (L |- nat a) -> (L |- a + 1 = S a))
+
+def addNatOneEqSucc {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] [N1 : One T] [NS : Succ T]
+  [C : AddNatOneEqSucc L N Q A N1 NS] {a : T} := C.addNatOneEqSucc a
+
+-- 1 + a = S a
+
+class AddOneNatEqSucc {P : Sort u} {T : Type v} 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) (N1 : One T) (NS : Succ T) :=
+  (addOneNatEqSucc : (a : T) -> (L |- nat a) -> (L |- 1 + a = S a))
+
+def addOneNatEqSucc {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] [N1 : One T] [NS : Succ T]
+  [C : AddOneNatEqSucc L N Q A N1 NS] {a : T} := C.addOneNatEqSucc a
+
+--------------------------------------------------------------------------------
+-- Commutativity
+--------------------------------------------------------------------------------
 
 -- 0 + a = a + 0
 
@@ -36,12 +64,12 @@ class AddNatComm {P : Sort u} {T : Type v}
   (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) :=
   (addNatComm : (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- a + b = b + a))
 
-instance {P : Sort u} {T : Type v} 
+instance i_AddNatComm_to_MemComm {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] 
   [K : AddNatComm L N Q A] : MemComm L Q N.isNat A.add 
   := {memComm := K.addNatComm}
 
-instance {P : Sort u} {T : Type v} 
+instance i_MemComm_to_AddNatComm {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] 
   [K : MemComm L Q N.isNat A.add ] : AddNatComm L N Q A
   := {addNatComm := K.memComm}
@@ -50,7 +78,10 @@ def addNatComm {P : Sort u} {T : Type v}
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T]
   [C : AddNatComm L N Q A] {a b : T} := C.addNatComm a b
 
+--------------------------------------------------------------------------------
+-- Associativity
 -- (a + b) + c = a + (b + c)
+--------------------------------------------------------------------------------
 
 class AddNatAssoc {P : Sort u} {T : Type v}
   (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) :=
@@ -58,12 +89,12 @@ class AddNatAssoc {P : Sort u} {T : Type v}
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
     (L |- (a + b) + c = a + (b + c)))
 
-instance {P : Sort u} {T : Type v} 
+instance i_AddNatAssoc_to_MemAssoc {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] 
   [K : AddNatAssoc L N Q A] : MemAssoc L Q N.isNat A.add 
   := {memAssoc := K.addNatAssoc}
 
-instance {P : Sort u} {T : Type v} 
+instance i_MemAssoc_to_AddNatAssoc {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] 
   [K : MemAssoc L Q N.isNat A.add] : AddNatAssoc L N Q A 
   := {addNatAssoc := K.memAssoc}
@@ -84,12 +115,12 @@ class EqNatAddNatLeft {P : Sort u} {T : Type v}
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
     (L |- a = b) -> (L |- c + a = c + b))
 
-instance {P : Sort u} {T : Type v} 
+instance i_EqNatAddNatLeft_to_EqMemMagLeft {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] 
   [K : EqNatAddNatLeft L N Q A] : EqMemMagLeft L Q N.isNat A.add 
   := {eqMemMagLeft := K.eqNatAddNatLeft}
 
-instance {P : Sort u} {T : Type v} 
+instance i_EqMemMagLeft_to_EqNatAddNatLeft {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] 
   [K : EqMemMagLeft L Q N.isNat A.add ] : EqNatAddNatLeft L N Q A
   := {eqNatAddNatLeft := K.eqMemMagLeft}
@@ -111,12 +142,12 @@ class EqNatAddNatRight {P : Sort u} {T : Type v}
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
     (L |- a = b) -> (L |- a + c = b + c))
 
-instance {P : Sort u} {T : Type v} 
+instance i_EqNatAddNatRight_to_EqMemMagRight {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] 
   [K : EqNatAddNatRight L N Q A] : EqMemMagRight L Q N.isNat A.add 
   := {eqMemMagRight := K.eqNatAddNatRight}
 
-instance {P : Sort u} {T : Type v} 
+instance i_EqMemMagRight_to_EqNatAddNatRight {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] 
   [K : EqMemMagRight L Q N.isNat A.add ] : EqNatAddNatRight L N Q A
   := {eqNatAddNatRight := K.eqMemMagRight}
@@ -167,6 +198,5 @@ def natAddNat {P : Sort u} {T : Type v}
 def natAdd {P : Sort u} {T : Type v}
   {L : Logic P} [N : IsNat P T] [A : Add T] [C : NatAddNat L N A]
   {a b : T} := C.natAddNat a b
-
 
 end Gaea.Peano
