@@ -4,7 +4,6 @@ import Gaea.Logic.Eq.Rules
 universes u v w
 
 open Gaea.Logic
-open Gaea.Syntax
 
 namespace Gaea.Peano
 

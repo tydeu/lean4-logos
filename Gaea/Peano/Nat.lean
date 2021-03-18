@@ -1,8 +1,8 @@
-import Gaea.Syntax.Math
+import Gaea.Math.Syntax
 
 universes u v
 
-open Gaea.Syntax
+open Gaea.Math (Zero Succ)
 
 namespace Gaea.Peano
 

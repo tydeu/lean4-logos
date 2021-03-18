@@ -1,10 +1,9 @@
 import Gaea.Peano.Nat
-import Gaea.Peano.Rules
+import Gaea.Peano.Add.Rules
 
-universes u v w
+universes u v
 
 open Gaea.Logic
-open Gaea.Syntax
 
 namespace Gaea.Peano
 

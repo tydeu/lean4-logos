@@ -1,13 +1,62 @@
-import Gaea.Logic
-import Gaea.Syntax
+import Gaea.Logic.Eq
+import Gaea.Logic.Basic
+import Gaea.Math.Notation
 import Gaea.Peano.Nat
 
 universes u v w
 
+open Gaea.Math
 open Gaea.Logic
-open Gaea.Syntax
 
 namespace Gaea.Peano
+
+--------------------------------------------------------------------------------
+-- Axioms
+--------------------------------------------------------------------------------
+
+-- Axiom 1
+class MulNatZeroEqZero {P : Sort u} {T : Type v} 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (Z : Zero T)  :=
+  (mulNatZeroEqZero : (a : T) -> (L |- nat a) -> (L |- a * 0 = 0))
+
+def mulNatZeroEqZero {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [Z : Zero T] 
+  [K : MulNatZeroEqZero L N Q M Z] {a : T} := K.mulNatZeroEqZero a
+
+-- Axiom 2
+class MulNatSuccEqAddMul {P : Sort u} {T : Type v} 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (A : Add T) (NS : Succ T) := 
+  (mulNatSuccEqAddMul : (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
+    (L |- a * S b = a + S (a * b)))
+
+def mulNatSuccEqAddMul {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [NS : Succ T]
+  [K : MulNatSuccEqAddMul L N Q M A NS] {a b : T} := K.mulNatSuccEqAddMul a b
+
+--------------------------------------------------------------------------------
+-- Commmuted Axioms
+--------------------------------------------------------------------------------
+
+-- Axiom 1 Commuted
+class MulZeroNatEqZero {P : Sort u} {T : Type v} 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (Z : Zero T)  :=
+  (mulZeroNatEqZero : (a : T) -> (L |- nat a) -> (L |- 0 * a = 0))
+
+def mulZeroNatEqZero {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [Z : Zero T] 
+  [K : MulZeroNatEqZero L N Q M Z] {a : T} := K.mulZeroNatEqZero a
+
+-- Axiom 2 Commuted
+class MulSuccNatEqAddMul {P : Sort u} {T : Type v} 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (A : Add T) (NS : Succ T) := 
+  (mulSuccNatEqAddMul : (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
+    (L |- S a * b = a + S (a * b)))
+
+def mulSuccNatEqAddMul {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [NS : Succ T]
+  [K : MulSuccNatEqAddMul L N Q M A NS] {a b : T} := K.mulSuccNatEqAddMul a b
+
+
 --------------------------------------------------------------------------------
 -- Special Cases
 --------------------------------------------------------------------------------

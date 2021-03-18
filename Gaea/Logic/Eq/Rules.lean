@@ -1,12 +1,8 @@
 import Gaea.Logic.Basic
 import Gaea.Logic.Rel.Rules
 import Gaea.Logic.Notation
-import Gaea.Syntax.Notation
-import Gaea.Syntax.Logic
 
 universes u v
-
-open Gaea.Syntax
 
 namespace Gaea.Logic
 

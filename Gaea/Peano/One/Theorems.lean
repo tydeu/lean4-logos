@@ -3,8 +3,8 @@ import Gaea.Peano.One.Rules
 
 universes u v
 
+open Gaea.Math
 open Gaea.Logic
-open Gaea.Syntax
 
 namespace Gaea.Peano
 

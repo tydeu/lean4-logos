@@ -2,8 +2,6 @@ import Gaea.Logic.Rel.Rules
 
 universes u v
 
-open Gaea.Syntax (LEq)
-
 namespace Gaea.Logic
 
 -- (b = a) /\ (c = a) -> (b = c)

@@ -2,8 +2,6 @@ import Gaea.Logic.Eq
 
 universes u v
 
-open Gaea.Syntax
-
 namespace Gaea.Logic
 
 class MEq {P : Sort u} (L : Logic P) (T : Sort v) extends LEq P T :=

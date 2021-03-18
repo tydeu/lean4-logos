@@ -1,16 +1,14 @@
 import Gaea.Logic
-import Gaea.Syntax
 import Gaea.Peano.Eq
 import Gaea.Peano.One
 import Gaea.Peano.Rules
 import Gaea.Peano.Add.Rules
 import Gaea.Peano.Add.Module
-import Gaea.Peano.One.Rules
 
 universes u v w
 
+open Gaea.Math
 open Gaea.Logic
-open Gaea.Syntax
 
 namespace Gaea.Peano
 

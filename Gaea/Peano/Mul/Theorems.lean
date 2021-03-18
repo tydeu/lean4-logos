@@ -1,5 +1,4 @@
 import Gaea.Logic
-import Gaea.Syntax
 import Gaea.Peano.Rules
 import Gaea.Peano.Mul.Rules
 import Gaea.Peano.Add
@@ -7,8 +6,8 @@ import Gaea.Peano.Eq
 
 universes u v w
 
+open Gaea.Math
 open Gaea.Logic
-open Gaea.Syntax
 
 namespace Gaea.Peano
 

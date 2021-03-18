@@ -1,14 +1,12 @@
 import Gaea.Logic.Basic
 import Gaea.Logic.Notation
-import Gaea.Syntax.Logic
-import Gaea.Syntax.Math
-import Gaea.Syntax.Notation
+import Gaea.Math.Notation
 import Gaea.Peano.Nat
 
 universes u v
 
+open Gaea.Math
 open Gaea.Logic
-open Gaea.Syntax
 
 namespace Gaea.Peano
 

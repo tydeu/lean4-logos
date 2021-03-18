@@ -1,3 +1,3 @@
 import Gaea.Logic
-import Gaea.Syntax
+import Gaea.Math
 import Gaea.Peano

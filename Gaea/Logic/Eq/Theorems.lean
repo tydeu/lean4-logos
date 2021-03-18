@@ -3,8 +3,6 @@ import Gaea.Logic.Rel.Theorems
 
 universes u v
 
-open Gaea.Syntax
-
 namespace Gaea.Logic
 
 def eqFunSubst_proof {P : Sort u} {T : Sort v} 

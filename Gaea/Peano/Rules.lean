@@ -1,15 +1,12 @@
 import Gaea.Logic
-import Gaea.Peano.Nat
-
-import Gaea.Syntax.Math
-import Gaea.Syntax.Logic
-import Gaea.Syntax.Notation
 import Gaea.Logic.Notation
+import Gaea.Math.Notation
+import Gaea.Peano.Nat
 
 universes u v w
 
+open Gaea.Math
 open Gaea.Logic
-open Gaea.Syntax
 
 namespace Gaea.Peano
 
@@ -30,7 +27,7 @@ def forallNatElim {P : Sort u} {T : Type v} {L : Logic P}
   := ifElim (forallElim p a) Na
 
 --------------------------------------------------------------------------------
--- Natural Rules
+-- Natural Axioms
 --------------------------------------------------------------------------------
 
 -- Axiom 1
@@ -196,89 +193,5 @@ class NatInduction' {P : Sort u} {T : Type v}
 
 def natInduction' {P : Sort u} {T : Type v} 
   (L : Logic P) [N : PNat P T] [I : NatInduction' L N] := I.natInduction'
-
---------------------------------------------------------------------------------
--- Addition Rules
---------------------------------------------------------------------------------
-
--- Axiom 1
-class AddNatZeroEqNat {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) (Z : Zero T) :=
-  (addNatZeroEqNat : (a : T) -> (L |- nat a) -> (L |- a + 0 = a))
-
-def addNatZeroEqNat {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] [Z : Zero T] 
-  [K : AddNatZeroEqNat L N Q A Z] {a : T} := K.addNatZeroEqNat a
-
--- Axiom 2
-class AddNatSuccEqSucc {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) (NS : Succ T) := 
-  (addNatSuccEqSucc : (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
-    (L |- a + S b = S (a + b)))
-
-def addNatSuccEqSucc {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] [NS : Succ T]
-  [K : AddNatSuccEqSucc L N Q A NS] {a b : T} := K.addNatSuccEqSucc a b
-
--- Axiom 1 Commuted
-class AddZeroNatEqNat {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) (Z : Zero T) :=
-  (addZeroNatEqNat : (a : T) -> (L |- nat a) -> (L |- 0 + a = a))
-
-def addZeroNatEqNat {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] [Z : Zero T] 
-  [K : AddZeroNatEqNat L N Q A Z] {a : T} := K.addZeroNatEqNat a
-
--- Axiom 2 Commuted
-class AddSuccNatEqSucc {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) (NS : Succ T) := 
-  (addSuccNatEqSucc : (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
-    (L |- S a + b = S (a + b)))
-
-def addSuccNatEqSucc {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] [NS : Succ T]
-  [K : AddSuccNatEqSucc L N Q A NS] {a b : T} := K.addSuccNatEqSucc a b
-
---------------------------------------------------------------------------------
--- Multiplication Rules
---------------------------------------------------------------------------------
-
--- Axiom 1
-class MulNatZeroEqZero {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (Z : Zero T)  :=
-  (mulNatZeroEqZero : (a : T) -> (L |- nat a) -> (L |- a * 0 = 0))
-
-def mulNatZeroEqZero {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [Z : Zero T] 
-  [K : MulNatZeroEqZero L N Q M Z] {a : T} := K.mulNatZeroEqZero a
-
--- Axiom 2
-class MulNatSuccEqAddMul {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (A : Add T) (NS : Succ T) := 
-  (mulNatSuccEqAddMul : (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
-    (L |- a * S b = a + S (a * b)))
-
-def mulNatSuccEqAddMul {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [NS : Succ T]
-  [K : MulNatSuccEqAddMul L N Q M A NS] {a b : T} := K.mulNatSuccEqAddMul a b
-
--- Axiom 1 Commuted
-class MulZeroNatEqZero {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (Z : Zero T)  :=
-  (mulZeroNatEqZero : (a : T) -> (L |- nat a) -> (L |- 0 * a = 0))
-
-def mulZeroNatEqZero {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [Z : Zero T] 
-  [K : MulZeroNatEqZero L N Q M Z] {a : T} := K.mulZeroNatEqZero a
-
--- Axiom 2 Commuted
-class MulSuccNatEqAddMul {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (A : Add T) (NS : Succ T) := 
-  (mulSuccNatEqAddMul : (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
-    (L |- S a * b = a + S (a * b)))
-
-def mulSuccNatEqAddMul {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [NS : Succ T]
-  [K : MulSuccNatEqAddMul L N Q M A NS] {a b : T} := K.mulSuccNatEqAddMul a b
 
 end Gaea.Peano

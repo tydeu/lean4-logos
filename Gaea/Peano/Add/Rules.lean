@@ -1,14 +1,59 @@
-import Gaea.Logic
-import Gaea.Syntax
 import Gaea.Peano.Nat
+import Gaea.Math.Notation
 import Gaea.Logic.Eq.Rules
 
-universes u v w
+universes u v
 
+open Gaea.Math
 open Gaea.Logic
-open Gaea.Syntax
 
 namespace Gaea.Peano
+
+--------------------------------------------------------------------------------
+-- Axioms
+--------------------------------------------------------------------------------
+
+-- Axiom 1
+class AddNatZeroEqNat {P : Sort u} {T : Type v} 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) (Z : Zero T) :=
+  (addNatZeroEqNat : (a : T) -> (L |- nat a) -> (L |- a + 0 = a))
+
+def addNatZeroEqNat {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] [Z : Zero T] 
+  [K : AddNatZeroEqNat L N Q A Z] {a : T} := K.addNatZeroEqNat a
+
+-- Axiom 2
+class AddNatSuccEqSucc {P : Sort u} {T : Type v} 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) (NS : Succ T) := 
+  (addNatSuccEqSucc : (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
+    (L |- a + S b = S (a + b)))
+
+def addNatSuccEqSucc {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] [NS : Succ T]
+  [K : AddNatSuccEqSucc L N Q A NS] {a b : T} := K.addNatSuccEqSucc a b
+
+--------------------------------------------------------------------------------
+-- Commuted Axioms
+--------------------------------------------------------------------------------
+
+-- Axiom 1 Commuted
+class AddZeroNatEqNat {P : Sort u} {T : Type v} 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) (Z : Zero T) :=
+  (addZeroNatEqNat : (a : T) -> (L |- nat a) -> (L |- 0 + a = a))
+
+def addZeroNatEqNat {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] [Z : Zero T] 
+  [K : AddZeroNatEqNat L N Q A Z] {a : T} := K.addZeroNatEqNat a
+
+-- Axiom 2 Commuted
+class AddSuccNatEqSucc {P : Sort u} {T : Type v} 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) (NS : Succ T) := 
+  (addSuccNatEqSucc : (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
+    (L |- S a + b = S (a + b)))
+
+def addSuccNatEqSucc {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] [NS : Succ T]
+  [K : AddSuccNatEqSucc L N Q A NS] {a b : T} := K.addSuccNatEqSucc a b
 
 --------------------------------------------------------------------------------
 -- Special Cases

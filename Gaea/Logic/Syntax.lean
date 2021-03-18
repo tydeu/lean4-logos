@@ -1,6 +1,6 @@
 universes u v
 
-namespace Gaea.Syntax 
+namespace Gaea.Logic 
 
 -- Constants
 
@@ -40,4 +40,4 @@ class LForall (prop : Sort u) (form : Sort v) :=
 class LExists (prop : Sort u) (form : Sort v) :=
   (lExists : (form -> prop) -> prop)
 
-end Gaea.Syntax
+end Gaea.Logic

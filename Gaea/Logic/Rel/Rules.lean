@@ -1,11 +1,7 @@
 import Gaea.Logic.Basic
 import Gaea.Logic.Notation
-import Gaea.Syntax.Notation
-import Gaea.Syntax.Logic
 
 universes u v w
-
-open Gaea.Syntax (LEq)
 
 namespace Gaea.Logic
 
