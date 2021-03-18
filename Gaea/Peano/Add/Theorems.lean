@@ -154,7 +154,7 @@ def addZeroNatEqNat_proof
     intro a Na A0a_eq_a
     have NSa := natS Na
     have NA0a := natAdd nat0 Na
-    apply memTrans' (natS NA0a) 
+    apply eqNatTrans' (natS NA0a) 
       (natAddZeroNat NSa) NSa
     exact addNatSuccEqSucc nat0 Na
     exact eqNatToEqSucc NA0a Na A0a_eq_a
@@ -194,7 +194,7 @@ def addSuccNatEqSucc_induct
     apply forallNatIntro; intro a Na
     have NSa := natS Na; 
     have NAa0 := natAddNatZero Na
-    apply memLeftEuc NSa 
+    apply eqNatLeftEuc NSa 
       (natAddNatZero NSa) (natS NAa0)
     exact addNatZeroEqNat (natS Na)
     have Aa0_eq_a := addNatZeroEqNat Na
@@ -211,10 +211,10 @@ def addSuccNatEqSucc_induct
     have AaSb_eq_SAab := addNatSuccEqSucc Na Nb
     have ASaSb_eq_SASab := addNatSuccEqSucc NSa Nb
     have SASab_eq_SSAab := eqNatToEqSucc NASab NSAab ASab_eq_SAab
-    have ASaSb_eq_SSAab := memTrans' NSASab NASaSb NSSAab 
+    have ASaSb_eq_SSAab := eqNatTrans' NSASab NASaSb NSSAab 
       ASaSb_eq_SASab SASab_eq_SSAab
     have SAaSb_eq_SSAab := eqNatToEqSucc NAaSb NSAab AaSb_eq_SAab
-    exact memLeftEuc NSSAab NASaSb NSAaSb ASaSb_eq_SSAab SAaSb_eq_SSAab
+    exact eqNatLeftEuc NSSAab NASaSb NSAaSb ASaSb_eq_SSAab SAaSb_eq_SSAab
 
 def addSuccNatEqSucc_proof
 {P : Sort u} {T : Type v} {L : Logic P} 
@@ -260,7 +260,7 @@ def addNatZeroComm_proof
 [AddZeroNatEqNat L N Q A Z]
 : (a : T) -> (L |- nat a) -> (L |- a + 0 = 0 + a)
 := by
-  intro a Na; apply memLeftEuc Na
+  intro a Na; apply eqNatLeftEuc Na
   exact natAddNatZero Na; exact natAddZeroNat Na
   exact addNatZeroEqNat Na; exact addZeroNatEqNat Na 
 
@@ -299,11 +299,11 @@ def addNatComm_induct {P : Sort u} {T : Type v} {L : Logic P}
     have NAab := natAdd Na Nb; have NSAab := natS NAab;
     have NAba := natAdd Nb Na; have NSAba := natS NAba
     have NASba := natAdd NSb Na; have NASab := natAdd Na NSb
-    apply memLeftEuc NSAab NASab NASba
+    apply eqNatLeftEuc NSAab NASab NASba
     exact addNatSuccEqSucc Na Nb
     have Aab_comm := forallNatElim p_Anb_comm Na
     have SAab_comm := eqNatToEqSucc NAab NAba Aab_comm
-    apply memLeftEuc NSAba NASba NSAab
+    apply eqNatLeftEuc NSAba NASba NSAab
     exact addSuccNatEqSucc Nb Na
     have Aab_comm := forallNatElim p_Anb_comm Na
     exact eqNatToEqSucc NAab NAba Aab_comm
@@ -375,7 +375,7 @@ def addNatAssoc_induct {P : Sort u} {T : Type v} {L : Logic P}
     apply forallNatIntro; intro c Nc
     have NAa0 := natAddNatZero Na
     have NA0c := natAddZeroNat Nc
-    refine memLeftEuc (natAdd Na Nc) 
+    refine eqNatLeftEuc (natAdd Na Nc) 
       (natAdd NAa0 Nc) (natAdd Na NA0c) ?AAa0c_eq_Aac ?AaA0c_eq_Aac
     case AAa0c_eq_Aac =>
       apply eqNatAddNatRight NAa0 Na Nc
@@ -396,24 +396,24 @@ def addNatAssoc_induct {P : Sort u} {T : Type v} {L : Logic P}
     have NAaASbc := natAdd Na NASbc
     have NAaAbc := natAdd Na NAbc
     have NSAaAbc := natS NAaAbc
-    refine memLeftEuc NSAaAbc
+    refine eqNatLeftEuc NSAaAbc
       NAAaSbc NAaASbc ?AAaSbc_eq_SAaAbc ?AaASbc_eq_SAaAbc
     case AAaSbc_eq_SAaAbc =>
       have NSAab := natS NAab
       have NASAabc := natAdd NSAab Nc
       have NAAabc := natAdd NAab Nc
       have NSAAabc := natS NAAabc
-      apply memTrans' NASAabc NAAaSbc NSAaAbc
+      apply eqNatTrans' NASAabc NAAaSbc NSAaAbc
       apply eqNatAddNatRight' Nc NAaSb NSAab 
       exact addNatSuccEqSucc Na Nb
-      apply memTrans' NSAAabc NASAabc NSAaAbc
+      apply eqNatTrans' NSAAabc NASAabc NSAaAbc
       exact addSuccNatEqSucc NAab Nc
       apply eqNatToEqSucc NAAabc NAaAbc
       exact forallNatElim (forallNatElim p_Ambn_assoc Na) Nc
     case AaASbc_eq_SAaAbc =>
       have NSAbc := natS NAbc
       have NAaSAbc := natAdd Na NSAbc
-      apply memTrans' NAaSAbc NAaASbc NSAaAbc
+      apply eqNatTrans' NAaSAbc NAaASbc NSAaAbc
       apply eqNatAddNatLeft' Na NASbc NSAbc 
       exact addSuccNatEqSucc Nb Nc
       exact addNatSuccEqSucc Na NAbc
