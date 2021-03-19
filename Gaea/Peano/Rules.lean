@@ -10,26 +10,6 @@ open Gaea.Logic
 
 namespace Gaea.Peano
 
---------------------------------------------------------------------------------
--- Logic Rules
---------------------------------------------------------------------------------
-
-def forallNatIntro {P : Sort u} {T : Type v} {L : Logic P} 
-  [N : IsNat P T] [Fa : LForall P T] [If : LIf P] [ForallIntro L Fa] [IfIntro L If]
-  {f : T -> P} (F : (a : T) -> (L |- nat a) -> (L |- f a))
-  : L |- forall a => nat a -> f a
-  := forallIntro fun a => ifIntro fun Na => F a Na
-
-def forallNatElim {P : Sort u} {T : Type v} {L : Logic P} 
-  [N : IsNat P T] [Fa : LForall P T] [If : LIf P] [ForallElim L Fa] [IfElim L If]
-  {f : T -> P} (p : L |- forall (a : T) => nat a -> f a) 
-  {a : T} (Na : L |- nat a) : L |- f a
-  := ifElim (forallElim p a) Na
-
---------------------------------------------------------------------------------
--- Natural Axioms
---------------------------------------------------------------------------------
-
 -- Axiom 1
 class NatZero {P : Sort u} {T : Type v} 
   (L : Logic P) (N : IsNat P T) (Z : Zero T) :=

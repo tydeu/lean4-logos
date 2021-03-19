@@ -2,6 +2,7 @@ import Gaea.Logic
 import Gaea.Peano.Eq
 import Gaea.Peano.One
 import Gaea.Peano.Rules
+import Gaea.Peano.Forall
 import Gaea.Peano.Add.Rules
 import Gaea.Peano.Add.Module
 
@@ -60,18 +61,19 @@ instance natAddZeroNat_spec {P : Sort u} {T : Type v}
 
 -- Uses standard (predicate) induction 
 def natAddNat_induct {P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [Q : LEq P T] [A : Add T] [Fa : MForall L T] [If : MIf L]
+[N : PNat P T] [Q : LEq P T] [A : Add T] [FaN : MForallNat L N.toIsNat]
 [NatInduction L N] 
 [NatEqNat L N.toIsNat Q] 
 [NatSuccNat L N.toIsNat N.toSucc]
 [AddNatZeroEqNat L N.toIsNat Q A N.toZero]
 [AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
-: (b : T) -> (L |- nat b) -> (L |- forall (a : T) => nat a -> nat (a + b))
+: (b : T) -> (L |- nat b) -> (L |- forallNat (a : T) => nat (a + b))
 := by
   refine natInduction ?f0 ?fS
   case f0 =>
     apply forallNatIntro; intro a Na 
     exact natAddNatZero Na
+    done
   case fS =>
     intro b Nb p_Nn_to_NAnb
     apply forallNatIntro; intro a Na
@@ -81,13 +83,13 @@ def natAddNat_induct {P : Sort u} {T : Type v} {L : Logic P}
     exact natS NAab
 
 def natAddNat_proof {P : Sort u} {T : Type v} {L : Logic P} 
-[N : PNat P T] [Q : LEq P T] [A : PAdd L N Q] [Fa : MForall L T] [If : MIf L]
+[N : PNat P T] [Q : LEq P T] [A : PAdd L N Q] [FaN : MForallNat L N.toIsNat]
 [NatInduction L N] [NatEqNat L N.toIsNat Q] [NatSuccNat L N.toIsNat N.toSucc]
 : (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat (a + b))
 := fun a b Na Nb => forallNatElim (natAddNat_induct b Nb) Na
 
 instance natAddNat_inst {P : Sort u} {T : Type v} {L : Logic P} 
-[N : PNat P T] [Q : LEq P T] [A : PAdd L N Q] [Fa : MForall L T] [If : MIf L]
+[N : PNat P T] [Q : LEq P T] [A : PAdd L N Q] [FaN : MForallNat L N.toIsNat]
 [NatInduction L N] [NatEqNat L N.toIsNat Q] [NatSuccNat L N.toIsNat N.toSucc]
 : NatAddNat L N.toIsNat A.toAdd := {natAddNat := natAddNat_proof}
 
@@ -321,7 +323,7 @@ instance addZeroNatEqNat_inst
 
 def addSuccNatEqSucc_induct
 {P : Sort u} {T : Type v} {L : Logic P} 
-[N : PNat P T] [Q : LEq P T] [A : Add T] [MForall L T] [MIf L]
+[N : PNat P T] [Q : LEq P T] [A : Add T] [FaN : MForallNat L N.toIsNat]
 [NatInduction L N]
 [NatSuccNat L N.toIsNat N.toSucc]
 [EqNatTrans L N.toIsNat Q]
@@ -331,7 +333,7 @@ def addSuccNatEqSucc_induct
 [NatAddNatZero L N.toIsNat A N.toZero]
 [AddNatZeroEqNat L N.toIsNat Q A N.toZero]
 [AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
-: (b : T) -> (L |- nat b) -> (L |- forall a => nat a -> S a + b = S (a + b))
+: (b : T) -> (L |- nat b) -> (L |- forallNat a => S a + b = S (a + b))
 := by
   refine natInduction ?f0 ?fS
   case f0 => 
@@ -362,7 +364,7 @@ def addSuccNatEqSucc_induct
 
 def addSuccNatEqSucc_proof
 {P : Sort u} {T : Type v} {L : Logic P} 
-[N : PNat P T] [Q : LEq P T] [A : Add T] [MForall L T] [MIf L]
+[N : PNat P T] [Q : LEq P T] [A : Add T] [FaN : MForallNat L N.toIsNat]
 [NatInduction L N]
 [NatSuccNat L N.toIsNat N.toSucc]
 [EqNatTrans L N.toIsNat Q]
@@ -379,7 +381,7 @@ def addSuccNatEqSucc_proof
   exact forallNatElim h Na
 
 instance addSuccNatEqSucc_inst {P : Sort u} {T : Type v} {L : Logic P} 
-[N : PNat P T] [Q : LEq P T] [A : Add T] [MForall L T] [MIf L]
+[N : PNat P T] [Q : LEq P T] [A : Add T] [FaN : MForallNat L N.toIsNat]
 [NatInduction L N]
 [NatSuccNat L N.toIsNat N.toSucc]
 [EqNatTrans L N.toIsNat Q]
@@ -442,7 +444,7 @@ instance addNatZeroComm_inst_leftEucNat
 -- a + b = b + a
 
 def addNatComm_induct {P : Sort u} {T : Type v} {L : Logic P} 
-[N : PNat P T] [Q : LEq P T] [A : Add T] [Fa : MForall L T] [If : MIf L]
+[N : PNat P T] [Q : LEq P T] [A : Add T] [FaN : MForallNat L N.toIsNat]
 [NatInduction L N]
 [NatSuccNat L N.toIsNat N.toSucc]
 [EqNatLeftEuc L N.toIsNat Q]
@@ -453,7 +455,7 @@ def addNatComm_induct {P : Sort u} {T : Type v} {L : Logic P}
 [AddNatZeroEqNat L N.toIsNat Q A N.toZero]
 [AddSuccNatEqSucc L N.toIsNat Q A N.toSucc]
 [AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
-: (b : T) -> (L |- nat b) -> (L |- forall a => nat a -> a + b = b + a) 
+: (b : T) -> (L |- nat b) -> (L |- forallNat a => a + b = b + a) 
 := by
   refine natInduction ?f0 ?fS
   case f0 =>
@@ -476,7 +478,7 @@ def addNatComm_induct {P : Sort u} {T : Type v} {L : Logic P}
     exact eqNatToEqSucc NAab NAba Aab_comm
 
 def addNatComm_proof {P : Sort u} {T : Type v} {L : Logic P} 
-[N : PNat P T] [Q : LEq P T] [A : Add T] [Fa : MForall L T] [If : MIf L]
+[N : PNat P T] [Q : LEq P T] [A : Add T] [FaN : MForallNat L N.toIsNat]
 [NatInduction L N]
 [NatSuccNat L N.toIsNat N.toSucc]
 [EqNatLeftEuc L N.toIsNat Q]
@@ -495,8 +497,7 @@ def addNatComm_proof {P : Sort u} {T : Type v} {L : Logic P}
 
 instance addNatComm_inst 
 {P : Sort u} {T : Type v} {L : Logic P} 
-[N : PNat P T] [Q : LEq P T] [A : Add T] 
-[Fa : MForall L T] [If : MIf L]
+[N : PNat P T] [Q : LEq P T] [A : Add T] [FaN : MForallNat L N.toIsNat]
 [NatInduction L N]
 [NatSuccNat L N.toIsNat N.toSucc]
 [EqNatLeftEuc L N.toIsNat Q]
@@ -516,7 +517,7 @@ instance addNatComm_inst
 --------------------------------------------------------------------------------
 
 def addNatAssoc_induct {P : Sort u} {T : Type v} {L : Logic P} 
-[N : PNat P T] [Q : LEq P T] [A : Add T] [Fa : MForall L T] [If : MIf L]
+[N : PNat P T] [Q : LEq P T] [A : Add T] [FaN : MForallNat L N.toIsNat]
 [NatInduction L N]
 [NatSuccNat L N.toIsNat N.toSucc]
 [EqNatTrans L N.toIsNat Q] 
@@ -532,8 +533,7 @@ def addNatAssoc_induct {P : Sort u} {T : Type v} {L : Logic P}
 [AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 [AddSuccNatEqSucc L N.toIsNat Q A N.toSucc]
 : (b : T) -> (L |- nat b) -> 
-  (L |- forall (a : T) => nat a -> 
-    forall (c : T) => nat c -> (a + b) + c = a + (b + c))
+  (L |- forallNat (a c : T) => (a + b) + c = a + (b + c))
 := by
   refine natInduction ?f0 ?fS
   case f0 =>
@@ -585,7 +585,7 @@ def addNatAssoc_induct {P : Sort u} {T : Type v} {L : Logic P}
       exact addNatSuccEqSucc Na NAbc
 
 def addNatAssoc_proof {P : Sort u} {T : Type v} {L : Logic P} 
-[N : PNat P T] [Q : LEq P T] [A : Add T] [Fa : MForall L T] [If : MIf L]
+[N : PNat P T] [Q : LEq P T] [A : Add T] [FaN : MForallNat L N.toIsNat]
 [NatInduction L N]
 [NatSuccNat L N.toIsNat N.toSucc]
 [EqNatTrans L N.toIsNat Q] 
@@ -609,7 +609,7 @@ def addNatAssoc_proof {P : Sort u} {T : Type v} {L : Logic P}
   exact forallNatElim (forallNatElim h Na) Nc
 
 instance addNatAssoc_inst {P : Sort u} {T : Type v} {L : Logic P} 
-[N : PNat P T] [Q : LEq P T] [A : Add T] [Fa : MForall L T] [If : MIf L]
+[N : PNat P T] [Q : LEq P T] [A : Add T] [FaN : MForallNat L N.toIsNat]
 [NatInduction L N]
 [NatSuccNat L N.toIsNat N.toSucc]
 [EqNatTrans L N.toIsNat Q] 

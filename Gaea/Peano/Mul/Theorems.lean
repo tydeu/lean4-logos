@@ -1,8 +1,9 @@
 import Gaea.Logic
-import Gaea.Peano.Rules
-import Gaea.Peano.Mul.Rules
-import Gaea.Peano.Add
 import Gaea.Peano.Eq
+import Gaea.Peano.Add
+import Gaea.Peano.Rules
+import Gaea.Peano.Forall
+import Gaea.Peano.Mul.Rules
 
 universes u v w
 
@@ -40,7 +41,7 @@ instance natMulNatZero_spec
 
 def natMulNat_induct 
 {P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [Fa : MForall L T] [If : MIf L]
+[N : PNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [FaN : MForallNat L N.toIsNat]
 [NatInduction L N] 
 [NatEqNat L N.toIsNat Q]
 [NatAddNat L N.toIsNat A]
@@ -48,7 +49,7 @@ def natMulNat_induct
 [NatMulNatZero L N.toIsNat M N.toZero]
 [MulNatZeroEqZero L N.toIsNat Q M N.toZero]
 [MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: (b : T) -> (L |- nat b) -> (L |- forall (a : T) => nat a -> nat (a * b))
+: (b : T) -> (L |- nat b) -> (L |- forallNat (a : T) => nat (a * b))
 := by
   refine natInduction ?f0 ?fS
   case f0 =>
