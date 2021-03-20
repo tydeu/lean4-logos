@@ -8,11 +8,102 @@ open Gaea.Logic
 namespace Gaea.Peano
 
 --------------------------------------------------------------------------------
--- Transitivity w/ Implied Nats
+-- Closure
 --------------------------------------------------------------------------------
 
--- (a = b) /\ (b = c) -> (a = c)
+-- Axiom N5
+class NatEqNat {P : Sort u} {T : Sort v} 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) :=
+  (natEqNat : (a b : T) -> (L |- nat b) -> (L |- a = b) -> (L |- nat a))
 
+def natEqNat {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [K : NatEqNat L N Q] 
+  {a b : T} := K.natEqNat a b
+
+def natEq {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [K : NatEqNat L N Q] 
+  {a b : T} := K.natEqNat a b
+
+--------------------------------------------------------------------------------
+-- Reflexivity
+-- a -> (a = a)
+--------------------------------------------------------------------------------
+
+-- Axiom N2
+class EqNatRefl {P : Sort u} {T : Sort v} 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) :=
+  (eqNatRefl : (x : T) -> (L |- nat x) -> (L |- x = x))
+
+instance {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T]
+  [K : EqNatRefl L N Q] : EqMemRefl L Q N.isNat 
+  := {eqMemRefl := K.eqNatRefl}
+
+instance {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] 
+  [K : EqMemRefl L Q N.isNat] : EqNatRefl L N Q
+  := {eqNatRefl := K.eqMemRefl}
+
+def eqNatRefl {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [K : EqNatRefl L N Q]
+  {x : T} := K.eqNatRefl x
+
+--------------------------------------------------------------------------------
+-- Symmetry
+-- (a = b) /\ (b = c) -> (a = c)
+--------------------------------------------------------------------------------
+
+-- Axiom N3
+class EqNatSymm {P : Sort u} {T : Sort v} 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) :=
+  (eqNatSymm : (x y : T) -> (L |- nat x) -> (L |- nat y) ->
+    (L |- x = y) -> (L |- y = x))
+
+instance {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T]
+  [K : EqNatSymm L N Q] : EqMemSymm L Q N.isNat 
+  := {eqMemSymm := K.eqNatSymm}
+
+instance {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] 
+  [K : EqMemSymm L Q N.isNat] : EqNatSymm L N Q
+  := {eqNatSymm := K.eqMemSymm}
+
+def eqNatSymm {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [K : EqNatSymm L N Q]
+  {x y : T} := K.eqNatSymm x y
+
+--------------------------------------------------------------------------------
+-- Transitivity
+-- (a = b) /\ (b = c) -> (a = c)
+--------------------------------------------------------------------------------
+
+-- Axiom N4
+class EqNatTrans {P : Sort u} {T : Sort v} 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) :=
+  (eqNatTrans : (x y z : T) -> (L |- nat x) -> (L |- nat y) -> (L |- nat z) -> 
+    (L |- x = y) -> (L |- y = z) -> (L |- x = z))
+
+instance {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T]
+  [K : EqNatTrans L N Q] : EqMemTrans L Q N.isNat 
+  := {eqMemTrans := K.eqNatTrans}
+
+instance {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] 
+  [K : EqMemTrans L Q N.isNat] : EqNatTrans L N Q
+  := {eqNatTrans := K.eqMemTrans}
+
+def eqNatTrans {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [K : EqNatTrans L N Q]
+  {x y z : T} := K.eqNatTrans x y z
+
+def eqNatTrans' {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [K : EqNatTrans L N Q]
+  {y x z : T} (Ny : L |- nat y) (Nx : L |- nat x) (Nz : L |- nat z)  
+  := K.eqNatTrans x y z Nx Ny Nz
+
+-- w/ Implied Nats
 class EqTransNat {P : Sort u} {T : Type v} 
   (L : Logic P) (N : IsNat P T) (Q : LEq P T) :=
   (eqTransNat : (a b c : T) -> 

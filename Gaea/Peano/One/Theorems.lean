@@ -1,4 +1,5 @@
 import Gaea.Peano.Rules
+import Gaea.Peano.Eq.Rules
 import Gaea.Peano.One.Rules
 
 universes u v
