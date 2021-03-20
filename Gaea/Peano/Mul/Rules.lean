@@ -15,6 +15,8 @@ namespace Gaea.Peano
 --------------------------------------------------------------------------------
 
 -- Axiom 1
+-- a * 0 = 0
+
 class MulNatZeroEqZero {P : Sort u} {T : Type v} 
   (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (Z : Zero T)  :=
   (mulNatZeroEqZero : (a : T) -> (L |- nat a) -> (L |- a * 0 = 0))
@@ -24,10 +26,12 @@ def mulNatZeroEqZero {P : Sort u} {T : Type v}
   [K : MulNatZeroEqZero L N Q M Z] {a : T} := K.mulNatZeroEqZero a
 
 -- Axiom 2
+-- a * S b = a + (a * b)
+
 class MulNatSuccEqAddMul {P : Sort u} {T : Type v} 
   (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (A : Add T) (NS : Succ T) := 
   (mulNatSuccEqAddMul : (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
-    (L |- a * S b = a + S (a * b)))
+    (L |- a * S b = a + (a * b)))
 
 def mulNatSuccEqAddMul {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [NS : Succ T]
@@ -38,6 +42,8 @@ def mulNatSuccEqAddMul {P : Sort u} {T : Type v}
 --------------------------------------------------------------------------------
 
 -- Axiom 1 Commuted
+-- 0 * a = 0
+
 class MulZeroNatEqZero {P : Sort u} {T : Type v} 
   (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (Z : Zero T)  :=
   (mulZeroNatEqZero : (a : T) -> (L |- nat a) -> (L |- 0 * a = 0))
@@ -47,15 +53,16 @@ def mulZeroNatEqZero {P : Sort u} {T : Type v}
   [K : MulZeroNatEqZero L N Q M Z] {a : T} := K.mulZeroNatEqZero a
 
 -- Axiom 2 Commuted
+-- S a * b = b + (a * b)
+
 class MulSuccNatEqAddMul {P : Sort u} {T : Type v} 
   (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (A : Add T) (NS : Succ T) := 
   (mulSuccNatEqAddMul : (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
-    (L |- S a * b = a + S (a * b)))
+    (L |- S a * b = b + (a * b)))
 
 def mulSuccNatEqAddMul {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [NS : Succ T]
   [K : MulSuccNatEqAddMul L N Q M A NS] {a b : T} := K.mulSuccNatEqAddMul a b
-
 
 --------------------------------------------------------------------------------
 -- Special Cases
