@@ -1,6 +1,6 @@
-import Gaea.Logic
-import Gaea.Logic.Notation
 import Gaea.Math.Notation
+import Gaea.Logic.Notation
+import Gaea.Logic.Eq.Rules
 import Gaea.Peano.Nat
 
 universes u v w
@@ -150,28 +150,5 @@ class SuccNatEqZeroFalse {P : Sort u} {T : Type v}
 def succNatEqZeroFalse {P : Sort u} {T : Type v} 
   {L : Logic P} [N : PNat P T] [Q : LEq P T] [F : LFalse P]
   [K : SuccNatEqZeroFalse L N Q F] {m n : T} := K.succNatEqZeroFalse m n
-
--- Axiom 9
--- Induction over predicates
-class NatInduction {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : PNat P T) := 
-  (natInduction : 
-    (f : T -> P) -> (L |- f 0) -> 
-    ((n : T) -> (L |- nat n) -> (L |- f n) -> (L |- f (S n))) ->
-    ((n : T) -> (L |- nat n) -> (L |- f n)))
-
-def natInduction {P : Sort u} {T : Type v} {L : Logic P} 
-  [N : PNat P T] [I : NatInduction L N] {f : T -> P} := I.natInduction f
-
--- Axiom 9 (Alt)
--- Induction over schemas
-class NatInduction' {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : PNat P T) := 
-  (natInduction' : (f : T -> Sort w) -> f 0 ->
-    ((n : T) -> (L |- nat n) -> (f n -> f (S n))) ->
-    ((n : T) -> (L |- nat n) -> f n))
-
-def natInduction' {P : Sort u} {T : Type v} 
-  (L : Logic P) [N : PNat P T] [I : NatInduction' L N] := I.natInduction'
 
 end Gaea.Peano

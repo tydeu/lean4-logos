@@ -3,6 +3,7 @@ import Gaea.Peano.Eq
 import Gaea.Peano.Add
 import Gaea.Peano.Rules
 import Gaea.Peano.Forall
+import Gaea.Peano.Induction
 import Gaea.Peano.Mul.Rules
 
 universes u v w
@@ -60,43 +61,31 @@ instance natMulZeroNat_spec
 
 -- nat (a * b)
 
-def natMulNat_induct 
+def natMulNat_proof
 {P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [FaN : MForallNat L N.toIsNat]
-[NatInduction L N] 
+[N : PNat P T] [Q : LEq P T] [M : Mul T] [A : Add T]
+[NatInductionRight L N] 
 [NatEqNat L N.toIsNat Q]
 [NatAddNat L N.toIsNat A]
 [NatMulNatZero L N.toIsNat M N.toZero]
 [MulNatZeroEqZero L N.toIsNat Q M N.toZero]
 [MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: (b : T) -> (L |- nat b) -> (L |- forallNat (a : T) => nat (a * b))
+: (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat (a * b))
 := by
-  refine natInduction ?f0 ?fS
+  refine natInductionRight ?f0 ?fS
   case f0 =>
-    apply forallNatIntro; intro a Na 
+    intro a Na 
     exact natMulNatZero Na
   case fS =>
-    intro b Nb p_Nn_to_NMnb
-    apply forallNatIntro; intro a Na
+    intro a b Na Nb NMab
     have MaSb_eq_AaSMab := mulNatSuccEqAddMul Na Nb
     refine natEq ?_ MaSb_eq_AaSMab
-    have NMab := forallNatElim p_Nn_to_NMnb Na
-    exact natAdd Na NMab 
+    exact natAdd Na NMab
 
-def natMulNat_proof {P : Sort u} {T : Type v} {L : Logic P} 
-[N : PNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [Fa : MForall L T] [If : MIf L]
-[NatInduction L N] 
-[NatEqNat L N.toIsNat Q]
-[NatZero L N.toIsNat N.toZero]
-[NatAddNat L N.toIsNat A]
-[MulNatZeroEqZero L N.toIsNat Q M N.toZero]
-[MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat (a * b))
-:= fun a b Na Nb => forallNatElim (natMulNat_induct b Nb) Na
-
-instance natMulNat_inst {P : Sort u} {T : Type v} {L : Logic P} 
-[N : PNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [Fa : MForall L T] [If : MIf L]
-[NatInduction L N] 
+instance natMulNat_inst 
+{P : Sort u} {T : Type v} {L : Logic P} 
+[N : PNat P T] [Q : LEq P T] [M : Mul T] [A : Add T]
+[NatInductionRight L N] 
 [NatEqNat L N.toIsNat Q]
 [NatZero L N.toIsNat N.toZero]
 [NatAddNat L N.toIsNat A]
@@ -173,7 +162,7 @@ instance mulZeroNatEqZero_inst {P : Sort u} {T : Type v} {L : Logic P}
 
 -- S a + b = b + (a * b)
 
-def mulSuccNatEqAddMul_induct {P : Sort u} {T : Type v} {L : Logic P} 
+def mulSuccNatEqAddMul_proof {P : Sort u} {T : Type v} {L : Logic P} 
 [N : PNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [FaN : MForallNat L N.toIsNat]
 [NatInduction L N]
 [NatZero L N.toIsNat N.toZero]
@@ -189,11 +178,11 @@ def mulSuccNatEqAddMul_induct {P : Sort u} {T : Type v} {L : Logic P}
 [AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 [MulNatZeroEqZero L N.toIsNat Q M N.toZero]
 [MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: (b : T) -> (L |- nat b) -> (L |- forallNat a => S a * b = b + (a * b)) 
+: (a b : T) -> (L |- nat a) -> (L |- nat b) ->  (L |- S a * b = b + (a * b))
 := by
-  refine natInduction ?f0 ?fS
+  refine natInductionRight ?f0 ?fS
   case f0 =>
-    apply forallNatIntro; intro a Na
+    intro a Na
     have NSa := natS Na
     have NMa0 := natMulNatZero Na
     have NA0Ma0 := natAddZeroNat NMa0
@@ -204,8 +193,7 @@ def mulSuccNatEqAddMul_induct {P : Sort u} {T : Type v} {L : Logic P}
     exact addZeroNatEqNat NMa0
     exact mulNatZeroEqZero Na
   case fS =>
-    intro b Nb p_MSnb_eq_AbMnb
-    apply forallNatIntro; intro a Na
+    intro a b Na Nb MSab_eq_AbMab
     have NSa := natS Na 
     have NSb := natS Nb
     have NMab := natMul Na Nb
@@ -227,7 +215,6 @@ def mulSuccNatEqAddMul_induct {P : Sort u} {T : Type v} {L : Logic P}
       exact mulNatSuccEqAddMul NSa Nb
       apply eqNatTrans' NASaAbMab NASaMSab NSAaAbMab
       apply eqNatAddNatLeft' NSa NMSab NAbMab
-      have MSab_eq_AbMab := forallNatElim p_MSnb_eq_AbMnb Na
       exact MSab_eq_AbMab
       exact addSuccNatEqSucc Na NAbMab
     case ASbMaSb_eq_SAaAbMab =>
@@ -256,28 +243,6 @@ def mulSuccNatEqAddMul_induct {P : Sort u} {T : Type v} {L : Logic P}
       apply eqNatAddNatRight' NMab NAba NAab
       exact addNatComm Nb Na
       exact addNatAssoc Na Nb NMab
-
-def mulSuccNatEqAddMul_proof {P : Sort u} {T : Type v} {L : Logic P} 
-[N : PNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [FaN : MForallNat L N.toIsNat]
-[NatInduction L N]
-[NatZero L N.toIsNat N.toZero]
-[NatSuccNat L N.toIsNat N.toSucc]
-[NatAddNat L N.toIsNat A]  
-[NatMulNat L N.toIsNat M]
-[EqNatSymm L N.toIsNat Q]
-[EqNatTrans L N.toIsNat Q]
-[EqNatToEqSucc L N.toIsNat Q N.toSucc]
-[EqNatAddNatLeft L N.toIsNat Q A]
-[EqNatAddNatRight L N.toIsNat Q A]
-[AddNatZeroEqNat L N.toIsNat Q A N.toZero]
-[AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
-[MulNatZeroEqZero L N.toIsNat Q M N.toZero]
-[MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: (a b : T) -> (L |- nat a) -> (L |- nat b) ->  (L |- S a * b = b + (a * b))
-:= by
-  intro a b Na Nb
-  have h := mulSuccNatEqAddMul_induct b Nb
-  exact forallNatElim h Na
 
 instance mulSuccNatEqAddMul_inst {P : Sort u} {T : Type v} {L : Logic P} 
 [N : PNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [FaN : MForallNat L N.toIsNat]
@@ -332,46 +297,9 @@ instance mulNatZeroComm_inst {P : Sort u} {T : Type v} {L : Logic P}
 
 -- a * b = b * a
 
-def mulNatComm_induct {P : Sort u} {T : Type v} {L : Logic P} 
-[N : PNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [FaN : MForallNat L N.toIsNat]
-[NatInduction L N]
-[NatAddNat L N.toIsNat A]  
-[NatMulNat L N.toIsNat M]
-[NatSuccNat L N.toIsNat N.toSucc]
-[EqNatSymm L N.toIsNat Q]
-[EqNatTrans L N.toIsNat Q]
-[EqNatAddNatLeft L N.toIsNat Q A]
-[MulNatZeroComm L N.toIsNat Q M N.toZero]
-[MulSuccNatEqAddMul L N.toIsNat Q M A N.toSucc]
-[MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: (b : T) -> (L |- nat b) -> (L |- forallNat a => a * b = b * a) 
-:= by
-  refine natInduction ?f0 ?fS
-  case f0 =>
-    apply forallNatIntro; intro a Na
-    exact mulNatZeroComm Na
-  case fS =>
-    intro b Nb p_Mnb_eq_Mbn
-    apply forallNatIntro; intro a Na
-    have NSb := natS Nb
-    have NMab := natMul Na Nb 
-    have NAaMab := natAdd Na NMab
-    have NMba := natMul Nb Na 
-    have NAaMba := natAdd Na NMba
-    have NSMba := natS NMba
-    have NMSba := natMul NSb Na; have NMSab := natMul Na NSb
-    apply eqNatLeftEuc NAaMab NMSab NMSba
-    exact mulNatSuccEqAddMul Na Nb
-    apply eqNatTrans' NAaMba NMSba NAaMab
-    exact mulSuccNatEqAddMul Nb Na
-    apply eqNatAddNatLeft' Na NMba NMab
-    have Mab_eq_Mba := forallNatElim p_Mnb_eq_Mbn Na
-    apply eqNatSymm NMab NMba
-    exact Mab_eq_Mba
-
 def mulNatComm_proof {P : Sort u} {T : Type v} {L : Logic P} 
-[N : PNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [FaN : MForallNat L N.toIsNat]
-[NatInduction L N]
+[N : PNat P T] [Q : LEq P T] [M : Mul T] [A : Add T]
+[NatInductionRight L N]
 [NatAddNat L N.toIsNat A]  
 [NatMulNat L N.toIsNat M]
 [NatSuccNat L N.toIsNat N.toSucc]
@@ -383,14 +311,32 @@ def mulNatComm_proof {P : Sort u} {T : Type v} {L : Logic P}
 [MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
 : (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- a * b = b * a) 
 := by
-  intro a b Na Nb
-  have h := mulNatComm_induct b Nb
-  exact forallNatElim h Na
+  refine natInductionRight ?f0 ?fS
+  case f0 =>
+    intro a Na
+    exact mulNatZeroComm Na
+  case fS =>
+    intro a b Na Nb Mab_eq_Mba
+    have NSb := natS Nb
+    have NMab := natMul Na Nb 
+    have NAaMab := natAdd Na NMab
+    have NMba := natMul Nb Na 
+    have NAaMba := natAdd Na NMba
+    have NSMba := natS NMba
+    have NMSba := natMul NSb Na
+    have NMSab := natMul Na NSb
+    apply eqNatLeftEuc NAaMab NMSab NMSba
+    exact mulNatSuccEqAddMul Na Nb
+    apply eqNatTrans' NAaMba NMSba NAaMab
+    exact mulSuccNatEqAddMul Nb Na
+    apply eqNatAddNatLeft' Na NMba NMab
+    apply eqNatSymm NMab NMba
+    exact Mab_eq_Mba
 
 instance mulNatComm_inst 
 {P : Sort u} {T : Type v} {L : Logic P} 
-[N : PNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [FaN : MForallNat L N.toIsNat]
-[NatInduction L N]
+[N : PNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] 
+[NatInductionRight L N]
 [NatAddNat L N.toIsNat A]  
 [NatMulNat L N.toIsNat M]
 [NatSuccNat L N.toIsNat N.toSucc]
