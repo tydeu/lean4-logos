@@ -158,6 +158,36 @@ def mulNatAssoc {P : Sort u} {T : Type v}
   [C : MulNatAssoc L N Q M] {a b c : T} := C.mulNatAssoc a b c
 
 --------------------------------------------------------------------------------
+-- Distributivity
+--------------------------------------------------------------------------------
+
+-- Left Distributive Over Addition
+-- a * (b + c) = (a * b) + (a * c)
+
+class MulNatAddEqAddMul {P : Sort u} {T : Type v} 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (A : Add T) := 
+  (mulNatAddEqAddMul : (a b c : T) -> 
+    (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
+    (L |- a * (b + c) = (a * b) + (a * c)))
+
+def mulNatAddEqAddMul {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [A : Add T]
+  [K : MulNatAddEqAddMul L N Q M A] {a b c : T} := K.mulNatAddEqAddMul a b c
+
+-- Right Distributive Over Addition
+-- (b + c) * a = (b * a) + (c * a)
+
+class MulAddNatEqAddMul {P : Sort u} {T : Type v} 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (A : Add T) := 
+  (mulAddNatEqAddMul : (a b c : T) -> 
+    (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
+    (L |- (b + c) * a = (b * a) + (c * a)))
+
+def mulAddNatEqAddMul {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [A : Add T]
+  [K : MulAddNatEqAddMul L N Q M A] {a b c : T} := K.mulAddNatEqAddMul a b c
+
+--------------------------------------------------------------------------------
 -- Substitutivity
 --------------------------------------------------------------------------------
 
