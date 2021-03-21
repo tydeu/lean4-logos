@@ -125,8 +125,9 @@ def addNatComm {P : Sort u} {T : Type v}
 
 --------------------------------------------------------------------------------
 -- Associativity
--- (a + b) + c = a + (b + c)
 --------------------------------------------------------------------------------
+
+-- (a + b) + c = a + (b + c)
 
 class AddNatAssoc {P : Sort u} {T : Type v}
   (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) :=
@@ -147,6 +148,18 @@ instance i_MemAssoc_to_AddNatAssoc {P : Sort u} {T : Type v}
 def addNatAssoc {P : Sort u} {T : Type v}
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T]
   [C : AddNatAssoc L N Q A] {a b c : T} := C.addNatAssoc a b c
+
+-- a + (b + c) = (a + b) + c 
+
+class AddNatAssocRev {P : Sort u} {T : Type v}
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) :=
+  (addNatAssocRev :  (a b c : T) -> 
+    (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
+    (L |- a + (b + c) = (a + b) + c))
+
+def addNatAssocRev {P : Sort u} {T : Type v}
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T]
+  [C : AddNatAssocRev L N Q A] {a b c : T} := C.addNatAssocRev a b c
 
 --------------------------------------------------------------------------------
 -- Substitutivity

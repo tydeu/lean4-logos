@@ -169,8 +169,8 @@ def mulSuccNatEqAddMul_proof {P : Sort u} {T : Type v} {L : Logic P}
 [NatSuccNat L N.toIsNat N.toSucc]
 [NatAddNat L N.toIsNat A]  
 [NatMulNat L N.toIsNat M]
-[EqNatSymm L N.toIsNat Q]
 [EqNatTrans L N.toIsNat Q]
+[EqNatLeftEuc L N.toIsNat Q]
 [EqNatToEqSucc L N.toIsNat Q N.toSucc]
 [EqNatAddNatLeft L N.toIsNat Q A]
 [EqNatAddNatRight L N.toIsNat Q A]
@@ -237,8 +237,7 @@ def mulSuccNatEqAddMul_proof {P : Sort u} {T : Type v} {L : Logic P}
       exact addSuccNatEqSucc Nb NAaMab
       apply eqNatToEqSucc NAbAaMab NAaAbMab
       apply eqNatTrans' NAAbaMab NAbAaMab NAaAbMab
-      apply eqNatSymm NAAbaMab NAbAaMab 
-      apply addNatAssoc Nb Na NMab
+      exact addNatAssocRev Nb Na NMab
       apply eqNatTrans' NAAabMab NAAbaMab NAaAbMab
       apply eqNatAddNatRight' NMab NAba NAab
       exact addNatComm Nb Na
