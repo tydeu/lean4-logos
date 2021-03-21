@@ -17,45 +17,116 @@ namespace Gaea.Peano
 -- Closure
 --------------------------------------------------------------------------------
 
--- nat (a + 0)
+-- nat (0 + 0)
 
-def natAddNatZero_proof
+instance natAddZero_byAddZero_inst 
 {P : Sort u} {T : Type v} {L : Logic P}
 [N : IsNat P T] [Q : LEq P T] [A : Add T] [Z : Zero T]  
-[NatEqNat L N Q] [AddNatZeroEqNat L N Q A Z]
-: (a : T) -> (L |- nat a) -> (L |- nat (a + 0))
-:= by intro a Na; apply natEq Na; exact addNatZeroEqNat Na
+[NatZero L N Z] [NatEqNat L N Q] [AddZeroEqZero L Q A Z] 
+: NatAddZero L N A Z 
+:= {natAddZero := natEq nat0 addZeroEqZero}
 
-instance natAddNatZero_inst 
+instance natAddZero_byAddNatZero_inst 
+{P : Sort u} {T : Type v} {L : Logic P}
+[N : IsNat P T] [Q : LEq P T] [A : Add T] [Z : Zero T]  
+[NatZero L N Z] [NatEqNat L N Q] [AddNatZeroEqNat L N Q A Z] 
+: NatAddZero L N A Z 
+:= {natAddZero := natEq nat0 (addNatZeroEqNat nat0)}
+
+instance natAddZero_byAddZeroNat_inst 
+{P : Sort u} {T : Type v} {L : Logic P}
+[N : IsNat P T] [Q : LEq P T] [A : Add T] [Z : Zero T]  
+[NatZero L N Z] [NatEqNat L N Q] [AddZeroNatEqNat L N Q A Z] 
+: NatAddZero L N A Z 
+:= {natAddZero := natEq nat0 (addZeroNatEqNat nat0)}
+
+-- nat (a + 0)
+
+def natAddNatZero_byNatInduction_proof
+{P : Sort u} {T : Type v} {L : Logic P}
+[N : PNat P T] [Q : LEq P T] [A : Add T]
+[NatInduction L N]
+[NatZero L N.toIsNat N.toZero]
+[NatSuccNat L N.toIsNat N.toSucc]
+[NatEqNat L N.toIsNat Q] 
+[NatAddZero L N.toIsNat A N.toZero]
+[AddSuccNatEqSucc L N.toIsNat Q A N.toSucc]
+: (a : T) -> (L |- nat a) -> (L |- nat (a + 0))
+:= by
+  refine natInduction ?f0 ?fS
+  case f0 =>
+    exact natAddZero
+  case fS =>
+    intro a Na NAa0
+    apply natEq (natS NAa0)
+    exact addSuccNatEqSucc Na nat0
+
+instance natAddNatZero_byNatInduction_inst 
+{P : Sort u} {T : Type v} {L : Logic P} 
+[N : PNat P T] [Q : LEq P T] [A : Add T]
+[NatInduction L N]
+[NatZero L N.toIsNat N.toZero]
+[NatSuccNat L N.toIsNat N.toSucc]
+[NatEqNat L N.toIsNat Q] 
+[NatAddZero L N.toIsNat A N.toZero]
+[AddSuccNatEqSucc L N.toIsNat Q A N.toSucc]
+: NatAddNatZero L N.toIsNat A N.toZero 
+:= {natAddNatZero := natAddNatZero_byNatInduction_proof}
+
+instance natAddNatZeroo_byAddNatZero_inst 
 {P : Sort u} {T : Type v} {L : Logic P}
 [N : IsNat P T] [Q : LEq P T] [A : Add T] [Z : Zero T]  
 [NatEqNat L N Q] [AddNatZeroEqNat L N Q A Z] : NatAddNatZero L N A Z 
-:= {natAddNatZero := natAddNatZero_proof}
+:= {natAddNatZero := fun _ Na => natEq Na (addNatZeroEqNat Na)}
 
-instance natAddNatZero_spec {P : Sort u} {T : Type v}
-{L : Logic P} [N : IsNat P T] [A : Add T] [Z : Zero T] [NatZero L N Z]
-[K : NatAddNat L N A] : NatAddNatZero L N A Z 
-:= {natAddNatZero := fun a Na => K.natAddNat a 0 Na nat0 }
+instance natAddNatZero_byNatAdd_inst {P : Sort u} {T : Type v}
+{L : Logic P} [N : IsNat P T] [A : Add T] [Z : Zero T] 
+[NatZero L N Z] [NatAddNat L N A] : NatAddNatZero L N A Z 
+:= {natAddNatZero := fun _ Na => natAdd Na nat0}
 
 -- nat (0 + a)
 
-def natAddZeroNat_proof
+def natAddZeroNat_byNatInduction_proof
 {P : Sort u} {T : Type v} {L : Logic P}
-[N : IsNat P T] [Q : LEq P T] [A : Add T] [Z : Zero T]  
-[NatEqNat L N Q] [AddZeroNatEqNat L N Q A Z]
+[N : PNat P T] [Q : LEq P T] [A : Add T]
+[NatInduction L N]
+[NatZero L N.toIsNat N.toZero]
+[NatSuccNat L N.toIsNat N.toSucc]
+[NatEqNat L N.toIsNat Q] 
+[NatAddZero L N.toIsNat A N.toZero]
+[AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : (a : T) -> (L |- nat a) -> (L |- nat (0 + a))
-:= by intro a Na; apply natEq Na; exact addZeroNatEqNat Na
+:= by
+  refine natInduction ?f0 ?fS
+  case f0 =>
+    exact natAddZero
+  case fS =>
+    intro a Na NA0a
+    apply natEq (natS NA0a)
+    exact addNatSuccEqSucc nat0 Na 
 
-instance natAddZeroNat_inst 
+instance natAddZeroNat_byNatInduction_inst 
+{P : Sort u} {T : Type v} {L : Logic P} 
+[N : PNat P T] [Q : LEq P T] [A : Add T]
+[NatInduction L N]
+[NatZero L N.toIsNat N.toZero]
+[NatSuccNat L N.toIsNat N.toSucc]
+[NatEqNat L N.toIsNat Q] 
+[NatAddZero L N.toIsNat A N.toZero]
+[AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
+: NatAddZeroNat L N.toIsNat A N.toZero 
+:= {natAddZeroNat := natAddZeroNat_byNatInduction_proof}
+
+instance natAddZeroNat_byAddZeroNat_inst 
   {P : Sort u} {T : Type v} {L : Logic P}
   [N : IsNat P T] [Q : LEq P T] [A : Add T] [Z : Zero T]  
   [NatEqNat L N Q] [AddZeroNatEqNat L N Q A Z] : NatAddZeroNat L N A Z 
-  := {natAddZeroNat := natAddZeroNat_proof}
+  := {natAddZeroNat := fun _ Na => natEq Na (addZeroNatEqNat Na)}
 
-instance natAddZeroNat_spec {P : Sort u} {T : Type v}
-  {L : Logic P} [N : IsNat P T] [A : Add T] [Z : Zero T] [NatZero L N Z]
-  [K : NatAddNat L N A] : NatAddZeroNat L N A Z 
-  := {natAddZeroNat := fun a Na => K.natAddNat 0 a nat0 Na }
+instance natAddZeroNat_byNatAdd_inst {P : Sort u} {T : Type v}
+  {L : Logic P} [N : IsNat P T] [A : Add T] [Z : Zero T] 
+  [NatZero L N Z] [K : NatAddNat L N A] : NatAddZeroNat L N A Z 
+  := {natAddZeroNat := fun _ Na => natAdd nat0 Na}
 
 -- nat (a + b)
 
@@ -75,9 +146,8 @@ def natAddNat_proof
     exact natAddNatZero Na
   case fS =>
     intro a b Na Nb NAab
-    have AaSb_eq_SAab := addNatSuccEqSucc Na Nb
-    refine natEq ?_ AaSb_eq_SAab
-    exact natS NAab
+    apply natEq (natS NAab)
+    exact addNatSuccEqSucc Na Nb
 
 instance natAddNat_inst 
 {P : Sort u} {T : Type v} {L : Logic P} 
@@ -267,7 +337,8 @@ def addZeroNatEqNat_proof
     apply eqNatTrans' (natS NA0a) 
       (natAddZeroNat NSa) NSa
     exact addNatSuccEqSucc nat0 Na
-    exact eqNatToEqSucc NA0a Na A0a_eq_a
+    apply eqNatToEqSucc NA0a Na 
+    exact A0a_eq_a
 
 instance addZeroNatEqNat_inst 
 {P : Sort u} {T : Type v} {L : Logic P} 
@@ -452,6 +523,126 @@ instance addNatComm_inst'
 [AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : AddNatComm L N.toIsNat Q A 
 := {addNatComm := addNatComm_proof}
+
+--------------------------------------------------------------------------------
+-- Substitutivity
+--------------------------------------------------------------------------------
+
+-- Left Addition
+-- (a = b) -> (c + a = c + b)
+
+def eqNatAddNatLeft_proof
+{P : Sort u} {T : Type v} {L : Logic P} 
+[N : PNat P T] [Q : LEq P T] [A : Add T] [If : MIf L]
+[NatInductionRight3 L N]
+[NatSuccNat L N.toIsNat N.toSucc]
+[EqNatJoin L N.toIsNat Q] 
+[EqNatToEqSucc L N.toIsNat Q N.toSucc]
+[NatAddNat L N.toIsNat A]
+[NatAddZeroNat L N.toIsNat A N.toZero]
+[AddZeroNatEqNat L N.toIsNat Q A N.toZero]
+[AddSuccNatEqSucc L N.toIsNat Q A N.toSucc]
+: (a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
+  (L |- a = b) -> (L |- c + a = c + b)
+:= by
+  intro a b c Na Nb Nc; refine ifElim ?_
+  refine natInductionRight3 ?f0 ?fS a b c Na Nb Nc
+    (f := fun a b c => (a = b : P) -> (c + a = c + b : P)) 
+  case f0 =>
+    intro a b Na Nb
+    apply ifIntro; intro Qab
+    exact eqNatJoin' Na Nb (natAddZeroNat Na) (natAddZeroNat Nb) Qab 
+      (addZeroNatEqNat Na) (addZeroNatEqNat Nb)
+  case fS =>
+    intro a b c Na Nb Nc p_Qab_to_QAacAbc
+    apply ifIntro; intro Qab
+    have QAacAbc := ifElim p_Qab_to_QAacAbc Qab
+    have NSc := natS Nc
+    have NAca := natAdd Nc Na; have NAcb := natAdd Nc Nb
+    apply eqNatJoin (natAdd NSc Na) (natAdd NSc Nb) (natS NAca) (natS NAcb)
+      (addSuccNatEqSucc Nc Na) (addSuccNatEqSucc Nc Nb)
+    apply eqNatToEqSucc NAca NAcb
+    exact ifElim p_Qab_to_QAacAbc Qab
+
+instance eqNatAddNatLeft_inst
+{P : Sort u} {T : Type v} {L : Logic P} 
+[N : PNat P T] [Q : LEq P T] [A : Add T] [If : MIf L]
+[NatInductionRight3 L N]
+[NatSuccNat L N.toIsNat N.toSucc]
+[EqNatJoin L N.toIsNat Q] 
+[EqNatToEqSucc L N.toIsNat Q N.toSucc]
+[NatAddNat L N.toIsNat A]
+[NatAddZeroNat L N.toIsNat A N.toZero]
+[AddZeroNatEqNat L N.toIsNat Q A N.toZero]
+[AddSuccNatEqSucc L N.toIsNat Q A N.toSucc]
+: EqNatAddNatLeft L N.toIsNat Q A
+:= {eqNatAddNatLeft := eqNatAddNatLeft_proof}
+
+instance eqNatAddNatLeft_inst'
+{P : Sort u} {T : Type v} {L : Logic P} 
+[N : PNat P T] [Q : LEq P T] [A : Add T] [If : MIf L]
+[NatInductionRight3 L N]
+[NatZero L N.toIsNat N.toZero]
+[NatSuccNat L N.toIsNat N.toSucc]
+[EqNatTrans L N.toIsNat Q]
+[EqNatLeftEuc L N.toIsNat Q]
+[EqNatToEqSucc L N.toIsNat Q N.toSucc]
+[NatAddNat L N.toIsNat A]
+[AddNatZeroEqNat L N.toIsNat Q A N.toZero]
+[AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
+: EqNatAddNatLeft L N.toIsNat Q A
+:= {eqNatAddNatLeft := eqNatAddNatLeft_proof}
+
+-- Right Addition
+-- (a = b) -> (a + c = b + c)
+
+def eqNatAddNatRight_proof
+{P : Sort u} {T : Type v} {L : Logic P} 
+[N : PNat P T] [Q : LEq P T] [A : Add T] [If : MIf L]
+[NatInductionRight3 L N]
+[NatSuccNat L N.toIsNat N.toSucc]
+[EqNatJoin L N.toIsNat Q] 
+[EqNatToEqSucc L N.toIsNat Q N.toSucc]
+[NatAddNat L N.toIsNat A]
+[NatAddNatZero L N.toIsNat A N.toZero]
+[AddNatZeroEqNat L N.toIsNat Q A N.toZero]
+[AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
+: (a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
+  (L |- a = b) -> (L |- a + c = b + c)
+:= by
+  intro a b c Na Nb Nc; refine ifElim ?_
+  refine natInductionRight3 ?f0 ?fS a b c Na Nb Nc
+    (f := fun a b c => (a = b : P) -> (a + c = b + c : P)) 
+  case f0 =>
+    intro a b Na Nb
+    apply ifIntro; intro Qab
+    exact eqNatJoin' Na Nb (natAddNatZero Na) (natAddNatZero Nb) Qab 
+      (addNatZeroEqNat Na) (addNatZeroEqNat Nb)
+  case fS =>
+    intro a b c Na Nb Nc p_Qab_to_QAacAbc
+    apply ifIntro; intro Qab
+    have QAacAbc := ifElim p_Qab_to_QAacAbc Qab
+    have NSc := natS Nc
+    have NAac := natAdd Na Nc; have NAbc := natAdd Nb Nc
+    have NAaSc := natAdd Na NSc; have NAbSc := natAdd Nb NSc
+    apply eqNatJoin NAaSc NAbSc (natS NAac) (natS NAbc)
+      (addNatSuccEqSucc Na Nc) (addNatSuccEqSucc Nb Nc)
+    apply eqNatToEqSucc NAac NAbc
+    exact ifElim p_Qab_to_QAacAbc Qab
+
+instance eqNatAddNatRight_inst {P : Sort u} {T : Type v} {L : Logic P} 
+{P : Sort u} {T : Type v} {L : Logic P} 
+[N : PNat P T] [Q : LEq P T] [A : Add T] [If : MIf L]
+[NatInductionRight3 L N]
+[NatSuccNat L N.toIsNat N.toSucc]
+[EqNatJoin L N.toIsNat Q] 
+[EqNatToEqSucc L N.toIsNat Q N.toSucc]
+[NatAddNat L N.toIsNat A]
+[NatAddNatZero L N.toIsNat A N.toZero]
+[AddNatZeroEqNat L N.toIsNat Q A N.toZero]
+[AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
+: EqNatAddNatRight L N.toIsNat Q A
+:= {eqNatAddNatRight := eqNatAddNatRight_proof}
 
 --------------------------------------------------------------------------------
 -- Associativity

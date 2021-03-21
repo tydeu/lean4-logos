@@ -94,6 +94,29 @@ def memTrans' {P : Sort u} {T : Sort v}
   := K.memTrans a b c Ca Cb Cc
 
 --------------------------------------------------------------------------------
+-- Join
+--------------------------------------------------------------------------------
+
+-- (x = a) /\ (y = b) /\ (a = b) -> (x = y)
+
+class RelMemJoin {P : Sort u} {T : Sort v} 
+  (L : Logic P) (R : T -> T -> P) (C : T -> P) :=
+  (relMemJoin : (x y a b : T) -> 
+    (L |- C x) -> (L |- C y) -> (L |- C a) -> (L |- C b) ->
+    (L |- R x a) -> (L |- R y b) -> (L |- R a b) -> (L |- R x y))
+
+def relMemJoin {P : Sort u} {T : Type v} 
+  {L : Logic P} {R : T -> T -> P} {C : T -> P} 
+  [K : RelMemJoin L R C] {x y a b : T} := K.relMemJoin x y a b 
+
+-- (a = b) /\ (x = a) /\ (y = b) -> (x = y)
+
+def relMemJoin' {P : Sort u} {T : Type v} 
+  {L : Logic P} {R : T -> T -> P} {C : T -> P} 
+  [K : RelMemJoin L R C] {a b x y : T}
+  := fun Ca Cb Cx Cy Rab Rxa Ryb => K.relMemJoin x y a b Cx Cy Ca Cb Rxa Ryb Rab
+
+--------------------------------------------------------------------------------
 -- Euclideaness
 --------------------------------------------------------------------------------
 

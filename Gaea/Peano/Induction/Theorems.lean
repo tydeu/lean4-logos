@@ -15,21 +15,44 @@ namespace Gaea.Peano
 -- Predicate Induction
 --------------------------------------------------------------------------------
 
+-- By Schema
+
 def natInduction_bySchema_proof
 {P : Sort u} {T : Type v} {L : Logic P}
 [N : PNat P T] [NatInduction' L N]
 : (f : T -> P) -> (L |- f 0) -> 
-  ((n : T) -> (L |- nat n) -> (L |- f n) -> (L |- f (S n))) ->
-  ((n : T) -> (L |- nat n) -> (L |- f n))
+  ((a : T) -> (L |- nat a) -> (L |- f a) -> (L |- f (S a))) ->
+  ((a : T) -> (L |- nat a) -> (L |- f a))
 := by
   intro f f0 fS
-  exact natInduction' L (fun n => L |- f n) f0 fS
+  exact natInduction' L (fun a => L |- f a) f0 fS
 
 instance natInduction_bySchema_inst
 {P : Sort u} {T : Type v} {L : Logic P}
 [N : PNat P T] [NatInduction' L N]
 : NatInduction L N
 := {natInduction := natInduction_bySchema_proof}
+
+-- By Right Binary Induction
+
+def natInduction_byRightInduction_proof
+{P : Sort u} {T : Type v} {L : Logic P}
+[N : PNat P T] [NatInductionRight L N]
+: (f : T -> P) -> (L |- f 0) -> 
+  ((a : T) -> (L |- nat a) -> (L |- f a) -> (L |- f (S a))) ->
+  ((a : T) -> (L |- nat a) -> (L |- f a))
+:= by
+  intro f f0 fS a Na
+  refine natInductionRight (f := fun a b => f b) 
+    ?f0' ?fS' a a Na Na
+  case f0' => intro a Na; exact f0 
+  case fS' => intro a b Na Nb; exact fS b Nb 
+
+instance natInduction_byRightInduction_inst
+{P : Sort u} {T : Type v} {L : Logic P}
+[N : PNat P T] [NatInductionRight L N]
+: NatInduction L N
+:= {natInduction := natInduction_byRightInduction_proof}
 
 --------------------------------------------------------------------------------
 -- Left Binary Induction
@@ -173,6 +196,28 @@ instance natInductionRight_bySchema_inst
 : NatInductionRight L N
 := {natInductionRight := natInductionRight_bySchema_proof}
 
+-- By Right Ternery Induction
+
+def natInductionRight_byRight3_proof
+{P : Sort u} {T : Type v} {L : Logic P}
+[N : PNat P T] [NatInductionRight3 L N]
+: (f : T -> T -> P) -> 
+  ((a : T) -> (L |- nat a) -> (L |- f a 0)) -> 
+  ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b) -> (L |- f a (S b))) ->
+  ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b))
+:= by
+  intro f f0 fS a b Na Nb
+  refine natInductionRight3 (f := fun a b c => f b c) 
+    ?f0' ?fS' a a b Na Na Nb
+  case f0' => intro a b Na Nb; exact f0 b Nb
+  case fS' => intro a b c Na Nb Nc; exact fS b c Nb Nc
+
+instance natInductionRight_byRight3_inst
+{P : Sort u} {T : Type v} {L : Logic P}
+[N : PNat P T] [NatInductionRight3 L N]
+: NatInductionRight L N
+:= {natInductionRight := natInductionRight_byRight3_proof}
+
 --------------------------------------------------------------------------------
 -- Right Ternery Induction
 --------------------------------------------------------------------------------
@@ -247,7 +292,7 @@ def natInductionRight3_bySchema_proof
   intro a b c Na Nb Nc
   exact h c Nc a b Na Nb
 
-instance natInductionRight2_bySchema_inst
+instance natInductionRight3_bySchema_inst
 {P : Sort u} {T : Type v} {L : Logic P}
 [N : PNat P T] [NatInduction' L N]
 : NatInductionRight3 L N

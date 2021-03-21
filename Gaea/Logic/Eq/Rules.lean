@@ -151,6 +151,39 @@ def eqMemTrans' {P : Sort u} {T : Sort v}
   := K.eqMemTrans a b c Ca Cb Cc
 
 --------------------------------------------------------------------------------
+-- Join
+--------------------------------------------------------------------------------
+
+-- (b = a) /\ (c = a) -> (b = c)
+
+class EqMemJoin {P : Sort u} {T : Sort v} 
+  (L : Logic P) (Q : LEq P T) (C : T -> P) :=
+  (eqMemJoin : (x y a b : T) -> 
+    (L |- C x) -> (L |- C y) -> (L |- C a) -> (L |- C b) ->
+    (L |- x = a) -> (L |- y = b) -> (L |- a = b) -> (L |- x = y))
+
+instance i_EqMemJoin_to_RelMemJoin {P : Sort u} {T : Sort v} 
+  {L : Logic P} [Q : LEq P T] {C : T -> P}
+  [K : EqMemJoin L Q C] : RelMemJoin L Q.lEq C
+  := {relMemJoin := K.eqMemJoin}
+
+instance i_RelMemJoin_to_EqMemJoin {P : Sort u} {T : Sort v} 
+  {L : Logic P} [Q : LEq P T] {C : T -> P}
+  [K : RelMemJoin L Q.lEq C] : EqMemJoin L Q C
+  := {eqMemJoin := K.relMemJoin}
+
+def eqMemJoin {P : Sort u} {T : Type v} 
+  {L : Logic P} [Q : LEq P T] {C : T -> P}
+  [K : EqMemJoin L Q C] {x y a b : T} := K.eqMemJoin x y a b 
+
+-- (a = b) /\ (x = a) /\ (y = b) -> (x = y)
+
+def eqMemJoin' {P : Sort u} {T : Type v} 
+  {L : Logic P} [Q : LEq P T] {C : T -> P}
+  [K : EqMemJoin L Q C] {a b x y : T}
+  := fun Ca Cb Cx Cy Qab Qxa Qyb => K.eqMemJoin x y a b Cx Cy Ca Cb Qxa Qyb Qab
+
+--------------------------------------------------------------------------------
 -- Euclideaness
 --------------------------------------------------------------------------------
 

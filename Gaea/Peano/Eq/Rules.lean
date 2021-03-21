@@ -118,6 +118,41 @@ def eqTransNat' {P : Sort u} {T : Type v}
 {a b c : T} := K.eqTransNat a b c
 
 --------------------------------------------------------------------------------
+-- Join
+--------------------------------------------------------------------------------
+
+-- (x = a) /\ (y = b) /\ (a = b) -> (x = y)
+
+class EqNatJoin {P : Sort u} {T : Type v} 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) :=
+  (eqNatJoin : (x y a b : T) -> 
+    (L |- nat x) -> (L |- nat y) -> (L |- nat a) -> (L |- nat b) ->
+    (L |- x = a) -> (L |- y = b) -> (L |- a = b) -> (L |- x = y))
+
+instance i_EqNatJoin_to_EqMemJoin {P : Sort u} {T : Type v} 
+  (L : Logic P) [N : IsNat P T] [Q : LEq P T] 
+  [K : EqNatJoin L N Q] : EqMemJoin L Q N.isNat 
+  := {eqMemJoin := K.eqNatJoin}
+
+instance i_EqMemJoin_to_EqNatJoin {P : Sort u} {T : Type v} 
+  (L : Logic P) [N : IsNat P T] [Q : LEq P T] 
+  [K : EqMemJoin L Q N.isNat] : EqNatJoin L N Q 
+  := {eqNatJoin := K.eqMemJoin}
+
+def eqNatJoin {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T]
+  [K : EqNatJoin L N Q] {x y a b : T} := K.eqNatJoin x y a b 
+
+-- (a = b) /\ (x = a) /\ (y = b) -> (x = y)
+
+def eqNatJoin' {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T]
+  [K : EqNatJoin L N Q] {a b x y : T} 
+  : (L |- nat a) -> (L |- nat b) -> (L |- nat x) -> (L |- nat y) ->
+    (L |- a = b) -> (L |- x = a) -> (L |- y = b) ->  (L |- x = y)
+  := fun Na Nb Nx Ny Qab Qxa Qyb => K.eqNatJoin x y a b Nx Ny Na Nb Qxa Qyb Qab
+
+--------------------------------------------------------------------------------
 -- Euclideaness
 --------------------------------------------------------------------------------
 
@@ -140,7 +175,7 @@ instance {P : Sort u} {T : Type v}
 
 def eqNatLeftEuc {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T]
-  [C : EqNatLeftEuc L N Q] {a b c : T} := C.eqNatLeftEuc a b c 
+  [K : EqNatLeftEuc L N Q] {a b c : T} := K.eqNatLeftEuc a b c 
 
 -- w/ Implied Nats
 class EqLeftEucNat {P : Sort u} {T : Type v} 
@@ -150,7 +185,7 @@ class EqLeftEucNat {P : Sort u} {T : Type v}
 
 def eqLeftEucNat {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T]
-  [C : EqLeftEucNat L N Q] {a b c : T} := C.eqLeftEucNat a b c 
+  [K : EqLeftEucNat L N Q] {a b c : T} := K.eqLeftEucNat a b c 
 
 -- Right Euclidean
 -- (a = b) /\ (a = c) -> (b = c)
@@ -171,6 +206,6 @@ instance {P : Sort u} {T : Type v}
 
 def eqNatRightEuc {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T]
-  [C : EqNatLeftEuc L N Q] {a b c : T} := C.eqNatLeftEuc a b c 
+  [K : EqNatLeftEuc L N Q] {a b c : T} := K.eqNatLeftEuc a b c 
 
 end Gaea.Peano

@@ -223,6 +223,16 @@ def eqNatAddNatRight' {P : Sort u} {T : Type v} {L : Logic P}
 -- Closure
 --------------------------------------------------------------------------------
 
+-- nat (0 + 0)
+
+class NatAddZero {P : Sort u} {T : Type v} 
+  (L : Logic P) (N : IsNat P T) (A : Add T) (Z : Zero T) :=
+  (natAddZero : L |- nat (0 + 0 : T))
+
+def natAddZero {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [A : Add T] [Z : Zero T]
+  [C : NatAddZero L N A Z] := C.natAddZero
+
 -- nat (a + 0)
 
 class NatAddNatZero {P : Sort u} {T : Type v} 
