@@ -17,9 +17,8 @@ namespace Gaea.Peano
 
 -- By Schema
 
-def natInduction_bySchema_proof
-{P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [NatInduction' L N]
+def natInductionBySchema {P : Sort u} {T : Type v} 
+{L : Logic P} {N : PNat P T} (I : NatInduction' L N)
 : (f : T -> P) -> (L |- f 0) -> 
   ((a : T) -> (L |- nat a) -> (L |- f a) -> (L |- f (S a))) ->
   ((a : T) -> (L |- nat a) -> (L |- f a))
@@ -27,17 +26,16 @@ def natInduction_bySchema_proof
   intro f f0 fS
   exact natInduction' L (fun a => L |- f a) f0 fS
 
-instance natInduction_bySchema_inst
-{P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [NatInduction' L N]
+instance iNatInductionBySchema 
+{P : Sort u} {T : Type v} {L : Logic P} 
+[N : PNat P T] [I : NatInduction' L N]
 : NatInduction L N
-:= {natInduction := natInduction_bySchema_proof}
+:= {natInduction := natInductionBySchema I}
 
 -- By Right Binary Induction
 
-def natInduction_byRightInduction_proof
-{P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [NatInductionRight L N]
+def natInductionByRight {P : Sort u} {T : Type v} 
+{L : Logic P} {N : PNat P T} (I : NatInductionRight L N)
 : (f : T -> P) -> (L |- f 0) -> 
   ((a : T) -> (L |- nat a) -> (L |- f a) -> (L |- f (S a))) ->
   ((a : T) -> (L |- nat a) -> (L |- f a))
@@ -48,11 +46,11 @@ def natInduction_byRightInduction_proof
   case f0' => intro a Na; exact f0 
   case fS' => intro a b Na Nb; exact fS b Nb 
 
-instance natInduction_byRightInduction_inst
+instance iNatInductionByRight
 {P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [NatInductionRight L N]
+[N : PNat P T] [I : NatInductionRight L N]
 : NatInduction L N
-:= {natInduction := natInduction_byRightInduction_proof}
+:= {natInduction := natInductionByRight I}
 
 --------------------------------------------------------------------------------
 -- Left Binary Induction
@@ -60,9 +58,9 @@ instance natInduction_byRightInduction_inst
 
 -- By Predicate Induction & ForallNat
 
-def natInductionLeft_byForallNatPredicate_induct
-{P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [NatInduction L N] [ForallNat P T]
+def natInductionLeftByForallNat_induct
+{P : Sort u} {T : Type v} {L : Logic P} 
+{N : PNat P T} (I : NatInduction L N) (FaN : MForallNat L N.toIsNat)
 : (f : T -> T -> P) -> 
   (L |- forallNat b => f 0 b) -> 
   ((a : T) -> (L |- nat a) -> 
@@ -72,16 +70,16 @@ def natInductionLeft_byForallNatPredicate_induct
   intro f p_f0 p_fS
   exact natInduction p_f0 p_fS
 
-def natInductionLeft_byForallNatPredicate_proof
-{P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [NatInduction L N] [MForallNat L N.toIsNat]
+def natInductionLeftByForallNat 
+{P : Sort u} {T : Type v} {L : Logic P} 
+{N : PNat P T} (I : NatInduction L N) (FaN : MForallNat L N.toIsNat)
 : (f : T -> T -> P) -> 
   ((b : T) -> (L |- nat b) -> (L |- f 0 b)) -> 
   ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b) -> (L |- f (S a) b)) ->
   ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b))
 := by
   intro f f0 fS a b Na Nb
-  have h := natInductionLeft_byForallNatPredicate_induct 
+  have h := natInductionLeftByForallNat_induct I FaN
     f ?p_f0 ?p_fS a Na
   case p_f0 =>
     apply forallNatIntro; intro b Nb
@@ -93,17 +91,17 @@ def natInductionLeft_byForallNatPredicate_proof
     exact fS a b Na Nb fab
   exact forallNatElim h Nb
 
-instance natInductLeft_inst_forallNat
+instance iNatInductionLeftByForallNat
 {P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [NatInduction L N] [MForallNat L N.toIsNat]
+[N : PNat P T] [I : NatInduction L N] [FaN : MForallNat L N.toIsNat]
 : NatInductionLeft L N
-:= {natInductionLeft := natInductionLeft_byForallNatPredicate_proof}
+:= {natInductionLeft := natInductionLeftByForallNat I FaN}
 
 -- By Schema Induction
 
-def natInductionLeft_bySchema_proof
-{P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [NatInduction' L N]
+def natInductionLeftBySchema 
+{P : Sort u} {T : Type v} {L : Logic P} 
+{N : PNat P T} (I : NatInduction' L N)
 : (f : T -> T -> P) -> 
   ((b : T) -> (L |- nat b) -> (L |- f 0 b)) -> 
   ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b) -> (L |- f (S a) b)) ->
@@ -119,11 +117,11 @@ def natInductionLeft_bySchema_proof
   intro a b Na Nb
   exact h a Na b Nb
 
-instance natInductionLeft_bySchema_inst
+instance iNatInductionLeftBySchema
 {P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [NatInduction' L N]
+[N : PNat P T] [I : NatInduction' L N]
 : NatInductionLeft L N
-:= {natInductionLeft := natInductionLeft_bySchema_proof}
+:= {natInductionLeft := natInductionLeftBySchema I}
 
 --------------------------------------------------------------------------------
 -- Right Binary Induction
@@ -131,9 +129,9 @@ instance natInductionLeft_bySchema_inst
 
 -- By Predicate Induction & ForallNat
 
-def natInductionRight_byForallNatPredicate_induct
-{P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [NatInduction L N] [ForallNat P T]
+def natInductionRightByForallNat_induct
+{P : Sort u} {T : Type v} {L : Logic P} 
+{N : PNat P T} (I : NatInduction L N) (FaN : MForallNat L N.toIsNat)
 : (f : T -> T -> P) -> 
   (L |- forallNat a => f a 0) -> 
   ((b : T) -> (L |- nat b) -> 
@@ -143,16 +141,16 @@ def natInductionRight_byForallNatPredicate_induct
   intro f p_f0 p_fS
   exact natInduction p_f0 p_fS
 
-def natInductionRight_byForallNatPredicate_proof
-{P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [NatInduction L N] [MForallNat L N.toIsNat]
+def natInductionRightByForallNat
+{P : Sort u} {T : Type v} {L : Logic P} 
+{N : PNat P T} (I : NatInduction L N) (FaN : MForallNat L N.toIsNat)
 : (f : T -> T -> P) -> 
   ((a : T) -> (L |- nat a) -> (L |- f a 0)) -> 
   ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b) -> (L |- f a (S b))) ->
   ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b))
 := by
   intro f f0 fS a b Na Nb
-  have h := natInductionRight_byForallNatPredicate_induct 
+  have h := natInductionRightByForallNat_induct I FaN
     f ?p_f0 ?p_fS b Nb
   case p_f0 =>
     apply forallNatIntro; intro a Na
@@ -164,17 +162,17 @@ def natInductionRight_byForallNatPredicate_proof
     exact fS a b Na Nb fab
   exact forallNatElim h Na
 
-instance natInductionRight_byForallNatPredicate_inst
+instance iNatInductionRightByForallNat
 {P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [NatInduction L N] [MForallNat L N.toIsNat]
+[N : PNat P T] [I : NatInduction L N] [FaN : MForallNat L N.toIsNat]
 : NatInductionRight L N
-:= {natInductionRight := natInductionRight_byForallNatPredicate_proof}
+:= {natInductionRight := natInductionRightByForallNat I FaN}
 
 -- By Schema Induction
 
-def natInductionRight_bySchema_proof
-{P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [NatInduction' L N]
+def natInductionRightBySchema 
+{P : Sort u} {T : Type v} {L : Logic P} 
+{N : PNat P T} (I : NatInduction' L N)
 : (f : T -> T -> P) -> 
   ((a : T) -> (L |- nat a) -> (L |- f a 0)) -> 
   ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b) -> (L |- f a (S b))) ->
@@ -190,17 +188,17 @@ def natInductionRight_bySchema_proof
   intro a b Na Nb
   exact h b Nb a Na
 
-instance natInductionRight_bySchema_inst
+instance iNatInductionRightBySchema
 {P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [NatInduction' L N]
+[N : PNat P T] [I : NatInduction' L N]
 : NatInductionRight L N
-:= {natInductionRight := natInductionRight_bySchema_proof}
+:= {natInductionRight := natInductionRightBySchema I}
 
 -- By Right Ternery Induction
 
-def natInductionRight_byRight3_proof
+def natInductionRightByRight3
 {P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [NatInductionRight3 L N]
+{N : PNat P T} (I : NatInductionRight3 L N)
 : (f : T -> T -> P) -> 
   ((a : T) -> (L |- nat a) -> (L |- f a 0)) -> 
   ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b) -> (L |- f a (S b))) ->
@@ -212,11 +210,11 @@ def natInductionRight_byRight3_proof
   case f0' => intro a b Na Nb; exact f0 b Nb
   case fS' => intro a b c Na Nb Nc; exact fS b c Nb Nc
 
-instance natInductionRight_byRight3_inst
+instance iNatInductionRightByRight3
 {P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [NatInductionRight3 L N]
+[N : PNat P T] [I : NatInductionRight3 L N]
 : NatInductionRight L N
-:= {natInductionRight := natInductionRight_byRight3_proof}
+:= {natInductionRight := natInductionRightByRight3 I}
 
 --------------------------------------------------------------------------------
 -- Right Ternery Induction
@@ -224,9 +222,9 @@ instance natInductionRight_byRight3_inst
 
 -- By Predicate Induction & ForallNat
 
-def natInductionRight3_byForallNatPredicate_induct
-{P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [NatInduction L N] [ForallNat P T]
+def natInductionRight3ByForallNat_induct
+{P : Sort u} {T : Type v} {L : Logic P} 
+{N : PNat P T} (I : NatInduction L N) (FaN : MForallNat L N.toIsNat)
 : (f : T -> T -> T -> P) -> 
   (L |- forallNat a b => f a b 0) -> 
   ((c : T) -> (L |- nat c) -> 
@@ -236,9 +234,9 @@ def natInductionRight3_byForallNatPredicate_induct
   intro f p_f0 p_fS
   exact natInduction p_f0 p_fS
 
-def natInductionRight3_byForallNatPredicate_proof
-{P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [NatInduction L N] [MForallNat L N.toIsNat]
+def natInductionRight3ByForallNat
+{P : Sort u} {T : Type v} {L : Logic P} 
+{N : PNat P T} (I : NatInduction L N) (FaN : MForallNat L N.toIsNat)
 : (f : T -> T -> T -> P) -> 
   ((a b : T) -> (L |- nat a) -> (L |- nat b) ->  
     (L |- f a b 0)) -> 
@@ -248,7 +246,7 @@ def natInductionRight3_byForallNatPredicate_proof
     (L |- f a b c))
 := by
   intro f f0 fS a b c Na Nb Nc
-  have h := natInductionRight3_byForallNatPredicate_induct 
+  have h := natInductionRight3ByForallNat_induct I FaN 
     f ?p_f0 ?p_fS c Nc
   case p_f0 =>
     apply forallNatIntro; intro a Na
@@ -262,17 +260,17 @@ def natInductionRight3_byForallNatPredicate_proof
     exact fS a b c Na Nb Nc fabc
   exact forallNatElim (forallNatElim h Na) Nb
 
-instance natInductionRight3_byForallNatPredicate_inst
+instance iNatInductionRight3ByForallNat
 {P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [NatInduction L N] [MForallNat L N.toIsNat]
+[N : PNat P T] [I : NatInduction L N] [FaN : MForallNat L N.toIsNat]
 : NatInductionRight3 L N
-:= {natInductionRight3 := natInductionRight3_byForallNatPredicate_proof}
+:= {natInductionRight3 := natInductionRight3ByForallNat I FaN}
 
 -- By Schema Induction
 
-def natInductionRight3_bySchema_proof
-{P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [NatInduction' L N]
+def natInductionRight3BySchema
+{P : Sort u} {T : Type v} {L : Logic P} 
+{N : PNat P T} (I : NatInduction' L N)
 : (f : T -> T -> T -> P) -> 
   ((a b : T) -> (L |- nat a) -> (L |- nat b) ->  
     (L |- f a b 0)) -> 
@@ -292,10 +290,10 @@ def natInductionRight3_bySchema_proof
   intro a b c Na Nb Nc
   exact h c Nc a b Na Nb
 
-instance natInductionRight3_bySchema_inst
+instance iNatInductionRight3BySchema
 {P : Sort u} {T : Type v} {L : Logic P}
-[N : PNat P T] [NatInduction' L N]
+[N : PNat P T] [I : NatInduction' L N]
 : NatInductionRight3 L N
-:= {natInductionRight3 := natInductionRight3_bySchema_proof}
+:= {natInductionRight3 := natInductionRight3BySchema I}
 
 end Gaea.Peano

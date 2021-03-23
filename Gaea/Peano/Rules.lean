@@ -23,46 +23,46 @@ def nat0 {P : Sort u} {T : Type v}
 
 -- Axiom 6
 class NatSuccNat {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (NS : Succ T) :=
+  (L : Logic P) (N : IsNat P T) (Su : Succ T) :=
   (natSuccNat : (n : T) -> (L |- nat n) -> (L |- nat (S n)))
 
 def natSuccNat {P : Sort u} {T : Sort v} 
-{L : Logic P} [N : IsNat P T] [NS : Succ T] [K : NatSuccNat L N NS] 
+{L : Logic P} [N : IsNat P T] [Su : Succ T] [K : NatSuccNat L N Su] 
 {n : T} := K.natSuccNat n
 
 def natS {P : Sort u} {T : Sort v} 
-{L : Logic P} [N : IsNat P T] [NS : Succ T] [K : NatSuccNat L N NS] 
+{L : Logic P} [N : IsNat P T] [Su : Succ T] [K : NatSuccNat L N Su] 
 {n : T} := K.natSuccNat n
 
 -- Axiom 7a
 class EqNatToEqSucc {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (NS : Succ T) :=
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (Su : Succ T) :=
   (eqNatToEqSucc : (m n : T) -> (L |- nat m) -> (L |- nat n) -> 
     (L |- m = n) -> (L |- S m = S n))
 
 instance {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [NS : Succ T]
-  [K : EqNatToEqSucc L N Q NS] : EqMemToEqFun L Q N.isNat NS.succ 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [Su : Succ T]
+  [K : EqNatToEqSucc L N Q Su] : EqMemToEqFun L Q N.isNat Su.succ 
   := {eqMemToEqFun := K.eqNatToEqSucc}
 
 instance {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [NS : Succ T]
-  [K : EqMemToEqFun L Q N.isNat NS.succ] : EqNatToEqSucc L N Q NS
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [Su : Succ T]
+  [K : EqMemToEqFun L Q N.isNat Su.succ] : EqNatToEqSucc L N Q Su
   := {eqNatToEqSucc := K.eqMemToEqFun}
 
 def eqNatToEqSucc {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [NS : Succ T]
-  [K : EqNatToEqSucc L N Q NS] {m n : T} := K.eqNatToEqSucc m n
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [Su : Succ T]
+  [K : EqNatToEqSucc L N Q Su] {m n : T} := K.eqNatToEqSucc m n
 
 -- Axiom 7b
 class EqSuccToEqNat {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (NS : Succ T) :=
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (Su : Succ T) :=
   (eqSuccToEqNat : (m n : T) -> (L |- nat m) -> (L |- nat n) -> 
     (L |- S m = S n) -> (L |- m = n))
 
 def eqSuccToEqNat {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [NS : Succ T]
-  [K : EqSuccToEqNat L N Q NS] {m n : T} := K.eqSuccToEqNat
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [Su : Succ T]
+  [K : EqSuccToEqNat L N Q Su] {m n : T} := K.eqSuccToEqNat
 
 -- Axiom 8
 class SuccNatEqZeroFalse {P : Sort u} {T : Type v} 

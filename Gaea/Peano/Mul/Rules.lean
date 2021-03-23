@@ -29,13 +29,13 @@ def mulNatZeroEqZero {P : Sort u} {T : Type v}
 -- a * S b = a + (a * b)
 
 class MulNatSuccEqAddMul {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (A : Add T) (NS : Succ T) := 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (A : Add T) (Su : Succ T) := 
   (mulNatSuccEqAddMul : (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
     (L |- a * S b = a + (a * b)))
 
 def mulNatSuccEqAddMul {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [NS : Succ T]
-  [K : MulNatSuccEqAddMul L N Q M A NS] {a b : T} := K.mulNatSuccEqAddMul a b
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [Su : Succ T]
+  [K : MulNatSuccEqAddMul L N Q M A Su] {a b : T} := K.mulNatSuccEqAddMul a b
 
 --------------------------------------------------------------------------------
 -- Commmuted Axioms
@@ -56,13 +56,13 @@ def mulZeroNatEqZero {P : Sort u} {T : Type v}
 -- S a * b = b + (a * b)
 
 class MulSuccNatEqAddMul {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (A : Add T) (NS : Succ T) := 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (A : Add T) (Su : Succ T) := 
   (mulSuccNatEqAddMul : (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
     (L |- S a * b = b + (a * b)))
 
 def mulSuccNatEqAddMul {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [NS : Succ T]
-  [K : MulSuccNatEqAddMul L N Q M A NS] {a b : T} := K.mulSuccNatEqAddMul a b
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [Su : Succ T]
+  [K : MulSuccNatEqAddMul L N Q M A Su] {a b : T} := K.mulSuccNatEqAddMul a b
 
 --------------------------------------------------------------------------------
 -- Special Cases
@@ -81,22 +81,22 @@ def mulZeroEqZero {P : Sort u} {T : Type v}
 -- a * 1 = a
 
 class MulNatOneEqNat {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (N1 : One T) :=
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (O : One T) :=
   (mulNatOneEqNat : (a : T) -> (L |- nat a) -> (L |- a * 1 = a))
 
 def mulNatOneEqNat {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [N1 : One T]
-  [C : MulNatOneEqNat L N Q M N1] {a : T} := C.mulNatOneEqNat a
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [O : One T]
+  [C : MulNatOneEqNat L N Q M O] {a : T} := C.mulNatOneEqNat a
 
 -- 1 * a = a
 
 class MulOneNatEqNat {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (N1 : One T) :=
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) (O : One T) :=
   (mulOneNatEqNat : (a : T) -> (L |- nat a) -> (L |- 1 * a = a))
 
 def mulOneNatEqNat {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [N1 : One T]
-  [C : MulOneNatEqNat L N Q M N1] {a : T} := C.mulOneNatEqNat a
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [O : One T]
+  [C : MulOneNatEqNat L N Q M O] {a : T} := C.mulOneNatEqNat a
 
 --------------------------------------------------------------------------------
 -- Commutativity

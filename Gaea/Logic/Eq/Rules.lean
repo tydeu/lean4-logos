@@ -172,13 +172,13 @@ instance i_RelMemJoin_to_EqMemJoin {P : Sort u} {T : Sort v}
   [K : RelMemJoin L Q.lEq C] : EqMemJoin L Q C
   := {eqMemJoin := K.relMemJoin}
 
-def eqMemJoin {P : Sort u} {T : Type v} 
+def eqMemJoin {P : Sort u} {T : Sort v} 
   {L : Logic P} [Q : LEq P T] {C : T -> P}
   [K : EqMemJoin L Q C] {x y a b : T} := K.eqMemJoin x y a b 
 
 -- (a = b) /\ (x = a) /\ (y = b) -> (x = y)
 
-def eqMemJoin' {P : Sort u} {T : Type v} 
+def eqMemJoin' {P : Sort u} {T : Sort v} 
   {L : Logic P} [Q : LEq P T] {C : T -> P}
   [K : EqMemJoin L Q C] {a b x y : T}
   := fun Ca Cb Cx Cy Qab Qxa Qyb => K.eqMemJoin x y a b Cx Cy Ca Cb Qxa Qyb Qab

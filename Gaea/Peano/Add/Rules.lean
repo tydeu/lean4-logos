@@ -24,13 +24,13 @@ def addNatZeroEqNat {P : Sort u} {T : Type v}
 
 -- Axiom 2
 class AddNatSuccEqSucc {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) (NS : Succ T) := 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) (Su : Succ T) := 
   (addNatSuccEqSucc : (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
     (L |- a + S b = S (a + b)))
 
 def addNatSuccEqSucc {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] [NS : Succ T]
-  [K : AddNatSuccEqSucc L N Q A NS] {a b : T} := K.addNatSuccEqSucc a b
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] [Su : Succ T]
+  [K : AddNatSuccEqSucc L N Q A Su] {a b : T} := K.addNatSuccEqSucc a b
 
 --------------------------------------------------------------------------------
 -- Commuted Axioms
@@ -47,13 +47,13 @@ def addZeroNatEqNat {P : Sort u} {T : Type v}
 
 -- Axiom 2 Commuted
 class AddSuccNatEqSucc {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) (NS : Succ T) := 
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) (Su : Succ T) := 
   (addSuccNatEqSucc : (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
     (L |- S a + b = S (a + b)))
 
 def addSuccNatEqSucc {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] [NS : Succ T]
-  [K : AddSuccNatEqSucc L N Q A NS] {a b : T} := K.addSuccNatEqSucc a b
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] [Su : Succ T]
+  [K : AddSuccNatEqSucc L N Q A Su] {a b : T} := K.addSuccNatEqSucc a b
 
 --------------------------------------------------------------------------------
 -- Special Cases
@@ -72,22 +72,22 @@ def addZeroEqZero {P : Sort u} {T : Type v}
 -- a + 1 = S a
 
 class AddNatOneEqSucc {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) (N1 : One T) (NS : Succ T) :=
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) (O : One T) (Su : Succ T) :=
   (addNatOneEqSucc : (a : T) -> (L |- nat a) -> (L |- a + 1 = S a))
 
 def addNatOneEqSucc {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] [N1 : One T] [NS : Succ T]
-  [C : AddNatOneEqSucc L N Q A N1 NS] {a : T} := C.addNatOneEqSucc a
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] [O : One T] [Su : Succ T]
+  [C : AddNatOneEqSucc L N Q A O Su] {a : T} := C.addNatOneEqSucc a
 
 -- 1 + a = S a
 
 class AddOneNatEqSucc {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) (N1 : One T) (NS : Succ T) :=
+  (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) (O : One T) (Su : Succ T) :=
   (addOneNatEqSucc : (a : T) -> (L |- nat a) -> (L |- 1 + a = S a))
 
 def addOneNatEqSucc {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] [N1 : One T] [NS : Succ T]
-  [C : AddOneNatEqSucc L N Q A N1 NS] {a : T} := C.addOneNatEqSucc a
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] [O : One T] [Su : Succ T]
+  [C : AddOneNatEqSucc L N Q A O Su] {a : T} := C.addOneNatEqSucc a
 
 --------------------------------------------------------------------------------
 -- Commutativity

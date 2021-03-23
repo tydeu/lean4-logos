@@ -7,8 +7,10 @@ namespace Gaea.Peano
 
 -- (a = b) /\ (b = c) -> (a = c)
 
-def eqTransNat_proof {P : Sort u} {T : Type v} 
-{L : Logic P} [N : IsNat P T] [Q : LEq P T] [EqNatTrans L N Q] [NatEqNat L N Q]
+def eqTransNatByNatEq 
+{P : Sort u} {T : Sort v} 
+{L : Logic P} {N : IsNat P T} {Q : LEq P T} 
+(QTr : EqNatTrans L N Q) (NQ : NatEqNat L N Q)
 : (a b c : T) -> (L |- nat c) -> (L |- a = b) -> (L |- b = c) -> (L |- a = c)
 := by
   intro a b c Nc Qab Qbc
@@ -16,14 +18,17 @@ def eqTransNat_proof {P : Sort u} {T : Type v}
   have Na := natEq Nb Qab
   exact eqNatTrans Na Nb Nc Qab Qbc
 
-instance eqTransNat_inst {P : Sort u} {T : Type v} 
-{L : Logic P} [N : IsNat P T] [Q : LEq P T] [EqNatTrans L N Q] [NatEqNat L N Q]
-: EqTransNat L N Q := {eqTransNat := eqTransNat_proof}
+instance iEqTransNatByNatEq  
+{P : Sort u} {T : Sort v} {L : Logic P} 
+[N : IsNat P T] [Q : LEq P T] [QTr : EqNatTrans L N Q] [NQ : NatEqNat L N Q]
+: EqTransNat L N Q := {eqTransNat := eqTransNatByNatEq QTr NQ}
 
 -- (b = a) /\ (c = a) -> (b = c)
 
-def eqLeftEucNat_proof {P : Sort u} {T : Type v} 
-{L : Logic P} [N : IsNat P T] [Q : LEq P T] [EqNatLeftEuc L N Q] [NatEqNat L N Q]
+def eqLeftEucNatByNatEq 
+{P : Sort u} {T : Sort v} 
+{L : Logic P} {N : IsNat P T} {Q : LEq P T} 
+(QEL : EqNatLeftEuc L N Q) (NQ : NatEqNat L N Q)
 : (a b c : T) -> (L |- nat a) -> (L |- b = a) -> (L |- c = a) -> (L |- b = c)
 := by
   intro a b c Na Qba Qca
@@ -31,8 +36,9 @@ def eqLeftEucNat_proof {P : Sort u} {T : Type v}
   have Nc := natEq Na Qca
   exact eqNatLeftEuc Na Nb Nc Qba Qca
 
-instance eqLeftEucNat_inst {P : Sort u} {T : Type v} 
-{L : Logic P} [N : IsNat P T] [Q : LEq P T] [EqNatLeftEuc L N Q] [NatEqNat L N Q]
-: EqLeftEucNat L N Q := {eqLeftEucNat := eqLeftEucNat_proof}
+instance iEqLeftEucNatByNatEq 
+{P : Sort u} {T : Sort v} {L : Logic P} 
+[N : IsNat P T] [Q : LEq P T] [QTr : EqNatLeftEuc L N Q] [NQ : NatEqNat L N Q]
+: EqLeftEucNat L N Q := {eqLeftEucNat := eqLeftEucNatByNatEq QTr NQ }
 
 end Gaea.Peano

@@ -11,15 +11,15 @@ open Gaea.Logic
 namespace Gaea.Peano
 
 class NatOne {P : Sort u} {T : Type v}
-  (L : Logic P) (N : IsNat P T) (N1 : One T) :=
+  (L : Logic P) (N : IsNat P T) (O : One T) :=
   (natOne : L |- nat (1 : T))
 
 def natOne {P : Sort u} (L : Logic P) (T : Type v)  
-   [N : IsNat P T] [N1 : One T] [K : NatOne L N N1] 
+   [N : IsNat P T] [O : One T] [K : NatOne L N O] 
   := K.natOne
 
 def nat1 {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [N1 : One T] [K : NatOne L N N1] 
+  {L : Logic P} [N : IsNat P T] [O : One T] [K : NatOne L N O] 
   := K.natOne
 
 class OneEqSuccZero {P : Sort u} {T : Type v} 
