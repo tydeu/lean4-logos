@@ -9,7 +9,7 @@ open Gaea.Logic
 
 namespace Gaea.Peano
 
-instance natOne_inst
+instance iNatOneByNatEq
   {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [Z : Zero T] [O : One T] [Su : Succ T] 
   [NatEqNat L N Q] [NatZero L N Z] [NatSuccNat L N Su] [OneEqSuccZero L Q Z O Su] 

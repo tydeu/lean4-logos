@@ -177,7 +177,7 @@ instance iMulZeroNatEqZeroByPeano
 [NS  : NatSuccNat L N.toIsNat N.toSucc]
 [NQ  : NatEqNat L N.toIsNat Q]
 [QTr : EqNatTrans L N.toIsNat Q]
-[Q2S : EqNatToEqSucc L N.toIsNat Q N.toSucc]
+[QtS : EqNatToEqSucc L N.toIsNat Q N.toSucc]
 [An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
 [AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 [Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero]
@@ -199,7 +199,7 @@ def mulSuccNatEqAddMulProof
 (NM  : NatMulNat L N.toIsNat M)
 (QTr : EqNatTrans L N.toIsNat Q)
 (QEL : EqNatLeftEuc L N.toIsNat Q)
-(Q2S : EqNatToEqSucc L N.toIsNat Q N.toSucc)
+(QtS : EqNatToEqSucc L N.toIsNat Q N.toSucc)
 (QAL : EqNatAddNatLeft L N.toIsNat Q A)
 (QAR : EqNatAddNatRight L N.toIsNat Q A)
 (ACm : AddNatComm L N.toIsNat Q A)
@@ -284,7 +284,7 @@ instance iMulSuccNatEqAddMul
 [NM  : NatMulNat L N.toIsNat M]
 [QTr : EqNatTrans L N.toIsNat Q]
 [QEL : EqNatLeftEuc L N.toIsNat Q]
-[Q2S : EqNatToEqSucc L N.toIsNat Q N.toSucc]
+[QtS : EqNatToEqSucc L N.toIsNat Q N.toSucc]
 [QAL : EqNatAddNatLeft L N.toIsNat Q A]
 [QAR : EqNatAddNatRight L N.toIsNat Q A]
 [ACm : AddNatComm L N.toIsNat Q A]
@@ -296,7 +296,7 @@ instance iMulSuccNatEqAddMul
 [MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
 : MulSuccNatEqAddMul L N.toIsNat Q M A N.toSucc := 
 {mulSuccNatEqAddMul := 
-  mulSuccNatEqAddMulProof I N0 NS NA NM QTr QEL Q2S QAL QAR 
+  mulSuccNatEqAddMulProof I N0 NS NA NM QTr QEL QtS QAL QAR 
     ACm AAs AAr A0n ASn Mn0 MnS}
 
 instance iMulSuccNatEqAddMulByPeano 
@@ -309,7 +309,7 @@ instance iMulSuccNatEqAddMulByPeano
 [NQ  : NatEqNat L N.toIsNat Q]
 [QSm : EqNatSymm L N.toIsNat Q]
 [QTr : EqNatTrans L N.toIsNat Q]
-[Q2S : EqNatToEqSucc L N.toIsNat Q N.toSucc]
+[QtS : EqNatToEqSucc L N.toIsNat Q N.toSucc]
 [An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
 [AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 [Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero]
@@ -319,7 +319,7 @@ instance iMulSuccNatEqAddMulByPeano
   mulSuccNatEqAddMulProof 
     iNatInductionRightByForallNat 
     N0 NS iNatAddNatByPeano iNatMulNatByPeano 
-    QTr iEqMemLeftEucToEqNatLeftEuc Q2S 
+    QTr iEqMemLeftEucToEqNatLeftEuc QtS 
     iEqNatAddNatLeftByPeano iEqNatAddNatRightByPeano 
     iAddNatCommByPeano iAddNatAssocByPeano iAddNatAssocRevByPeano 
     iAddZeroNatEqNatByPeano iAddSuccNatEqSuccByPeano Mn0 MnS}
@@ -869,7 +869,7 @@ instance iMulAddNatEqAddMulByPeano
 [NQ  : NatEqNat L N.toIsNat Q]
 [QSm : EqNatSymm L N.toIsNat Q]
 [QTr : EqNatTrans L N.toIsNat Q]
-[Q2S : EqNatToEqSucc L N.toIsNat Q N.toSucc]
+[QtS : EqNatToEqSucc L N.toIsNat Q N.toSucc]
 [An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
 [AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 [Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero]
@@ -978,7 +978,7 @@ instance iMulNatAssocByPeano
 [NQ  : NatEqNat L N.toIsNat Q]
 [QSm : EqNatSymm L N.toIsNat Q]
 [QTr : EqNatTrans L N.toIsNat Q]
-[Q2S : EqNatToEqSucc L N.toIsNat Q N.toSucc]
+[QtS : EqNatToEqSucc L N.toIsNat Q N.toSucc]
 [An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
 [AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 [Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero]

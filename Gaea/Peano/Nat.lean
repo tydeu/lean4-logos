@@ -23,6 +23,9 @@ export IsNat (nat)
 
 class PNat (P : Sort u) (T : Sort v) extends IsNat P T, Zero T, Succ T
 
+instance (P : Sort u) (T : Sort v) [N : IsNat P T] [Z : Zero T] [S : Succ T] 
+  : PNat P T := {toIsNat := N, toZero := Z, toSucc := S} 
+
 namespace PNat
 
 def prop {P : Sort u} {T : Sort v} (N : PNat P T) := P
