@@ -76,7 +76,7 @@ class MulZeroEqZero {P : Sort u} {T : Type v}
 
 def mulZeroEqZero {P : Sort u} {T : Type v} 
   {L : Logic P} [Q : LEq P T] [M : Mul T] [Z : Zero T] 
-  [C : MulZeroEqZero L Q M Z] := C.mulZeroEqZero
+  [K : MulZeroEqZero L Q M Z] := K.mulZeroEqZero
 
 -- a * 1 = a
 
@@ -86,7 +86,7 @@ class MulNatOneEqNat {P : Sort u} {T : Type v}
 
 def mulNatOneEqNat {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [O : One T]
-  [C : MulNatOneEqNat L N Q M O] {a : T} := C.mulNatOneEqNat a
+  [K : MulNatOneEqNat L N Q M O] {a : T} := K.mulNatOneEqNat a
 
 -- 1 * a = a
 
@@ -96,7 +96,7 @@ class MulOneNatEqNat {P : Sort u} {T : Type v}
 
 def mulOneNatEqNat {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [O : One T]
-  [C : MulOneNatEqNat L N Q M O] {a : T} := C.mulOneNatEqNat a
+  [K : MulOneNatEqNat L N Q M O] {a : T} := K.mulOneNatEqNat a
 
 --------------------------------------------------------------------------------
 -- Commutativity
@@ -110,7 +110,7 @@ class MulNatZeroComm {P : Sort u} {T : Type v}
 
 def mulNatZeroComm {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] [Z : Zero T]
-  [C : MulNatZeroComm L N Q M Z] {a : T} := C.mulNatZeroComm a
+  [K : MulNatZeroComm L N Q M Z] {a : T} := K.mulNatZeroComm a
 
 -- a * b = b * a
 
@@ -130,7 +130,7 @@ instance i_MemComm_to_MulNatComm {P : Sort u} {T : Type v}
 
 def mulNatComm {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T]
-  [C : MulNatComm L N Q M] {a b : T} := C.mulNatComm a b
+  [K : MulNatComm L N Q M] {a b : T} := K.mulNatComm a b
 
 --------------------------------------------------------------------------------
 -- Associativity
@@ -155,7 +155,7 @@ instance i_MemAssoc_to_MulNatAssoc {P : Sort u} {T : Type v}
 
 def mulNatAssoc {P : Sort u} {T : Type v}
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T]
-  [C : MulNatAssoc L N Q M] {a b c : T} := C.mulNatAssoc a b c
+  [K : MulNatAssoc L N Q M] {a b c : T} := K.mulNatAssoc a b c
 
 --------------------------------------------------------------------------------
 -- Distributivity
@@ -211,12 +211,12 @@ instance i_EqMemMagLeft_to_EqNatMulNatLeft  {P : Sort u} {T : Type v}
 
 def eqNatMulNatLeft {P : Sort u} {T : Type v}
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T]
-  [C : EqNatMulNatLeft L N Q M] {a b c : T} := C.eqNatMulNatLeft a b c
+  [K : EqNatMulNatLeft L N Q M] {a b c : T} := K.eqNatMulNatLeft a b c
 
 def eqNatMulNatLeft' {P : Sort u} {T : Type v} {L : Logic P} 
-  [N : IsNat P T] [Q : LEq P T] [M : Mul T] [C : EqNatMulNatLeft L N Q M] 
+  [N : IsNat P T] [Q : LEq P T] [M : Mul T] [K : EqNatMulNatLeft L N Q M] 
   {c a b : T} (Nc : L |- nat c) (Na : L |- nat a) (Nb : L|- nat b) 
-  := C.eqNatMulNatLeft a b c Na Nb Nc
+  := K.eqNatMulNatLeft a b c Na Nb Nc
 
 -- (a = b) -> (a * c = b * c)
 
@@ -238,16 +238,26 @@ instance i_EqMemMagRight_to_EqNatMulNatRight  {P : Sort u} {T : Type v}
 
 def eqNatMulNatRight {P : Sort u} {T : Type v}
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T]
-  [C : EqNatMulNatRight L N Q M] {a b c : T} := C.eqNatMulNatRight a b c
+  [K : EqNatMulNatRight L N Q M] {a b c : T} := K.eqNatMulNatRight a b c
 
 def eqNatMulNatRight' {P : Sort u} {T : Type v} {L : Logic P} 
-  [N : IsNat P T] [Q : LEq P T] [M : Mul T] [C : EqNatMulNatRight L N Q M] 
+  [N : IsNat P T] [Q : LEq P T] [M : Mul T] [K : EqNatMulNatRight L N Q M] 
   {c a b : T} (Nc : L |- nat c) (Na : L |- nat a) (Nb : L|- nat b) 
-  := C.eqNatMulNatRight a b c Na Nb Nc
+  := K.eqNatMulNatRight a b c Na Nb Nc
 
 --------------------------------------------------------------------------------
 -- Closure
 --------------------------------------------------------------------------------
+
+-- nat (0 * 0)
+
+class NatMulZero {P : Sort u} {T : Type v} 
+  (L : Logic P) (N : IsNat P T) (M : Mul T) (Z : Zero T) :=
+  (natMulZero : L |- nat (0 * 0 : T))
+
+def natMulZero {P : Sort u} {T : Type v} 
+  {L : Logic P} [N : IsNat P T] [M : Mul T] [Z : Zero T]
+  [K : NatMulZero L N M Z] := K.natMulZero
 
 -- nat (a * 0)
 
@@ -257,7 +267,7 @@ class NatMulNatZero {P : Sort u} {T : Type v}
 
 def natMulNatZero {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [M : Mul T] [Z : Zero T]
-  [C : NatMulNatZero L N M Z] {a : T} := C.natMulNatZero a
+  [K : NatMulNatZero L N M Z] {a : T} := K.natMulNatZero a
 
 -- nat (0 * a)
 
@@ -267,7 +277,7 @@ class NatMulZeroNat {P : Sort u} {T : Type v}
 
 def natMulZeroNat {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [M : Mul T] [Z : Zero T]
-  [C : NatMulZeroNat L N M Z] {a : T} := C.natMulZeroNat a 
+  [K : NatMulZeroNat L N M Z] {a : T} := K.natMulZeroNat a 
 
 -- nat (a * b)
 
@@ -276,11 +286,11 @@ class NatMulNat {P : Sort u} {T : Type v}
   (natMulNat : (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat (a * b)))
 
 def natMulNat {P : Sort u} {T : Type v}
-  {L : Logic P} [N : IsNat P T] [M : Mul T] [C : NatMulNat L N M]
-  {a b : T} := C.natMulNat a b
+  {L : Logic P} [N : IsNat P T] [M : Mul T] [K : NatMulNat L N M]
+  {a b : T} := K.natMulNat a b
 
 def natMul {P : Sort u} {T : Type v}
-  {L : Logic P} [N : IsNat P T] [M : Mul T] [C : NatMulNat L N M]
-  {a b : T} := C.natMulNat a b
+  {L : Logic P} [N : IsNat P T] [M : Mul T] [K : NatMulNat L N M]
+  {a b : T} := K.natMulNat a b
 
 end Gaea.Peano
