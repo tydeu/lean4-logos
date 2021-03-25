@@ -1,6 +1,6 @@
 import Gaea.Logic.Logic
 import Gaea.Logic.Eq.Syntax
-import Gaea.Logic.Classic.Syntax
+import Gaea.Logic.Basic.Syntax
 
 open Gaea.Logic
 

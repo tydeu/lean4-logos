@@ -1,5 +1,5 @@
 import Gaea.Peano.Forall.Rules
-import Gaea.Logic.Classic.Modules
+import Gaea.Logic.Basic.Modules
 
 universes u v
 

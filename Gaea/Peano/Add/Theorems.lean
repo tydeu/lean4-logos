@@ -1,4 +1,3 @@
-import Gaea.Logic
 import Gaea.Peano.Eq
 import Gaea.Peano.One
 import Gaea.Peano.Rules

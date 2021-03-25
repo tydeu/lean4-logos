@@ -60,7 +60,7 @@ def memSymm {P : Sort u} {T : Sort v}
 
 --------------------------------------------------------------------------------
 -- Transitivity
--- (a = b) /\ (b = c) -> (a = c)
+-- (R a b) /\ (R b c) -> (R a c)
 --------------------------------------------------------------------------------
 
 -- Unconstrained
@@ -97,7 +97,7 @@ def memTrans' {P : Sort u} {T : Sort v}
 -- Join
 --------------------------------------------------------------------------------
 
--- (x = a) /\ (y = b) /\ (a = b) -> (x = y)
+-- (R x a) /\ (R y b) /\ (R a b) -> (R x y)
 
 class RelMemJoin {P : Sort u} {T : Sort v} 
   (L : Logic P) (R : T -> T -> P) (C : T -> P) :=
@@ -109,7 +109,7 @@ def relMemJoin {P : Sort u} {T : Sort v}
   {L : Logic P} {R : T -> T -> P} {C : T -> P} 
   [K : RelMemJoin L R C] {x y a b : T} := K.relMemJoin x y a b 
 
--- (a = b) /\ (x = a) /\ (y = b) -> (x = y)
+-- (R a b) /\ (R x a) /\ (R y b) -> (R x y)
 
 def relMemJoin' {P : Sort u} {T : Sort v} 
   {L : Logic P} {R : T -> T -> P} {C : T -> P} 
@@ -171,5 +171,35 @@ instance {P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P} {C : T -> P}
 def memRightEuc {P : Sort u} {T : Sort v} 
   {L : Logic P} {R : T -> T -> P} {C : T -> P} 
   [K : MemRightEuc L R C] {a b c : T} := K.memRightEuc a b c 
+
+--------------------------------------------------------------------------------
+-- Predicate Substitution
+-- R a b -> (P a -> P b)
+--------------------------------------------------------------------------------
+
+class PredSubst {P : Sort u} {T : Sort v} (L : Logic P) (R : T -> T -> P) :=
+  (predSubst : (a b : T) -> (F : T -> P) -> 
+    (L |- R a b) -> (L |- F a) -> (L |- F b))
+
+def predSubst {P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P}
+  [K : PredSubst L R] {a b : T} := K.predSubst a b
+
+def predSubst' {P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P}
+  [K : PredSubst L R] {a b : T} {F : T -> P} := K.predSubst a b F
+
+--------------------------------------------------------------------------------
+-- Function Substitution
+-- (R a b) -> (R (f a) (f b))
+--------------------------------------------------------------------------------
+
+class FunSubst {P : Sort u} {T : Sort v} (L : Logic P) (R : T -> T -> P) :=
+  (funSubst : (a b : T) -> (f : T -> T) -> 
+    (L |- R a b) -> (L |- R (f a) (f b)))
+
+def funSubst {P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P}
+  [K : FunSubst L R] {a b : T} := K.funSubst a b
+
+def funSubst' {P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P}
+  [K : FunSubst L R] {a b : T} {f : T -> T} := K.funSubst a b f
 
 end Gaea.Logic

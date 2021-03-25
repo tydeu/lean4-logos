@@ -21,6 +21,8 @@ instance {P : Sort u} {T : Sort v} {L : Logic P}
   := {eqPredSubst := K.toEqPredSubst.eqPredSubst}
 
 namespace MEq
+abbrev lEq {P : Sort u} {T : Sort v} {L : Logic P} (K : MEq L T) 
+  := K.toLEq.lEq
 abbrev eqRefl {P : Sort u} {T : Sort v} {L : Logic P} (K : MEq L T) 
   := K.toEqRefl.eqRefl
 abbrev eqPredSubst {P : Sort u} {T : Sort v} {L : Logic P} (K : MEq L T) 

@@ -1,4 +1,3 @@
-import Gaea.Logic
 import Gaea.Peano.Eq
 import Gaea.Peano.Add
 import Gaea.Peano.Rules
@@ -535,8 +534,8 @@ def mulNatCommProof
 (NA  : NatAddNat L N.toIsNat A)  
 (NM  : NatMulNat L N.toIsNat M)
 (NS  : NatSuccNat L N.toIsNat N.toSucc)
-(QSm : EqNatSymm L N.toIsNat Q)
 (QTr : EqNatTrans L N.toIsNat Q)
+(QEL : EqNatLeftEuc L N.toIsNat Q)
 (QAL : EqNatAddNatLeft L N.toIsNat Q A)
 (M0C : MulNatZeroComm L N.toIsNat Q M N.toZero)
 (MSn : MulSuccNatEqAddMul L N.toIsNat Q M A N.toSucc)
@@ -556,14 +555,16 @@ def mulNatCommProof
     have NAaMba := natAdd Na NMba
     have NSMba := natS NMba
     have NMSba := natMul NSb Na
-    have NMSab := natMul Na NSb
-    apply eqNatLeftEuc NAaMab NMSab NMSba
-    exact mulNatSuccEqAddMul Na Nb
-    apply eqNatTrans' NAaMba NMSba NAaMab
-    exact mulSuccNatEqAddMul Nb Na
-    apply eqNatAddNatLeft' Na NMba NMab
-    apply eqNatSymm NMab NMba
-    exact Mab_eq_Mba
+    have NMaSb := natMul Na NSb
+    apply eqNatLeftEuc NAaMba NMaSb NMSba
+      ?MaSb_eq_AaMba ?MSba_eq_AaMba
+    case MaSb_eq_AaMba =>
+      apply eqNatTrans' NAaMab NMaSb NAaMba
+      exact mulNatSuccEqAddMul Na Nb
+      apply eqNatAddNatLeft' Na NMab NMba
+      exact Mab_eq_Mba
+    case MSba_eq_AaMba =>
+      exact mulSuccNatEqAddMul Nb Na
 
 instance iMulNatComm 
 {P : Sort u} {T : Type v} {L : Logic P} 
@@ -572,14 +573,14 @@ instance iMulNatComm
 [NA  : NatAddNat L N.toIsNat A]  
 [NM  : NatMulNat L N.toIsNat M]
 [NS  : NatSuccNat L N.toIsNat N.toSucc]
-[QSm : EqNatSymm L N.toIsNat Q]
 [QTr : EqNatTrans L N.toIsNat Q]
+[QEL : EqNatLeftEuc L N.toIsNat Q]
 [QAL : EqNatAddNatLeft L N.toIsNat Q A]
 [M0C : MulNatZeroComm L N.toIsNat Q M N.toZero]
 [MSn : MulSuccNatEqAddMul L N.toIsNat Q M A N.toSucc]
 [MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
 : MulNatComm L N.toIsNat Q M 
-:= {mulNatComm := mulNatCommProof I NA NM NS QSm QTr QAL M0C MSn MnS}
+:= {mulNatComm := mulNatCommProof I NA NM NS QTr QEL QAL M0C MSn MnS}
 
 instance iMulNatCommByPeano 
 {P : Sort u} {T : Type v} {L : Logic P} 
@@ -597,9 +598,11 @@ instance iMulNatCommByPeano
 [Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero]
 [MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
 : MulNatComm L N.toIsNat Q M := 
-{mulNatComm := mulNatCommProof iNatInductionRightByForallNat 
-  iNatAddNatByPeano iNatMulNatByPeano NS QSm QTr iEqNatAddNatLeftByPeano 
-  iMulNatZeroCommByNatMulZero iMulSuccNatEqAddMulByPeano MnS}
+{mulNatComm := 
+  mulNatCommProof iNatInductionRightByForallNat 
+    iNatAddNatByPeano iNatMulNatByPeano NS 
+    QTr iEqMemLeftEucToEqNatLeftEuc iEqNatAddNatLeftByPeano 
+    iMulNatZeroCommByNatMulZero iMulSuccNatEqAddMulByPeano MnS}
 
 --------------------------------------------------------------------------------
 -- Substitutivity
