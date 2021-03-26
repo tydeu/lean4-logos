@@ -15,17 +15,17 @@ instance {P : Sort u} {T : Sort v} {L : Logic P}
   [Fa : LForall P T] [I : ForallIntro L Fa] [E : ForallElim L Fa] :
   MForall L T := {toLForall := Fa, toForallIntro := I, toForallElim := E}
 
-instance {P : Sort u} {T : Sort v} {L : Logic P} [C : MForall L T] :
-  ForallIntro L C.toLForall := {forallIntro := C.toForallIntro.forallIntro}
+instance {P : Sort u} {T : Sort v} {L : Logic P} [K : MForall L T] :
+  ForallIntro L K.toLForall := {forallIntro := K.toForallIntro.forallIntro}
 
-instance {P : Sort u} {T : Sort v} {L : Logic P} [C : MForall L T] :
-  ForallElim L C.toLForall := {forallElim := C.toForallElim.forallElim}
+instance {P : Sort u} {T : Sort v} {L : Logic P} [K : MForall L T] :
+  ForallElim L K.toLForall := {forallElim := K.toForallElim.forallElim}
 
 namespace MForall
-abbrev forallIntro {P : Sort u} {T : Sort v} {L : Logic P} (C : MForall L T) 
-  := C.toForallIntro.forallIntro
-abbrev ForallElim {P : Sort u} {T : Sort v} {L : Logic P} (C : MForall L T) 
-  := C.toForallElim.forallElim
+abbrev forallIntro {P : Sort u} {T : Sort v} {L : Logic P} (K : MForall L T) 
+  := K.toForallIntro.forallIntro
+abbrev ForallElim {P : Sort u} {T : Sort v} {L : Logic P} (K : MForall L T) 
+  := K.toForallElim.forallElim
 end MForall
 
 -- Exists
@@ -38,17 +38,17 @@ instance {P : Sort u} {T : Sort v} {L : Logic P}
   [Fa : LExists P T] [I : ExistsIntro L Fa] [E : ExistsElim L Fa] :
   MExists L T := {toLExists := Fa, toExistsIntro := I, toExistsElim := E}
 
-instance {P : Sort u} {T : Sort v} {L : Logic P} [C : MExists L T] :
-  ExistsIntro L C.toLExists := {existsIntro := C.toExistsIntro.existsIntro}
+instance {P : Sort u} {T : Sort v} {L : Logic P} [K : MExists L T] :
+  ExistsIntro L K.toLExists := {existsIntro := K.toExistsIntro.existsIntro}
 
-instance {P : Sort u} {T : Sort v} {L : Logic P} [C : MExists L T] :
-  ExistsElim L C.toLExists := {existsElim := C.toExistsElim.existsElim}
+instance {P : Sort u} {T : Sort v} {L : Logic P} [K : MExists L T] :
+  ExistsElim L K.toLExists := {existsElim := K.toExistsElim.existsElim}
 
 namespace MExists
-abbrev existsIntro {P : Sort u} {T : Sort v} {L : Logic P} (C : MExists L T) 
-  := C.toExistsIntro.existsIntro
-abbrev ExistsElim {P : Sort u} {T : Sort v} {L : Logic P} (C : MExists L T) 
-  := C.toExistsElim.existsElim
+abbrev existsIntro {P : Sort u} {T : Sort v} {L : Logic P} (K : MExists L T) 
+  := K.toExistsIntro.existsIntro
+abbrev ExistsElim {P : Sort u} {T : Sort v} {L : Logic P} (K : MExists L T) 
+  := K.toExistsElim.existsElim
 end MExists
 
 -- If
@@ -61,17 +61,17 @@ instance {P : Sort u} {T : Sort v} {L : Logic P}
   [If : LIf P] [I : IfIntro L If] [E : IfElim L If] :
   MIf L := {toLIf := If, toIfIntro := I, toIfElim := E}
 
-instance {P : Sort u} {L : Logic P} {C : MIf L} :
-  IfIntro L C.toLIf := {ifIntro := C.toIfIntro.ifIntro}
+instance {P : Sort u} {L : Logic P} {K : MIf L} :
+  IfIntro L K.toLIf := {ifIntro := K.toIfIntro.ifIntro}
 
-instance {P : Sort u} {L : Logic P} {C : MIf L} :
-  IfElim L C.toLIf := {ifElim := C.toIfElim.ifElim}
+instance {P : Sort u} {L : Logic P} {K : MIf L} :
+  IfElim L K.toLIf := {ifElim := K.toIfElim.ifElim}
 
 namespace MIf
-abbrev ifIntro {P : Sort u} {L : Logic P} (C : MIf L) 
-  := C.toIfIntro.ifIntro
-abbrev ifElim {P : Sort u} {L : Logic P} (C : MIf L) 
-  := C.toIfElim.ifElim
+abbrev ifIntro {P : Sort u} {L : Logic P} (K : MIf L) 
+  := K.toIfIntro.ifIntro
+abbrev ifElim {P : Sort u} {L : Logic P} (K : MIf L) 
+  := K.toIfElim.ifElim
 end MIf
 
 -- Iff
@@ -85,22 +85,22 @@ instance {P : Sort u} {T : Sort v} {L : Logic P} [Iff : LIff P]
   [If : LIf P] [I : IffIntro L Iff If] [T : IffTo L Iff If] [F : IffFrom L Iff If] :
   MIff L If := {toLIff := Iff, toIffIntro := I, toIffTo := T, toIffFrom := F}
 
-instance {P : Sort u} {L : Logic P} [If : LIf P] [C : MIff L If] :
-  IffIntro L C.toLIff If := {iffIntro := C.toIffIntro.iffIntro}
+instance {P : Sort u} {L : Logic P} [If : LIf P] [K : MIff L If] :
+  IffIntro L K.toLIff If := {iffIntro := K.toIffIntro.iffIntro}
 
-instance {P : Sort u} {L : Logic P} [If : LIf P] [C : MIff L If] :
-  IffTo L C.toLIff If := {iffTo := C.toIffTo.iffTo}
+instance {P : Sort u} {L : Logic P} [If : LIf P] [K : MIff L If] :
+  IffTo L K.toLIff If := {iffTo := K.toIffTo.iffTo}
 
-instance {P : Sort u} {L : Logic P} [If : LIf P] [C : MIff L If] :
-  IffFrom L C.toLIff If := {iffFrom := C.toIffFrom.iffFrom}
+instance {P : Sort u} {L : Logic P} [If : LIf P] [K : MIff L If] :
+  IffFrom L K.toLIff If := {iffFrom := K.toIffFrom.iffFrom}
 
 namespace MIff
-abbrev iffIntro {P : Sort u} {L : Logic P} {If : LIf P} (C : MIff L If) 
-  := C.toIffIntro.iffIntro
-abbrev IffTo {P : Sort u} {L : Logic P} {If : LIf P} (C : MIff L If) 
-  := C.toIffTo.iffTo
-abbrev IffFrom {P : Sort u} {L : Logic P} {If : LIf P} (C : MIff L If) 
-  := C.toIffFrom.iffFrom
+abbrev iffIntro {P : Sort u} {L : Logic P} {If : LIf P} (K : MIff L If) 
+  := K.toIffIntro.iffIntro
+abbrev IffTo {P : Sort u} {L : Logic P} {If : LIf P} (K : MIff L If) 
+  := K.toIffTo.iffTo
+abbrev IffFrom {P : Sort u} {L : Logic P} {If : LIf P} (K : MIff L If) 
+  := K.toIffFrom.iffFrom
 end MIff
 
 -- Conjunction
@@ -114,50 +114,45 @@ instance {P : Sort u} {T : Sort v} {L : Logic P}
   [Cj : Conj P] [I : ConjIntro L Cj] [Lt : ConjLeft L Cj] [Rt : ConjRight L Cj] :
   MConj L := {toConj := Cj, toConjIntro := I, toConjLeft := Lt, toConjRight := Rt}
 
-instance {P : Sort u} {L : Logic P} [C : MConj L] :
-  ConjIntro L C.toConj := {conjIntro := C.toConjIntro.conjIntro}
+instance {P : Sort u} {L : Logic P} [K : MConj L] :
+  ConjIntro L K.toConj := {conjIntro := K.toConjIntro.conjIntro}
 
-instance {P : Sort u} {L : Logic P} [C : MConj L] :
-  ConjLeft L C.toConj := {conjLeft := C.toConjLeft.conjLeft}
+instance {P : Sort u} {L : Logic P} [K : MConj L] :
+  ConjLeft L K.toConj := {conjLeft := K.toConjLeft.conjLeft}
 
-instance {P : Sort u} {L : Logic P} [C : MConj L] :
-  ConjRight L C.toConj := {conjRight := C.toConjRight.conjRight}
+instance {P : Sort u} {L : Logic P} [K : MConj L] :
+  ConjRight L K.toConj := {conjRight := K.toConjRight.conjRight}
 
 namespace MConj
-abbrev conjIntro {P : Sort u} {L : Logic P} (C : MConj L) 
-  := C.toConjIntro.conjIntro
-abbrev conjLeft {P : Sort u} {L : Logic P} (C : MConj L)
-  := C.toConjLeft.conjLeft
-abbrev conjRight {P : Sort u} {L : Logic P} (C : MConj L) 
-  := C.toConjRight.conjRight
+abbrev conjIntro {P : Sort u} {L : Logic P} (K : MConj L) 
+  := K.toConjIntro.conjIntro
+abbrev conjLeft {P : Sort u} {L : Logic P} (K : MConj L)
+  := K.toConjLeft.conjLeft
+abbrev conjRight {P : Sort u} {L : Logic P} (K : MConj L) 
+  := K.toConjRight.conjRight
 end MConj
 
 -- Not
 
-class MNot {P : Sort u} (L : Logic P) 
-  (If : LIf P) (F : LFalse P) extends LNot P :=
-  (toNotIntro : NotIntro L toLNot If F)
-  (toNotElim : NotElim L toLNot If F)
+class MNot {P : Sort u} (L : Logic P) (F : LFalse P) extends LNot P :=
+  (toNotIntro : NotIntro L toLNot F)
+  (toNotElim : NotElim L toLNot F)
 
-instance {P : Sort u} {T : Sort v} {L : Logic P} [Not : LNot P] 
-  [If : LIf P] [F : LFalse P] [I : NotIntro L Not If F] [E : NotElim L Not If F] :
-  MNot L If F := {toLNot := Not, toNotIntro := I, toNotElim := E}
+instance {P : Sort u} {T : Sort v} {L : Logic P} 
+  [Nt : LNot P] [F : LFalse P] [I : NotIntro L Nt F] [E : NotElim L Nt F] :
+  MNot L F := {toLNot := Nt, toNotIntro := I, toNotElim := E}
 
-instance {P : Sort u} {L : Logic P} 
-  [If : LIf P] [F : LFalse P] [C : MNot L If F] :
-  NotIntro L C.toLNot If F := {notIntro := C.toNotIntro.notIntro}
+instance {P : Sort u} {L : Logic P} [F : LFalse P] [K : MNot L F] :
+  NotIntro L K.toLNot F := {notIntro := K.toNotIntro.notIntro}
 
-instance {P : Sort u} {L : Logic P}  
-  [If : LIf P] [F : LFalse P] [C : MNot L If F] :
-  NotElim L C.toLNot If F := {notElim := C.toNotElim.notElim}
+instance {P : Sort u} {L : Logic P} [F : LFalse P] [K : MNot L F] :
+  NotElim L K.toLNot F := {notElim := K.toNotElim.notElim}
 
 namespace MNot
-abbrev notIntro {P : Sort u} {L : Logic P} 
-  {If : LIf P} {F : LFalse P} (C : MNot L If F) 
-  := C.toNotIntro.notIntro
-abbrev notElim {P : Sort u} {L : Logic P} 
-  {If : LIf P} {F : LFalse P} (C : MNot L If F) 
-  := C.toNotElim.notElim
+abbrev notIntro {P : Sort u} {L : Logic P} {F : LFalse P} (K : MNot L F) 
+  := K.toNotIntro.notIntro
+abbrev notElim {P : Sort u} {L : Logic P} {F : LFalse P} (K : MNot L F) 
+  := K.toNotElim.notElim
 end MNot
 
 end Gaea.Logic
