@@ -103,34 +103,34 @@ abbrev IffFrom {P : Sort u} {L : Logic P} {If : LIf P} (C : MIff L If)
   := C.toIffFrom.iffFrom
 end MIff
 
--- And
+-- Conjunction
 
-class MAnd {P : Sort u} (L : Logic P) extends LAnd P :=
-  (toAndIntro : AndIntro L toLAnd)
-  (toAndLeft : AndLeft L toLAnd)
-  (toAndRight : AndRight L toLAnd)
+class MConj {P : Sort u} (L : Logic P) extends Conj P :=
+  (toConjIntro : ConjIntro L toConj)
+  (toConjLeft : ConjLeft L toConj)
+  (toConjRight : ConjRight L toConj)
 
 instance {P : Sort u} {T : Sort v} {L : Logic P} 
-  [And : LAnd P] [I : AndIntro L And] [Lt : AndLeft L And] [Rt : AndRight L And] :
-  MAnd L := {toLAnd := And, toAndIntro := I, toAndLeft := Lt, toAndRight := Rt}
+  [Cj : Conj P] [I : ConjIntro L Cj] [Lt : ConjLeft L Cj] [Rt : ConjRight L Cj] :
+  MConj L := {toConj := Cj, toConjIntro := I, toConjLeft := Lt, toConjRight := Rt}
 
-instance {P : Sort u} {L : Logic P} [C : MAnd L] :
-  AndIntro L C.toLAnd := {andIntro := C.toAndIntro.andIntro}
+instance {P : Sort u} {L : Logic P} [C : MConj L] :
+  ConjIntro L C.toConj := {conjIntro := C.toConjIntro.conjIntro}
 
-instance {P : Sort u} {L : Logic P} [C : MAnd L] :
-  AndLeft L C.toLAnd := {andLeft := C.toAndLeft.andLeft}
+instance {P : Sort u} {L : Logic P} [C : MConj L] :
+  ConjLeft L C.toConj := {conjLeft := C.toConjLeft.conjLeft}
 
-instance {P : Sort u} {L : Logic P} [C : MAnd L] :
-  AndRight L C.toLAnd := {andRight := C.toAndRight.andRight}
+instance {P : Sort u} {L : Logic P} [C : MConj L] :
+  ConjRight L C.toConj := {conjRight := C.toConjRight.conjRight}
 
-namespace MAnd
-abbrev andIntro {P : Sort u} {L : Logic P} (C : MAnd L) 
-  := C.toAndIntro.andIntro
-abbrev andLeft {P : Sort u} {L : Logic P} (C : MAnd L)
-  := C.toAndLeft.andLeft
-abbrev andRight {P : Sort u} {L : Logic P} (C : MAnd L) 
-  := C.toAndRight.andRight
-end MAnd
+namespace MConj
+abbrev conjIntro {P : Sort u} {L : Logic P} (C : MConj L) 
+  := C.toConjIntro.conjIntro
+abbrev conjLeft {P : Sort u} {L : Logic P} (C : MConj L)
+  := C.toConjLeft.conjLeft
+abbrev conjRight {P : Sort u} {L : Logic P} (C : MConj L) 
+  := C.toConjRight.conjRight
+end MConj
 
 -- Not
 

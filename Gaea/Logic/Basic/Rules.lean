@@ -82,63 +82,63 @@ def iffFrom' {P : Sort u} {L : Logic P} [Iff : LIff P] [If : LIf P]
   : (L |- p <-> q) -> ((L |- q) -> (L |- p))
   := fun pIff => K'.ifElim q p (K.iffFrom p q pIff)
 
--- And
+-- Conjuction
 
-class AndIntro {P : Sort u} (L : Logic P) (And : LAnd P) := 
-  (andIntro : (p q : P) -> (L |- p) -> (L |- q) -> (L |- p /\ q)) 
+class ConjIntro {P : Sort u} (L : Logic P) (Cj : Conj P) := 
+  (conjIntro : (p q : P) -> (L |- p) -> (L |- q) -> (L |- p /\ q)) 
 
-def andIntro {P : Sort u} {L : Logic P} [And : LAnd P] 
-  [K : AndIntro L And] {p q : P} := K.andIntro p q
+def conjIntro {P : Sort u} {L : Logic P} [Cj : Conj P] 
+  [K : ConjIntro L Cj] {p q : P} := K.conjIntro p q
 
-class AndLeft {P : Sort u} (L : Logic P) (And : LAnd P) := 
-  (andLeft : (p q : P) -> (L |- p /\ q) -> (L |- p))
+class ConjLeft {P : Sort u} (L : Logic P) (Cj : Conj P) := 
+  (conjLeft : (p q : P) -> (L |- p /\ q) -> (L |- p))
 
-def andLeft {P : Sort u} {L : Logic P} [And : LAnd P] 
-  [K : AndLeft L And] {p q : P} := K.andLeft p q
+def conjLeft {P : Sort u} {L : Logic P} [Cj : Conj P] 
+  [K : ConjLeft L Cj] {p q : P} := K.conjLeft p q
 
-class AndRight {P : Sort u} (L : Logic P) (And : LAnd P) := 
-  (andRight : (p q : P) -> (L |- p /\ q) -> (L |- q))
+class ConjRight {P : Sort u} (L : Logic P) (Cj : Conj P) := 
+  (conjRight : (p q : P) -> (L |- p /\ q) -> (L |- q))
 
-def andRight {P : Sort u} {L : Logic P} [And : LAnd P] 
-  [K : AndRight L And] {p q : P} := K.andRight p q
+def conjRight {P : Sort u} {L : Logic P} [Cj : Conj P] 
+  [K : ConjRight L Cj] {p q : P} := K.conjRight p q
 
--- Or
+-- Disjunction
 
-class OrIntroLeft {P : Sort u} (L : Logic P) (Or : LOr P)  := 
-  (orIntroLeft : (p q : P) -> (L |- q) -> (L |- p \/ q)) 
+class DisjIntroLeft {P : Sort u} (L : Logic P) (Dj : Disj P)  := 
+  (disjIntroLeft : (p q : P) -> (L |- q) -> (L |- p \/ q)) 
 
-def orIntroLeft {P : Sort u} {L : Logic P} [Or : LOr P] 
-  [K : OrIntroLeft L Or] {p q : P} := K.orIntroLeft p q
+def disjIntroLeft {P : Sort u} {L : Logic P} [Dj : Disj P] 
+  [K : DisjIntroLeft L Dj] {p q : P} := K.disjIntroLeft p q
 
-class OrIntroRight {P : Sort u} (L : Logic P) (Or : LOr P)  := 
-  (orIntroRight : (p q : P) -> (L |- p) -> (L |- p \/ q)) 
+class DisjIntroRight {P : Sort u} (L : Logic P) (Dj : Disj P)  := 
+  (disjIntroRight : (p q : P) -> (L |- p) -> (L |- p \/ q)) 
 
-def orIntroRight {P : Sort u} {L : Logic P} [Or : LOr P] 
-  [K : OrIntroRight L Or] {p q : P} := K.orIntroRight p q
+def disjIntroRight {P : Sort u} {L : Logic P} [Dj : Disj P] 
+  [K : DisjIntroRight L Dj] {p q : P} := K.disjIntroRight p q
 
-class OrElim {P : Sort u} (L : Logic P) (Or : LOr P) (If : LIf P) := 
-  (orElim : (p q r : P) -> (L |- p \/ q) -> 
+class DisjElim {P : Sort u} (L : Logic P) (Dj : Disj P) (If : LIf P) := 
+  (disjElim : (p q r : P) -> (L |- p \/ q) -> 
     (L |- p -> r) -> (L |- q -> r) -> (L |- r))
 
-def orElim {P : Sort u} {L : Logic P} [Or : LOr P] [If : LIf P] 
-  [K : OrElim L Or If] {p q r : P} := K.orElim p q r
+def disjElim {P : Sort u} {L : Logic P} [Dj : Disj P] [If : LIf P] 
+  [K : DisjElim L Dj If] {p q r : P} := K.disjElim p q r
 
-def orElim' {P : Sort u} {L : Logic P} [Or : LOr P] [If : LIf P] 
-  [K : OrElim L Or If] [K' : IfIntro L If] {p q r : P} 
+def disjElim' {P : Sort u} {L : Logic P} [Dj : Disj P] [If : LIf P] 
+  [K : DisjElim L Dj If] [K' : IfIntro L If] {p q r : P} 
   : (L |- p \/ q) -> ((L |- p) -> (L |- r)) -> ((L |- q) -> (L |- r)) -> (L |- r)
-  := fun pq pr qr => K.orElim p q r pq (K'.ifIntro p r pr) (K'.ifIntro q r qr)
+  := fun pq pr qr => K.disjElim p q r pq (K'.ifIntro p r pr) (K'.ifIntro q r qr)
 
-class OrElimLeft {P : Sort u} (L : Logic P) (Or : LOr P) (Not : LNot P) := 
-  (orElimLeft : (p q : P) -> (L |- p \/ q) -> (L |- ~p) -> (L |- q))
+class DisjElimLeft {P : Sort u} (L : Logic P) (Dj : Disj P) (Not : LNot P) := 
+  (disjElimLeft : (p q : P) -> (L |- p \/ q) -> (L |- ~p) -> (L |- q))
 
-def orElimLeft {P : Sort u} {L : Logic P} [Or : LOr P] [Not : LNot P] 
-  [K : OrElimLeft L Or Not] {p q : P} := K.orElimLeft p q
+def disjElimLeft {P : Sort u} {L : Logic P} [Dj : Disj P] [Not : LNot P] 
+  [K : DisjElimLeft L Dj Not] {p q : P} := K.disjElimLeft p q
 
-class OrElimRight {P : Sort u} (L : Logic P) (Or : LOr P) (Not : LNot P) := 
-  (orElimRight : (p q : P) -> (L |- p \/ q) -> (L |- ~q) -> (L |- p))
+class DisjElimRight {P : Sort u} (L : Logic P) (Dj : Disj P) (Not : LNot P) := 
+  (disjElimRight : (p q : P) -> (L |- p \/ q) -> (L |- ~q) -> (L |- p))
 
-def orElimRight {P : Sort u} {L : Logic P} [Or : LOr P] [Not : LNot P] 
-  [K : OrElimRight L Or Not] {p q : P} := K.orElimRight p q
+def disjElimRight {P : Sort u} {L : Logic P} [Dj : Disj P] [Not : LNot P] 
+  [K : DisjElimRight L Dj Not] {p q : P} := K.disjElimRight p q
 
 -- Not
 

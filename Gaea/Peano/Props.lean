@@ -30,12 +30,12 @@ def eqNatSymm {P : Sort u} (T : Sort v)
 
 -- Axiom 4
 def eqNatTrans {P : Sort u} (T : Sort v) 
-  [LEq P T] [LIf P] [LAnd P] [ForallNat P T] : P :=
+  [LEq P T] [LIf P] [Conj P] [ForallNat P T] : P :=
   forallNat (x y z : T) => x = y /\ y = z -> x = z
 
 -- Axiom 5
 def natEqNat {P : Sort u} (L : Logic P) (T : Sort v) 
-  [IsNat P T] [LEq P T] [LIf P] [LAnd P] [LForall P T] : P :=
+  [IsNat P T] [LEq P T] [LIf P] [Conj P] [LForall P T] : P :=
   forall (a b : T) => nat b /\ a = b -> nat a
 
 -- Axiom 6
@@ -115,7 +115,7 @@ def leIffAddNat
 -- Axiom 2
 def strongNatInduction 
   {P : Sort u} (T : Type v) 
-  [LIf P] [LAnd P] [LForall P (T -> P)] 
+  [LIf P] [Conj P] [LForall P (T -> P)] 
   [ForallNat P T] [LE P T] [Zero T] [Succ T] : P := 
   forall (f : T -> P) => 
     f 0 -> 

@@ -22,10 +22,10 @@ infixr:25 " ⇒ "   => LIf.lIf
 infix:20 " <-> "  => LIff.lIff
 infix:20 " ⇔ "   => LIff.lIff
 
-infixr:35 " /\\ " => LAnd.lAnd
-infixr:35 " ∧ "   => LAnd.lAnd
-infixr:30 " \\/ " => LOr.lOr
-infixr:30 " ∨ "   => LOr.lOr
+infixr:35 " /\\ " => Conj.conj
+infixr:35 " ∧ "   => Conj.conj
+infixr:30 " \\/ " => Disj.disj
+infixr:30 " ∨ "   => Disj.disj
 
 prefix "~" => LNot.lNot
 prefix "¬" => LNot.lNot

@@ -18,11 +18,11 @@ class LIf (prop : Sort u) :=
 class LIff (prop : Sort u) :=
   (lIff : prop -> prop -> prop)
 
-class LAnd (prop : Sort u):=
-  (lAnd : prop -> prop -> prop)
+class Conj (prop : Sort u):=
+  (conj : prop -> prop -> prop)
 
-class LOr (prop : Sort u) :=
-  (lOr : prop -> prop -> prop)
+class Disj (prop : Sort u) :=
+  (disj : prop -> prop -> prop)
 
 class LNot (prop : Sort u) :=
   (lNot : prop -> prop)
