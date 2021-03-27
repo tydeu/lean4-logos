@@ -5,6 +5,21 @@ namespace Gaea.Logic
 universe u
 variable {P : Sort u} (L : Logic P)
 
+-- Contraposition
+-- (L |- p -> q) <-> (~q -> ~p)
+
+class ContraIfIntro {P : Sort u} (L : Logic P) (If : LIf P) (Nt : LNot P) :=
+  contraIfIntro : (p q : P) -> ((L |- ~q) -> (L |- ~p)) -> (L |- p -> q) 
+
+def contraIfIntro {P : Sort u} {L : Logic P} [If : LIf P] [Nt : LNot P]
+  [K : ContraIfIntro L If Nt] {p q : P} := K.contraIfIntro p q
+
+class ContraIfElim {P : Sort u} (L : Logic P) (If : LIf P) (Nt : LNot P) :=
+  contraIfElim : (p q : P) -> (L |- p -> q) -> ((L |- ~q) -> (L |- ~p)) 
+
+def contraIfElim {P : Sort u} {L : Logic P} [If : LIf P] [Nt : LNot P]
+  [K : ContraIfElim L If Nt] {p q : P} := K.contraIfElim p q
+
 -- Modus Ponens
 -- (p -> q) /\ p |- q 
 

@@ -9,17 +9,37 @@ variable {P : Sort u} (L : Logic P) (F : P -> P -> P)
 -- p |- F p p
 
 class LRefl :=
-  lRefl : (p : P) -> (L |- p) -> (L |- F p p)
+  lRefl : (p : P) -> (L |- F p p)
 
-def lRefl {L F} [K :  LRefl L F] {p : P} := K.lRefl p
+def lRefl {L : Logic P} {F} [K :  LRefl L F] := K.lRefl
+def lRefl' {L F} [K :  LRefl L F] {p : P} := K.lRefl p
 
--- Commutativity
+-- Tautology
+-- p |- F p p
+
+class Taut :=
+  taut : (p : P) -> (L |- p) -> (L |- F p p)
+
+def taut {L F} [K :  Taut L F] {p : P} := K.taut p
+
+instance iTautOfLRefl {L : Logic P} {F} [K :  LRefl L F] : Taut L F
+  := {taut := fun p _ => lRefl p}
+
+-- Symmetry / Commutativity
 -- F p q -|- F q p
 
-class LComm :=
-  lComm : (p q : P) -> (L |- F p q) -> (L |- F q p)
+class LSymm :=
+  lSymm : (p q : P) -> (L |- F p q) -> (L |- F q p)
 
-def lComm {L F} [K :  LComm L F] {p q : P} := K.lComm p q
+def lSymm {L F} [K :  LSymm L F] {p q : P} := K.lSymm p q
+
+-- Transitivity
+-- F a b , F b c |- F a c 
+
+class LTrans :=
+  lTrans : (p q r : P) -> (L |- F p q) -> (L |- F q r) -> (L |- F p r)
+
+def lTrans {L F} [K :  LTrans L F] {p q r : P} := K.lTrans p q r
 
 -- Associativity
 -- F (F p q) r -|- F p (F q r)

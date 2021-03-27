@@ -1,5 +1,7 @@
+import Gaea.Logic.Rules
 import Gaea.Logic.Basic.Rules
-import Gaea.Logic.Classic.Rules
+import Gaea.Logic.Basic.Modules
+import Gaea.Logic.Rel.Rules
 
 namespace Gaea.Logic
 
@@ -7,55 +9,53 @@ universe u
 variable {P : Sort u}
 
 --------------------------------------------------------------------------------
--- Contrapositive
+-- If
 --------------------------------------------------------------------------------
 
--- (~q |- ~p) |- (p -> q)
+-- Reflexitivity
+-- p -> (p -> p)
 
-def contraIfIntroByIfNotDne {L : Logic P} 
-{If : LIf P} {Nt : LNot P} {F : LFalse P}
-(IfI : IfIntro L If) 
-(NtI : NotIntro L Nt F)
-(NtE : NotElim L Nt F)
-(DnE : DblNegElim L Nt)
-: (p q : P) -> ((L |- ~q) -> (L |- ~p)) -> (L |- p -> q)
+def ifReflByIIntro {L : Logic P} 
+{If : LIf P} (IfI : IfIntro L If)
+: (p : P) -> (L |- p -> p)
 := by
-  intro p q Nq_to_Np
+  intro p
+  apply ifIntro
+  exact id 
+
+instance iIfReflByIntro {L : Logic P} [If : LIf P] [IfI : IfIntro L If]
+: LRefl L If.lIf := {lRefl := ifReflByIIntro IfI}
+
+namespace MIf
+abbrev toLRefl {L : Logic P} (K : MIf L) : LRefl L K.lIf := iIfReflByIntro
+abbrev toRefl {L : Logic P} (K : MIf L) : Refl L K.lIf := iReflOfLRefl
+abbrev ifRefl {L : Logic P} (K : MIf L) := K.toLRefl.lRefl
+abbrev refl {L : Logic P} (K : MIf L) := K.ifRefl
+abbrev toTaut {L : Logic P} (K : MIf L) : Taut L K.lIf := iTautOfLRefl
+abbrev ifTaut {L : Logic P} (K : MIf L) := K.toTaut.taut
+abbrev taut {L : Logic P} (K : MIf L) {p} := K.ifTaut p
+end MIf
+
+-- Transitivity
+-- (p -> q) -> (q -> r) -> (p -> r)
+
+def ifTransByIE {L : Logic P} 
+{If : LIf P} (IfI : IfIntro L If) (IfE : IfElim L If)
+: (p q r : P) -> (L |- p -> q) -> (L |- q -> r) -> (L |- p -> r)
+:= by
+  intro p q r LpTq LqTr
   apply ifIntro; intro Lp
-  apply dblNegElim
-  apply notIntro; intro LNq
-  have LNp := Nq_to_Np LNq
-  exact notElim LNp Lp
+  exact ifElim LqTr (ifElim LpTq Lp) 
 
-instance iContraIfIntroByIfNotDne {L : Logic P} 
-[If : LIf P] [Nt : LNot P] [F : LFalse P]
-[IfI : IfIntro L If]
-[NtI : NotIntro L Nt F]
-[NtE : NotElim L Nt F]
-[DnE : DblNegElim L Nt]
-: ContraIfIntro L If Nt :=
-{contraIfIntro := contraIfIntroByIfNotDne IfI NtI NtE DnE}
+instance iIfTransByIE {L : Logic P} 
+[If : LIf P] [IfI : IfIntro L If] [IfE : IfElim L If]
+: LTrans L If.lIf := {lTrans := ifTransByIE IfI IfE}
 
--- (p -> q) |- (~q |- ~p) 
-
-def contraIfElimByIfNot {L : Logic P} 
-{If : LIf P} {Nt : LNot P} {F : LFalse P}
-(IfE : IfElim L If) 
-(NtI : NotIntro L Nt F)
-(NtE : NotElim L Nt F)
-: (p q : P) -> (L |- p -> q) -> (L |- ~q) -> (L |- ~p)
-:= by
-  intro p q LpTq LNq
-  apply notIntro; intro Lp
-  have Lq := ifElim LpTq Lp
-  exact notElim LNq Lq
-
-instance iContraIfElimByIfNot {L : Logic P} 
-[If : LIf P] [Nt : LNot P] [F : LFalse P]
-[IfE : IfElim L If]
-[NtI : NotIntro L Nt F]
-[NtE : NotElim L Nt F]
-: ContraIfElim L If Nt :=
-{contraIfElim := contraIfElimByIfNot IfE NtI NtE}
+namespace MIf
+abbrev toLTrans {L : Logic P} (K : MIf L) : LTrans L K.lIf := iIfTransByIE
+abbrev toTrans {L : Logic P} (K : MIf L) : Trans L K.lIf := iTransOfLTrans
+abbrev ifTrans {L : Logic P} (K : MIf L) := K.toLTrans.lTrans
+abbrev trans {L : Logic P} (K : MIf L) {p q r} := K.ifTrans p q r
+end MIf
 
 end Gaea.Logic

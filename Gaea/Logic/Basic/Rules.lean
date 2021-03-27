@@ -55,20 +55,6 @@ class IfElim {P : Sort u} (L : Logic P) (If : LIf P) :=
 def ifElim {P : Sort u} {L : Logic P} [If : LIf P] [K : IfElim L If] 
   {p q : P} := K.ifElim p q
 
--- (L |- p -> q) <-> (~q -> ~p)
-
-class ContraIfIntro {P : Sort u} (L : Logic P) (If : LIf P) (Nt : LNot P) :=
-  contraIfIntro : (p q : P) -> ((L |- ~q) -> (L |- ~p)) -> (L |- p -> q) 
-
-def contraIfIntro {P : Sort u} {L : Logic P} [If : LIf P] [Nt : LNot P]
-  [K : ContraIfIntro L If Nt] {p q : P} := K.contraIfIntro p q
-
-class ContraIfElim {P : Sort u} (L : Logic P) (If : LIf P) (Nt : LNot P) :=
-  contraIfElim : (p q : P) -> (L |- p -> q) -> ((L |- ~q) -> (L |- ~p)) 
-
-def contraIfElim {P : Sort u} {L : Logic P} [If : LIf P] [Nt : LNot P]
-  [K : ContraIfElim L If Nt] {p q : P} := K.contraIfElim p q
-
 --------------------------------------------------------------------------------
 -- Iff
 --------------------------------------------------------------------------------
@@ -84,27 +70,27 @@ def iffIntro' {P : Sort u} {L : Logic P} [Iff : LIff P] [If : LIf P]
   : ((L |- p) -> (L |- q)) -> ((L |- q) -> (L |- p)) -> (L |- p <-> q)
   := fun pq qp => K.iffIntro p q (K'.ifIntro p q pq) (K'.ifIntro q p qp)
 
-class IffTo {P : Sort u} (L : Logic P) (Iff : LIff P) (If : LIf P) := 
-  (iffTo : (p q : P) -> (L |- p <-> q) -> (L |- p -> q))
+class IffForw {P : Sort u} (L : Logic P) (Iff : LIff P) (If : LIf P) := 
+  (iffForw : (p q : P) -> (L |- p <-> q) -> (L |- p -> q))
 
-def iffTo {P : Sort u} {L : Logic P} [Iff : LIff P] [If : LIf P]
-  [K : IffTo L Iff If] {p q : P} := K.iffTo p q
+def iffForw {P : Sort u} {L : Logic P} [Iff : LIff P] [If : LIf P]
+  [K : IffForw L Iff If] {p q : P} := K.iffForw p q
 
-def iffTo' {P : Sort u} {L : Logic P} [Iff : LIff P] [If : LIf P] 
-  [K : IffTo L Iff If] [K' : IfElim L If] {p q : P} 
+def iffForw' {P : Sort u} {L : Logic P} [Iff : LIff P] [If : LIf P] 
+  [K : IffForw L Iff If] [K' : IfElim L If] {p q : P} 
   : (L |- p <-> q) -> ((L |- p) -> (L |- q))
-  := fun pIff => K'.ifElim p q (K.iffTo p q pIff)
+  := fun pIff => K'.ifElim p q (K.iffForw p q pIff)
 
-class IffFrom {P : Sort u} (L : Logic P) (Iff : LIff P) (If : LIf P) := 
-  iffFrom : (p q : P) -> (L |- p <-> q) -> (L |- q -> p)
+class IffBack {P : Sort u} (L : Logic P) (Iff : LIff P) (If : LIf P) := 
+  iffBack : (p q : P) -> (L |- p <-> q) -> (L |- q -> p)
 
-def iffFrom {P : Sort u} {L : Logic P} [Iff : LIff P] [If : LIf P]
-  [K : IffFrom L Iff If] {p q : P} := K.iffFrom p q
+def iffBack {P : Sort u} {L : Logic P} [Iff : LIff P] [If : LIf P]
+  [K : IffBack L Iff If] {p q : P} := K.iffBack p q
 
-def iffFrom' {P : Sort u} {L : Logic P} [Iff : LIff P] [If : LIf P] 
-  [K : IffFrom L Iff If] [K' : IfElim L If] {p q : P} 
+def iffBack' {P : Sort u} {L : Logic P} [Iff : LIff P] [If : LIf P] 
+  [K : IffBack L Iff If] [K' : IfElim L If] {p q : P} 
   : (L |- p <-> q) -> ((L |- q) -> (L |- p))
-  := fun pIff => K'.ifElim q p (K.iffFrom p q pIff)
+  := fun pIff => K'.ifElim q p (K.iffBack p q pIff)
 
 --------------------------------------------------------------------------------
 -- Conjuction
