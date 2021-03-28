@@ -203,18 +203,4 @@ class NonContradiction (Cj : Conj P) (Nt : LNot P) :=
 def nc {L} [Cj : Conj P] [Nt : LNot P]
 [K : NonContradiction L Cj Nt] {p : P} := K.nc p
 
--- Principle of Explosion
--- Know in Latin as "Ex falso [sequitur] quodlibe"
--- false |- p
-
-class Exfalso (F : LFalse P) :=
-  exfalso : (p : P) -> (L |- false) -> (L |- p)
-
-def exfalso {L} [F : LFalse P]
-[K : Exfalso L F] {p : P} := K.exfalso p
-
-def exfalso' {L} [F : LFalse P]
-[K : Exfalso L F] (f : L |- false) (p : P) := K.exfalso p f
-
-
 end Gaea.Logic

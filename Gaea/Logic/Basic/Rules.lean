@@ -1,6 +1,6 @@
 import Gaea.Logic.Notation
 
-universes u v
+universes u v w
 
 namespace Gaea.Logic
 
@@ -288,9 +288,66 @@ def notElim {P : Sort u} {L : Logic P} [Nt : LNot P] [F : LFalse P]
 --------------------------------------------------------------------------------
 
 class TrueIntro {P : Sort u} (L : Logic P) (T : LTrue P) := 
-  (trueIntro : L |- true) 
+  trueIntro : L |- true 
 
 def trueIntro {P : Sort u} {L : Logic P} [T : LTrue P]
   [K : TrueIntro L T] := K.trueIntro
+
+--------------------------------------------------------------------------------
+-- Absurdity
+--------------------------------------------------------------------------------
+
+class Absurdity {P : Sort u} (L : Logic P) :=
+  absurdity : Sort w
+
+def absurdity {P : Sort u} (L : Logic P) [K : Absurdity L] 
+  := K.absurdity L
+
+class Contradiction {P : Sort u} (L : Logic P) (A : Absurdity L) (Nt : LNot P) :=
+  contradiction : (p : P) -> (L |- p) -> (L |- ~p) -> absurdity L
+
+def contradiction {P : Sort u} {L : Logic P} [A : Absurdity L] [Nt : LNot P]
+  [K : Contradiction L A Nt] {p : P} := K.contradiction p
+
+class AdAbsurdium {P : Sort u} (L : Logic P) (A : Absurdity L) (Nt : LNot P) :=
+  adAbsurdium : (p : P) -> ((L |- p) -> absurdity L) -> (L |- ~p)
+
+def adAbsurdium {P : Sort u} {L : Logic P} [A : Absurdity L] [Nt : LNot P]
+  [K : AdAbsurdium L A Nt] {p : P} := K.adAbsurdium p
+
+class ExAbsurdium {P : Sort u} (L : Logic P) (A : Absurdity L) :=
+  exAbsurdium : (p : P) -> absurdity L -> (L |- p)
+
+def exAbsurdium {P : Sort u} {L : Logic P} [A : Absurdity L]
+  [K : ExAbsurdium L A] {p : P} := K.exAbsurdium p
+
+def exAbsurdium' {P : Sort u} {L : Logic P} [A : Absurdity L]
+  [K : ExAbsurdium L A] := K.exAbsurdium
+
+--------------------------------------------------------------------------------
+-- False
+--------------------------------------------------------------------------------
+
+class FalseIntro {P : Sort u} (L : Logic P) (F : LFalse P) (A : Absurdity L) := 
+  falseIntro : absurdity L -> (L |- false) 
+
+def falseIntro {P : Sort u} {L : Logic P} [F : LFalse P] [A : Absurdity L]
+  [K : FalseIntro L F A] := K.falseIntro
+
+class FalseElim {P : Sort u} (L : Logic P) (F : LFalse P) (A : Absurdity L) := 
+  falseElim : (L |- false) -> absurdity L
+
+def falseElim {P : Sort u} {L : Logic P} [F : LFalse P] [A : Absurdity L]
+  [K : FalseElim L F A] := K.falseElim
+
+class ExFalso {P : Sort u} (L : Logic P) (F : LFalse P) :=
+  exFalso : (p : P) -> (L |- false) -> (L |- p)
+
+def exFalso {P : Sort u} {L : Logic P} [F : LFalse P]
+  [K : ExFalso L F] {p : P} := K.exFalso p
+
+def exFalso' {P : Sort u} {L : Logic P} [F : LFalse P]
+  [K : ExFalso L F] (f : L |- false) (p : P) := K.exFalso p f
+
 
 end Gaea.Logic
