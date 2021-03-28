@@ -120,17 +120,37 @@ class ConjRight {P : Sort u} (L : Logic P) (Cj : Conj P) :=
 def conjRight {P : Sort u} {L : Logic P} [Cj : Conj P] 
   [K : ConjRight L Cj] {p q : P} := K.conjRight p q
 
+-- p /\ q -> p
+
+class ConjElim {P : Sort u} (L : Logic P) (Cj : Conj P) := 
+  conjElim : (p q : P) -> (L |- p /\ q) -> PProd (L |- p) (L |- q)
+
+def conjElim {P : Sort u} {L : Logic P} [Cj : Conj P] 
+  [K : ConjElim L Cj] {p q : P} := K.conjElim p q
+
+instance iConjElimOfLeftRight {P : Sort u} {L : Logic P} [Cj : Conj P]
+  [CjL : ConjLeft L Cj] [CjR : ConjRight L Cj] : ConjElim L Cj := 
+  {conjElim := fun p q LpCq => PProd.mk (conjLeft LpCq) (conjRight LpCq)}
+
+instance iConjLeftOfElim {P : Sort u} {L : Logic P} [Cj : Conj P]
+  [K : ConjElim L Cj] : ConjLeft L Cj := 
+  {conjLeft := fun p q LpCq => PProd.fst (K.conjElim p q LpCq)}
+
+instance iConjRightOfElim {P : Sort u} {L : Logic P} [Cj : Conj P]
+  [K : ConjElim L Cj] : ConjRight L Cj := 
+  {conjRight := fun p q LpCq => PProd.snd (K.conjElim p q LpCq)}
+
 -- p -> p /\ p
 
 class ConjTaut {P : Sort u} (L : Logic P) (Cj : Conj P)  :=
   conjTaut : (p : P) -> (L |- p) -> (L |- p /\ p)
 
+def conjTaut {P : Sort u} {L : Logic P} [Cj : Conj P] 
+  [K : ConjTaut L Cj] {p : P} := K.conjTaut p
+
 instance iConjTautOfIntro {P : Sort u} {L : Logic P} [Cj : Conj P]
   [K : ConjIntro L Cj] : ConjTaut L Cj := 
   {conjTaut := fun p Lp => K.conjIntro p p Lp Lp}
-
-def conjTaut {P : Sort u} {L : Logic P} [Cj : Conj P] 
-  [K : ConjTaut L Cj] {p : P} := K.conjTaut p
 
 -- p /\ p -> p
 
@@ -170,8 +190,8 @@ class ConjUncurry {P : Sort u} (L : Logic P) (Cj : Conj P) :=
 def conjUncurry {P : Sort u} {L : Logic P} [Cj : Conj P] 
   [K : ConjUncurry L Cj] {a : Sort v} {p q : P} := K.conjUncurry a p q
 
-instance iConjUncurryOfLeftRight {P : Sort u} {L : Logic P} [Cj : Conj P]
-  [CjL : ConjLeft L Cj] [CjR : ConjRight L Cj] : ConjUncurry L Cj := 
+instance iConjUncurryOfElim {P : Sort u} {L : Logic P} [Cj : Conj P]
+  [K : ConjElim L Cj] : ConjUncurry L Cj := 
   {conjUncurry := fun a p q fpq LpCq => fpq (conjLeft LpCq) (conjRight LpCq)}
 
 --------------------------------------------------------------------------------

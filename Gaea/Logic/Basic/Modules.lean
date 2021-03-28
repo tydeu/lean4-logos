@@ -135,21 +135,17 @@ end MIff
 
 class MConj (L : Logic P) extends Conj P :=
   (toConjIntro : ConjIntro L toConj)
-  (toConjLeft : ConjLeft L toConj)
-  (toConjRight : ConjRight L toConj)
+  (toConjElim : ConjElim L toConj)
 
 instance iMConj {L : Logic P} 
-  [Cj : Conj P] [I : ConjIntro L Cj] [Lt : ConjLeft L Cj] [Rt : ConjRight L Cj] :
-  MConj L := {toConj := Cj, toConjIntro := I, toConjLeft := Lt, toConjRight := Rt}
+  [Cj : Conj P] [I : ConjIntro L Cj] [E : ConjElim L Cj] :
+  MConj L := {toConj := Cj, toConjIntro := I, toConjElim := E}
 
 instance iConjIntroOfMConj {L : Logic P} [K : MConj L] :
   ConjIntro L K.toConj := {conjIntro := K.toConjIntro.conjIntro}
 
-instance iConjLeftOfMConj {L : Logic P} [K : MConj L] :
-  ConjLeft L K.toConj := {conjLeft := K.toConjLeft.conjLeft}
-
-instance iConjRightOfMConj {L : Logic P} [K : MConj L] :
-  ConjRight L K.toConj := {conjRight := K.toConjRight.conjRight}
+instance iConjElimOfMConj {L : Logic P} [K : MConj L] :
+  ConjElim L K.toConj := {conjElim := K.toConjElim.conjElim}
 
 namespace MConj
 abbrev conj {L : Logic P} (K : MConj L) 
@@ -158,14 +154,46 @@ abbrev conjIntro {L : Logic P} (K : MConj L)
   := K.toConjIntro.conjIntro
 abbrev intro {L : Logic P} (K : MConj L) 
   {p q} := K.conjIntro p q
+abbrev toConjTaut {L : Logic P} (K : MConj L)
+  : ConjTaut L K.toConj := iConjTautOfIntro
+abbrev conjTaut {L : Logic P} (K : MConj L)
+  := K.toConjTaut.conjTaut
+abbrev taut {L : Logic P} (K : MConj L)
+  {p q} := K.conjTaut p q
+abbrev conjElim {L : Logic P} (K : MConj L) 
+  := K.toConjElim.conjElim
+abbrev elim {L : Logic P} (K : MConj L) 
+  {p q} := K.conjElim p q
+abbrev toConjLeft {L : Logic P} (K : MConj L)
+  : ConjLeft L K.toConj := iConjLeftOfElim
 abbrev conjLeft {L : Logic P} (K : MConj L)
   := K.toConjLeft.conjLeft
 abbrev left {L : Logic P} (K : MConj L)
   {p q} := K.conjLeft p q
+abbrev toConjRight {L : Logic P} (K : MConj L)
+  : ConjRight L K.toConj := iConjRightOfElim
 abbrev conjRight {L : Logic P} (K : MConj L) 
   := K.toConjRight.conjRight
 abbrev right {L : Logic P} (K : MConj L) 
   {p q} := K.conjRight p q
+abbrev toConjSimp {L : Logic P} (K : MConj L)
+  : ConjSimp L K.toConj := iConjSimpOfLeft
+abbrev conjSimp {L : Logic P} (K : MConj L) 
+  := K.toConjSimp.conjSimp
+abbrev simp {L : Logic P} (K : MConj L) 
+  {p q} := K.conjSimp p q
+abbrev toConjCurry {L : Logic P} (K : MConj L)
+  : ConjCurry L K.toConj := iConjCurryOfIntro
+abbrev conjCurry {L : Logic P} (K : MConj L) 
+  := K.toConjCurry.conjCurry
+abbrev curry {L : Logic P} (K : MConj L) 
+  {p q} := K.conjCurry p q
+abbrev toConjUncurry {L : Logic P} (K : MConj L)
+  : ConjUncurry L K.toConj := iConjUncurryOfElim
+abbrev conjUncurry {L : Logic P} (K : MConj L) 
+  := K.toConjUncurry.conjUncurry
+abbrev uncurry {L : Logic P} (K : MConj L) 
+  {p q} := K.conjUncurry p q
 end MConj
 
 -- Not

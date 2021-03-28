@@ -4,7 +4,7 @@ import Gaea.Logic.Basic.Syntax
 
 open Gaea.Logic
 
--- Judgements
+-- Judgments
 
 infix:10 " |- " => Judgment
 infix:10 " ⊢ " => Judgment
@@ -40,15 +40,15 @@ open Lean
 
 macro "∀ " xs:explicitBinders " => " b:term : term => 
   expandExplicitBinders `LForall.lForall xs b
-macro "forall" xs:explicitBinders " => " b:term : term => 
+macro "forall " xs:explicitBinders " => " b:term : term => 
   expandExplicitBinders `LForall.lForall xs b
 
 macro "∃ " xs:explicitBinders " => " b:term : term => 
   expandExplicitBinders `lExists xs b
-macro "exists" xs:explicitBinders " => " b:term : term => 
+macro "exists " xs:explicitBinders " => " b:term : term => 
   expandExplicitBinders `lExists xs b
 
--- Required for the unexpanders work
+-- Required for the unexpanders to work
 export Gaea.Logic.LForall (lForall)
 export Gaea.Logic.LExists (lExists)
 
