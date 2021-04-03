@@ -14,11 +14,11 @@ namespace Gaea.Logic
 class EqRefl {P : Sort u} {T : Sort v} (L : Logic P) (Q : LEq P T) :=
   (eqRefl : (a : T) -> (L |- a = a))
 
-instance iEqReflToRefl 
+instance iReflOfEqRefl 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T]
 [K : EqRefl L Q] : Refl L Q.lEq := {refl := K.eqRefl}
 
-instance iReflToEqRefl 
+instance iEqReflOfRefl 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T]
 [K : Refl L Q.lEq] : EqRefl L Q := {eqRefl := K.refl}
 
@@ -31,21 +31,21 @@ def eqRefl'
 [K : EqRefl L Q] {a : T} := K.eqRefl a
 
 -- Constrained
-class EqMemRefl {P : Sort u} {T : Sort v} 
+class EqReflT {P : Sort u} {T : Sort v} 
   (L : Logic P) (Q : LEq P T) (C : T -> P) :=
-  (eqMemRefl : (a : T) -> (L |- C a) -> (L |- a = a))
+  (eqReflT : (a : T) -> (L |- C a) -> (L |- a = a))
 
-instance iEqMemReflToMemRefl 
+instance iReflTOfEqReflT 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T] {C : T -> P}
-[K : EqMemRefl L Q C] : MemRefl L Q.lEq C := {memRefl := K.eqMemRefl}
+[K : EqReflT L Q C] : ReflT L Q.lEq C := {reflT := K.eqReflT}
 
-instance iMemReflToEqMemRefl 
+instance iEqReflTOfReflT 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T] {C : T -> P}
-[K : MemRefl L Q.lEq C] : EqMemRefl L Q C := {eqMemRefl := K.memRefl}
+[K : ReflT L Q.lEq C] : EqReflT L Q C := {eqReflT := K.reflT}
 
-def eqMemRefl 
+def eqReflT 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T] {C : T -> P}
-[K : EqMemRefl L Q C] {a : T} := K.eqMemRefl a
+[K : EqReflT L Q C] {a : T} := K.eqReflT a
 
 --------------------------------------------------------------------------------
 -- Symmetry
@@ -56,11 +56,11 @@ def eqMemRefl
 class EqSymm {P : Sort u} {T : Sort v} (L : Logic P) (Q : LEq P T) :=
   (eqSymm : (a b : T) -> (L |- a = b) -> (L |- b = a))
 
-instance iEqSymmToSymm 
+instance iSymmOfEqSymm 
 {P : Sort u} {T : Sort v}  {L : Logic P} [Q : LEq P T]
 [K : EqSymm L Q] : Symm L Q.lEq := {symm := K.eqSymm}
 
-instance iSymmToEqSymm 
+instance iEqSymmOfSymm 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T]
 [K : Symm L Q.lEq] : EqSymm L Q := {eqSymm := K.symm}
 
@@ -69,23 +69,23 @@ def eqSymm
 [K : EqSymm L Q] := K.eqSymm
 
 -- Constrained
-class EqMemSymm {P : Sort u} {T : Sort v} 
+class EqSymmT {P : Sort u} {T : Sort v} 
   (L : Logic P) (Q : LEq P T) (C : T -> P) :=
-  (eqMemSymm : (a b : T) -> 
+  (eqSymmT : (a b : T) -> 
     (L |- C a) -> (L |- C b) ->
     (L |- a = b) -> (L |- b = a))
 
-instance iEqMemSymmToMemSymm 
+instance iSymmTOfEqSymmT 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T] {C : T -> P}
-[K : EqMemSymm L Q C] : MemSymm L Q.lEq C := {memSymm := K.eqMemSymm}
+[K : EqSymmT L Q C] : SymmT L Q.lEq C := {symmT := K.eqSymmT}
 
-instance iMemSymmToEqMemSymm 
+instance iEqSymmTOfSymmT 
 {P : Sort u} {T : Sort v}  {L : Logic P} [Q : LEq P T] {C : T -> P}
-[K : MemSymm L Q.lEq C] : EqMemSymm L Q C := {eqMemSymm := K.memSymm}
+[K : SymmT L Q.lEq C] : EqSymmT L Q C := {eqSymmT := K.symmT}
 
-def eqMemSymm 
+def eqSymmT 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T] {C : T -> P}
-[K : EqMemSymm L Q C] {a b : T} := K.eqMemSymm a b 
+[K : EqSymmT L Q C] {a b : T} := K.eqSymmT a b 
 
 --------------------------------------------------------------------------------
 -- Transitivity
@@ -98,11 +98,11 @@ class EqTrans {P : Sort u} {T : Sort v}
   (eqTrans : (a b c : T) ->
     (L |- a = b) -> (L |- b = c) -> (L |- a = c))
 
-instance iEqTransToTrans 
+instance iTransOfEqTrans 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T]
 [K : EqTrans L Q] : Trans L Q.lEq := {trans := K.eqTrans}
 
-instance iTransToEqTrans 
+instance iEqTransOfTrans 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T] 
 [K : Trans L Q.lEq] : EqTrans L Q := {eqTrans := K.trans}
 
@@ -115,28 +115,28 @@ def eqTrans'
 [K : EqTrans L Q] {b a c : T} := K.eqTrans a b c
 
 -- Constrained
-class EqMemTrans {P : Sort u} {T : Sort v} 
+class EqTransT {P : Sort u} {T : Sort v} 
   (L : Logic P) (Q : LEq P T) (C : T -> P)  :=
-  (eqMemTrans : (a b c : T) -> 
+  (eqTransT : (a b c : T) -> 
     (L |- C a) -> (L |- C b) -> (L |- C c) -> 
     (L |- a = b) -> (L |- b = c) -> (L |- a = c))
 
-instance iEqMemTransToMemTrans 
+instance iTransTOfEqTransT 
 {P : Sort u} {T : Sort v}  {L : Logic P} [Q : LEq P T] {C : T -> P}
-[K : EqMemTrans L Q C] : MemTrans L Q.lEq C := {memTrans := K.eqMemTrans}
+[K : EqTransT L Q C] : TransT L Q.lEq C := {transT := K.eqTransT}
 
-instance iMemTransToEqMemTrans 
+instance iEqTransTOfTransT 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T] {C : T -> P}
-[K : MemTrans L Q.lEq C] : EqMemTrans L Q C := {eqMemTrans := K.memTrans}
+[K : TransT L Q.lEq C] : EqTransT L Q C := {eqTransT := K.transT}
 
-def eqMemTrans 
+def eqTransT 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T] {C : T -> P}
-[K : EqMemTrans L Q C] {a b c : T} := K.eqMemTrans a b c 
+[K : EqTransT L Q C] {a b c : T} := K.eqTransT a b c 
 
-def eqMemTrans' 
+def eqTransT' 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T] {C : T -> P} 
-[K : EqMemTrans L Q C] {b a c : T} (Cb : L |- C b) (Ca : L |- C a) (Cc : L |- C c)  
-:= K.eqMemTrans a b c Ca Cb Cc
+[K : EqTransT L Q C] {b a c : T} (Cb : L |- C b) (Ca : L |- C a) (Cc : L |- C c)  
+:= K.eqTransT a b c Ca Cb Cc
 
 --------------------------------------------------------------------------------
 -- Join
@@ -144,31 +144,31 @@ def eqMemTrans'
 
 -- (b = a) /\ (c = a) -> (b = c)
 
-class EqMemJoin {P : Sort u} {T : Sort v} 
+class EqJoinT {P : Sort u} {T : Sort v} 
   (L : Logic P) (Q : LEq P T) (C : T -> P) :=
-  (eqMemJoin : (x y a b : T) -> 
+  (eqJoinT : (x y a b : T) -> 
     (L |- C x) -> (L |- C y) -> (L |- C a) -> (L |- C b) ->
     (L |- x = a) -> (L |- y = b) -> (L |- a = b) -> (L |- x = y))
 
-instance iEqMemJoinToRelMemJoin 
+instance iRelJoinTOfEqJoinT 
 {P : Sort u} {T : Sort v}  {L : Logic P} [Q : LEq P T] {C : T -> P}
-[K : EqMemJoin L Q C] : RelMemJoin L Q.lEq C := {relMemJoin := K.eqMemJoin}
+[K : EqJoinT L Q C] : RelJoinT L Q.lEq C := {relJoinT := K.eqJoinT}
 
-instance iRelMemJoinToEqMemJoin 
+instance iEqJoinTOfRelJoinT 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T] {C : T -> P}
-[K : RelMemJoin L Q.lEq C] : EqMemJoin L Q C := {eqMemJoin := K.relMemJoin}
+[K : RelJoinT L Q.lEq C] : EqJoinT L Q C := {eqJoinT := K.relJoinT}
 
-def eqMemJoin 
+def eqJoinT 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T] {C : T -> P}
-[K : EqMemJoin L Q C] {x y a b : T} := K.eqMemJoin x y a b 
+[K : EqJoinT L Q C] {x y a b : T} := K.eqJoinT x y a b 
 
 -- (a = b) /\ (x = a) /\ (y = b) -> (x = y)
 
-def eqMemJoin' 
+def eqJoinT' 
 {P : Sort u} {T : Sort v} 
 {L : Logic P} [Q : LEq P T] {C : T -> P}
-[K : EqMemJoin L Q C] {a b x y : T}
-:= fun Ca Cb Cx Cy Qab Qxa Qyb => K.eqMemJoin x y a b Cx Cy Ca Cb Qxa Qyb Qab
+[K : EqJoinT L Q C] {a b x y : T}
+:= fun Ca Cb Cx Cy Qab Qxa Qyb => K.eqJoinT x y a b Cx Cy Ca Cb Qxa Qyb Qab
 
 --------------------------------------------------------------------------------
 -- Euclideaness
@@ -177,48 +177,48 @@ def eqMemJoin'
 -- Left Euclidean
 -- (b = a) /\ (c = a) -> (b = c)
 
-class EqMemLeftEuc {P : Sort u} {T : Sort v} 
+class EqLeftEucT {P : Sort u} {T : Sort v} 
   (L : Logic P) (Q : LEq P T) (C : T -> P) :=
-  (eqMemLeftEuc : (a b c : T) -> 
+  (eqLeftEucT : (a b c : T) -> 
     (L |- C a) -> (L |- C b) -> (L |- C c) -> 
     (L |- b = a) -> (L |- c = a) -> (L |- b = c))
 
-instance iEqMemLeftEucToMemLeftEuc
+instance iLeftEucTOfEqLeftEucT
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T] {C : T -> P}
-[K : EqMemLeftEuc L Q C] : MemLeftEuc L Q.lEq C 
-:= {memLeftEuc := K.eqMemLeftEuc}
+[K : EqLeftEucT L Q C] : LeftEucT L Q.lEq C 
+:= {leftEucT := K.eqLeftEucT}
 
-instance iMemLeftEucToEqMemLeftEuc 
+instance iEqLeftEucTOfLeftEucT 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T] {C : T -> P}
-[K : MemLeftEuc L Q.lEq C] : EqMemLeftEuc L Q C 
-:= {eqMemLeftEuc := K.memLeftEuc}
+[K : LeftEucT L Q.lEq C] : EqLeftEucT L Q C 
+:= {eqLeftEucT := K.leftEucT}
 
-def eqMemLeftEuc 
+def eqLeftEucT 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T] {C : T -> P}
-[K : EqMemLeftEuc L Q C] {a b c : T} := K.eqMemLeftEuc a b c 
+[K : EqLeftEucT L Q C] {a b c : T} := K.eqLeftEucT a b c 
 
 -- Right Euclidean
 -- (a = b) /\ (a = c) -> (b = c)
 
-class EqMemRightEuc {P : Sort u} {T : Sort v} 
+class EqRightEucT {P : Sort u} {T : Sort v} 
   (L : Logic P) (Q : LEq P T) (C : T -> P) :=
-  (eqMemRightEuc : (a b c : T) -> 
+  (eqRightEucT : (a b c : T) -> 
     (L |- C a) -> (L |- C b) -> (L |- C c) -> 
     (L |- a = b) -> (L |- a = c) -> (L |- b = c))
 
-instance iEqMemRightEucToMemRightEuc
+instance iRightEucTOfEqRightEucT
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T] {C : T -> P}
-[K : EqMemRightEuc L Q C] : MemRightEuc L Q.lEq C 
-:= {memRightEuc := K.eqMemRightEuc}
+[K : EqRightEucT L Q C] : RightEucT L Q.lEq C 
+:= {rightEucT := K.eqRightEucT}
 
-instance iMemRightEucToEqMemRightEuc
+instance iEqRightEucTOfRightEucT
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T] {C : T -> P}
-[K : MemRightEuc L Q.lEq C] : EqMemRightEuc L Q C 
-:= {eqMemRightEuc := K.memRightEuc}
+[K : RightEucT L Q.lEq C] : EqRightEucT L Q C 
+:= {eqRightEucT := K.rightEucT}
 
-def eqMemRightEuc 
+def eqRightEucT 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T] {C : T -> P}
-[K : EqMemRightEuc L Q C] {a b c : T} := K.eqMemRightEuc a b c 
+[K : EqRightEucT L Q C] {a b c : T} := K.eqRightEucT a b c 
 
 --------------------------------------------------------------------------------
 -- Commutativity
@@ -236,13 +236,13 @@ def comm {P : Sort u} {T : Sort v}
 [K : Comm L Q f] {a b : T} := K.comm a b
 
 -- Constrained for a given function
-class MemComm {P : Sort u} {T : Sort v} 
+class CommT {P : Sort u} {T : Sort v} 
   (L : Logic P) (Q : LEq P T) (C : T -> P) (f : T -> T -> T) :=
-  (memComm : (a b : T) -> (L |- C a) -> (L |- C b) -> (L |- f a b = f b a))
+  (commT : (a b : T) -> (L |- C a) -> (L |- C b) -> (L |- f a b = f b a))
 
-def memComm {P : Sort u} {T : Sort v} 
+def commT {P : Sort u} {T : Sort v} 
 {L : Logic P} [Q : LEq P T] {C : T -> P} {f : T -> T -> T}
-[K : MemComm L Q C f] {a b : T} := K.memComm a b
+[K : CommT L Q C f] {a b : T} := K.commT a b
 
 --------------------------------------------------------------------------------
 -- Associativity
@@ -260,15 +260,15 @@ def assoc {P : Sort u} {T : Sort v}
 [K : Assoc L Q f] {a b c : T} := K.assoc a b c
 
 -- Constrained for a given function
-class MemAssoc {P : Sort u} {T : Sort v}
+class AssocT {P : Sort u} {T : Sort v}
   (L : Logic P) (Q : LEq P T) (C : T -> P) (f : T -> T -> T) :=
-  (memAssoc :  (a b c : T) -> 
+  (assocT :  (a b c : T) -> 
     (L |- C a) -> (L |- C b) -> (L |- C c) -> 
     (L |- (f (f a b) c) = (f a (f b c))))
 
-def memAssoc {P : Sort u} {T : Sort v}
+def assocT {P : Sort u} {T : Sort v}
 {L : Logic P} [Q : LEq P T] {C : T -> P} {f : T -> T -> T}
-[K : MemAssoc L Q C f] {a b c : T} := K.memAssoc a b c
+[K : AssocT L Q C f] {a b c : T} := K.assocT a b c
 
 --------------------------------------------------------------------------------
 -- Function Substitution
@@ -280,12 +280,12 @@ class EqFunSubst {P : Sort u} {T : Sort v} (L : Logic P) (Q : LEq P T) :=
   (eqFunSubst : (a b : T) -> (f : T -> T) ->
     (L |- a = b) -> (L |- f a = f b))
 
-instance iEqFunSubstToFunSubst 
+instance iFunSubstOfEqFunSubst 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T]
 [K : EqFunSubst L Q] : FunSubst L Q.lEq
 := {funSubst := K.eqFunSubst}
 
-instance iFunSubstToEqFunSubst 
+instance iEqFunSubstOfFunSubst 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T]
 [K : FunSubst L Q.lEq] : EqFunSubst L Q
 := {eqFunSubst := K.funSubst}
@@ -299,19 +299,19 @@ def eqFunSubst'
 [K : EqFunSubst L Q] {a b : T} := K.eqFunSubst a b
 
 -- Constrained for a given function
-class EqMemToEqFun {P : Sort u} {T : Sort v}
+class EqToEqFunT {P : Sort u} {T : Sort v}
   (L : Logic P) (Q : LEq P T) (C : T -> P) (f : T -> T) :=
-  (eqMemToEqFun : (a b : T) -> 
+  (eqToEqFunT : (a b : T) -> 
     (L |- C a) -> (L |- C b) -> (L |- a = b) -> (L |- f a = f b))
 
-instance iEqFunSubstToEqMemToEqFun {P : Sort u} {T : Sort v}
+instance iEqToEqFunTOfEqFunSubst {P : Sort u} {T : Sort v}
 {L : Logic P} [Q : LEq P T] {C : T -> P} {f : T -> T}
-[K : EqFunSubst L Q] : EqMemToEqFun L Q C f
-:= {eqMemToEqFun := fun a b _ _  => K.eqFunSubst a b f}
+[K : EqFunSubst L Q] : EqToEqFunT L Q C f
+:= {eqToEqFunT := fun a b _ _  => K.eqFunSubst a b f}
 
-def eqMemToEqFun {P : Sort u} {T : Sort v}
+def eqToEqFunT {P : Sort u} {T : Sort v}
 {L : Logic P} [Q : LEq P T] {C : T -> P} {f : T -> T}
-[K : EqMemToEqFun L Q C f] {a b : T} := K.eqMemToEqFun a b
+[K : EqToEqFunT L Q C f] {a b : T} := K.eqToEqFunT a b
 
 --------------------------------------------------------------------------------
 -- Predicate Substitution
@@ -322,12 +322,12 @@ class EqPredSubst {P : Sort u} {T : Sort v} (L : Logic P) (Q : LEq P T) :=
   (eqPredSubst : (a b : T) -> (f : T -> P) -> 
     (L |- a = b) -> (L |- f a) -> (L |- f b))
 
-instance iEqPredSubstToPredSubst 
+instance iPredSubstOfEqPredSubst 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T]
 [K : EqPredSubst L Q] : PredSubst L Q.lEq
 := {predSubst := K.eqPredSubst}
 
-instance iPredSubstToEqPredSubst
+instance iEqPredSubstOfPredSubst
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T]
 [K : PredSubst L Q.lEq] : EqPredSubst L Q
 := {eqPredSubst := K.predSubst}
@@ -347,39 +347,39 @@ def eqPredSubst'
 -- Left Addition / Right Substitution
 -- (a = b) -> (f c a = f c b)
 
-class EqMemMagLeft {P : Sort u} {T : Sort v}
+class EqMagLeftT {P : Sort u} {T : Sort v}
   (L : Logic P) (Q : LEq P T) (C : T -> P) (f : T -> T -> T)  :=
-  (eqMemMagLeft : (a b c : T) -> 
+  (eqMagLeftT : (a b c : T) -> 
     (L |- C a) -> (L |- C b) -> (L |- C c) ->
     (L |- a = b) -> (L |- f c a = f c b))
 
-def eqMemMagLeft {P : Sort u} {T : Sort v}
+def eqMagLeftT {P : Sort u} {T : Sort v}
 {L : Logic P} [Q : LEq P T] {C : T -> P} {f : T -> T -> T}
-[K : EqMemMagLeft L Q C f] {a b c : T} := K.eqMemMagLeft a b c
+[K : EqMagLeftT L Q C f] {a b c : T} := K.eqMagLeftT a b c
 
-def eqMemMagLeft' {P : Sort u} {T : Sort v} 
+def eqMagLeftT' {P : Sort u} {T : Sort v} 
 {L : Logic P} [Q : LEq P T] {C : T -> P} {f : T -> T -> T} 
-[K : EqMemMagLeft L Q C f] {c a b : T} 
+[K : EqMagLeftT L Q C f] {c a b : T} 
 (Nc : L |- C c) (Na : L |- C a) (Nb : L|- C b) 
-:= K.eqMemMagLeft a b c Na Nb Nc
+:= K.eqMagLeftT a b c Na Nb Nc
 
 -- Right Addition / Left Substitution
 -- (a = b) -> (f a c = f b c)
 
-class EqMemMagRight {P : Sort u} {T : Sort v}
+class EqMagRightT {P : Sort u} {T : Sort v}
   (L : Logic P) (Q : LEq P T) (C : T -> P) (f : T -> T -> T)  :=
-  (eqMemMagRight : (a b c : T) -> 
+  (eqMagRightT : (a b c : T) -> 
     (L |- C a) -> (L |- C b) -> (L |- C c) ->
     (L |- a = b) -> (L |- f a c = f b c))
 
-def eqMemMagRight {P : Sort u} {T : Sort v}
+def eqMagRightT {P : Sort u} {T : Sort v}
 {L : Logic P} [Q : LEq P T] {C : T -> P} {f : T -> T -> T}
-[K : EqMemMagRight L Q C f] {a b c : T} := K.eqMemMagRight a b c
+[K : EqMagRightT L Q C f] {a b c : T} := K.eqMagRightT a b c
 
-def eqMemMagRight' {P : Sort u} {T : Sort v} 
+def eqMagRightT' {P : Sort u} {T : Sort v} 
 {L : Logic P}  [Q : LEq P T] {C : T -> P} {f : T -> T -> T} 
-[K : EqMemMagRight L Q C f] {c a b : T} 
+[K : EqMagRightT L Q C f] {c a b : T} 
 (Nc : L |- C c) (Na : L |- C a) (Nb : L|- C b) 
-:= K.eqMemMagRight a b c Na Nb Nc
+:= K.eqMagRightT a b c Na Nb Nc
   
 end Gaea.Logic

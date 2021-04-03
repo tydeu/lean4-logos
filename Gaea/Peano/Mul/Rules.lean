@@ -118,15 +118,15 @@ class MulNatComm {P : Sort u} {T : Type v}
   (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) :=
   (mulNatComm : (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- a * b = b * a))
 
-instance i_MulNatComm_to_MemComm {P : Sort u} {T : Type v} 
+instance iCommTOfMulNatComm {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] 
-  [K : MulNatComm L N Q M] : MemComm L Q N.isNat M.mul 
-  := {memComm := K.mulNatComm}
+  [K : MulNatComm L N Q M] : CommT L Q N.isNat M.mul 
+  := {commT := K.mulNatComm}
 
-instance i_MemComm_to_MulNatComm {P : Sort u} {T : Type v} 
+instance iMulNatCommTOfComm {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] 
-  [K : MemComm L Q N.isNat M.mul ] : MulNatComm L N Q M
-  := {mulNatComm := K.memComm}
+  [K : CommT L Q N.isNat M.mul ] : MulNatComm L N Q M
+  := {mulNatComm := K.commT}
 
 def mulNatComm {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T]
@@ -143,15 +143,15 @@ class MulNatAssoc {P : Sort u} {T : Type v}
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
     (L |- (a * b) * c = a * (b * c)))
 
-instance i_MulNatAssoc_to_MemAssoc {P : Sort u} {T : Type v} 
+instance iAssocTOfMulNatAssoc {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] 
-  [K : MulNatAssoc L N Q M] : MemAssoc L Q N.isNat M.mul 
-  := {memAssoc := K.mulNatAssoc}
+  [K : MulNatAssoc L N Q M] : AssocT L Q N.isNat M.mul 
+  := {assocT := K.mulNatAssoc}
 
-instance i_MemAssoc_to_MulNatAssoc {P : Sort u} {T : Type v} 
+instance iMulNatAssocTOfAssoc {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] 
-  [K : MemAssoc L Q N.isNat M.mul] : MulNatAssoc L N Q M 
-  := {mulNatAssoc := K.memAssoc}
+  [K : AssocT L Q N.isNat M.mul] : MulNatAssoc L N Q M 
+  := {mulNatAssoc := K.assocT}
 
 def mulNatAssoc {P : Sort u} {T : Type v}
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T]
@@ -199,15 +199,15 @@ class EqNatMulNatLeft {P : Sort u} {T : Type v}
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
     (L |- a = b) -> (L |- c * a = c * b))
 
-instance i_EqNatMulNatLeft_to_EqMemMagLeft {P : Sort u} {T : Type v} 
+instance iEqMagLeftTOfEqNatMulNatLeft {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] 
-  [K : EqNatMulNatLeft L N Q M] : EqMemMagLeft L Q N.isNat M.mul 
-  := {eqMemMagLeft := K.eqNatMulNatLeft}
+  [K : EqNatMulNatLeft L N Q M] : EqMagLeftT L Q N.isNat M.mul 
+  := {eqMagLeftT := K.eqNatMulNatLeft}
 
-instance i_EqMemMagLeft_to_EqNatMulNatLeft  {P : Sort u} {T : Type v} 
+instance iEqNatMulNatLeftTOfEqMagLeft  {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] 
-  [K : EqMemMagLeft L Q N.isNat M.mul ] : EqNatMulNatLeft L N Q M
-  := {eqNatMulNatLeft := K.eqMemMagLeft}
+  [K : EqMagLeftT L Q N.isNat M.mul ] : EqNatMulNatLeft L N Q M
+  := {eqNatMulNatLeft := K.eqMagLeftT}
 
 def eqNatMulNatLeft {P : Sort u} {T : Type v}
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T]
@@ -226,15 +226,15 @@ class EqNatMulNatRight {P : Sort u} {T : Type v}
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
     (L |- a = b) -> (L |- a * c = b * c))
 
-instance i_EqNatMulNatRight_to_EqMemMagRight {P : Sort u} {T : Type v} 
+instance iEqMagRightTOfEqNatMulNatRight {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] 
-  [K : EqNatMulNatRight L N Q M] : EqMemMagRight L Q N.isNat M.mul 
-  := {eqMemMagRight := K.eqNatMulNatRight}
+  [K : EqNatMulNatRight L N Q M] : EqMagRightT L Q N.isNat M.mul 
+  := {eqMagRightT := K.eqNatMulNatRight}
 
-instance i_EqMemMagRight_to_EqNatMulNatRight  {P : Sort u} {T : Type v} 
+instance iEqNatMulNatRightTOfEqMagRight  {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] 
-  [K : EqMemMagRight L Q N.isNat M.mul] : EqNatMulNatRight L N Q M
-  := {eqNatMulNatRight := K.eqMemMagRight}
+  [K : EqMagRightT L Q N.isNat M.mul] : EqNatMulNatRight L N Q M
+  := {eqNatMulNatRight := K.eqMagRightT}
 
 def eqNatMulNatRight {P : Sort u} {T : Type v}
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T]

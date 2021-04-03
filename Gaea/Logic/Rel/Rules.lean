@@ -28,15 +28,15 @@ def refl' {L : Logic P} {R : T -> T -> P}
   [K : Refl L R] {a : T} := K.refl
 
 -- Constrained
-class MemRefl (L : Logic P) (R : T -> T -> P) (C : T -> P) :=
-  memRefl : (a : T) -> (L |- C a) -> (L |- R a a)
+class ReflT (L : Logic P) (R : T -> T -> P) (C : T -> P) :=
+  reflT : (a : T) -> (L |- C a) -> (L |- R a a)
 
-instance iReflOfMemRefl {L : Logic P} {R : T -> T -> P} {C : T -> P}
-  [K : Refl L R] : MemRefl L R C := {memRefl := fun a _ => K.refl a}
+instance iReflOfReflT {L : Logic P} {R : T -> T -> P} {C : T -> P}
+  [K : Refl L R] : ReflT L R C := {reflT := fun a _ => K.refl a}
 
-def memRefl 
+def reflT 
   {L : Logic P} {R : T -> T -> P} {C : T -> P} 
-  [K : MemRefl L R C] {a : T} := K.memRefl a
+  [K : ReflT L R C] {a : T} := K.reflT a
 
 --------------------------------------------------------------------------------
 -- Symmetry
@@ -57,15 +57,15 @@ def symm {L : Logic P} {R : T -> T -> P}
   [K : Symm L R] {a b : T} := K.symm a b
 
 -- Constrained
-class MemSymm (L : Logic P) (R : T -> T -> P) (C : T -> P)  :=
-  memSymm : (a b : T) -> (L |- C a) -> (L |- C b) ->
+class SymmT (L : Logic P) (R : T -> T -> P) (C : T -> P)  :=
+  symmT : (a b : T) -> (L |- C a) -> (L |- C b) ->
     (L |- R a b) -> (L |- R b a)
 
-instance iMemSymmOfSymm {L : Logic P} {R : T -> T -> P} {C : T -> P}
-  [K : Symm L R] : MemSymm L R C := {memSymm := fun a b _ _ => K.symm a b}
+instance iSymmOfSymmT {L : Logic P} {R : T -> T -> P} {C : T -> P}
+  [K : Symm L R] : SymmT L R C := {symmT := fun a b _ _ => K.symm a b}
 
-def memSymm {L : Logic P} {R : T -> T -> P} {C : T -> P} 
-  [K : MemSymm L R C] {a b : T} := K.memSymm a b 
+def symmT {L : Logic P} {R : T -> T -> P} {C : T -> P} 
+  [K : SymmT L R C] {a b : T} := K.symmT a b 
 
 --------------------------------------------------------------------------------
 -- Transitivity
@@ -89,21 +89,21 @@ def trans' {L : Logic P} {R : T -> T -> P}
   [K : Trans L R] {b a c : T} := K.trans b a c 
 
 -- Constrained
-class MemTrans (L : Logic P) (R : T -> T -> P) (C : T -> P) :=
-  memTrans : (a b c : T) -> 
+class TransT (L : Logic P) (R : T -> T -> P) (C : T -> P) :=
+  transT : (a b c : T) -> 
     (L |- C a) -> (L |- C b) -> (L |- C c) -> 
     (L |- R a b) -> (L |- R b c) -> (L |- R a c)
 
-instance iMemTransOfTrans {L : Logic P} {R : T -> T -> P} {C : T -> P}
-  [K : Trans L R] : MemTrans L R C 
-  := {memTrans := fun a b c _ _ _ => K.trans a b c}
+instance iTransOfTransT {L : Logic P} {R : T -> T -> P} {C : T -> P}
+  [K : Trans L R] : TransT L R C 
+  := {transT := fun a b c _ _ _ => K.trans a b c}
 
-def memTrans {L : Logic P} {R : T -> T -> P} {C : T -> P} 
-  [K : MemTrans L R C] {a b c : T} := K.memTrans a b c 
+def transT {L : Logic P} {R : T -> T -> P} {C : T -> P} 
+  [K : TransT L R C] {a b c : T} := K.transT a b c 
 
-def memTrans' {L : Logic P} {R : T -> T -> P} {C : T -> P} 
-  [K : MemTrans L R C] {b a c : T} (Cb : L |- C b) (Ca : L |- C a) (Cc : L |- C c)  
-  := K.memTrans a b c Ca Cb Cc
+def transT' {L : Logic P} {R : T -> T -> P} {C : T -> P} 
+  [K : TransT L R C] {b a c : T} (Cb : L |- C b) (Ca : L |- C a) (Cc : L |- C c)  
+  := K.transT a b c Ca Cb Cc
 
 --------------------------------------------------------------------------------
 -- Join
@@ -111,19 +111,19 @@ def memTrans' {L : Logic P} {R : T -> T -> P} {C : T -> P}
 
 -- (R x a) /\ (R y b) /\ (R a b) -> (R x y)
 
-class RelMemJoin (L : Logic P) (R : T -> T -> P) (C : T -> P) :=
-  relMemJoin : (x y a b : T) -> 
+class RelJoinT (L : Logic P) (R : T -> T -> P) (C : T -> P) :=
+  relJoinT : (x y a b : T) -> 
     (L |- C x) -> (L |- C y) -> (L |- C a) -> (L |- C b) ->
     (L |- R x a) -> (L |- R y b) -> (L |- R a b) -> (L |- R x y)
 
-def relMemJoin {L : Logic P} {R : T -> T -> P} {C : T -> P} 
-  [K : RelMemJoin L R C] {x y a b : T} := K.relMemJoin x y a b 
+def relJoinT {L : Logic P} {R : T -> T -> P} {C : T -> P} 
+  [K : RelJoinT L R C] {x y a b : T} := K.relJoinT x y a b 
 
 -- (R a b) /\ (R x a) /\ (R y b) -> (R x y)
 
-def relMemJoin' {L : Logic P} {R : T -> T -> P} {C : T -> P} 
-  [K : RelMemJoin L R C] {a b x y : T}
-  := fun Ca Cb Cx Cy Rab Rxa Ryb => K.relMemJoin x y a b Cx Cy Ca Cb Rxa Ryb Rab
+def relJoinT' {L : Logic P} {R : T -> T -> P} {C : T -> P} 
+  [K : RelJoinT L R C] {a b x y : T}
+  := fun Ca Cb Cx Cy Rab Rxa Ryb => K.relJoinT x y a b Cx Cy Ca Cb Rxa Ryb Rab
 
 --------------------------------------------------------------------------------
 -- Euclideaness
@@ -140,17 +140,17 @@ def leftEuc {L : Logic P} {R : T -> T -> P}
   [K : LeftEuc L R] {a b c : T} := K.leftEuc a b c 
 
 -- Constrained
-class MemLeftEuc (L : Logic P) (R : T -> T -> P) (C : T -> P) :=
-  memLeftEuc : (a b c : T) -> 
+class LeftEucT (L : Logic P) (R : T -> T -> P) (C : T -> P) :=
+  leftEucT : (a b c : T) -> 
     (L |- C a) -> (L |- C b) -> (L |- C c) -> 
     (L |- R b a) -> (L |- R c a) -> (L |- R b c)
 
-instance iMemLeftEucOfLeftEuc {L : Logic P} {R : T -> T -> P} {C : T -> P}
-  [K : LeftEuc L R] : MemLeftEuc L R C 
-  := {memLeftEuc := fun a b c _ _ _ => K.leftEuc a b c}
+instance iLeftEucOfLeftEucT {L : Logic P} {R : T -> T -> P} {C : T -> P}
+  [K : LeftEuc L R] : LeftEucT L R C 
+  := {leftEucT := fun a b c _ _ _ => K.leftEuc a b c}
 
-def memLeftEuc {L : Logic P} {R : T -> T -> P} {C : T -> P} 
-  [K : MemLeftEuc L R C] {a b c : T} := K.memLeftEuc a b c 
+def leftEucT {L : Logic P} {R : T -> T -> P} {C : T -> P} 
+  [K : LeftEucT L R C] {a b c : T} := K.leftEucT a b c 
 
 -- Right Euclidean
 -- (a = b) /\ (a = c) -> (b = c)
@@ -163,17 +163,17 @@ def rightEuc {L : Logic P} {R : T -> T -> P}
   [K : RightEuc L R] {a b c : T} := K.rightEuc a b c 
 
 -- Constrained
-class MemRightEuc (L : Logic P) (R : T -> T -> P) (C : T -> P)  :=
-  memRightEuc : (a b c : T) -> 
+class RightEucT (L : Logic P) (R : T -> T -> P) (C : T -> P)  :=
+  rightEucT : (a b c : T) -> 
     (L |- C a) -> (L |- C b) -> (L |- C c) -> 
     (L |- R a b) -> (L |- R a c) -> (L |- R b c)
 
-instance iMemRightEucOfRightEuc {L : Logic P} {R : T -> T -> P} {C : T -> P}
-  [K : RightEuc L R] : MemRightEuc L R C 
-  := {memRightEuc := fun a b c _ _ _ => K.rightEuc a b c}
+instance iRightEucOfRightEucT {L : Logic P} {R : T -> T -> P} {C : T -> P}
+  [K : RightEuc L R] : RightEucT L R C 
+  := {rightEucT := fun a b c _ _ _ => K.rightEuc a b c}
 
-def memRightEuc {L : Logic P} {R : T -> T -> P} {C : T -> P} 
-  [K : MemRightEuc L R C] {a b c : T} := K.memRightEuc a b c 
+def rightEucT {L : Logic P} {R : T -> T -> P} {C : T -> P} 
+  [K : RightEucT L R C] {a b c : T} := K.rightEucT a b c 
 
 --------------------------------------------------------------------------------
 -- Predicate Substitution

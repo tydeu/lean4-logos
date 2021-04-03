@@ -9,15 +9,15 @@ namespace Gaea.Logic
 instance iMEqFunSubst 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : MEq L T]
 : EqFunSubst L Q.toLEq := 
-{eqFunSubst := funSubstByReflPredSubst iEqReflToRefl iEqPredSubstToPredSubst}
+{eqFunSubst := funSubstByReflPredSubst iReflOfEqRefl iPredSubstOfEqPredSubst}
 
 instance iMEqSymm 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : MEq L T]
 : EqSymm L Q.toLEq := 
-{eqSymm := symmByReflPredSubst iEqReflToRefl iEqPredSubstToPredSubst}
+{eqSymm := symmByReflPredSubst iReflOfEqRefl iPredSubstOfEqPredSubst}
 
 instance iMEqTrans
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : MEq L T]
-: EqTrans L Q.toLEq := {eqTrans := transByPredSubst iEqPredSubstToPredSubst}
+: EqTrans L Q.toLEq := {eqTrans := transByPredSubst iPredSubstOfEqPredSubst}
 
 end Gaea.Logic

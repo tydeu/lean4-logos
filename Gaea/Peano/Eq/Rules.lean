@@ -34,15 +34,15 @@ class EqNatRefl {P : Sort u} {T : Sort v}
   (L : Logic P) (N : IsNat P T) (Q : LEq P T) :=
   (eqNatRefl : (x : T) -> (L |- nat x) -> (L |- x = x))
 
-instance iEqNatReflToEqMemRefl {P : Sort u} {T : Sort v} 
+instance iEqReflTOfEqNatRefl {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T]
-  [K : EqNatRefl L N Q] : EqMemRefl L Q N.isNat 
-  := {eqMemRefl := K.eqNatRefl}
+  [K : EqNatRefl L N Q] : EqReflT L Q N.isNat 
+  := {eqReflT := K.eqNatRefl}
 
-instance iEqMemReflToEqNatRefl {P : Sort u} {T : Sort v} 
+instance iEqNatReflTOfEqRefl {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T]
-  [K : EqMemRefl L Q N.isNat] : EqNatRefl L N Q
-  := {eqNatRefl := K.eqMemRefl}
+  [K : EqReflT L Q N.isNat] : EqNatRefl L N Q
+  := {eqNatRefl := K.eqReflT}
 
 def eqNatRefl {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [K : EqNatRefl L N Q]
@@ -59,15 +59,15 @@ class EqNatSymm {P : Sort u} {T : Sort v}
   (eqNatSymm : (x y : T) -> (L |- nat x) -> (L |- nat y) ->
     (L |- x = y) -> (L |- y = x))
 
-instance iEqNatSymmToEqMemSymm {P : Sort u} {T : Sort v} 
+instance iEqSymmTOfEqNatSymm {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T]
-  [K : EqNatSymm L N Q] : EqMemSymm L Q N.isNat 
-  := {eqMemSymm := K.eqNatSymm}
+  [K : EqNatSymm L N Q] : EqSymmT L Q N.isNat 
+  := {eqSymmT := K.eqNatSymm}
 
-instance iEqMemSymmToEqNatSymm {P : Sort u} {T : Sort v} 
+instance iEqNatSymmTOfEqSymm {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T]
-  [K : EqMemSymm L Q N.isNat] : EqNatSymm L N Q
-  := {eqNatSymm := K.eqMemSymm}
+  [K : EqSymmT L Q N.isNat] : EqNatSymm L N Q
+  := {eqNatSymm := K.eqSymmT}
 
 def eqNatSymm {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [K : EqNatSymm L N Q]
@@ -84,15 +84,15 @@ class EqNatTrans {P : Sort u} {T : Sort v}
   (eqNatTrans : (x y z : T) -> (L |- nat x) -> (L |- nat y) -> (L |- nat z) -> 
     (L |- x = y) -> (L |- y = z) -> (L |- x = z))
 
-instance iEqNatTransToEqMemTrans {P : Sort u} {T : Sort v} 
+instance iEqTransTOfEqNatTrans {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T]
-  [K : EqNatTrans L N Q] : EqMemTrans L Q N.isNat 
-  := {eqMemTrans := K.eqNatTrans}
+  [K : EqNatTrans L N Q] : EqTransT L Q N.isNat 
+  := {eqTransT := K.eqNatTrans}
 
-instance iEqMemTransToEqNatTrans {P : Sort u} {T : Sort v} 
+instance iEqNatTransTOfEqTrans {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T]
-  [K : EqMemTrans L Q N.isNat] : EqNatTrans L N Q
-  := {eqNatTrans := K.eqMemTrans}
+  [K : EqTransT L Q N.isNat] : EqNatTrans L N Q
+  := {eqNatTrans := K.eqTransT}
 
 def eqNatTrans {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [K : EqNatTrans L N Q]
@@ -129,15 +129,15 @@ class EqNatJoin {P : Sort u} {T : Sort v}
     (L |- nat x) -> (L |- nat y) -> (L |- nat a) -> (L |- nat b) ->
     (L |- x = a) -> (L |- y = b) -> (L |- a = b) -> (L |- x = y))
 
-instance iEqNatJoinToEqMemJoin {P : Sort u} {T : Sort v} 
+instance iEqJoinTOfEqNatJoin {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] 
-  [K : EqNatJoin L N Q] : EqMemJoin L Q N.isNat 
-  := {eqMemJoin := K.eqNatJoin}
+  [K : EqNatJoin L N Q] : EqJoinT L Q N.isNat 
+  := {eqJoinT := K.eqNatJoin}
 
-instance iEqMemJoinToEqNatJoin {P : Sort u} {T : Sort v} 
+instance iEqNatJoinTOfEqJoin {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] 
-  [K : EqMemJoin L Q N.isNat] : EqNatJoin L N Q 
-  := {eqNatJoin := K.eqMemJoin}
+  [K : EqJoinT L Q N.isNat] : EqNatJoin L N Q 
+  := {eqNatJoin := K.eqJoinT}
 
 def eqNatJoin {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T]
@@ -165,13 +165,13 @@ class EqNatLeftEuc {P : Sort u} {T : Sort v}
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
     (L |- b = a) -> (L |- c = a) -> (L |- b = c))
 
-instance iEqNatLeftEucToEqMemLeftEuc {P : Sort u} {T : Sort v} 
+instance iEqLeftEucTOfEqNatLeftEuc {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [K : EqNatLeftEuc L N Q] 
-  : EqMemLeftEuc L Q N.isNat := {eqMemLeftEuc := K.eqNatLeftEuc}
+  : EqLeftEucT L Q N.isNat := {eqLeftEucT := K.eqNatLeftEuc}
 
-instance iEqMemLeftEucToEqNatLeftEuc {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [K : EqMemLeftEuc L Q N.isNat] 
-  : EqNatLeftEuc L N Q := {eqNatLeftEuc := K.eqMemLeftEuc}
+instance iEqNatLeftEucTOfEqLeftEuc {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [K : EqLeftEucT L Q N.isNat] 
+  : EqNatLeftEuc L N Q := {eqNatLeftEuc := K.eqLeftEucT}
 
 def eqNatLeftEuc {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T]
@@ -196,13 +196,13 @@ class EqNatRightEuc {P : Sort u} {T : Sort v}
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
     (L |- a = b) -> (L |- a = c) -> (L |- b = c))
 
-instance iEqNatRightEucToEqMemRightEuc {P : Sort u} {T : Sort v} 
+instance iEqRightEucTOfEqNatRightEuc {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [K : EqNatRightEuc L N Q] 
-  : EqMemRightEuc L Q N.isNat := {eqMemRightEuc := K.eqNatRightEuc}
+  : EqRightEucT L Q N.isNat := {eqRightEucT := K.eqNatRightEuc}
 
-instance iEqMemRightEucToEqNatRightEuc {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [K : EqMemRightEuc L Q N.isNat] 
-  : EqNatRightEuc L N Q := {eqNatRightEuc := K.eqMemRightEuc}
+instance iEqNatRightEucTOfEqRightEuc {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : LEq P T] [K : EqRightEucT L Q N.isNat] 
+  : EqNatRightEuc L N Q := {eqNatRightEuc := K.eqRightEucT}
 
 def eqNatRightEuc {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T]

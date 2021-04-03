@@ -80,21 +80,21 @@ instance iLeftEucBySymmTrans
 
 -- Constrained
 
-def memLeftEucBySymmTrans 
+def leftEucBySymmTransT 
 {P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P} {C : T -> P} 
-(Sm : MemSymm L R C) (Tr : MemTrans L R C)
+(Sm : SymmT L R C) (Tr : TransT L R C)
 : (a b c : T) -> 
     (L |- C a) -> (L |- C b) -> (L |- C c) -> 
     (L |- R b a) -> (L |- R c a) -> (L |- R b c)
 := by
   intro a b c Ca Cb Cc Rba Rca
-  have Rac := memSymm Cc Ca Rca
-  exact memTrans Cb Ca Cc Rba Rac
+  have Rac := symmT Cc Ca Rca
+  exact transT Cb Ca Cc Rba Rac
 
-instance iMemLeftEucBySymmTrans 
+instance iLeftEucBySymmTransT 
 {P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P} {C : T -> P}  
-[Sm : MemSymm L R C] [Tr : MemTrans L R C] : MemLeftEuc L R C := 
-{memLeftEuc := memLeftEucBySymmTrans Sm Tr}
+[Sm : SymmT L R C] [Tr : TransT L R C] : LeftEucT L R C := 
+{leftEucT := leftEucBySymmTransT Sm Tr}
 
 --------------------------------------------------------------------------------
 -- Right Euclidean
@@ -121,21 +121,21 @@ instance iRightEucBySymmTrans
 
 -- Constrained
 
-def memRightEucBySymmTrans
+def rightEucBySymmTransT
 {P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P} {C : T -> P} 
-(Sm : MemSymm L R C) (Tr : MemTrans L R C)
+(Sm : SymmT L R C) (Tr : TransT L R C)
 : (a b c : T) -> 
     (L |- C a) -> (L |- C b) -> (L |- C c) -> 
     (L |- R a b) -> (L |- R a c) -> (L |- R b c)
 := by
   intro a b c Ca Cb Cc Rab Rac
-  have Rba := memSymm Ca Cb Rab
-  exact memTrans Cb Ca Cc Rba Rac
+  have Rba := symmT Ca Cb Rab
+  exact transT Cb Ca Cc Rba Rac
 
-instance iMemRightEucBySymmTrans 
+instance iRightEucBySymmTransT 
 {P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P} {C : T -> P}  
-[Sm : MemSymm L R C] [Tr : MemTrans L R C] : MemRightEuc L R C := 
-{memRightEuc := memRightEucBySymmTrans Sm Tr}
+[Sm : SymmT L R C] [Tr : TransT L R C] : RightEucT L R C := 
+{rightEucT := rightEucBySymmTransT Sm Tr}
 
 --------------------------------------------------------------------------------
 -- Join
@@ -144,36 +144,36 @@ instance iMemRightEucBySymmTrans
 
 -- By Trans/LeftEuc
 
-def relMemJoinByTransLeftEuc
+def relJoinByTransLeftEucT
 {P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P} {C : T -> P}
-(Tr : MemTrans L R C) (LEu : MemLeftEuc L R C)
+(Tr : TransT L R C) (LEu : LeftEucT L R C)
 : (x y a b : T) -> 
   (L |- C x) -> (L |- C y) -> (L |- C a) -> (L |- C b) ->
   (L |- R x a) -> (L |- R y b) -> (L |- R a b) -> (L |- R x y)
 := by
   intro x y a b Cx Cy Ca Cb Rxa Ryb Rab
-  exact memLeftEuc Cb Cx Cy (memTrans Cx Ca Cb Rxa Rab) Ryb
+  exact leftEucT Cb Cx Cy (transT Cx Ca Cb Rxa Rab) Ryb
 
-instance iRelMemJoinByTransLeftEuc
+instance iRelJoinByTransLeftEucT
 {P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P} {C : T -> P} 
-[Tr : MemTrans L R C] [LEu : MemLeftEuc L R C] : RelMemJoin L R C := 
-{relMemJoin := relMemJoinByTransLeftEuc Tr LEu}
+[Tr : TransT L R C] [LEu : LeftEucT L R C] : RelJoinT L R C := 
+{relJoinT := relJoinByTransLeftEucT Tr LEu}
 
 -- By Symm/Trans
 
-def relMemJoinBySymmTrans
+def relJoinBySymmTransT
 {P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P} {C : T -> P} 
-(Sm : MemSymm L R C) (Tr : MemTrans L R C)
+(Sm : SymmT L R C) (Tr : TransT L R C)
 : (x y a b : T) -> 
   (L |- C x) -> (L |- C y) -> (L |- C a) -> (L |- C b) ->
   (L |- R x a) -> (L |- R y b) -> (L |- R a b) -> (L |- R x y)
 := by
   intro x y a b Cx Cy Ca Cb Rxa Ryb Rab
-  exact memTrans Cx Cb Cy (memTrans Cx Ca Cb Rxa Rab) (memSymm Cy Cb Ryb)
+  exact transT Cx Cb Cy (transT Cx Ca Cb Rxa Rab) (symmT Cy Cb Ryb)
 
-instance iRelMemJoinBySymmTrans 
+instance iRelJoinBySymmTransT 
 {P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P} {C : T -> P} 
-[Sm : MemSymm L R C] [Tr : MemTrans L R C] : RelMemJoin L R C 
-:= {relMemJoin := relMemJoinBySymmTrans Sm Tr}
+[Sm : SymmT L R C] [Tr : TransT L R C] : RelJoinT L R C 
+:= {relJoinT := relJoinBySymmTransT Sm Tr}
 
 end Gaea.Logic

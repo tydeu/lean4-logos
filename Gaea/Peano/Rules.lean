@@ -42,13 +42,13 @@ class EqNatToEqSucc {P : Sort u} {T : Sort v}
 
 instance {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [Su : Succ T]
-  [K : EqNatToEqSucc L N Q Su] : EqMemToEqFun L Q N.isNat Su.succ 
-  := {eqMemToEqFun := K.eqNatToEqSucc}
+  [K : EqNatToEqSucc L N Q Su] : EqToEqFunT L Q N.isNat Su.succ 
+  := {eqToEqFunT := K.eqNatToEqSucc}
 
 instance {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [Su : Succ T]
-  [K : EqMemToEqFun L Q N.isNat Su.succ] : EqNatToEqSucc L N Q Su
-  := {eqNatToEqSucc := K.eqMemToEqFun}
+  [K : EqToEqFunT L Q N.isNat Su.succ] : EqNatToEqSucc L N Q Su
+  := {eqNatToEqSucc := K.eqToEqFunT}
 
 def eqNatToEqSucc {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [Su : Succ T]
