@@ -450,7 +450,7 @@ instance iAddSuccNatEqSuccByPeano
 {addSuccNatEqSucc := 
   addSuccNatEqSuccByNatAdd iNatInductionRightByForallNat 
     NS iNatAddNatZeroByNatAdd iNatAddNatByPeano 
-    QTr iEqNatLeftEucTOfEqLeftEuc QtS An0 AnS} 
+    QTr iEqNatLeftEucOfLeftEucT QtS An0 AnS} 
 
 --------------------------------------------------------------------------------
 -- Commutativity
@@ -504,7 +504,7 @@ instance iAddNatZeroCommByNatEq
 [An0 : AddNatZeroEqNat L N Q A Z] 
 [A0n : AddZeroNatEqNat L N Q A Z]
 : AddNatZeroComm L N Q A Z := 
-{addNatZeroComm := addNatZeroCommByNatAddZero iEqNatLeftEucTOfEqLeftEuc 
+{addNatZeroComm := addNatZeroCommByNatAddZero iEqNatLeftEucOfLeftEucT 
   iNatAddNatZeroByAddNatZero iNatAddZeroNatByAddZeroNat An0 A0n}
 
 def addNatZeroCommByLeftEucNat
@@ -604,7 +604,7 @@ instance iAddNatCommByPeano
 : AddNatComm L N.toIsNat Q A := 
 {addNatComm := 
   addNatCommProof iNatInductionRightByForallNat 
-    NS iNatAddNatByPeano iEqNatLeftEucTOfEqLeftEuc QtS 
+    NS iNatAddNatByPeano iEqNatLeftEucOfLeftEucT QtS 
     iAddNatZeroCommByPeano iAddSuccNatEqSuccByPeano AnS}
 
 --------------------------------------------------------------------------------
@@ -677,7 +677,7 @@ instance iEqNatAddNatLeftByPeano
 : EqNatAddNatLeft L N.toIsNat Q A := 
 {eqNatAddNatLeft := 
   eqNatAddNatLeftProof If iNatInductionRight3ByForallNat 
-    NS iNatAddZeroNatByNatAdd iNatAddNatByPeano iEqNatJoinTOfEqJoin QtS 
+    NS iNatAddZeroNatByNatAdd iNatAddNatByPeano iEqNatJoinOfEqJoinT QtS 
     iAddZeroNatEqNatByPeano iAddSuccNatEqSuccByPeano}
 
 -- Right Addition
@@ -746,7 +746,7 @@ instance iEqNatAddNatRightByPeano
 [AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : EqNatAddNatRight L N.toIsNat Q A := 
 {eqNatAddNatRight := eqNatAddNatRightProof If iNatInductionRight3ByForallNat NS 
-  iNatAddNatZeroByAddNatZero iNatAddNatByPeano iEqNatJoinTOfEqJoin QtS An0 AnS} 
+  iNatAddNatZeroByAddNatZero iNatAddNatByPeano iEqNatJoinOfEqJoinT QtS An0 AnS} 
 
 --------------------------------------------------------------------------------
 -- Associativity
@@ -843,7 +843,7 @@ instance iAddNatAssocByPeano
 {addNatAssoc := 
   addNatAssocByAddNatX iNatInductionRight3ByForallNat 
     NS iNatAddNatZeroByAddNatZero iNatAddNatByPeano 
-    QTr iEqNatLeftEucTOfEqLeftEuc QtS iEqNatAddNatLeftByPeano An0 AnS}
+    QTr iEqNatLeftEucOfLeftEucT QtS iEqNatAddNatLeftByPeano An0 AnS}
 
 -- a + (b + c) = (a + b) + c 
 
@@ -936,7 +936,7 @@ instance iAddNatAssocRevByPeano
 {addNatAssocRev := 
   addNatAssocRevByAddNatX iNatInductionRight3ByForallNat 
     NS iNatAddNatZeroByAddNatZero iNatAddNatByPeano 
-    QTr iEqNatLeftEucTOfEqLeftEuc QtS iEqNatAddNatLeftByPeano An0 AnS}
+    QTr iEqNatLeftEucOfLeftEucT QtS iEqNatAddNatLeftByPeano An0 AnS}
 
 --------------------------------------------------------------------------------
 -- Special Cases
