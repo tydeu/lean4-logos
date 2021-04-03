@@ -294,6 +294,23 @@ def trueIntro {P : Sort u} {L : Logic P} [T : LTrue P]
   [K : TrueIntro L T] := K.trueIntro
 
 --------------------------------------------------------------------------------
+-- Contradiction
+--------------------------------------------------------------------------------
+
+def Contradiction {P : Sort u} (L : Logic P) (Nt : LNot P) :=
+  PSigma fun (p : P) => PProd (L |- p) (L |- ~p)
+
+def contradiction {P : Sort u} {L : Logic P} [Nt : LNot P]
+  {p : P} (Lp : L |- p) (LNp : L |- ~p) : Contradiction L Nt := 
+    PSigma.mk p (PProd.mk Lp LNp)
+
+class ByContradiction {P : Sort u} (L : Logic P) (Nt : LNot P) :=
+  byContradiction : (p : P) -> ((L |- p) -> Contradiction L Nt) -> (L |- ~p)
+
+def byContradiction {P : Sort u} {L : Logic P} [Nt : LNot P]
+  [K : ByContradiction L Nt] {p : P} := K.byContradiction p
+
+--------------------------------------------------------------------------------
 -- Absurdity
 --------------------------------------------------------------------------------
 
@@ -302,12 +319,6 @@ class Absurdity {P : Sort u} (L : Logic P) :=
 
 def absurdity {P : Sort u} (L : Logic P) [K : Absurdity L] 
   := K.absurdity L
-
-class Contradiction {P : Sort u} (L : Logic P) (A : Absurdity L) (Nt : LNot P) :=
-  contradiction : (p : P) -> (L |- p) -> (L |- ~p) -> absurdity L
-
-def contradiction {P : Sort u} {L : Logic P} [A : Absurdity L] [Nt : LNot P]
-  [K : Contradiction L A Nt] {p : P} := K.contradiction p
 
 class AdAbsurdium {P : Sort u} (L : Logic P) (A : Absurdity L) (Nt : LNot P) :=
   adAbsurdium : (p : P) -> ((L |- p) -> absurdity L) -> (L |- ~p)
