@@ -71,7 +71,7 @@ def natInductionRight {P : Sort u} {T : Type v} {L : Logic P}
   := K.natInductionRight f
 
 --------------------------------------------------------------------------------
--- Ternery Induction
+-- Ternary Induction
 --------------------------------------------------------------------------------
 
 -- Left Induction
@@ -124,5 +124,20 @@ class NatInductionRight3 {P : Sort u} {T : Type v}
 def natInductionRight3 {P : Sort u} {T : Type v} {L : Logic P} 
   [N : PNat P T] [K : NatInductionRight3 L N] {f : T -> T -> T -> P} 
   := K.natInductionRight3 f
+
+class NatInductionRight3If {P : Sort u} {T : Type v} 
+  (L : Logic P) (N : PNat P T) := 
+  (natInductionRight3If : 
+    (C : T -> T -> P) -> (f : T -> T -> T -> P) -> 
+    ((a b : T) -> (L |- nat a) -> (L |- nat b) ->  
+      (L |- C a b) -> (L |- f a b 0)) -> 
+    ((a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
+      (L |- C a b) -> (L |- f a b c) -> (L |- f a b (S c))) ->
+    ((a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
+      (L |- C a b) -> (L |- f a b c)))
+
+def natInductionRight3If {P : Sort u} {T : Type v} {L : Logic P} [N : PNat P T] 
+  [K : NatInductionRight3If L N] {C : T -> T -> P} {f : T -> T -> T -> P} 
+  := K.natInductionRight3If C f 
 
 end Gaea.Peano

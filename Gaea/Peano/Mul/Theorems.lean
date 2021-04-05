@@ -613,8 +613,8 @@ instance iMulNatCommByPeano
 
 def eqNatMulNatLeftProof
 {P : Sort u} {T : Type v} {L : Logic P} 
-{N : PNat P T} {Q : LEq P T} {M : Mul T} {A : Add T} (If : MIf L)
-(I   : NatInductionRight3 L N)
+{N : PNat P T} {Q : LEq P T} {M : Mul T} {A : Add T}
+(I   : NatInductionRight3If L N)
 (N0  : NatZero L N.toIsNat N.toZero)
 (NS  : NatSuccNat L N.toIsNat N.toSucc)
 (NA  : NatAddNat L N.toIsNat A)
@@ -628,18 +628,14 @@ def eqNatMulNatLeftProof
 : (a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
   ((L |- a = b) -> (L |- c * a = c * b)) 
 := by
-  intro a b c Na Nb Nc; refine ifElim ?_
-  refine natInductionRight3 ?f0 ?fS a b c Na Nb Nc
-    (f := fun a b c => (a = b : P) -> (c * a = c * b : P)) 
+  refine natInductionRight3If ?f0 ?fS
   case f0 =>
-    intro a b Na Nb
-    apply ifIntro; intro Qab
+    intro a b Na Nb Qab
     apply eqNatLeftEuc nat0 (natMulZeroNat Na) (natMulZeroNat Nb) 
     exact mulZeroNatEqZero Na
     exact mulZeroNatEqZero Nb
   case fS =>
-    intro a b c Na Nb Nc p_Qab_to_QMcaMcb
-    apply ifIntro; intro Qab
+    intro a b c Na Nb Nc Qab QMcaMcb
     have NSc := natS Nc
     have NMcb := natMul Nc Nb
     have NMSca := natMul NSc Na
@@ -655,7 +651,7 @@ def eqNatMulNatLeftProof
       exact mulSuccNatEqAddMul Nc Na
       apply eqNatTrans' NAaMcb NAaMca NAbMcb
       apply eqNatAddNatLeft' Na NMca NMcb
-      exact ifElim p_Qab_to_QMcaMcb Qab
+      exact QMcaMcb
       apply eqNatAddNatRight' NMcb Na Nb 
       exact Qab
     case MScb_eq_AbMcb =>
@@ -663,8 +659,8 @@ def eqNatMulNatLeftProof
 
 instance iEqNatMulNatLeft
 {P : Sort u} {T : Type v} {L : Logic P} 
-[N : PNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [If : MIf L]
-[I   : NatInductionRight3 L N]
+[N : PNat P T] [Q : LEq P T] [M : Mul T] [A : Add T]
+[I   : NatInductionRight3If L N]
 [N0  : NatZero L N.toIsNat N.toZero]
 [NS  : NatSuccNat L N.toIsNat N.toSucc]
 [NA  : NatAddNat L N.toIsNat A]
@@ -677,7 +673,7 @@ instance iEqNatMulNatLeft
 [MSn : MulSuccNatEqAddMul L N.toIsNat Q M A N.toSucc]
 : EqNatMulNatLeft L N.toIsNat Q M := 
 {eqNatMulNatLeft := 
-  eqNatMulNatLeftProof If I N0 NS NA NM QTr QEL QAL QAR M0n MSn}
+  eqNatMulNatLeftProof I N0 NS NA NM QTr QEL QAL QAR M0n MSn}
 
 instance iEqNatMulNatLeftByPeano
 {P : Sort u} {T : Type v} {L : Logic P} 
@@ -696,7 +692,7 @@ instance iEqNatMulNatLeftByPeano
 [MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
 : EqNatMulNatLeft L N.toIsNat Q M := 
 {eqNatMulNatLeft := 
-  eqNatMulNatLeftProof If iNatInductionRight3ByForallNat 
+  eqNatMulNatLeftProof iNatInductionRight3IfByForallNatIf 
     N0 NS iNatAddNatByPeano iNatMulNatByPeano 
     QTr iEqNatLeftEucOfLeftEucT 
     iEqNatAddNatLeftByPeano iEqNatAddNatRightByPeano 
@@ -707,8 +703,8 @@ instance iEqNatMulNatLeftByPeano
 
 def eqNatMulNatRightProof
 {P : Sort u} {T : Type v} {L : Logic P} 
-{N : PNat P T} {Q : LEq P T} {M : Mul T} {A : Add T} (If : MIf L)
-(I   : NatInductionRight3 L N)
+{N : PNat P T} {Q : LEq P T} {M : Mul T} {A : Add T}
+(I   : NatInductionRight3If L N)
 (N0  : NatZero L N.toIsNat N.toZero)
 (NS  : NatSuccNat L N.toIsNat N.toSucc)
 (NA  : NatAddNat L N.toIsNat A)
@@ -722,18 +718,14 @@ def eqNatMulNatRightProof
 : (a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
   ((L |- a = b) -> (L |- a * c = b * c)) 
 := by
-  intro a b c Na Nb Nc; refine ifElim ?_
-  refine natInductionRight3 ?f0 ?fS a b c Na Nb Nc
-    (f := fun a b c => (a = b : P) -> (a * c = b * c : P)) 
+  refine natInductionRight3If ?f0 ?fS
   case f0 =>
-    intro a b Na Nb
-    apply ifIntro; intro Qab
+    intro a b Na Nb Qab
     apply eqNatLeftEuc nat0 (natMulNatZero Na) (natMulNatZero Nb) 
     exact mulNatZeroEqZero Na
     exact mulNatZeroEqZero Nb
   case fS =>
-    intro a b c Na Nb Nc p_Qab_to_QMacMbc
-    apply ifIntro; intro Qab
+    intro a b c Na Nb Nc Qab QMacMbc
     have NSc := natS Nc
     have NMbc := natMul Nb Nc
     have NMaSc := natMul Na NSc
@@ -749,7 +741,7 @@ def eqNatMulNatRightProof
       exact mulNatSuccEqAddMul Na Nc
       apply eqNatTrans' NAaMbc NAaMac NAbMbc
       apply eqNatAddNatLeft' Na NMac NMbc
-      exact ifElim p_Qab_to_QMacMbc Qab
+      exact QMacMbc
       apply eqNatAddNatRight' NMbc Na Nb
       exact Qab
     case MbSc_eq_AbMbc =>
@@ -757,8 +749,8 @@ def eqNatMulNatRightProof
 
 instance iEqNatMulNatRight
 {P : Sort u} {T : Type v} {L : Logic P} 
-[N : PNat P T] [Q : LEq P T] [M : Mul T] [A : Add T] [If : MIf L]
-[I   : NatInductionRight3 L N]
+[N : PNat P T] [Q : LEq P T] [M : Mul T] [A : Add T]
+[I   : NatInductionRight3If L N]
 [N0  : NatZero L N.toIsNat N.toZero]
 [NS  : NatSuccNat L N.toIsNat N.toSucc]
 [NA  : NatAddNat L N.toIsNat A]
@@ -771,7 +763,7 @@ instance iEqNatMulNatRight
 [MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
 : EqNatMulNatRight L N.toIsNat Q M := 
 {eqNatMulNatRight := 
-  eqNatMulNatRightProof If I N0 NS NA NM QTr QEL QAL QAR Mn0 MnS}
+  eqNatMulNatRightProof I N0 NS NA NM QTr QEL QAL QAR Mn0 MnS}
 
 instance iEqNatMulNatRightByPeano
 {P : Sort u} {T : Type v} {L : Logic P} 
@@ -790,7 +782,7 @@ instance iEqNatMulNatRightByPeano
 [MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
 : EqNatMulNatRight L N.toIsNat Q M := 
 {eqNatMulNatRight := 
-  eqNatMulNatRightProof If iNatInductionRight3ByForallNat 
+  eqNatMulNatRightProof iNatInductionRight3IfByForallNatIf 
     N0 NS iNatAddNatByPeano iNatMulNatByPeano QTr iEqNatLeftEucOfLeftEucT 
     iEqNatAddNatLeftByPeano iEqNatAddNatRightByPeano Mn0 MnS}
 

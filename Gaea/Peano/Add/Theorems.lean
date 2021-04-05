@@ -616,8 +616,8 @@ instance iAddNatCommByPeano
 
 def eqNatAddNatLeftProof
 {P : Sort u} {T : Type v} {L : Logic P} 
-{N : PNat P T} {Q : LEq P T} {A : Add T} (If : MIf L)
-(I    : NatInductionRight3 L N)
+{N : PNat P T} {Q : LEq P T} {A : Add T}
+(I    : NatInductionRight3If L N)
 (NS   : NatSuccNat L N.toIsNat N.toSucc)
 (NA0n : NatAddZeroNat L N.toIsNat A N.toZero)
 (NA   : NatAddNat L N.toIsNat A)
@@ -628,29 +628,23 @@ def eqNatAddNatLeftProof
 : (a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
   (L |- a = b) -> (L |- c + a = c + b)
 := by
-  intro a b c Na Nb Nc; refine ifElim ?_
-  refine natInductionRight3 ?f0 ?fS a b c Na Nb Nc
-    (f := fun a b c => (a = b : P) -> (c + a = c + b : P)) 
+  refine natInductionRight3If ?f0 ?fS
   case f0 =>
-    intro a b Na Nb
-    apply ifIntro; intro Qab
+    intro a b Na Nb Qab
     exact eqNatJoin' Na Nb (natAddZeroNat Na) (natAddZeroNat Nb) Qab 
       (addZeroNatEqNat Na) (addZeroNatEqNat Nb)
   case fS =>
-    intro a b c Na Nb Nc p_Qab_to_QAacAbc
-    apply ifIntro; intro Qab
-    have QAacAbc := ifElim p_Qab_to_QAacAbc Qab
-    have NSc := natS Nc
-    have NAca := natAdd Nc Na; have NAcb := natAdd Nc Nb
+    intro a b c Na Nb Nc Qab QAacAbc
+    have NSc := natS Nc; have NAca := natAdd Nc Na; have NAcb := natAdd Nc Nb
     apply eqNatJoin (natAdd NSc Na) (natAdd NSc Nb) (natS NAca) (natS NAcb)
       (addSuccNatEqSucc Nc Na) (addSuccNatEqSucc Nc Nb)
     apply eqNatToEqSucc NAca NAcb
-    exact ifElim p_Qab_to_QAacAbc Qab
+    exact QAacAbc
 
 instance iEqNatAddNatLeft
 {P : Sort u} {T : Type v} {L : Logic P} 
 [N : PNat P T] [Q : LEq P T] [A : Add T] [If : MIf L]
-[I    : NatInductionRight3 L N]
+[I    : NatInductionRight3If L N]
 [NS   : NatSuccNat L N.toIsNat N.toSucc]
 [QJ   : EqNatJoin L N.toIsNat Q] 
 [QtS  : EqNatToEqSucc L N.toIsNat Q N.toSucc]
@@ -659,7 +653,7 @@ instance iEqNatAddNatLeft
 [A0n  : AddZeroNatEqNat L N.toIsNat Q A N.toZero]
 [ASn  : AddSuccNatEqSucc L N.toIsNat Q A N.toSucc]
 : EqNatAddNatLeft L N.toIsNat Q A
-:= {eqNatAddNatLeft := eqNatAddNatLeftProof If I NS NA0n NA QJ QtS A0n ASn}
+:= {eqNatAddNatLeft := eqNatAddNatLeftProof I NS NA0n NA QJ QtS A0n ASn}
 
 instance iEqNatAddNatLeftByPeano
 {P : Sort u} {T : Type v} {L : Logic P} 
@@ -676,7 +670,7 @@ instance iEqNatAddNatLeftByPeano
 [AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : EqNatAddNatLeft L N.toIsNat Q A := 
 {eqNatAddNatLeft := 
-  eqNatAddNatLeftProof If iNatInductionRight3ByForallNat 
+  eqNatAddNatLeftProof iNatInductionRight3IfByForallNatIf 
     NS iNatAddZeroNatByNatAdd iNatAddNatByPeano iEqNatJoinOfEqJoinT QtS 
     iAddZeroNatEqNatByPeano iAddSuccNatEqSuccByPeano}
 
@@ -685,8 +679,8 @@ instance iEqNatAddNatLeftByPeano
 
 def eqNatAddNatRightProof
 {P : Sort u} {T : Type v} {L : Logic P} 
-{N : PNat P T} {Q : LEq P T} {A : Add T} (If : MIf L)
-(I    : NatInductionRight3 L N)
+{N : PNat P T} {Q : LEq P T} {A : Add T}
+(I    : NatInductionRight3If L N)
 (NS   : NatSuccNat L N.toIsNat N.toSucc)
 (NAn0 : NatAddNatZero L N.toIsNat A N.toZero)
 (NA   : NatAddNat L N.toIsNat A)
@@ -697,30 +691,23 @@ def eqNatAddNatRightProof
 : (a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
   (L |- a = b) -> (L |- a + c = b + c)
 := by
-  intro a b c Na Nb Nc; refine ifElim ?_
-  refine natInductionRight3 ?f0 ?fS a b c Na Nb Nc
-    (f := fun a b c => (a = b : P) -> (a + c = b + c : P)) 
+  refine natInductionRight3If ?f0 ?fS
   case f0 =>
-    intro a b Na Nb
-    apply ifIntro; intro Qab
+    intro a b Na Nb Qab
     exact eqNatJoin' Na Nb (natAddNatZero Na) (natAddNatZero Nb) Qab 
       (addNatZeroEqNat Na) (addNatZeroEqNat Nb)
   case fS =>
-    intro a b c Na Nb Nc p_Qab_to_QAacAbc
-    apply ifIntro; intro Qab
-    have QAacAbc := ifElim p_Qab_to_QAacAbc Qab
-    have NSc := natS Nc
-    have NAac := natAdd Na Nc; have NAbc := natAdd Nb Nc
-    have NAaSc := natAdd Na NSc; have NAbSc := natAdd Nb NSc
-    apply eqNatJoin NAaSc NAbSc (natS NAac) (natS NAbc)
+    intro a b c Na Nb Nc Qab QAacAbc
+    have NSc := natS Nc; have NAac := natAdd Na Nc; have NAbc := natAdd Nb Nc
+    apply eqNatJoin (natAdd Na NSc) (natAdd Nb NSc) (natS NAac) (natS NAbc)
       (addNatSuccEqSucc Na Nc) (addNatSuccEqSucc Nb Nc)
     apply eqNatToEqSucc NAac NAbc
-    exact ifElim p_Qab_to_QAacAbc Qab
+    exact QAacAbc
 
 instance iEqNatAddNatRight 
 {P : Sort u} {T : Type v} {L : Logic P} 
-[N : PNat P T] [Q : LEq P T] [A : Add T] [If : MIf L]
-[I    : NatInductionRight3 L N]
+[N : PNat P T] [Q : LEq P T] [A : Add T]
+[I    : NatInductionRight3If L N]
 [NS   : NatSuccNat L N.toIsNat N.toSucc]
 [QJ   : EqNatJoin L N.toIsNat Q] 
 [QtS  : EqNatToEqSucc L N.toIsNat Q N.toSucc]
@@ -729,7 +716,7 @@ instance iEqNatAddNatRight
 [An0  : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
 [AnS  : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : EqNatAddNatRight L N.toIsNat Q A
-:= {eqNatAddNatRight := eqNatAddNatRightProof If I NS NAn0 NA QJ QtS An0 AnS}
+:= {eqNatAddNatRight := eqNatAddNatRightProof I NS NAn0 NA QJ QtS An0 AnS}
 
 instance iEqNatAddNatRightByPeano
 {P : Sort u} {T : Type v} {L : Logic P} 
@@ -745,7 +732,7 @@ instance iEqNatAddNatRightByPeano
 [An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
 [AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : EqNatAddNatRight L N.toIsNat Q A := 
-{eqNatAddNatRight := eqNatAddNatRightProof If iNatInductionRight3ByForallNat NS 
+{eqNatAddNatRight := eqNatAddNatRightProof iNatInductionRight3IfByForallNatIf NS 
   iNatAddNatZeroByAddNatZero iNatAddNatByPeano iEqNatJoinOfEqJoinT QtS An0 AnS} 
 
 --------------------------------------------------------------------------------

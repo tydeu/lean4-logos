@@ -194,7 +194,7 @@ instance iNatInductionRightBySchema
 : NatInductionRight L N
 := {natInductionRight := natInductionRightBySchema I}
 
--- By Right Ternery Induction
+-- By Right Ternary Induction
 
 def natInductionRightByRight3
 {P : Sort u} {T : Type v} {L : Logic P}
@@ -217,7 +217,7 @@ instance iNatInductionRightByRight3
 := {natInductionRight := natInductionRightByRight3 I}
 
 --------------------------------------------------------------------------------
--- Right Ternery Induction
+-- Right Ternary Induction
 --------------------------------------------------------------------------------
 
 -- By Predicate Induction & ForallNat
@@ -295,5 +295,89 @@ instance iNatInductionRight3BySchema
 [N : PNat P T] [I : NatInduction' L N]
 : NatInductionRight3 L N
 := {natInductionRight3 := natInductionRight3BySchema I}
+
+--------------------------------------------------------------------------------
+-- Right Ternary Induction (Conditioned)
+--------------------------------------------------------------------------------
+
+-- By Predicate Induction & ForallNat & If
+
+def natInductionRight3IfByForallNatIf_induct
+{P : Sort u} {T : Type v} {L : Logic P} {N : PNat P T} 
+(I : NatInduction L N) (FaN : MForallNat L N.toIsNat) (If : MIf L)
+: (C : T -> T -> P) -> (f : T -> T -> T -> P) ->
+  (L |- forallNat a b => C a b -> f a b 0) -> 
+  ((c : T) -> (L |- nat c) -> 
+    (L |- forallNat a b => C a b -> f a b c) -> 
+    (L |- forallNat a b => C a b -> f a b (S c))) ->
+  ((c : T) -> (L |- nat c) -> (L |- forallNat a b => C a b -> f a b c))
+:= by
+  intro C f p_f0 p_fS
+  exact natInduction p_f0 p_fS
+
+def natInductionRight3IfByForallNatIf
+{P : Sort u} {T : Type v} {L : Logic P} {N : PNat P T} 
+(I : NatInduction L N) (FaN : MForallNat L N.toIsNat) (If : MIf L)
+: (C : T -> T -> P) -> (f : T -> T -> T -> P) ->
+  ((a b : T) -> (L |- nat a) -> (L |- nat b) ->  
+    (L |- C a b) -> (L |- f a b 0)) -> 
+  ((a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
+    (L |- C a b) -> (L |- f a b c) -> (L |- f a b (S c))) ->
+  ((a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
+    (L |- C a b) -> (L |- f a b c))
+:= by
+  intro C f f0 fS a b c Na Nb Nc
+  have h := natInductionRight3IfByForallNatIf_induct I FaN If
+    C f ?p_f0 ?p_fS c Nc
+  case p_f0 =>
+    apply forallNatIntro; intro a Na
+    apply forallNatIntro; intro b Nb
+    apply ifIntro; intro Cab
+    exact f0 a b Na Nb Cab
+  case p_fS =>
+    intro c Nc p_fabc
+    apply forallNatIntro; intro a Na
+    apply forallNatIntro; intro b Nb
+    apply ifIntro; intro Cab
+    have fabc := ifElim (forallNatElim (forallNatElim p_fabc Na) Nb) Cab
+    exact fS a b c Na Nb Nc Cab fabc 
+  exact ifElim (forallNatElim (forallNatElim h Na) Nb)
+
+instance iNatInductionRight3IfByForallNatIf
+{P : Sort u} {T : Type v} {L : Logic P} [N : PNat P T] 
+[I : NatInduction L N] [FaN : MForallNat L N.toIsNat] [If : MIf L]
+: NatInductionRight3If L N
+:= {natInductionRight3If := natInductionRight3IfByForallNatIf I FaN If}
+
+-- By Schema Induction
+
+def natInductionRight3IfBySchema
+{P : Sort u} {T : Type v} {L : Logic P} 
+{N : PNat P T} (I : NatInduction' L N)
+: (C : T -> T -> P) -> (f : T -> T -> T -> P) ->
+  ((a b : T) -> (L |- nat a) -> (L |- nat b) ->  
+    (L |- C a b) -> (L |- f a b 0)) -> 
+  ((a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
+    (L |- C a b) -> (L |- f a b c) -> (L |- f a b (S c))) ->
+  ((a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
+    (L |- C a b) -> (L |- f a b c))
+:= by
+  intro C f f0 fS
+  have h := natInduction' L
+    (fun (c : T) => (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
+      (L |- C a b) -> (L |- f a b c)) 
+    f0 ?i_fS
+  case i_fS =>
+    intro c Nc fmnc a b Na Nb Cab
+    have fabc := fmnc a b Na Nb Cab
+    exact fS a b c Na Nb Nc Cab fabc
+  intro a b c Na Nb Nc
+  exact h c Nc a b Na Nb
+
+instance iNatInductionRight3IfBySchema
+{P : Sort u} {T : Type v} {L : Logic P}
+[N : PNat P T] [I : NatInduction' L N]
+: NatInductionRight3If L N
+:= {natInductionRight3If := natInductionRight3IfBySchema I}
 
 end Gaea.Peano
