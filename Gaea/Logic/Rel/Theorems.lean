@@ -11,9 +11,9 @@ namespace Gaea.Logic
 
 def funSubstByReflPredSubst {P : Sort u} {T : Sort v} 
 {L : Logic P} {R : T -> T -> P} (Rf : Refl L R) (PSb : PredSubst L R)
-: (a b : T) -> (f : T -> T) -> (L |- R a b) -> (L |- R (f a) (f b))
+: (f : T -> T) -> (a b : T) -> (L |- R a b) -> (L |- R (f a) (f b))
 := by 
-  intro a b f Rab
+  intro f a b Rab
   apply predSubst (fun x => R (f a) (f x)) Rab 
   exact refl (f a)
 

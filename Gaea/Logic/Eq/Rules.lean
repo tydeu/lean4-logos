@@ -92,70 +92,19 @@ def assocT {P : Sort u} {T : Sort v}
 -- (a = b) -> (f a = f b)
 --------------------------------------------------------------------------------
 
--- Unconstrained
-class EqFunSubst {P : Sort u} {T : Sort v} (L : Logic P) (Q : LEq P T) :=
-  (eqFunSubst : (a b : T) -> (f : T -> T) ->
-    (L |- a = b) -> (L |- f a = f b))
-
-instance iFunSubstOfEqFunSubst 
-{P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T]
-[K : EqFunSubst L Q] : FunSubst L Q.lEq
-:= {funSubst := K.eqFunSubst}
-
-instance iEqFunSubstOfFunSubst 
-{P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T]
-[K : FunSubst L Q.lEq] : EqFunSubst L Q
-:= {eqFunSubst := K.funSubst}
-
-def eqFunSubst 
-{P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T]
-[K : EqFunSubst L Q] {a b : T} {f : T -> T} := K.eqFunSubst a b f
-
-def eqFunSubst' 
-{P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T]
-[K : EqFunSubst L Q] {a b : T} := K.eqFunSubst a b
-
 -- Constrained for a given function
 class EqToEqFunT {P : Sort u} {T : Sort v}
   (L : Logic P) (Q : LEq P T) (C : T -> P) (f : T -> T) :=
   (eqToEqFunT : (a b : T) -> 
     (L |- C a) -> (L |- C b) -> (L |- a = b) -> (L |- f a = f b))
 
-instance iEqToEqFunTOfEqFunSubst {P : Sort u} {T : Sort v}
-{L : Logic P} [Q : LEq P T] {C : T -> P} {f : T -> T}
-[K : EqFunSubst L Q] : EqToEqFunT L Q C f
-:= {eqToEqFunT := fun a b _ _  => K.eqFunSubst a b f}
+instance iEqToEqFunTOfFSubst {P : Sort u} {T : Sort v}
+{L : Logic P} [Q : LEq P T] {C : T -> P} {f : T -> T} [K : FSubst L Q.lEq f] 
+: EqToEqFunT L Q C f := {eqToEqFunT := fun a b _ _  => K.fSubst a b}
 
 def eqToEqFunT {P : Sort u} {T : Sort v}
 {L : Logic P} [Q : LEq P T] {C : T -> P} {f : T -> T}
 [K : EqToEqFunT L Q C f] {a b : T} := K.eqToEqFunT a b
-
---------------------------------------------------------------------------------
--- Predicate Substitution
--- (a = b) -> (P a -> P b)
---------------------------------------------------------------------------------
-
-class EqPredSubst {P : Sort u} {T : Sort v} (L : Logic P) (Q : LEq P T) :=
-  (eqPredSubst : (a b : T) -> (f : T -> P) -> 
-    (L |- a = b) -> (L |- f a) -> (L |- f b))
-
-instance iPredSubstOfEqPredSubst 
-{P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T]
-[K : EqPredSubst L Q] : PredSubst L Q.lEq
-:= {predSubst := K.eqPredSubst}
-
-instance iEqPredSubstOfPredSubst
-{P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T]
-[K : PredSubst L Q.lEq] : EqPredSubst L Q
-:= {eqPredSubst := K.predSubst}
-
-def eqPredSubst 
-{P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T]
-[K : EqPredSubst L Q] {a b : T} {f : T -> P} := K.eqPredSubst a b f
-
-def eqPredSubst' 
-{P : Sort u} {T : Sort v} {L : Logic P} [Q : LEq P T]
-[K : EqPredSubst L Q] {a b : T} := K.eqPredSubst a b
 
 --------------------------------------------------------------------------------
 -- Magma Addition / Substitution

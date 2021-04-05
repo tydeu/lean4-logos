@@ -180,29 +180,40 @@ def rightEucT {L : Logic P} {R : T -> T -> P} {C : T -> P}
 -- R a b -> (P a -> P b)
 --------------------------------------------------------------------------------
 
+class PSubst (L : Logic P) (R : T -> T -> P) (F : T -> P) :=
+  pSubst : (a b : T) -> (L |- R a b) -> (L |- F a) -> (L |- F b)
+
 class PredSubst (L : Logic P) (R : T -> T -> P) :=
-  predSubst : (a b : T) -> (F : T -> P) -> 
+  predSubst : (F : T -> P) -> (a b : T) -> 
     (L |- R a b) -> (L |- F a) -> (L |- F b)
 
+instance iPSubstOfPredSubst {L : Logic P} {R : T -> T -> P}
+  [K : PredSubst L R] {F : T -> P} : PSubst L R F := {pSubst := K.predSubst F}
+
 def predSubst {L : Logic P} {R : T -> T -> P}
-  [K : PredSubst L R] {a b : T} := K.predSubst a b
+  (F : T -> P) {a b : T} [K : PSubst L R F] := K.pSubst a b
 
 def predSubst' {L : Logic P} {R : T -> T -> P}
-  [K : PredSubst L R] {a b : T} {F : T -> P} := K.predSubst a b F
+  {F : T -> P} {a b : T} [K : PSubst L R F] := K.pSubst a b
 
 --------------------------------------------------------------------------------
 -- Function Substitution
 -- (R a b) -> (R (f a) (f b))
 --------------------------------------------------------------------------------
 
+class FSubst (L : Logic P) (R : T -> T -> P) (f : T -> T) :=
+  fSubst : (a b : T) -> (L |- R a b) -> (L |- R (f a) (f b))
+
 class FunSubst (L : Logic P) (R : T -> T -> P) :=
-  funSubst : (a b : T) -> (f : T -> T) -> 
-    (L |- R a b) -> (L |- R (f a) (f b))
+  funSubst : (f : T -> T) -> (a b : T) -> (L |- R a b) -> (L |- R (f a) (f b))
+
+instance iFSubstOfFunSubst {L : Logic P} {R : T -> T -> P}
+  [K : FunSubst L R] {f : T -> T} : FSubst L R f := {fSubst := K.funSubst f}
 
 def funSubst {L : Logic P} {R : T -> T -> P}
-  [K : FunSubst L R] {a b : T} := K.funSubst a b
+  (f : T -> T) {a b : T} [K : FSubst L R f] := K.fSubst a b
 
 def funSubst' {L : Logic P} {R : T -> T -> P}
-  [K : FunSubst L R] {a b : T} {f : T -> T} := K.funSubst a b f
+  {f : T -> T} {a b : T} [K : FSubst L R f] := K.fSubst a b
 
 end Gaea.Logic
