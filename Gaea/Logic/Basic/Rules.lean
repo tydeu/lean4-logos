@@ -490,17 +490,17 @@ instance iDisjElimOfAsOr {L : Logic P} [Dj : Disj P]
 -- Not
 --------------------------------------------------------------------------------
 
-class NotIntro (L : Logic P) (Nt : LNot P) (F : LFalse P) := 
-  notIntro : (p : P) -> ((L |- p) -> (L |- false)) -> (L |- ~p) 
+class NotIntro (L : Logic P) (Nt : LNot P) := 
+  notIntro : (p : P) -> ((L |- p) -> False) -> (L |- ~p) 
 
-def notIntro {L : Logic P} [Nt : LNot P] [F : LFalse P] 
-  [K : NotIntro L Nt F] {p : P} := K.notIntro p
+def notIntro {L : Logic P} [Nt : LNot P]
+  [K : NotIntro L Nt] {p : P} := K.notIntro p
 
-class NotElim (L : Logic P) (Nt : LNot P) (F : LFalse P) := 
-  notElim : (p : P) -> (L |- ~p) -> ((L |- p) -> (L |- false))
+class NotElim (L : Logic P) (Nt : LNot P) := 
+  notElim : (p : P) -> (L |- ~p) -> ((L |- p) -> False)
 
-def notElim {L : Logic P} [Nt : LNot P] [F : LFalse P] 
-  [K : NotElim L Nt F] {p : P} := K.notElim p
+def notElim {L : Logic P} [Nt : LNot P] 
+  [K : NotElim L Nt] {p : P} := K.notElim p
 
 --------------------------------------------------------------------------------
 -- True
@@ -551,33 +551,26 @@ class ExAbsurdium (L : Logic P) (A : Absurdity L) :=
 def exAbsurdium {L : Logic P} [A : Absurdity L]
   [K : ExAbsurdium L A] {p : P} := K.exAbsurdium p
 
-def exAbsurdium' {L : Logic P} [A : Absurdity L]
-  [K : ExAbsurdium L A] := K.exAbsurdium
-
 --------------------------------------------------------------------------------
 -- False
 --------------------------------------------------------------------------------
 
-class FalseIntro (L : Logic P) (F : LFalse P) (A : Absurdity L) := 
-  falseIntro : absurdity L -> (L |- false) 
+class FalseIntro (L : Logic P) (F : LFalse P) := 
+  falseIntro : False -> (L |- false) 
 
-def falseIntro {L : Logic P} [F : LFalse P] [A : Absurdity L]
-  [K : FalseIntro L F A] := K.falseIntro
+def falseIntro {L : Logic P} [F : LFalse P]
+  [K : FalseIntro L F] := K.falseIntro
 
-class FalseElim (L : Logic P) (F : LFalse P) (A : Absurdity L) := 
-  falseElim : (L |- false) -> absurdity L
+class FalseElim (L : Logic P) (F : LFalse P) := 
+  falseElim : (L |- false) -> False
 
-def falseElim {L : Logic P} [F : LFalse P] [A : Absurdity L]
-  [K : FalseElim L F A] := K.falseElim
+def falseElim {L : Logic P} [F : LFalse P]
+  [K : FalseElim L F] := K.falseElim
 
 class ExFalso (L : Logic P) (F : LFalse P) :=
   exFalso : (p : P) -> (L |- false) -> (L |- p)
 
 def exFalso {L : Logic P} [F : LFalse P]
   [K : ExFalso L F] {p : P} := K.exFalso p
-
-def exFalso' {L : Logic P} [F : LFalse P]
-  [K : ExFalso L F] (f : L |- false) (p : P) := K.exFalso p f
-
 
 end Gaea.Logic

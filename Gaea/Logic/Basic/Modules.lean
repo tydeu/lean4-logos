@@ -251,30 +251,30 @@ end MDisj
 
 -- Not
 
-class MNot (L : Logic P) (F : LFalse P) extends LNot P :=
-  (toNotIntro : NotIntro L toLNot F)
-  (toNotElim : NotElim L toLNot F)
+class MNot (L : Logic P) extends LNot P :=
+  (toNotIntro : NotIntro L toLNot)
+  (toNotElim : NotElim L toLNot)
 
 instance iMNot {L : Logic P} 
-  [Nt : LNot P] [F : LFalse P] [I : NotIntro L Nt F] [E : NotElim L Nt F] :
-  MNot L F := {toLNot := Nt, toNotIntro := I, toNotElim := E}
+  [Nt : LNot P] [I : NotIntro L Nt] [E : NotElim L Nt] : 
+  MNot L := {toLNot := Nt, toNotIntro := I, toNotElim := E}
 
-instance iNotIntroOfMNot {L : Logic P} [F : LFalse P] [K : MNot L F] :
-  NotIntro L K.toLNot F := {notIntro := K.toNotIntro.notIntro}
+instance iNotIntroOfMNot {L : Logic P} [F : LFalse P] [K : MNot L] : 
+  NotIntro L K.toLNot := {notIntro := K.toNotIntro.notIntro}
 
-instance iNotElimOfMNot {L : Logic P} [F : LFalse P] [K : MNot L F] :
-  NotElim L K.toLNot F := {notElim := K.toNotElim.notElim}
+instance iNotElimOfMNot {L : Logic P} [F : LFalse P] [K : MNot L] : 
+  NotElim L K.toLNot := {notElim := K.toNotElim.notElim}
 
 namespace MNot
-abbrev lNot {L : Logic P} {F : LFalse P} (K : MNot L F) 
+abbrev lNot {L : Logic P} (K : MNot L) 
   := K.toLNot.lNot
-abbrev notIntro {L : Logic P} {F : LFalse P} (K : MNot L F) 
+abbrev notIntro {L : Logic P} (K : MNot L) 
   := K.toNotIntro.notIntro
-abbrev intro {L : Logic P} {F : LFalse P} (K : MNot L F) 
+abbrev intro {L : Logic P} (K : MNot L) 
   {p} := K.notIntro p
-abbrev notElim {L : Logic P} {F : LFalse P} (K : MNot L F) 
+abbrev notElim {L : Logic P} (K : MNot L) 
   := K.toNotElim.notElim
-abbrev elim {L : Logic P} {F : LFalse P} (K : MNot L F) 
+abbrev elim {L : Logic P} (K : MNot L) 
   {p} := K.notElim p
 end MNot
 
