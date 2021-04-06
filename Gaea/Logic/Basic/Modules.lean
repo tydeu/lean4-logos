@@ -135,17 +135,12 @@ end MIff
 
 class MConj (L : Logic P) extends Conj P :=
   (toConjIntro : ConjIntro L toConj)
-  (toConjElim : ConjElim L toConj)
+  (toConjLeft : ConjLeft L toConj)
+  (toConjRight : ConjRight L toConj)
 
-instance iMConj {L : Logic P} 
-  [Cj : Conj P] [I : ConjIntro L Cj] [E : ConjElim L Cj] :
-  MConj L := {toConj := Cj, toConjIntro := I, toConjElim := E}
-
-instance iConjIntroOfMConj {L : Logic P} [K : MConj L] :
-  ConjIntro L K.toConj := {conjIntro := K.toConjIntro.conjIntro}
-
-instance iConjElimOfMConj {L : Logic P} [K : MConj L] :
-  ConjElim L K.toConj := {conjElim := K.toConjElim.conjElim}
+instance iMConj {L : Logic P} [Cj : Conj P] 
+  [I : ConjIntro L Cj] [CjL : ConjLeft L Cj] [CjR : ConjRight L Cj] : MConj L 
+  := {toConj := Cj, toConjIntro := I, toConjLeft := CjL, toConjRight := CjR}
 
 namespace MConj
 abbrev conj {L : Logic P} (K : MConj L) 
@@ -154,28 +149,32 @@ abbrev conjIntro {L : Logic P} (K : MConj L)
   := K.toConjIntro.conjIntro
 abbrev intro {L : Logic P} (K : MConj L) 
   {p q} := K.conjIntro p q
+abbrev conjLeft {L : Logic P} (K : MConj L)
+  := K.toConjLeft.conjLeft
+abbrev left {L : Logic P} (K : MConj L)
+  {p q} := K.conjLeft p q
+abbrev conjRight {L : Logic P} (K : MConj L) 
+  := K.toConjRight.conjRight
+abbrev right {L : Logic P} (K : MConj L) 
+  {p q} := K.conjRight p q
+end MConj
+
+instance iConjIntroOfMConj {L : Logic P} [K : MConj L] :
+  ConjIntro L K.toConj := {conjIntro := K.conjIntro}
+
+instance iConjLeftOfMConj {L : Logic P} [K : MConj L] :
+  ConjLeft L K.toConj := {conjLeft := K.conjLeft}
+
+instance iConjRightOfMConj {L : Logic P} [K : MConj L] :
+  ConjRight L K.toConj := {conjRight := K.conjRight}
+
+namespace MConj
 abbrev toConjTaut {L : Logic P} (K : MConj L)
   : ConjTaut L K.toConj := iConjTautOfIntro
 abbrev conjTaut {L : Logic P} (K : MConj L)
   := K.toConjTaut.conjTaut
 abbrev taut {L : Logic P} (K : MConj L)
   {p q} := K.conjTaut p q
-abbrev conjElim {L : Logic P} (K : MConj L) 
-  := K.toConjElim.conjElim
-abbrev elim {L : Logic P} (K : MConj L) 
-  {p q} := K.conjElim p q
-abbrev toConjLeft {L : Logic P} (K : MConj L)
-  : ConjLeft L K.toConj := iConjLeftOfElim
-abbrev conjLeft {L : Logic P} (K : MConj L)
-  := K.toConjLeft.conjLeft
-abbrev left {L : Logic P} (K : MConj L)
-  {p q} := K.conjLeft p q
-abbrev toConjRight {L : Logic P} (K : MConj L)
-  : ConjRight L K.toConj := iConjRightOfElim
-abbrev conjRight {L : Logic P} (K : MConj L) 
-  := K.toConjRight.conjRight
-abbrev right {L : Logic P} (K : MConj L) 
-  {p q} := K.conjRight p q
 abbrev toConjSimp {L : Logic P} (K : MConj L)
   : ConjSimp L K.toConj := iConjSimpOfLeft
 abbrev conjSimp {L : Logic P} (K : MConj L) 
@@ -189,12 +188,66 @@ abbrev conjCurry {L : Logic P} (K : MConj L)
 abbrev curry {L : Logic P} (K : MConj L) 
   {p q} := K.conjCurry p q
 abbrev toConjUncurry {L : Logic P} (K : MConj L)
-  : ConjUncurry L K.toConj := iConjUncurryOfElim
+  : ConjUncurry L K.toConj := iConjUncurryOfLeftRight
 abbrev conjUncurry {L : Logic P} (K : MConj L) 
   := K.toConjUncurry.conjUncurry
 abbrev uncurry {L : Logic P} (K : MConj L) 
   {p q} := K.conjUncurry p q
 end MConj
+
+-- Disjunction
+
+class MDisj (L : Logic P) extends Disj P :=
+  (toDisjIntroLeft : DisjIntroLeft L toDisj)
+  (toDisjIntroRight : DisjIntroRight L toDisj)
+  (toDisjElim : DisjElim L toDisj)
+
+instance iMDisj {L : Logic P} [Dj : Disj P] 
+  [DiL : DisjIntroLeft L Dj] [DiR : DisjIntroRight L Dj] [E : DisjElim L Dj] 
+  : MDisj L := 
+  {toDisj := Dj, 
+    toDisjIntroLeft := DiL, toDisjIntroRight := DiR, toDisjElim := E}
+
+namespace MDisj
+abbrev disj {L : Logic P} (K : MDisj L) 
+  := K.toDisj.disj
+abbrev disjIntroLeft {L : Logic P} (K : MDisj L)
+  := K.toDisjIntroLeft.disjIntroLeft
+abbrev inl {L : Logic P} (K : MDisj L)
+  {p q} := K.disjIntroLeft p q
+abbrev disjIntroRight {L : Logic P} (K : MDisj L) 
+  := K.toDisjIntroRight.disjIntroRight
+abbrev inr {L : Logic P} (K : MDisj L) 
+  {p q} := K.disjIntroRight p q
+abbrev disjElim {L : Logic P} (K : MDisj L) 
+  := K.toDisjElim.disjElim
+abbrev elim {L : Logic P} (K : MDisj L) 
+  {a p q} := K.disjElim a p q
+end MDisj
+
+instance iDisjIntroLeftOfMDisj {L : Logic P} [K : MDisj L] :
+  DisjIntroLeft L K.toDisj := {disjIntroLeft := K.disjIntroLeft}
+
+instance iDisjIntroRightOfMDisj {L : Logic P} [K : MDisj L] :
+  DisjIntroRight L K.toDisj := {disjIntroRight := K.disjIntroRight}
+
+instance iDisjElimOfMDisj {L : Logic P} [K : MDisj L] :
+  DisjElim L K.toDisj := {disjElim := K.disjElim}
+
+namespace MDisj
+abbrev toDisjTaut {L : Logic P} (K : MDisj L)
+  : DisjTaut L K.toDisj := iDisjTautOfIntroLeft
+abbrev disjTaut {L : Logic P} (K : MDisj L)
+  := K.toDisjTaut.disjTaut
+abbrev taut {L : Logic P} (K : MDisj L)
+  {p q} := K.disjTaut p q
+abbrev toDisjSimp {L : Logic P} (K : MDisj L)
+  : DisjSimp L K.toDisj := iDisjSimpOfElim
+abbrev disjSimp {L : Logic P} (K : MDisj L) 
+  := K.toDisjSimp.disjSimp
+abbrev simp {L : Logic P} (K : MDisj L) 
+  {p q} := K.disjSimp p q
+end MDisj
 
 -- Not
 

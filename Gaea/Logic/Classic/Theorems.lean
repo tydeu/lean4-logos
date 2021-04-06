@@ -162,11 +162,11 @@ def cnstrDilByIfConjDisj {L : Logic P}
   apply disjElim LpDr ?pTqDs ?rTqDs
   case pTqDs =>
     intro Lp
-    apply disjIntroRight
+    apply disjIntroLeft
     exact ifElim LpTq Lp
   case rTqDs =>
     intro Lr
-    apply disjIntroLeft
+    apply disjIntroRight
     exact ifElim LrTs Lr
 
 instance iCnstrDilByIfConjDisj {L : Logic P} 
@@ -198,11 +198,11 @@ def destrDilByIfConjDisj {L : Logic P}
   apply disjElim LNqDNs ?NqTNpDNr ?NsTNpDNr
   case NqTNpDNr =>
     intro LNq
-    apply disjIntroRight
+    apply disjIntroLeft
     exact contraIfElim LpTq LNq
   case NsTNpDNr =>
     intro LNs
-    apply disjIntroLeft
+    apply disjIntroRight
     exact contraIfElim LrTs LNs
 
 instance iDestrDilByIfConjDisj {L : Logic P} 
@@ -235,11 +235,11 @@ def bidirDilByIfConjDisj {L : Logic P}
   apply disjElim LpDNs ?pTqDNr ?NsTqDNr
   case pTqDNr =>
     intro Lp
-    apply disjIntroRight
+    apply disjIntroLeft
     exact ifElim LpTq Lp
   case NsTqDNr =>
     intro LNs
-    apply disjIntroLeft
+    apply disjIntroRight
     exact contraIfElim LrTs LNs
 
 instance iBidirDilByIfConjDisj {L : Logic P} 
