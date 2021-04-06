@@ -153,10 +153,10 @@ def natMulNatProof
     intro a Na 
     exact natMulNatZero Na
   case fS =>
-    intro a b Na Nb NMab
-    have MaSb_eq_AaSMab := mulNatSuccEqAddMul Na Nb
-    refine natEq ?_ MaSb_eq_AaSMab
-    exact natAdd Na NMab
+    intro b Nb NMnb a Na
+    have NMab := NMnb a Na
+    apply natEq (natAdd Na NMab)
+    exact mulNatSuccEqAddMul Na Nb 
 
 instance iNatMulNat 
 {P : Sort u} {T : Type v} {L : Logic P} 
@@ -391,7 +391,7 @@ def mulSuccNatEqAddMulProof
     exact addZeroNatEqNat NMa0
     exact mulNatZeroEqZero Na
   case fS =>
-    intro a b Na Nb MSab_eq_AbMab
+    intro b Nb MSnb_eq_AbMnb a Na 
     have NSa := natS Na 
     have NSb := natS Nb
     have NMab := natMul Na Nb
@@ -413,7 +413,7 @@ def mulSuccNatEqAddMulProof
       exact mulNatSuccEqAddMul NSa Nb
       apply eqNatTrans' NASaAbMab NASaMSab NSAaAbMab
       apply eqNatAddNatLeft' NSa NMSab NAbMab
-      exact MSab_eq_AbMab
+      exact MSnb_eq_AbMnb a Na
       exact addSuccNatEqSucc Na NAbMab
     case ASbMaSb_eq_SAaAbMab =>
       have NMaSb := natMul Na NSb
@@ -547,7 +547,7 @@ def mulNatCommProof
     intro a Na
     exact mulNatZeroComm Na
   case fS =>
-    intro a b Na Nb Mab_eq_Mba
+    intro b Nb Mnb_eq_Mbn a Na
     have NSb := natS Nb
     have NMab := natMul Na Nb 
     have NAaMab := natAdd Na NMab
@@ -562,7 +562,7 @@ def mulNatCommProof
       apply eqNatTrans' NAaMab NMaSb NAaMba
       exact mulNatSuccEqAddMul Na Nb
       apply eqNatAddNatLeft' Na NMab NMba
-      exact Mab_eq_Mba
+      exact Mnb_eq_Mbn a Na
     case MSba_eq_AaMba =>
       exact mulSuccNatEqAddMul Nb Na
 
@@ -635,7 +635,7 @@ def eqNatMulNatLeftProof
     exact mulZeroNatEqZero Na
     exact mulZeroNatEqZero Nb
   case fS =>
-    intro a b c Na Nb Nc Qab QMcaMcb
+    intro c Nc Qmn_to_QMcmMcn a b Na Nb Qab 
     have NSc := natS Nc
     have NMcb := natMul Nc Nb
     have NMSca := natMul NSc Na
@@ -651,7 +651,7 @@ def eqNatMulNatLeftProof
       exact mulSuccNatEqAddMul Nc Na
       apply eqNatTrans' NAaMcb NAaMca NAbMcb
       apply eqNatAddNatLeft' Na NMca NMcb
-      exact QMcaMcb
+      exact Qmn_to_QMcmMcn a b Na Nb Qab
       apply eqNatAddNatRight' NMcb Na Nb 
       exact Qab
     case MScb_eq_AbMcb =>
@@ -725,7 +725,7 @@ def eqNatMulNatRightProof
     exact mulNatZeroEqZero Na
     exact mulNatZeroEqZero Nb
   case fS =>
-    intro a b c Na Nb Nc Qab QMacMbc
+    intro c Nc Qmn_to_QMmcMnc a b Na Nb Qab
     have NSc := natS Nc
     have NMbc := natMul Nb Nc
     have NMaSc := natMul Na NSc
@@ -741,7 +741,7 @@ def eqNatMulNatRightProof
       exact mulNatSuccEqAddMul Na Nc
       apply eqNatTrans' NAaMbc NAaMac NAbMbc
       apply eqNatAddNatLeft' Na NMac NMbc
-      exact QMacMbc
+      exact Qmn_to_QMmcMnc a b Na Nb Qab
       apply eqNatAddNatRight' NMbc Na Nb
       exact Qab
     case MbSc_eq_AbMbc =>
@@ -834,7 +834,7 @@ def mulNatAddEqAddMulProof
       exact mulNatZeroEqZero Na
       exact addNatZeroEqNat NMab
   case fS =>
-    intro a b c Na Nb Nc MaAbc_eq_NAMabMac
+    intro c Nc MmAnc_eq_NAMmnMmc a b Na Nb
     have NSc := natS Nc
     have NMab := natMul Na Nb
     have NMac := natMul Na Nc 
@@ -862,7 +862,7 @@ def mulNatAddEqAddMulProof
       exact mulNatSuccEqAddMul Na NAbc
       apply eqNatTrans' NAaAMabMac NAaMaAbc NAMabAMaca
       apply eqNatAddNatLeft' Na NMaAbc NAMabMac
-      exact MaAbc_eq_NAMabMac
+      exact MmAnc_eq_NAMmnMmc a b Na Nb
       apply eqNatTrans' NAAMabMaca NAaAMabMac NAMabAMaca
       exact addNatComm Na NAMabMac
       exact addNatAssoc NMab NMac Na
@@ -961,7 +961,7 @@ def mulAddNatEqAddMulProof
       exact mulZeroNatEqZero Na
       exact addNatZeroEqNat NMba
   case fS =>
-    intro a b c Na Nb Nc MAbca_eq_AMbaMca
+    intro c Nc MAncm_eq_AMnmMcm a b Na Nb
     have NSc := natS Nc
     have NMba := natMul Nb Na
     have NMca := natMul Nc Na 
@@ -989,7 +989,7 @@ def mulAddNatEqAddMulProof
       exact mulSuccNatEqAddMul NAbc Na
       apply eqNatTrans' NAaAMbaMca NAaMaAbc NAMbaAMcaa
       apply eqNatAddNatLeft' Na NMAbca NAMbaMca
-      exact MAbca_eq_AMbaMca
+      exact MAncm_eq_AMnmMcm a b Na Nb
       apply eqNatTrans' NAAMabMaca NAaAMbaMca NAMbaAMcaa
       exact addNatComm Na NAMbaMca
       exact addNatAssoc NMba NMca Na
@@ -1087,7 +1087,7 @@ def mulNatAssocProof
       exact mulNatZeroEqZero Nb
       exact mulNatZeroEqZero Na
   case fS =>
-    intro a b c Na Nb Nc MMabc_eq_MaMbc
+    intro c Nc MMmnc_eq_MmMnc a b Na Nb
     have NSc := natS Nc
     have NMab := natMul Na Nb
     have NMbc := natMul Nb Nc
@@ -1104,7 +1104,7 @@ def mulNatAssocProof
       apply eqNatTrans' NAMabMMabc NMMabSc NAMabMaMbc
       exact mulNatSuccEqAddMul NMab Nc
       apply eqNatAddNatLeft' NMab NMMabc NMaMbc
-      exact MMabc_eq_MaMbc
+      exact MMmnc_eq_MmMnc a b Na Nb
     case MaMbSc_eq_AMabMaMbc =>
       have NAbMbc := natAdd Nb NMbc
       have NMaAbMbc := natMul Na NAbMbc

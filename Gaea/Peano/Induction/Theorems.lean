@@ -24,7 +24,8 @@ def natInductionBySchema {P : Sort u} {T : Type v}
   ((a : T) -> (L |- nat a) -> (L |- f a))
 := by
   intro f f0 fS
-  exact natInduction' L (fun a => L |- f a) f0 fS
+  exact natInduction' L f0 fS 
+    (f := fun a => L |- f a)
 
 instance iNatInductionBySchema 
 {P : Sort u} {T : Type v} {L : Logic P} 
@@ -44,7 +45,7 @@ def natInductionByRight {P : Sort u} {T : Type v}
   refine natInductionRight (f := fun a b => f b) 
     ?f0' ?fS' a a Na Na
   case f0' => intro a Na; exact f0 
-  case fS' => intro a b Na Nb; exact fS b Nb 
+  case fS' => intro b Nb ih a Na; exact fS b Nb (ih a Na) 
 
 instance iNatInductionByRight
 {P : Sort u} {T : Type v} {L : Logic P}
@@ -64,7 +65,8 @@ def natInductionLeftByForallNat_induct
 : (f : T -> T -> P) -> 
   (L |- forallNat b => f 0 b) -> 
   ((a : T) -> (L |- nat a) -> 
-    (L |- forallNat b => f a b) -> (L |- forallNat b => f (S a) b)) ->
+    (L |- forallNat b => f a b) -> 
+    (L |- forallNat b => f (S a) b)) ->
   ((a : T) -> (L |- nat a) -> (L |- forallNat b => f a b))
 := by
   intro f p_f0 p_fS
@@ -75,7 +77,9 @@ def natInductionLeftByForallNat
 {N : PNat P T} (I : NatInduction L N) (FaN : MForallNat L N.toIsNat)
 : (f : T -> T -> P) -> 
   ((b : T) -> (L |- nat b) -> (L |- f 0 b)) -> 
-  ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b) -> (L |- f (S a) b)) ->
+  ((a : T) -> (L |- nat a) ->
+    ((b : T) -> (L |- nat b) -> (L |- f a b)) -> 
+    ((b : T) -> (L |- nat b) -> (L |- f (S a) b))) ->
   ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b))
 := by
   intro f f0 fS a b Na Nb
@@ -85,10 +89,10 @@ def natInductionLeftByForallNat
     apply forallNatIntro; intro b Nb
     exact f0 b Nb
   case p_fS =>
-    intro a Na p_fab
+    intro a Na p_ih
     apply forallNatIntro; intro b Nb
-    have fab := forallNatElim p_fab Nb
-    exact fS a b Na Nb fab
+    have ih := fun b (Nb : L |- nat b) => forallNatElim p_ih Nb
+    exact fS a Na ih b Nb
   exact forallNatElim h Nb
 
 instance iNatInductionLeftByForallNat
@@ -104,16 +108,14 @@ def natInductionLeftBySchema
 {N : PNat P T} (I : NatInduction' L N)
 : (f : T -> T -> P) -> 
   ((b : T) -> (L |- nat b) -> (L |- f 0 b)) -> 
-  ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b) -> (L |- f (S a) b)) ->
+  ((a : T) -> (L |- nat a) ->
+    ((b : T) -> (L |- nat b) -> (L |- f a b)) -> 
+    ((b : T) -> (L |- nat b) -> (L |- f (S a) b))) ->
   ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b))
 := by
   intro f f0 fS
-  have h := natInduction' L
-    (fun (a : T) => (b : T) -> (L |- nat b) -> (L |- f a b)) f0 ?i_fS
-  case i_fS =>
-    intro a Na fan b Nb
-    have fab := fan b Nb
-    exact fS a b Na Nb fab
+  have h := natInduction' L f0 fS
+    (f := fun (a : T) => (b : T) -> (L |- nat b) -> (L |- f a b)) 
   intro a b Na Nb
   exact h a Na b Nb
 
@@ -135,7 +137,8 @@ def natInductionRightByForallNat_induct
 : (f : T -> T -> P) -> 
   (L |- forallNat a => f a 0) -> 
   ((b : T) -> (L |- nat b) -> 
-    (L |- forallNat a => f a b) -> (L |- forallNat a => f a (S b))) ->
+    (L |- forallNat a => f a b) -> 
+    (L |- forallNat a => f a (S b))) ->
   ((b : T) -> (L |- nat b) -> (L |- forallNat a => f a b))
 := by
   intro f p_f0 p_fS
@@ -146,7 +149,9 @@ def natInductionRightByForallNat
 {N : PNat P T} (I : NatInduction L N) (FaN : MForallNat L N.toIsNat)
 : (f : T -> T -> P) -> 
   ((a : T) -> (L |- nat a) -> (L |- f a 0)) -> 
-  ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b) -> (L |- f a (S b))) ->
+  ((b : T) -> (L |- nat b) -> 
+    ((a : T) -> (L |- nat a) -> (L |- f a b)) -> 
+    ((a : T) -> (L |- nat a) -> (L |- f a (S b)))) ->
   ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b))
 := by
   intro f f0 fS a b Na Nb
@@ -156,10 +161,10 @@ def natInductionRightByForallNat
     apply forallNatIntro; intro a Na
     exact f0 a Na
   case p_fS =>
-    intro b Nb p_fab
+    intro b Nb p_ih
     apply forallNatIntro; intro a Na
-    have fab := forallNatElim p_fab Na
-    exact fS a b Na Nb fab
+    have ih := fun a (Na : L |- nat a) => forallNatElim p_ih Na
+    exact fS b Nb ih a Na
   exact forallNatElim h Na
 
 instance iNatInductionRightByForallNat
@@ -175,16 +180,14 @@ def natInductionRightBySchema
 {N : PNat P T} (I : NatInduction' L N)
 : (f : T -> T -> P) -> 
   ((a : T) -> (L |- nat a) -> (L |- f a 0)) -> 
-  ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b) -> (L |- f a (S b))) ->
+  ((b : T) -> (L |- nat b) -> 
+    ((a : T) -> (L |- nat a) -> (L |- f a b)) -> 
+    ((a : T) -> (L |- nat a) -> (L |- f a (S b)))) ->
   ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b))
 := by
   intro f f0 fS
-  have h := natInduction' L
-    (fun (b : T) => (a : T) -> (L |- nat a) -> (L |- f a b)) f0 ?i_fS
-  case i_fS =>
-    intro b Nb fnb a Na
-    have fab := fnb a Na
-    exact fS a b Na Nb fab
+  have h := natInduction' L f0 fS
+    (f := fun (b : T) => (a : T) -> (L |- nat a) -> (L |- f a b))
   intro a b Na Nb
   exact h b Nb a Na
 
@@ -201,14 +204,20 @@ def natInductionRightByRight3
 {N : PNat P T} (I : NatInductionRight3 L N)
 : (f : T -> T -> P) -> 
   ((a : T) -> (L |- nat a) -> (L |- f a 0)) -> 
-  ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b) -> (L |- f a (S b))) ->
+  ((b : T) -> (L |- nat b) -> 
+    ((a : T) -> (L |- nat a) -> (L |- f a b)) -> 
+    ((a : T) -> (L |- nat a) -> (L |- f a (S b)))) ->
   ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b))
 := by
   intro f f0 fS a b Na Nb
-  refine natInductionRight3 (f := fun a b c => f b c) 
-    ?f0' ?fS' a a b Na Na Nb
-  case f0' => intro a b Na Nb; exact f0 b Nb
-  case fS' => intro a b c Na Nb Nc; exact fS b c Nb Nc
+  refine natInductionRight3 ?f0' ?fS' a a b Na Na Nb
+    (f := fun a b c => f b c)
+  case f0' => 
+    intro a b Na Nb
+    exact f0 b Nb
+  case fS' => 
+    intro c Nc ih a b Na Nb 
+    exact fS c Nc (fun b Nb => ih a b Na Nb) b Nb
 
 instance iNatInductionRightByRight3
 {P : Sort u} {T : Type v} {L : Logic P}
@@ -228,7 +237,8 @@ def natInductionRight3ByForallNat_induct
 : (f : T -> T -> T -> P) -> 
   (L |- forallNat a b => f a b 0) -> 
   ((c : T) -> (L |- nat c) -> 
-    (L |- forallNat a b => f a b c) -> (L |- forallNat a b => f a b (S c))) ->
+    (L |- forallNat a b => f a b c) -> 
+    (L |- forallNat a b => f a b (S c))) ->
   ((c : T) -> (L |- nat c) -> (L |- forallNat a b => f a b c))
 := by
   intro f p_f0 p_fS
@@ -238,10 +248,11 @@ def natInductionRight3ByForallNat
 {P : Sort u} {T : Type v} {L : Logic P} 
 {N : PNat P T} (I : NatInduction L N) (FaN : MForallNat L N.toIsNat)
 : (f : T -> T -> T -> P) -> 
-  ((a b : T) -> (L |- nat a) -> (L |- nat b) ->  
+  ((a b : T) -> (L |- nat a) -> (L |- nat b) -> 
     (L |- f a b 0)) -> 
-  ((a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
-    (L |- f a b c) -> (L |- f a b (S c))) ->
+  ((c : T) -> (L |- nat c) ->
+    ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b c)) -> 
+    ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b (S c)))) ->
   ((a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
     (L |- f a b c))
 := by
@@ -253,11 +264,12 @@ def natInductionRight3ByForallNat
     apply forallNatIntro; intro b Nb
     exact f0 a b Na Nb
   case p_fS =>
-    intro c Nc p_fabc
+    intro c Nc p_ih
     apply forallNatIntro; intro a Na
     apply forallNatIntro; intro b Nb
-    have fabc := forallNatElim (forallNatElim p_fabc Na) Nb
-    exact fS a b c Na Nb Nc fabc
+    have ih := fun a b (Na : L |- nat a) (Nb : L |- nat b) => 
+      forallNatElim (forallNatElim p_ih Na) Nb
+    exact fS c Nc ih a b Na Nb
   exact forallNatElim (forallNatElim h Na) Nb
 
 instance iNatInductionRight3ByForallNat
@@ -274,19 +286,16 @@ def natInductionRight3BySchema
 : (f : T -> T -> T -> P) -> 
   ((a b : T) -> (L |- nat a) -> (L |- nat b) ->  
     (L |- f a b 0)) -> 
-  ((a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
-    (L |- f a b c) -> (L |- f a b (S c))) ->
+  ((c : T) -> (L |- nat c) ->
+    ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b c)) -> 
+    ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b (S c)))) ->
   ((a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
     (L |- f a b c))
 := by
   intro f f0 fS
-  have h := natInduction' L
-    (fun (c : T) => (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b c)) 
-    f0 ?i_fS
-  case i_fS =>
-    intro c Nc fmnc a b Na Nb
-    have fabc := fmnc a b Na Nb
-    exact fS a b c Na Nb Nc fabc
+  have h := natInduction' L f0 fS
+    (f := fun (c : T) => 
+      (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b c))
   intro a b c Na Nb Nc
   exact h c Nc a b Na Nb
 
@@ -321,8 +330,11 @@ def natInductionRight3IfByForallNatIf
 : (C : T -> T -> P) -> (f : T -> T -> T -> P) ->
   ((a b : T) -> (L |- nat a) -> (L |- nat b) ->  
     (L |- C a b) -> (L |- f a b 0)) -> 
-  ((a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
-    (L |- C a b) -> (L |- f a b c) -> (L |- f a b (S c))) ->
+  ((c : T) -> (L |- nat c) -> 
+    ((a b : T) -> (L |- nat a) -> (L |- nat b) -> 
+      (L |- C a b) -> (L |- f a b c)) ->
+    ((a b : T) -> (L |- nat a) -> (L |- nat b) -> 
+      (L |- C a b) -> (L |- f a b (S c)))) ->
   ((a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
     (L |- C a b) -> (L |- f a b c))
 := by
@@ -335,12 +347,13 @@ def natInductionRight3IfByForallNatIf
     apply ifIntro; intro Cab
     exact f0 a b Na Nb Cab
   case p_fS =>
-    intro c Nc p_fabc
+    intro c Nc p_ih
     apply forallNatIntro; intro a Na
     apply forallNatIntro; intro b Nb
     apply ifIntro; intro Cab
-    have fabc := ifElim (forallNatElim (forallNatElim p_fabc Na) Nb) Cab
-    exact fS a b c Na Nb Nc Cab fabc 
+    have ih := fun a b (Na : L |- nat a) (Nb : L |- nat b) Cab => 
+      ifElim (forallNatElim (forallNatElim p_ih Na) Nb) Cab
+    exact fS c Nc ih a b Na Nb Cab
   exact ifElim (forallNatElim (forallNatElim h Na) Nb)
 
 instance iNatInductionRight3IfByForallNatIf
@@ -357,20 +370,18 @@ def natInductionRight3IfBySchema
 : (C : T -> T -> P) -> (f : T -> T -> T -> P) ->
   ((a b : T) -> (L |- nat a) -> (L |- nat b) ->  
     (L |- C a b) -> (L |- f a b 0)) -> 
-  ((a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
-    (L |- C a b) -> (L |- f a b c) -> (L |- f a b (S c))) ->
+  ((c : T) -> (L |- nat c) -> 
+    ((a b : T) -> (L |- nat a) -> (L |- nat b) -> 
+      (L |- C a b) -> (L |- f a b c)) ->
+    ((a b : T) -> (L |- nat a) -> (L |- nat b) -> 
+      (L |- C a b) -> (L |- f a b (S c)))) ->
   ((a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
     (L |- C a b) -> (L |- f a b c))
 := by
   intro C f f0 fS
-  have h := natInduction' L
-    (fun (c : T) => (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
-      (L |- C a b) -> (L |- f a b c)) 
-    f0 ?i_fS
-  case i_fS =>
-    intro c Nc fmnc a b Na Nb Cab
-    have fabc := fmnc a b Na Nb Cab
-    exact fS a b c Na Nb Nc Cab fabc
+  have h := natInduction' L f0 fS
+    (f := fun (c : T) => (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
+      (L |- C a b) -> (L |- f a b c))
   intro a b c Na Nb Nc
   exact h c Nc a b Na Nb
 

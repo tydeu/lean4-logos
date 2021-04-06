@@ -145,7 +145,8 @@ def natAddNatByPeano
     intro a Na
     exact natAddNatZero Na
   case fS =>
-    intro a b Na Nb NAab
+    intro b Nb NAnb a Na 
+    have NAab := NAnb a Na
     apply natEq (natS NAab)
     exact addNatSuccEqSucc Na Nb
 
@@ -333,7 +334,7 @@ def addNatSuccEqSuccByNatAdd
     apply eqNatToEqSucc NA0a Na 
     exact addZeroNatEqNat Na
   case fS =>
-    intro a b Na Nb AaSb_eq_SAab
+    intro a Na AaSn_eq_SAan b Nb
     have NSa := natS Na
     have NSb := natS Nb
     have NASab := natAdd NSa Nb
@@ -350,7 +351,7 @@ def addNatSuccEqSuccByNatAdd
       apply eqNatTrans' NSAaSb NASaSb NSSAab 
       exact addSuccNatEqSucc Na NSb 
       apply eqNatToEqSucc NAaSb NSAab 
-      exact AaSb_eq_SAab
+      exact AaSn_eq_SAan b Nb
     case SASab_eq_SSAab =>
       apply eqNatToEqSucc NASab NSAab 
       exact addSuccNatEqSucc Na Nb
@@ -397,7 +398,7 @@ def addSuccNatEqSuccByNatAdd
     apply eqNatToEqSucc NAa0 Na 
     exact addNatZeroEqNat Na
   case fS =>
-    intro a b Na Nb ASab_eq_SAab
+    intro b Nb ASnb_eq_SAnb a Na
     have NSa := natS Na
     have NSb := natS Nb
     have NAaSb := natAdd Na NSb
@@ -414,7 +415,7 @@ def addSuccNatEqSuccByNatAdd
       apply eqNatTrans' NSASab NASaSb NSSAab 
       exact addNatSuccEqSucc NSa Nb 
       apply eqNatToEqSucc NASab NSAab 
-      exact ASab_eq_SAab
+      exact ASnb_eq_SAnb a Na
     case SAaSb_eq_SSAab =>
       apply eqNatToEqSucc NAaSb NSAab 
       exact addNatSuccEqSucc Na Nb
@@ -563,7 +564,7 @@ def addNatCommProof
     intro a Na
     exact addNatZeroComm Na
   case fS =>
-    intro a b Na Nb Aab_eq_Aba
+    intro b Nb Anb_eq_Abn a Na
     have NSb := natS Nb
     have NAab := natAdd Na Nb; have NSAab := natS NAab;
     have NAba := natAdd Nb Na; have NSAba := natS NAba
@@ -573,7 +574,7 @@ def addNatCommProof
     apply eqNatLeftEuc NSAba NASba NSAab
     exact addSuccNatEqSucc Nb Na
     apply eqNatToEqSucc NAab NAba 
-    exact Aab_eq_Aba
+    exact Anb_eq_Abn a Na
 
 instance iAddNatComm 
 {P : Sort u} {T : Type v} {L : Logic P} 
@@ -634,12 +635,12 @@ def eqNatAddNatLeftProof
     exact eqNatJoin' Na Nb (natAddZeroNat Na) (natAddZeroNat Nb) Qab 
       (addZeroNatEqNat Na) (addZeroNatEqNat Nb)
   case fS =>
-    intro a b c Na Nb Nc Qab QAacAbc
+    intro c Nc Qmn_to_QAcmAcn a b Na Nb Qab 
     have NSc := natS Nc; have NAca := natAdd Nc Na; have NAcb := natAdd Nc Nb
     apply eqNatJoin (natAdd NSc Na) (natAdd NSc Nb) (natS NAca) (natS NAcb)
       (addSuccNatEqSucc Nc Na) (addSuccNatEqSucc Nc Nb)
     apply eqNatToEqSucc NAca NAcb
-    exact QAacAbc
+    exact Qmn_to_QAcmAcn a b Na Nb Qab
 
 instance iEqNatAddNatLeft
 {P : Sort u} {T : Type v} {L : Logic P} 
@@ -697,12 +698,12 @@ def eqNatAddNatRightProof
     exact eqNatJoin' Na Nb (natAddNatZero Na) (natAddNatZero Nb) Qab 
       (addNatZeroEqNat Na) (addNatZeroEqNat Nb)
   case fS =>
-    intro a b c Na Nb Nc Qab QAacAbc
+    intro c Nc Qmn_to_QAmcAnc a b Na Nb Qab 
     have NSc := natS Nc; have NAac := natAdd Na Nc; have NAbc := natAdd Nb Nc
     apply eqNatJoin (natAdd Na NSc) (natAdd Nb NSc) (natS NAac) (natS NAbc)
       (addNatSuccEqSucc Na Nc) (addNatSuccEqSucc Nb Nc)
     apply eqNatToEqSucc NAac NAbc
-    exact QAacAbc
+    exact Qmn_to_QAmcAnc a b Na Nb Qab
 
 instance iEqNatAddNatRight 
 {P : Sort u} {T : Type v} {L : Logic P} 
@@ -771,7 +772,7 @@ def addNatAssocByAddNatX
       apply eqNatAddNatLeft' Na NAb0 Nb
       exact addNatZeroEqNat Nb
   case fS =>
-    intro a b c Na Nb Nc AAabSc_eq_AaAbSc
+    intro c Nc AAmnSc_eq_AmAnSc a b Na Nb
     have NSc := natS Nc
     have NAab := natAdd Na Nb
     have NAbc := natAdd Nb Nc
@@ -788,7 +789,7 @@ def addNatAssocByAddNatX
       apply eqNatTrans' NSAAabc NAAabSc NSAaAbc
       exact addNatSuccEqSucc NAab Nc
       apply eqNatToEqSucc NAAabc NAaAbc
-      exact AAabSc_eq_AaAbSc
+      exact AAmnSc_eq_AmAnSc a b Na Nb
     case AaAbSc_eq_SAaAbc =>
       have NSAbc := natS NAbc
       have NAaSAbc := natAdd Na NSAbc
@@ -864,7 +865,7 @@ def addNatAssocRevByAddNatX
     case AAab0_eq_Aab =>
       exact addNatZeroEqNat NAab
   case fS =>
-    intro a b c Na Nb Nc AaAbSc_eq_AAabSc
+    intro c Nc AmAnSc_eq_AAmnSc a b Na Nb
     have NSc := natS Nc
     have NAab := natAdd Na Nb
     have NAbc := natAdd Nb Nc
@@ -886,7 +887,7 @@ def addNatAssocRevByAddNatX
       apply eqNatTrans' NSAaAbc NAaSAbc NSAAabc
       exact addNatSuccEqSucc Na NAbc
       apply eqNatToEqSucc NAaAbc NAAabc
-      exact AaAbSc_eq_AAabSc
+      exact AmAnSc_eq_AAmnSc a b Na Nb
     case AAabSc_eq_SAAabc =>
       exact addNatSuccEqSucc NAab Nc
 
