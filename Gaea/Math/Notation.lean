@@ -9,7 +9,6 @@ export Gaea.Math.Succ (S)
 -- Operators
 
 infix:50 " < "  => LT.lt
-
 infix:50 " <= " => LE.le
 infix:50 " ≤ "  => LE.le
 

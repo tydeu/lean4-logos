@@ -1,11 +1,11 @@
 import Gaea.Logic.Basic.Rules
+import Gaea.Logic.Basic.Tactics
 import Gaea.Logic.Classic.Rules
 
 namespace Gaea.Logic
 
 universe u
 variable {P : Sort u}
-
 
 --------------------------------------------------------------------------------
 -- Contrapositive
@@ -23,9 +23,9 @@ def contraIfIntroByIfDneNot
   intro p q Nq_to_Np
   apply ifIntro; intro Lp
   apply dblNegElim
-  apply byContradiction; intro LNq
+  byContradiction LNq
   have LNp := Nq_to_Np LNq
-  exact contradiction Lp LNp
+  contradiction Lp LNp
 
 instance iContraIfIntroByIfDneNot
 {L : Logic P} [If : LIf P] [Nt : LNot P]
@@ -44,7 +44,7 @@ def contraIfElimByIfNot
 : (p q : P) -> (L |- p -> q) -> (L |- ~q) -> (L |- ~p)
 := by
   intro p q LpTq LNq
-  apply byContradiction; intro Lp
+  byContradiction Lp
   have Lq := ifElim LpTq Lp
   exact contradiction Lq LNq
 
@@ -83,8 +83,7 @@ def mtByContraIfConj {L : Logic P}
 : (p q : P) -> (L |- (p -> q) /\ ~q) -> (L |- ~p)
 := by
   intro p q
-  apply conjUncurry
-  intro LpTq LNq
+  assume (LpTq, LNq)
   exact contraIfElim LpTq LNq
 
 instance iMtByContraIfConj {L : Logic P} 
@@ -106,9 +105,7 @@ def hypoSylByIfConj {L : Logic P}
 : (p q r : P) -> (L |- (p -> q) /\ (q -> r)) -> (L |- p -> r)
 := by
   intro p q r 
-  apply conjUncurry 
-  intro LpTq LqTr
-  apply ifIntro; intro Lp
+  assume (LpTq, LqTr) [Lp]
   have Lq := ifElim LpTq Lp
   have Lr := ifElim LqTr Lq 
   exact Lr
@@ -128,8 +125,7 @@ def disjSylByConjDisjNot {L : Logic P}
 : (p q : P) -> (L |- (p \/ q) /\ ~p) -> (L |- q)
 := by
   intro p q
-  apply conjUncurry
-  intro LpDq LNp
+  assume (LpDq, LNp)
   exact disjElimLeft LpDq LNp
 
 instance iDisjSylByConjDisjNot {L : Logic P} 
@@ -157,8 +153,7 @@ def cnstrDilByIfConjDisj {L : Logic P}
     (L |- (p -> q) /\ (r -> s) /\ (p \/ r)) -> (L |- q \/ s) 
 := by
   intro p q r s
-  apply conjUncurry; intro LpTq
-  apply conjUncurry; intro LrTs LpDr
+  assume (LpTq, LrTs, LpDr)
   apply disjElim LpDr ?pTqDs ?rTqDs
   case pTqDs =>
     intro Lp
@@ -193,8 +188,7 @@ def destrDilByIfConjDisj {L : Logic P}
     (L |- (p -> q) /\ (r -> s) /\ (~q \/ ~s)) -> (L |- ~p \/ ~r) 
 := by
   intro p q r s
-  apply conjUncurry; intro LpTq
-  apply conjUncurry; intro LrTs LNqDNs
+  assume (LpTq, LrTs, LNqDNs)
   apply disjElim LNqDNs ?NqTNpDNr ?NsTNpDNr
   case NqTNpDNr =>
     intro LNq
@@ -230,8 +224,7 @@ def bidirDilByIfConjDisj {L : Logic P}
     (L |- (p -> q) /\ (r -> s) /\ (p \/ ~s)) -> (L |- q \/ ~r) 
 := by
   intro p q r s
-  apply conjUncurry; intro LpTq
-  apply conjUncurry; intro LrTs LpDNs
+  assume (LpTq, LrTs, LpDNs)
   apply disjElim LpDNs ?pTqDNr ?NsTqDNr
   case pTqDNr =>
     intro Lp
