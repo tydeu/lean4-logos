@@ -1,6 +1,7 @@
 import Gaea.Logic.Rules
 import Gaea.Logic.Basic.Rules
 import Gaea.Logic.Basic.Modules
+import Gaea.Logic.Basic.Tactics
 import Gaea.Logic.Rel.Rules
 
 namespace Gaea.Logic
@@ -9,53 +10,102 @@ universe u
 variable {P : Sort u}
 
 --------------------------------------------------------------------------------
--- If
+-- Im
 --------------------------------------------------------------------------------
 
 -- Reflexitivity
 -- p -> (p -> p)
 
-def ifReflByIIntro {L : Logic P} 
-{If : LIf P} (IfI : IfIntro L If)
+def ifReflByAssump {L : Logic P} 
+{Im : Imp P} (ByA : ByAssumption L Im.imp)
 : (p : P) -> (L |- p -> p)
 := by
   intro p
-  apply ifIntro
-  exact id 
+  byAssumption Lp
+  exact Lp 
 
-instance iIfReflByIntro {L : Logic P} [If : LIf P] [IfI : IfIntro L If]
-: LRefl L If.lIf := {lRefl := ifReflByIIntro IfI}
+instance iIfReflByAssump {L : Logic P} 
+  [Im : Imp P] [ByA : ByAssumption L Im.imp] : LRefl L Im.imp 
+  := {lRefl := ifReflByAssump ByA}
 
-namespace MIf
-abbrev toLRefl {L : Logic P} (K : MIf L) : LRefl L K.lIf := iIfReflByIntro
-abbrev toRefl {L : Logic P} (K : MIf L) : Refl L K.lIf := iReflOfLRefl
-abbrev ifRefl {L : Logic P} (K : MIf L) := K.toLRefl.lRefl
-abbrev refl {L : Logic P} (K : MIf L) := K.ifRefl
-abbrev toTaut {L : Logic P} (K : MIf L) : Taut L K.lIf := iTautOfLRefl
-abbrev ifTaut {L : Logic P} (K : MIf L) := K.toTaut.taut
-abbrev taut {L : Logic P} (K : MIf L) {p} := K.ifTaut p
-end MIf
+namespace MImp
+abbrev toLRefl {L : Logic P} (K : MImp L) : LRefl L K.imp := iIfReflByAssump
+abbrev toRefl {L : Logic P} (K : MImp L) : Refl L K.imp := iReflOfLRefl
+abbrev ifRefl {L : Logic P} (K : MImp L) := K.toLRefl.lRefl
+abbrev refl {L : Logic P} (K : MImp L) := K.ifRefl
+abbrev toTaut {L : Logic P} (K : MImp L) : Taut L K.imp := iTautOfLRefl
+abbrev ifTaut {L : Logic P} (K : MImp L) := K.toTaut.taut
+abbrev taut {L : Logic P} (K : MImp L) {p} := K.ifTaut p
+end MImp
 
 -- Transitivity
 -- (p -> q) -> (q -> r) -> (p -> r)
 
-def ifTransByIE {L : Logic P} 
-{If : LIf P} (IfI : IfIntro L If) (IfE : IfElim L If)
+def ifTransByMpAssump {L : Logic P} 
+{Im : Imp P} (ByA : ByAssumption L Im.imp) (Mp : ModusPonens L Im.imp)
 : (p q r : P) -> (L |- p -> q) -> (L |- q -> r) -> (L |- p -> r)
 := by
   intro p q r LpTq LqTr
-  apply ifIntro; intro Lp
-  exact ifElim LqTr (ifElim LpTq Lp) 
+  byAssumption Lp
+  mp LqTr (mp LpTq Lp) 
 
-instance iIfTransByIE {L : Logic P} 
-[If : LIf P] [IfI : IfIntro L If] [IfE : IfElim L If]
-: LTrans L If.lIf := {lTrans := ifTransByIE IfI IfE}
+instance iIfTransByMpAssump {L : Logic P} 
+[Im : Imp P] [ByA : ByAssumption L Im.imp] [Mp : ModusPonens L Im.imp]
+: LTrans L Im.imp := {lTrans := ifTransByMpAssump ByA Mp}
 
-namespace MIf
-abbrev toLTrans {L : Logic P} (K : MIf L) : LTrans L K.lIf := iIfTransByIE
-abbrev toTrans {L : Logic P} (K : MIf L) : Trans L K.lIf := iTransOfLTrans
-abbrev ifTrans {L : Logic P} (K : MIf L) := K.toLTrans.lTrans
-abbrev trans {L : Logic P} (K : MIf L) {p q r} := K.ifTrans p q r
-end MIf
+namespace MImp
+abbrev toLTrans {L : Logic P} (K : MImp L) : LTrans L K.imp := iIfTransByMpAssump
+abbrev toTrans {L : Logic P} (K : MImp L) : Trans L K.imp := iTransOfLTrans
+abbrev ifTrans {L : Logic P} (K : MImp L) := K.toLTrans.lTrans
+abbrev trans {L : Logic P} (K : MImp L) {p q r} := K.ifTrans p q r
+end MImp
+
+--------------------------------------------------------------------------------
+-- Contrapositive
+--------------------------------------------------------------------------------
+
+-- (~q -> ~p) -> (L |- p -> q)
+
+def byContrapositionByIfDneNot 
+{L : Logic P} {Im : Imp P} {Nt : LNot P}
+(DnE : DblNegElim L Nt)
+(ByA : ByAssumption L Im.imp)
+(ByC : ByContradiction L Nt)
+: (p q : P) -> ((L |- ~q) -> (L |- ~p)) -> (L |- p -> q)
+:= by
+  intro p q Nq_to_Np
+  byAssumption Lp
+  apply dblNegElim
+  byContradiction LNq
+  have LNp := Nq_to_Np LNq
+  contradiction Lp LNp
+
+instance iByContrapositionByIfDneNot
+{L : Logic P} [Im : Imp P] [Nt : LNot P]
+[DnE : DblNegElim L Nt]
+[ByA : ByAssumption L Im.imp]
+[ByC : ByContradiction L Nt]
+: ByContraposition L Im.imp Nt :=
+{byContraposition := byContrapositionByIfDneNot DnE ByA ByC}
+
+-- (L |- p -> q) -> (L |- ~q -> ~p) 
+
+def mtByMpContra
+{L : Logic P} {Im : Imp P} {Nt : LNot P}
+(Mp  : ModusPonens L Im.imp) 
+(ByC : ByContradiction L Nt)
+: (p q : P) -> (L |- p -> q) -> (L |- ~q) -> (L |- ~p)
+:= by
+  intro p q LpTq LNq
+  byContradiction Lp
+  have Lq := mp LpTq Lp
+  contradiction Lq LNq
+
+instance iModusTollensByMpContra 
+{L : Logic P} [Im : Imp P] [Nt : LNot P]
+[Mp  : ModusPonens L Im.imp]
+[ByC : ByContradiction L Nt]
+: ModusTollens L Im.imp Nt :=
+{mt := mtByMpContra Mp ByC}
 
 end Gaea.Logic

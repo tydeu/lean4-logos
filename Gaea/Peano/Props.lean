@@ -25,17 +25,17 @@ def eqNatRefl {P : Sort u} (T : Sort v)
 
 -- Axiom 3
 def eqNatSymm {P : Sort u} (T : Sort v) 
-  [LEq P T] [LIf P] [ForallNat P T] : P :=
+  [LEq P T] [Imp P] [ForallNat P T] : P :=
   forallNat (x y : T) => x = y -> y = x
 
 -- Axiom 4
 def eqNatTrans {P : Sort u} (T : Sort v) 
-  [LEq P T] [LIf P] [Conj P] [ForallNat P T] : P :=
+  [LEq P T] [Imp P] [Conj P] [ForallNat P T] : P :=
   forallNat (x y z : T) => x = y /\ y = z -> x = z
 
 -- Axiom 5
 def natEqNat {P : Sort u} (L : Logic P) (T : Sort v) 
-  [IsNat P T] [LEq P T] [LIf P] [Conj P] [LForall P T] : P :=
+  [IsNat P T] [LEq P T] [Imp P] [Conj P] [LForall P T] : P :=
   forall (a b : T) => nat b /\ a = b -> nat a
 
 -- Axiom 6
@@ -50,23 +50,23 @@ def eqNatIffEqSucc {P : Sort u} (T : Sort v)
 
 -- Axiom 7a
 def eqNatToEqSucc {P : Sort u} (T : Sort v) 
-  [LEq P T] [Succ T] [LIf P] [ForallNat P T] : P :=
+  [LEq P T] [Succ T] [Imp P] [ForallNat P T] : P :=
   forallNat (m n : T) => m = n -> S m = S n
 
 -- Axiom 7b
 def eqSuccToEqNat {P : Sort u} (T : Sort v) 
-  [LEq P T] [Succ T] [LIf P] [ForallNat P T] : P :=
+  [LEq P T] [Succ T] [Imp P] [ForallNat P T] : P :=
   forallNat (m n : T) => S m = S n -> m = n
 
 -- Axiom 8
 def succNatEqZeroFalse {P : Sort u} (T : Type v) 
-  [LEq P T] [LFalse P] [Zero T] [Succ T] [LIf P] [ForallNat P T] : P :=
+  [LEq P T] [LFalse P] [Zero T] [Succ T] [Imp P] [ForallNat P T] : P :=
   forallNat (m n : T) => S n = 0 -> false
 
 -- Axiom 9
 def natInduction 
   {P : Sort u} (T : Type v) 
-  [LIf P] [LForall P (T -> P)]
+  [Imp P] [LForall P (T -> P)]
   [ForallNat P T] [Zero T] [Succ T] : P := 
   forall (f : T -> P) => 
     f 0 -> 
@@ -109,13 +109,13 @@ def mulNatSuccEqAddMul {P : Sort u} (T : Type v)
 def leIffAddNat 
   {P : Sort u} (T : Type v) 
   [IsNat P T] [LE P T] [LEq P T] [Add T] 
-  [LIf P] [LIff P] [ForallNat P T] [LExists P T] : P :=
+  [Imp P] [LIff P] [ForallNat P T] [LExists P T] : P :=
   forallNat (a b : T) => a <= b <-> exists c => nat c -> a + c = b
 
 -- Axiom 2
 def strongNatInduction 
   {P : Sort u} (T : Type v) 
-  [LIf P] [Conj P] [LForall P (T -> P)] 
+  [Imp P] [Conj P] [LForall P (T -> P)] 
   [ForallNat P T] [LE P T] [Zero T] [Succ T] : P := 
   forall (f : T -> P) => 
     f 0 -> 

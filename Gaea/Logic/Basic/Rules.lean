@@ -1,3 +1,4 @@
+import Gaea.Logic.Concepts
 import Gaea.Logic.Notation
 
 universes u v w
@@ -6,57 +7,77 @@ variable {P : Sort u} {T : Sort v}
 namespace Gaea.Logic
 
 --------------------------------------------------------------------------------
--- Forall
+-- Universial Quantification
 --------------------------------------------------------------------------------
 
-class ForallIntro (L : Logic P) (Fa : LForall P T) := 
-  forallIntro : (f : T -> P) -> ((a : T) -> (L |- f a)) -> (L |- lForall f)
+class UnivGen (L : Logic P) (U : Quant P T) := 
+  ug : (f : T -> P) -> ((a : T) -> (L |- f a)) -> (L |- U f)
 
-def forallIntro {L : Logic P} [Fa : LForall P T]  
-  [K : ForallIntro L Fa] {f} := K.forallIntro f
+def ug {L : Logic P} {U : Quant P T} 
+  [K : UnivGen L U] {f} := K.ug f
 
-class ForallElim (L : Logic P) (Fa : LForall P T) := 
-  forallElim : (f : T -> P) -> (L |- lForall f) -> ((a : T) -> (L |- f a))  
+class UnivInst (L : Logic P) (U : Quant P T) := 
+  ui : (f : T -> P) -> (L |- U f) -> ((a : T) -> (L |- f a))  
 
-def forallElim {L : Logic P} [Fa : LForall P T]  
-  [K : ForallElim L Fa] {f} := K.forallElim f
+def ui {L : Logic P} {U : Quant P T} 
+  [K : UnivInst L U] {f} := K.ui f
 
 --------------------------------------------------------------------------------
--- Exists
+-- Existential Quantification
 --------------------------------------------------------------------------------
 
-class ExistsIntro (L : Logic P) (X : LExists P T) := 
-  existsIntro : (f : T -> P) -> (a : T) -> (L |- f a) -> (L |- lExists f)
+class ExstGen (L : Logic P) (X : Quant P T) := 
+  xg : (f : T -> P) -> (a : T) -> (L |- f a) -> (L |- X f)
 
-def existsIntro {L : Logic P} [X : LExists P T]  
-  [K : ExistsIntro L X] {f} := K.existsIntro f
+def xg {L : Logic P} {X : Quant P T}  
+  [K : ExstGen L X] {f} := K.xg f
 
-class ExistsElim (L : Logic P) (X : LExists P T) := 
-  existsElim : (r : Sort w) -> (f : T -> P) ->  (L |- lExists f) -> 
+class ExstInst (L : Logic P) (X : Quant P T) := 
+  xi : (r : Sort w) -> (f : T -> P) ->  (L |- X f) -> 
     ((a : T) -> (L |- f a) -> r) -> r
 
-def existsElim {L : Logic P} [X : LExists P T]  
-  [K : ExistsElim L X] {r f} := K.existsElim r f
+def xi {L : Logic P} {X : Quant P T} 
+  [K : ExstInst L X] {r f} := K.xi r f
 
 --------------------------------------------------------------------------------
--- If
+-- Implication
 --------------------------------------------------------------------------------
 
 -- ((L |- p) -> (L |- q)) -> (L |- p -> q) 
 
-class IfIntro (L : Logic P) (If : LIf P) := 
-  ifIntro : (p q : P) -> ((L |- p) -> (L |- q)) -> (L |- p -> q) 
+class ByAssumption (L : Logic P) (imp : Binar P) := 
+  byAssumption : (p q : P) -> ((L |- p) -> (L |- q)) -> (L |- imp p q) 
 
-def ifIntro {L : Logic P} [If : LIf P] [K : IfIntro L If] 
-  {p q} := K.ifIntro p q
+def byAssumption {L : Logic P} {imp : Binar P} [K : ByAssumption L imp] 
+  {p q} := K.byAssumption p q
 
--- (L |- p -> q) -> ((L |- p) -> (L |- q))
+-- (L |- p -> q) -> (L |- p) -> (L |- q)
 
-class IfElim (L : Logic P) (If : LIf P) := 
-  ifElim : (p q : P) -> (L |- p -> q) -> ((L |- p) -> (L |- q))
+class ModusPonens (L : Logic P) (imp : Binar P) := 
+  mp : (p q : P) -> (L |- imp p q) -> (L |- p) -> (L |- q)
 
-def ifElim {L : Logic P} [If : LIf P] [K : IfElim L If] 
-  {p q} := K.ifElim p q
+def mp {L : Logic P} {imp : Binar P} [K : ModusPonens L imp] 
+  {p q} := K.mp p q
+
+--------------------------------------------------------------------------------
+-- Contraposition
+--------------------------------------------------------------------------------
+
+-- (~q -> ~p) -> (L |- p -> q)
+
+class ByContraposition {P : Sort u} (L : Logic P) (imp : Binar P) (Nt : LNot P) :=
+  byContraposition : (p q : P) -> ((L |- ~q) -> (L |- ~p)) -> (L |- imp p q) 
+
+def byContraposition {P : Sort u} {L : Logic P} {imp : Binar P} [Nt : LNot P]
+  [K : ByContraposition L imp Nt] {p q : P} := K.byContraposition p q
+
+-- (L |- p -> q) -> ~q -> ~p 
+
+class ModusTollens {P : Sort u} (L : Logic P) (imp : Binar P) (Nt : LNot P) :=
+  mt : (p q : P) -> (L |- imp p q) -> ((L |- ~q) -> (L |- ~p)) 
+
+def mt {P : Sort u} {L : Logic P} {imp : Binar P} [Nt : LNot P]
+  [K : ModusTollens L imp Nt] {p q : P} := K.mt p q
 
 --------------------------------------------------------------------------------
 -- Iff
@@ -64,42 +85,42 @@ def ifElim {L : Logic P} [If : LIf P] [K : IfElim L If]
 
 -- (L |- p -> q) -> (L |- q -> p) -> (L |- p <-> q)
 
-class IffIntro (L : Logic P) (Iff : LIff P) (If : LIf P) := 
+class IffIntro (L : Logic P) (Iff : LIff P) (Im : Imp P) := 
   iffIntro : (p q : P) -> (L |- p -> q) -> (L |- q -> p) -> (L |- p <-> q)
 
-def iffIntro {L : Logic P} [Iff : LIff P] [If : LIf P]
-  [K : IffIntro L Iff If] {p q} := K.iffIntro p q
+def iffIntro {L : Logic P} [Iff : LIff P] [Im : Imp P]
+  [K : IffIntro L Iff Im] {p q} := K.iffIntro p q
 
-def iffIntro' {L : Logic P} [Iff : LIff P] [If : LIf P] 
-  [K : IffIntro L Iff If] [IfI : IfIntro L If] {p q} 
+def iffIntro' {L : Logic P} [Iff : LIff P] [Im : Imp P] 
+  [K : IffIntro L Iff Im] [ByA : ByAssumption L Im.imp] {p q} 
   : ((L |- p) -> (L |- q)) -> ((L |- q) -> (L |- p)) -> (L |- p <-> q)
-  := fun pq qp => K.iffIntro p q (IfI.ifIntro p q pq) (IfI.ifIntro q p qp)
+  := fun pq qp => K.iffIntro p q (ByA.byAssumption p q pq) (ByA.byAssumption q p qp)
 
 -- (L |- p <-> q) -> (L |- p -> q)
 
-class IffForw (L : Logic P) (Iff : LIff P) (If : LIf P) := 
+class IffForw (L : Logic P) (Iff : LIff P) (Im : Imp P) := 
   iffForw : (p q : P) -> (L |- p <-> q) -> (L |- p -> q)
 
-def iffForw {L : Logic P} [Iff : LIff P] [If : LIf P]
-  [K : IffForw L Iff If] {p q} := K.iffForw p q
+def iffForw {L : Logic P} [Iff : LIff P] [Im : Imp P]
+  [K : IffForw L Iff Im] {p q} := K.iffForw p q
 
-def iffForw' {L : Logic P} [Iff : LIff P] [If : LIf P] 
-  [K : IffForw L Iff If] [K' : IfElim L If] {p q} 
+def iffForw' {L : Logic P} [Iff : LIff P] [Im : Imp P] 
+  [K : IffForw L Iff Im] [Mp : ModusPonens L Im.imp] {p q} 
   : (L |- p <-> q) -> ((L |- p) -> (L |- q))
-  := fun pIff => K'.ifElim p q (K.iffForw p q pIff)
+  := fun pIff => Mp.mp p q (K.iffForw p q pIff)
 
 -- (L |- p <-> q) -> (L |- q -> p)
 
-class IffBack (L : Logic P) (Iff : LIff P) (If : LIf P) := 
+class IffBack (L : Logic P) (Iff : LIff P) (Im : Imp P) := 
   iffBack : (p q : P) -> (L |- p <-> q) -> (L |- q -> p)
 
-def iffBack {L : Logic P} [Iff : LIff P] [If : LIf P]
-  [K : IffBack L Iff If] {p q} := K.iffBack p q
+def iffBack {L : Logic P} [Iff : LIff P] [Im : Imp P]
+  [K : IffBack L Iff Im] {p q} := K.iffBack p q
 
-def iffBack' {L : Logic P} [Iff : LIff P] [If : LIf P] 
-  [K : IffBack L Iff If] [IfE : IfElim L If] {p q} 
+def iffBack' {L : Logic P} [Iff : LIff P] [Im : Imp P] 
+  [K : IffBack L Iff Im] [Mp : ModusPonens L Im.imp] {p q} 
   : (L |- p <-> q) -> ((L |- q) -> (L |- p))
-  := fun pIff => IfE.ifElim q p (K.iffBack p q pIff)
+  := fun pIff => Mp.mp q p (K.iffBack p q pIff)
 
 --------------------------------------------------------------------------------
 -- Conjuction
@@ -501,6 +522,22 @@ class NotElim (L : Logic P) (Nt : LNot P) :=
 
 def notElim {L : Logic P} [Nt : LNot P] 
   [K : NotElim L Nt] {p} := K.notElim p
+
+--------------------------------------------------------------------------------
+-- Double Negation
+--------------------------------------------------------------------------------
+
+class DblNegIntro (L : Logic P) (Nt : LNot P) :=
+  dblNegIntro : (p : P) -> (L |- p) -> (L |- ~~p)
+
+def dblNegIntro {L : Logic P} [Nt : LNot P]
+[K : DblNegIntro L Nt] {p : P} := K.dblNegIntro p
+
+class DblNegElim (L : Logic P) (Nt : LNot P) :=
+  dblNegElim : (p : P) -> (L |- ~~p) -> (L |- p)
+
+def dblNegElim {L} [Nt : LNot P]
+[K : DblNegElim L Nt] {p : P} := K.dblNegElim p
 
 --------------------------------------------------------------------------------
 -- True

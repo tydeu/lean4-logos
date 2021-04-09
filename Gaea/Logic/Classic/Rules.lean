@@ -5,47 +5,32 @@ namespace Gaea.Logic
 universe u
 variable {P : Sort u} (L : Logic P)
 
--- Contraposition
--- (L |- p -> q) <-> (~q -> ~p)
-
-class ContraIfIntro {P : Sort u} (L : Logic P) (If : LIf P) (Nt : LNot P) :=
-  contraIfIntro : (p q : P) -> ((L |- ~q) -> (L |- ~p)) -> (L |- p -> q) 
-
-def contraIfIntro {P : Sort u} {L : Logic P} [If : LIf P] [Nt : LNot P]
-  [K : ContraIfIntro L If Nt] {p q : P} := K.contraIfIntro p q
-
-class ContraIfElim {P : Sort u} (L : Logic P) (If : LIf P) (Nt : LNot P) :=
-  contraIfElim : (p q : P) -> (L |- p -> q) -> ((L |- ~q) -> (L |- ~p)) 
-
-def contraIfElim {P : Sort u} {L : Logic P} [If : LIf P] [Nt : LNot P]
-  [K : ContraIfElim L If Nt] {p q : P} := K.contraIfElim p q
-
 -- Modus Ponens
 -- (p -> q) /\ p |- q 
 
-class ModusPonens (If : LIf P) (Cj : Conj P) :=
-  mp : (p q : P) -> (L |- (p -> q) /\ p) -> (L |- q) 
+class ConjMp (Im : Imp P) (Cj : Conj P) :=
+  conjMp : (p q : P) -> (L |- (p -> q) /\ p) -> (L |- q) 
 
-def mp {L} [If : LIf P] [Cj : Conj P] 
-[K : ModusPonens L If Cj] {p q : P} := K.mp p q
+def conjMp {L} [Im : Imp P] [Cj : Conj P] 
+[K : ConjMp L Im Cj] {p q : P} := K.conjMp p q
 
 -- Modus Tollens
 -- (p -> q) /\ ~q |- ~p 
 
-class ModusTollens (If : LIf P) (Cj : Conj P) (Nt : LNot P) :=
-  mt : (p q : P) -> (L |- (p -> q) /\ ~q) -> (L |- ~p) 
+class ConjMt (Im : Imp P) (Cj : Conj P) (Nt : LNot P) :=
+  conjMt : (p q : P) -> (L |- (p -> q) /\ ~q) -> (L |- ~p) 
 
-def mt {L} [If : LIf P] [Cj : Conj P] [Nt : LNot P]
-[K : ModusTollens L If Cj Nt] {p q : P} := K.mt p q
+def conjMt {L} [Im : Imp P] [Cj : Conj P] [Nt : LNot P]
+[K : ConjMt L Im Cj Nt] {p q : P} := K.conjMt p q
 
 -- Hypothetical Syllogism
 -- (p -> q) /\ (q -> r) |- (p -> r) 
 
-class HypoSyl (If : LIf P) (Cj : Conj P) :=
+class HypoSyl (Im : Imp P) (Cj : Conj P) :=
   hypoSyl : (p q r : P) -> (L |- (p -> q) /\ (q -> r)) -> (L |- p -> r) 
 
-def hypoSyl {L} [If : LIf P] [Cj : Conj P] 
-[K : HypoSyl L If Cj] {p q r : P} := K.hypoSyl p q r
+def hypoSyl {L} [Im : Imp P] [Cj : Conj P] 
+[K : HypoSyl L Im Cj] {p q r : P} := K.hypoSyl p q r
 
 -- Disjunctive Syllogism
 -- (p \/ q) /\ ~p |- q 
@@ -59,41 +44,41 @@ def disjSyl {L} [Cj : Conj P] [Dj : Disj P] [Nt : LNot P]
 -- Constructive Dilemma
 -- (p -> q) /\ (r -> s) /\ (p \/ r) |- q \/ s 
 
-class CnstrDil (If : LIf P) (Cj : Conj P) (Dj : Disj P) :=
+class CnstrDil (Im : Imp P) (Cj : Conj P) (Dj : Disj P) :=
   cnstrDil : (p q r s : P) -> 
     (L |- (p -> q) /\ (r -> s) /\ (p \/ r)) -> (L |- q \/ s) 
 
-def cnstrDil {L} [If : LIf P] [Cj : Conj P] [Dj : Disj P]
-[K : CnstrDil L If Cj Dj] {p q r s: P} := K.cnstrDil p q r s
+def cnstrDil {L} [Im : Imp P] [Cj : Conj P] [Dj : Disj P]
+[K : CnstrDil L Im Cj Dj] {p q r s: P} := K.cnstrDil p q r s
 
 -- Destructive Dilemma
 -- (p -> q) /\ (r -> s) /\ (~q \/ ~s) |- ~p \/ ~r 
 
-class DestrDil (If : LIf P) (Cj : Conj P) (Dj : Disj P) (Nt : LNot P) :=
+class DestrDil (Im : Imp P) (Cj : Conj P) (Dj : Disj P) (Nt : LNot P) :=
   destrDil : (p q r s : P) -> 
     (L |- (p -> q) /\ (r -> s) /\ (~q \/ ~s)) -> (L |- ~p \/ ~r) 
 
-def destrDil {L} [If : LIf P] [Cj : Conj P] [Dj : Disj P] [Nt : LNot P]
-[K : DestrDil L If Cj Dj Nt] {p q r s: P} := K.destrDil p q r s
+def destrDil {L} [Im : Imp P] [Cj : Conj P] [Dj : Disj P] [Nt : LNot P]
+[K : DestrDil L Im Cj Dj Nt] {p q r s: P} := K.destrDil p q r s
 
 -- Bidirectional Dilemma
 -- (p -> q) /\ (r -> s) /\ (p \/ ~s) |- q \/ ~r 
 
-class BidirDil (If : LIf P) (Cj : Conj P) (Dj : Disj P) (Nt : LNot P) :=
+class BidirDil (Im : Imp P) (Cj : Conj P) (Dj : Disj P) (Nt : LNot P) :=
   bidirDil : (p q r s : P) -> 
     (L |- (p -> q) /\ (r -> s) /\ (p \/ ~s)) -> (L |- q \/ ~r) 
 
-def bidirDil {L} [If : LIf P] [Cj : Conj P] [Dj : Disj P] [Nt : LNot P]
-[K : BidirDil L If Cj Dj Nt] {p q r s: P} := K.bidirDil p q r s
+def bidirDil {L} [Im : Imp P] [Cj : Conj P] [Dj : Disj P] [Nt : LNot P]
+[K : BidirDil L Im Cj Dj Nt] {p q r s: P} := K.bidirDil p q r s
 
 -- Composition
 -- (p -> q) /\ (p -> r) |- p -> (q /\ r)
 
-class Composition (If : LIf P) (Cj : Conj P) :=
+class Composition (Im : Imp P) (Cj : Conj P) :=
   composition : (p q r : P) -> (L |- (p -> q) /\ (p -> r)) -> (L |- p -> (q /\ r))
 
-def composition [If : LIf P] [Cj : Conj P] 
-[K : Composition L If Cj] {p q : P} := K.composition p q
+def composition [Im : Imp P] [Cj : Conj P] 
+[K : Composition L Im Cj] {p q : P} := K.composition p q
 
 -- DeMorgan's Law (1)
 -- ~(p /\ q) |- ~p \/ ~q
@@ -113,44 +98,29 @@ class DisjDeMorgan (Cj : Conj P) (Dj : Disj P) (Nt : LNot P) :=
 def disjDeMorgan {L} [Cj : Conj P] [Dj : Disj P] [Nt : LNot P]
 [K : DisjDeMorgan L Cj Dj Nt] {p q : P} := K.disjDeMorgan p q
 
--- Double Negation
--- p -|- ~~p
-
-class DblNegIntro (Nt : LNot P) :=
-  dblNegIntro : (p : P) -> (L |- p) -> (L |- ~~p)
-
-def dblNegIntro {L} [Nt : LNot P]
-[K : DblNegIntro L Nt] {p : P} := K.dblNegIntro p
-
-class DblNegElim (Nt : LNot P) :=
-  dblNegElim : (p : P) -> (L |- ~~p) -> (L |- p)
-
-def dblNegElim {L} [Nt : LNot P]
-[K : DblNegElim L Nt] {p : P} := K.dblNegElim p
-
 -- Transposition
 -- p -> q |- ~q -> ~p
 
-class Transposition (If : LIf P) (Nt : LNot P) :=
+class Transposition (Im : Imp P) (Nt : LNot P) :=
   transposition : (p q : P) -> (L |- p -> q) -> (L |- ~q -> ~p)
 
-def transposition {L} [If : LIf P] [Nt : LNot P]
-[K : Transposition L If Nt] {p q : P} := K.transposition p q
+def transposition {L} [Im : Imp P] [Nt : LNot P]
+[K : Transposition L Im Nt] {p q : P} := K.transposition p q
 
 -- Material Implication
 -- p -> q -|- ~p \/ q
 
-class MatImpIntro (If : LIf P) (Dj : Disj P) (Nt : LNot P) :=
+class MatImpIntro (Im : Imp P) (Dj : Disj P) (Nt : LNot P) :=
   matImpIntro : (p q : P) -> (L |- ~p \/ q) -> (L |- p -> q)
 
-def matImpIntro {L} [If : LIf P] [Dj : Disj P] [Nt : LNot P]
-[K : MatImpIntro L If Dj Nt] {p q : P} := K.matImpIntro p q
+def matImpIntro {L} [Im : Imp P] [Dj : Disj P] [Nt : LNot P]
+[K : MatImpIntro L Im Dj Nt] {p q : P} := K.matImpIntro p q
 
-class MatImpElim (If : LIf P) (Dj : Disj P) (Nt : LNot P) :=
+class MatImpElim (Im : Imp P) (Dj : Disj P) (Nt : LNot P) :=
   matImpElim : (p q : P) -> (L |- p -> q) -> (L |- ~p \/ q)
 
-def matImpElim {L} [If : LIf P] [Dj : Disj P] [Nt : LNot P]
-[K : MatImpElim L If Dj Nt] {p q : P} := K.matImpElim p q
+def matImpElim {L} [Im : Imp P] [Dj : Disj P] [Nt : LNot P]
+[K : MatImpElim L Im Dj Nt] {p q : P} := K.matImpElim p q
 
 -- Material Equivalence
 -- (p <-> q) -|- (p /\ q) \/ (~p /\ ~q)
@@ -170,20 +140,20 @@ def matEqvElim {L} [Iff : LIff P] [Cj : Conj P] [Dj : Disj P] [Nt : LNot P]
 -- Exportation
 -- (p /\ q) -> r |- p -> (q -> r)
 
-class Exprt (If : LIf P) (Cj : Conj P) :=
+class Exprt (Im : Imp P) (Cj : Conj P) :=
   exprt : (p q r : P) -> (L |- (p /\ q) -> r) -> (L |- p -> (q -> r))
 
-def exprt {L} [If : LIf P] [Cj : Conj P]
-[K : Exprt L If Cj] {p q r : P} := K.exprt p q r
+def exprt {L} [Im : Imp P] [Cj : Conj P]
+[K : Exprt L Im Cj] {p q r : P} := K.exprt p q r
 
 -- Importation
 -- p -> (q -> r) |- (p /\ q) -> r
 
-class Imprt (If : LIf P) (Cj : Conj P) :=
+class Imprt (Im : Imp P) (Cj : Conj P) :=
   imprt : (p q r : P) -> (L |- p -> (q -> r)) -> (L |- (p /\ q) -> r)
 
-def imprt {L} [If : LIf P] [Cj : Conj P]
-[K : Imprt L If Cj] {p q : P} := K.imprt p q
+def imprt {L} [Im : Imp P] [Cj : Conj P]
+[K : Imprt L Im Cj] {p q : P} := K.imprt p q
 
 -- Law of the Excluded Middle
 -- |- p \/ ~p

@@ -8,115 +8,67 @@ universe u
 variable {P : Sort u}
 
 --------------------------------------------------------------------------------
--- Contrapositive
---------------------------------------------------------------------------------
-
--- (~q |- ~p) |- (p -> q)
-
-def contraIfIntroByIfDneNot 
-{L : Logic P} {If : LIf P} {Nt : LNot P}
-(IfI : IfIntro L If) 
-(DnE : DblNegElim L Nt)
-(ByC : ByContradiction L Nt)
-: (p q : P) -> ((L |- ~q) -> (L |- ~p)) -> (L |- p -> q)
-:= by
-  intro p q Nq_to_Np
-  apply ifIntro; intro Lp
-  apply dblNegElim
-  byContradiction LNq
-  have LNp := Nq_to_Np LNq
-  contradiction Lp LNp
-
-instance iContraIfIntroByIfDneNot
-{L : Logic P} [If : LIf P] [Nt : LNot P]
-[IfI : IfIntro L If]
-[DnE : DblNegElim L Nt]
-[ByC : ByContradiction L Nt]
-: ContraIfIntro L If Nt :=
-{contraIfIntro := contraIfIntroByIfDneNot IfI DnE ByC}
-
--- (p -> q) |- (~q |- ~p) 
-
-def contraIfElimByIfNot 
-{L : Logic P} {If : LIf P} {Nt : LNot P}
-(IfE : IfElim L If) 
-(ByC : ByContradiction L Nt)
-: (p q : P) -> (L |- p -> q) -> (L |- ~q) -> (L |- ~p)
-:= by
-  intro p q LpTq LNq
-  byContradiction Lp
-  have Lq := ifElim LpTq Lp
-  exact contradiction Lq LNq
-
-instance iContraIfElimByIfNot 
-{L : Logic P} [If : LIf P] [Nt : LNot P]
-[IfE : IfElim L If]
-[ByC : ByContradiction L Nt]
-: ContraIfElim L If Nt :=
-{contraIfElim := contraIfElimByIfNot IfE ByC}
-
---------------------------------------------------------------------------------
 -- Modus Ponens
 --------------------------------------------------------------------------------
 
-def mpByIfConj {L : Logic P} {If : LIf P} {Cj : Conj P} 
-(IfE : IfElim L If) (CjU : ConjUncurry L Cj)
+def conjMpByIfConj {L : Logic P} {Im : Imp P} {Cj : Conj P} 
+(Mp : ModusPonens L Im.imp) (CjU : ConjUncurry L Cj)
 : (p q : P) -> (L |- (p -> q) /\ p) -> (L |- q)
 := by
   intro p q
-  apply conjUncurry
-  intro LpTq Lp
-  exact ifElim LpTq Lp
+  assume (LpTq, Lp)
+  mp LpTq Lp
 
-instance iMpByIfConj {L : Logic P} [If : LIf P] [Cj : Conj P] 
-[IfE : IfElim L If] [CjU : ConjUncurry L Cj]
-: ModusPonens L If Cj := {mp := mpByIfConj IfE CjU}
+instance iConjMpByIfConj {L : Logic P} [Im : Imp P] [Cj : Conj P] 
+[Mp : ModusPonens L Im.imp] [CjU : ConjUncurry L Cj]
+: ConjMp L Im Cj := {conjMp := conjMpByIfConj Mp CjU}
 
 --------------------------------------------------------------------------------
 -- Modus Tollens
 --------------------------------------------------------------------------------
 
-def mtByContraIfConj {L : Logic P} 
-{If : LIf P} {Cj : Conj P} {Nt : LNot P}
+def conjMtByContraIfConj {L : Logic P} 
+{Im : Imp P} {Cj : Conj P} {Nt : LNot P}
 (CjU : ConjUncurry L Cj)
-(CfE : ContraIfElim L If Nt)
+(Mt  : ModusTollens L Im.imp Nt)
 : (p q : P) -> (L |- (p -> q) /\ ~q) -> (L |- ~p)
 := by
   intro p q
   assume (LpTq, LNq)
-  exact contraIfElim LpTq LNq
+  mt LpTq LNq
 
-instance iMtByContraIfConj {L : Logic P} 
-[If : LIf P] [Cj : Conj P] [Nt : LNot P]
+instance iConjMtByContraIfConj {L : Logic P} 
+[Im : Imp P] [Cj : Conj P] [Nt : LNot P]
 [CjU : ConjUncurry L Cj]
-[CfE : ContraIfElim L If Nt]
-: ModusTollens L If Cj Nt :=
-{mt := mtByContraIfConj CjU CfE}
+[Mt  : ModusTollens L Im.imp Nt]
+: ConjMt L Im Cj Nt :=
+{conjMt := conjMtByContraIfConj CjU Mt}
 
 --------------------------------------------------------------------------------
 -- Syllogisms
 --------------------------------------------------------------------------------
 
 def hypoSylByIfConj {L : Logic P}
-{If : LIf P} {Cj : Conj P}
-(IfI : IfIntro L If) 
-(IfE : IfElim L If) 
+{Im : Imp P} {Cj : Conj P}
+(Mp  : ModusPonens L Im.imp) 
+(ByA : ByAssumption L Im.imp) 
 (CjU : ConjUncurry L Cj) 
 : (p q r : P) -> (L |- (p -> q) /\ (q -> r)) -> (L |- p -> r)
 := by
   intro p q r 
-  assume (LpTq, LqTr) [Lp]
-  have Lq := ifElim LpTq Lp
-  have Lr := ifElim LqTr Lq 
+  assume (LpTq, LqTr) 
+  byAssumption Lp
+  have Lq := mp LpTq Lp
+  have Lr := mp LqTr Lq 
   exact Lr
 
 instance iHypoSylByIfConj {L : Logic P} 
-[If : LIf P] [Cj : Conj P]
-[IfI : IfIntro L If] 
-[IfE : IfElim L If]
+[Im : Imp P] [Cj : Conj P]
+[Mp  : ModusPonens L Im.imp]
+[ByA : ByAssumption L Im.imp] 
 [CjU : ConjUncurry L Cj]
-: HypoSyl L If Cj :=
-{hypoSyl := hypoSylByIfConj IfI IfE CjU}
+: HypoSyl L Im Cj :=
+{hypoSyl := hypoSylByIfConj Mp ByA CjU}
 
 def disjSylByConjDisjNot {L : Logic P} 
 {Cj : Conj P} {Dj : Disj P} {Nt : LNot P}
@@ -143,8 +95,8 @@ instance iDisjSylByConjDisjNot {L : Logic P}
 -- (p -> q) /\ (r -> s) /\ (p \/ r) |- q \/ s 
 
 def cnstrDilByIfConjDisj {L : Logic P} 
-{If : LIf P} {Cj : Conj P} {Dj : Disj P}
-(IfE : IfElim L If) 
+{Im : Imp P} {Cj : Conj P} {Dj : Disj P}
+(Mp  : ModusPonens L Im.imp) 
 (CjU : ConjUncurry L Cj) 
 (DiL : DisjIntroLeft L Dj)
 (DiR : DisjIntroRight L Dj) 
@@ -158,28 +110,28 @@ def cnstrDilByIfConjDisj {L : Logic P}
   case pTqDs =>
     intro Lp
     apply disjIntroLeft
-    exact ifElim LpTq Lp
+    mp LpTq Lp
   case rTqDs =>
     intro Lr
     apply disjIntroRight
-    exact ifElim LrTs Lr
+    mp LrTs Lr
 
 instance iCnstrDilByIfConjDisj {L : Logic P} 
-[If : LIf P] [Cj : Conj P] [Dj : Disj P]
-[IfE : IfElim L If]
+[Im : Imp P] [Cj : Conj P] [Dj : Disj P]
+[Mp  : ModusPonens L Im.imp]
 [CjU : ConjUncurry L Cj]
 [DiL : DisjIntroLeft L Dj]
 [DiR : DisjIntroRight L Dj] 
 [DjE : DisjElim L Dj]
-: CnstrDil L If Cj Dj :=
-{cnstrDil := cnstrDilByIfConjDisj IfE CjU DiL DiR DjE} 
+: CnstrDil L Im Cj Dj :=
+{cnstrDil := cnstrDilByIfConjDisj Mp CjU DiL DiR DjE} 
 
 -- Destructive Dilemma
 -- (p -> q) /\ (r -> s) /\ (~q \/ ~s) |- ~p \/ ~r 
 
 def destrDilByIfConjDisj {L : Logic P} 
-{If : LIf P} {Cj : Conj P} {Dj : Disj P} {Nt : LNot P}
-(CfE : ContraIfElim L If Nt)
+{Im : Imp P} {Cj : Conj P} {Dj : Disj P} {Nt : LNot P}
+(Mt : ModusTollens L Im.imp Nt)
 (CjU : ConjUncurry L Cj) 
 (DiL : DisjIntroLeft L Dj)
 (DiR : DisjIntroRight L Dj) 
@@ -193,29 +145,29 @@ def destrDilByIfConjDisj {L : Logic P}
   case NqTNpDNr =>
     intro LNq
     apply disjIntroLeft
-    exact contraIfElim LpTq LNq
+    mt LpTq LNq
   case NsTNpDNr =>
     intro LNs
     apply disjIntroRight
-    exact contraIfElim LrTs LNs
+    mt LrTs LNs
 
 instance iDestrDilByIfConjDisj {L : Logic P} 
-[If : LIf P] [Cj : Conj P] [Dj : Disj P] [Nt : LNot P]
-[CfE : ContraIfElim L If Nt]
+[Im : Imp P] [Cj : Conj P] [Dj : Disj P] [Nt : LNot P]
+[Mt : ModusTollens L Im.imp Nt]
 [CjU : ConjUncurry L Cj]
 [DiL : DisjIntroLeft L Dj]
 [DiR : DisjIntroRight L Dj] 
 [DjE : DisjElim L Dj]
-: DestrDil L If Cj Dj Nt :=
-{destrDil := destrDilByIfConjDisj CfE CjU DiL DiR DjE } 
+: DestrDil L Im Cj Dj Nt :=
+{destrDil := destrDilByIfConjDisj Mt CjU DiL DiR DjE } 
 
 -- Bidirectional Dilemma
 -- (p -> q) /\ (r -> s) /\ (p \/ ~s) |- q \/ ~r 
 
 def bidirDilByIfConjDisj {L : Logic P} 
-{If : LIf P} {Cj : Conj P} {Dj : Disj P} {Nt : LNot P}
-(IfE : IfElim L If) 
-(CfE : ContraIfElim L If Nt)
+{Im : Imp P} {Cj : Conj P} {Dj : Disj P} {Nt : LNot P}
+(Mp  : ModusPonens L Im.imp) 
+(Mt  : ModusTollens L Im.imp Nt)
 (CjU : ConjUncurry L Cj)
 (DiL : DisjIntroLeft L Dj)
 (DiR : DisjIntroRight L Dj) 
@@ -229,21 +181,21 @@ def bidirDilByIfConjDisj {L : Logic P}
   case pTqDNr =>
     intro Lp
     apply disjIntroLeft
-    exact ifElim LpTq Lp
+    mp LpTq Lp
   case NsTqDNr =>
     intro LNs
     apply disjIntroRight
-    exact contraIfElim LrTs LNs
+    mt LrTs LNs
 
 instance iBidirDilByIfConjDisj {L : Logic P} 
-[If : LIf P] [Cj : Conj P] [Dj : Disj P] [Nt : LNot P]
-[IfE : IfElim L If]
+[Im : Imp P] [Cj : Conj P] [Dj : Disj P] [Nt : LNot P]
+[Mp  : ModusPonens L Im.imp]
+[Mt  : ModusTollens L Im.imp Nt]
 [CjU : ConjUncurry L Cj]
 [DiL : DisjIntroLeft L Dj]
 [DiR : DisjIntroRight L Dj] 
 [DjE : DisjElim L Dj]
-[CfE : ContraIfElim L If Nt]
-: BidirDil L If Cj Dj Nt :=
-{bidirDil := bidirDilByIfConjDisj IfE CfE CjU DiL DiR DjE} 
+: BidirDil L Im Cj Dj Nt :=
+{bidirDil := bidirDilByIfConjDisj Mp Mt CjU DiL DiR DjE} 
 
 end Gaea.Logic

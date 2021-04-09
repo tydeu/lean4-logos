@@ -12,8 +12,8 @@ class LFalse (prop : Sort u) :=
 
 -- Connectives
 
-class LIf (prop : Sort u) :=
-  (lIf : prop -> prop -> prop)
+class Imp (prop : Sort u) :=
+  (imp : prop -> prop -> prop)
 
 class LIff (prop : Sort u) :=
   (lIff : prop -> prop -> prop)

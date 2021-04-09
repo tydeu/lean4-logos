@@ -16,8 +16,8 @@ def false {P : Sort u} [K : LFalse P] := K.lFalse
 
 -- Connectives
 
-infixr:25 " -> "  => LIf.lIf
-infixr:25 " ⇒ "   => LIf.lIf
+infixr:25 " -> "  => Imp.imp
+infixr:25 " ⇒ "   => Imp.imp
 
 infix:20 " <-> "  => LIff.lIff
 infix:20 " ⇔ "   => LIff.lIff

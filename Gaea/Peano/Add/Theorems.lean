@@ -644,7 +644,7 @@ def eqNatAddNatLeftProof
 
 instance iEqNatAddNatLeft
 {P : Sort u} {T : Type v} {L : Logic P} 
-[N : PNat P T] [Q : LEq P T] [A : Add T] [If : MIf L]
+[N : PNat P T] [Q : LEq P T] [A : Add T] [Im : MImp L]
 [I    : NatInductionRight3If L N]
 [NS   : NatSuccNat L N.toIsNat N.toSucc]
 [QJ   : EqNatJoin L N.toIsNat Q] 
@@ -659,7 +659,7 @@ instance iEqNatAddNatLeft
 instance iEqNatAddNatLeftByPeano
 {P : Sort u} {T : Type v} {L : Logic P} 
 [N : PNat P T] [Q : LEq P T] [A : Add T] 
-[FaN : MForallNat L N.toIsNat] [If : MIf L]
+[FaN : MForallNat L N.toIsNat] [Im : MImp L]
 [I   : NatInduction L N]
 [N0  : NatZero L N.toIsNat N.toZero]
 [NS  : NatSuccNat L N.toIsNat N.toSucc]
@@ -722,7 +722,7 @@ instance iEqNatAddNatRight
 instance iEqNatAddNatRightByPeano
 {P : Sort u} {T : Type v} {L : Logic P} 
 [N : PNat P T] [Q : LEq P T] [A : Add T] 
-[FaN : MForallNat L N.toIsNat] [If : MIf L]
+[FaN : MForallNat L N.toIsNat] [Im : MImp L]
 [I   : NatInduction L N]
 [N0  : NatZero L N.toIsNat N.toZero]
 [NS  : NatSuccNat L N.toIsNat N.toSucc]
@@ -817,7 +817,7 @@ instance iAddNatAssocByAddNatX
 instance iAddNatAssocByPeano
 {P : Sort u} {T : Type v} {L : Logic P} 
 [N : PNat P T] [Q : LEq P T] [A : Add T] 
-[FaN : MForallNat L N.toIsNat] [If : MIf L]
+[FaN : MForallNat L N.toIsNat] [Im : MImp L]
 [NatInduction L N]
 [N0  : NatZero L N.toIsNat N.toZero]
 [NS  : NatSuccNat L N.toIsNat N.toSucc]
@@ -910,7 +910,7 @@ instance iAddNatAssocRevByAddNatX
 instance iAddNatAssocRevByPeano 
 {P : Sort u} {T : Type v} {L : Logic P} 
 [N : PNat P T] [Q : LEq P T] [A : Add T] 
-[FaN : MForallNat L N.toIsNat] [If : MIf L]
+[FaN : MForallNat L N.toIsNat] [Im : MImp L]
 [I   : NatInduction L N]
 [N0  : NatZero L N.toIsNat N.toZero]
 [NS  : NatSuccNat L N.toIsNat N.toSucc]
