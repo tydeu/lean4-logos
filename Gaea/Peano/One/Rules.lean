@@ -1,7 +1,8 @@
-import Gaea.Logic.Logic
-import Gaea.Logic.Notation
-import Gaea.Math.Notation
 import Gaea.Peano.Nat
+import Gaea.Math.Notation
+import Gaea.Logic.Judgment
+import Gaea.Logic.Eq.Syntax
+import Gaea.Logic.Eq.Notation
 
 universes u v
 

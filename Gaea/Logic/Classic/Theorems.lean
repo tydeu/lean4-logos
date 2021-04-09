@@ -1,5 +1,5 @@
-import Gaea.Logic.Basic.Rules
-import Gaea.Logic.Basic.Tactics
+import Gaea.Logic.Prop.Rules
+import Gaea.Logic.Prop.Tactics
 import Gaea.Logic.Classic.Rules
 
 namespace Gaea.Logic

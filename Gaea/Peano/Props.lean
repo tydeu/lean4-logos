@@ -1,5 +1,10 @@
 import Gaea.Math.Notation
-import Gaea.Logic.Notation
+import Gaea.Logic.Prop.Syntax
+import Gaea.Logic.Prop.Notation
+import Gaea.Logic.Quant.Syntax
+import Gaea.Logic.Quant.Notation
+import Gaea.Logic.Eq.Syntax
+import Gaea.Logic.Eq.Notation
 import Gaea.Peano.Forall.Notation
 import Gaea.Peano.Nat
 

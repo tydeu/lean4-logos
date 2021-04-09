@@ -1,4 +1,5 @@
-import Gaea.Logic.Basic.Rules
+import Gaea.Logic.Prop.Rules
+import Gaea.Logic.Quant.Rules
 import Gaea.Peano.Forall.Notation
 
 universes u v

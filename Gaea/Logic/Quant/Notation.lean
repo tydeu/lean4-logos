@@ -1,47 +1,12 @@
-import Gaea.Logic.Logic
-import Gaea.Logic.Eq.Syntax
-import Gaea.Logic.Basic.Syntax
-
-open Gaea.Logic
-
--- Judgments
-
-infix:10 " |- " => Judgment
-infix:10 " ⊢ " => Judgment
-
--- Boolean Constants
-
-def true {P : Sort u} [K : LTrue P] := K.lTrue
-def false {P : Sort u} [K : LFalse P] := K.lFalse
-
--- Connectives
-
-infixr:25 " -> "  => Imp.imp
-infixr:25 " ⇒ "   => Imp.imp
-
-infix:20 " <-> "  => LIff.lIff
-infix:20 " ⇔ "   => LIff.lIff
-
-infixr:35 " /\\ " => Conj.conj
-infixr:35 " ∧ "   => Conj.conj
-infixr:30 " \\/ " => Disj.disj
-infixr:30 " ∨ "   => Disj.disj
-
-prefix:max "~" => LNot.lNot
-prefix:max "¬" => LNot.lNot
-
--- Equality
-
-infix:50 " = "  => LEq.lEq
-
--- Quantifiers
+import Gaea.Logic.Quant.Syntax
 
 open Lean
+open Gaea.Logic
 
 macro "∀ " xs:explicitBinders " => " b:term : term => 
-  expandExplicitBinders `LForall.lForall xs b
+  expandExplicitBinders `lForall xs b
 macro "forall " xs:explicitBinders " => " b:term : term => 
-  expandExplicitBinders `LForall.lForall xs b
+  expandExplicitBinders `lForall xs b
 
 macro "∃ " xs:explicitBinders " => " b:term : term => 
   expandExplicitBinders `lExists xs b

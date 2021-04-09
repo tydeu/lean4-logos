@@ -1,7 +1,7 @@
 import Gaea.Logic.Rules
-import Gaea.Logic.Basic.Rules
-import Gaea.Logic.Basic.Modules
-import Gaea.Logic.Basic.Tactics
+import Gaea.Logic.Prop.Rules
+import Gaea.Logic.Prop.Modules
+import Gaea.Logic.Prop.Tactics
 import Gaea.Logic.Rel.Rules
 
 namespace Gaea.Logic
@@ -10,14 +10,14 @@ universe u
 variable {P : Sort u}
 
 --------------------------------------------------------------------------------
--- Im
+-- Implication
 --------------------------------------------------------------------------------
 
--- Reflexitivity
+-- Reflexivity
 -- p -> (p -> p)
 
 def ifReflByAssump {L : Logic P} 
-{Im : Imp P} (ByA : ByAssumption L Im.imp)
+{imp : Binar P} (ByA : ByAssumption L imp)
 : (p : P) -> (L |- p -> p)
 := by
   intro p
@@ -25,8 +25,8 @@ def ifReflByAssump {L : Logic P}
   exact Lp 
 
 instance iIfReflByAssump {L : Logic P} 
-  [Im : Imp P] [ByA : ByAssumption L Im.imp] : LRefl L Im.imp 
-  := {lRefl := ifReflByAssump ByA}
+{imp : Binar P} [ByA : ByAssumption L imp] : LRefl L imp 
+:= {lRefl := ifReflByAssump ByA}
 
 namespace MImp
 abbrev toLRefl {L : Logic P} (K : MImp L) : LRefl L K.imp := iIfReflByAssump
@@ -42,7 +42,7 @@ end MImp
 -- (p -> q) -> (q -> r) -> (p -> r)
 
 def ifTransByMpAssump {L : Logic P} 
-{Im : Imp P} (ByA : ByAssumption L Im.imp) (Mp : ModusPonens L Im.imp)
+{imp : Binar P} (ByA : ByAssumption L imp) (Mp : ModusPonens L imp)
 : (p q r : P) -> (L |- p -> q) -> (L |- q -> r) -> (L |- p -> r)
 := by
   intro p q r LpTq LqTr
@@ -50,8 +50,8 @@ def ifTransByMpAssump {L : Logic P}
   mp LqTr (mp LpTq Lp) 
 
 instance iIfTransByMpAssump {L : Logic P} 
-[Im : Imp P] [ByA : ByAssumption L Im.imp] [Mp : ModusPonens L Im.imp]
-: LTrans L Im.imp := {lTrans := ifTransByMpAssump ByA Mp}
+{imp : Binar P} [ByA : ByAssumption L imp] [Mp : ModusPonens L imp]
+: LTrans L imp := {lTrans := ifTransByMpAssump ByA Mp}
 
 namespace MImp
 abbrev toLTrans {L : Logic P} (K : MImp L) : LTrans L K.imp := iIfTransByMpAssump
@@ -67,9 +67,9 @@ end MImp
 -- (~q -> ~p) -> (L |- p -> q)
 
 def byContrapositionByIfDneNot 
-{L : Logic P} {Im : Imp P} {Nt : LNot P}
+{L : Logic P} {imp : Binar P} {Nt : LNot P}
 (DnE : DblNegElim L Nt)
-(ByA : ByAssumption L Im.imp)
+(ByA : ByAssumption L imp)
 (ByC : ByContradiction L Nt)
 : (p q : P) -> ((L |- ~q) -> (L |- ~p)) -> (L |- p -> q)
 := by
@@ -81,18 +81,18 @@ def byContrapositionByIfDneNot
   contradiction Lp LNp
 
 instance iByContrapositionByIfDneNot
-{L : Logic P} [Im : Imp P] [Nt : LNot P]
+{L : Logic P} {imp : Binar P} [Nt : LNot P]
 [DnE : DblNegElim L Nt]
-[ByA : ByAssumption L Im.imp]
+[ByA : ByAssumption L imp]
 [ByC : ByContradiction L Nt]
-: ByContraposition L Im.imp Nt :=
+: ByContraposition L imp Nt :=
 {byContraposition := byContrapositionByIfDneNot DnE ByA ByC}
 
 -- (L |- p -> q) -> (L |- ~q -> ~p) 
 
 def mtByMpContra
-{L : Logic P} {Im : Imp P} {Nt : LNot P}
-(Mp  : ModusPonens L Im.imp) 
+{L : Logic P} {imp : Binar P} {Nt : LNot P}
+(Mp  : ModusPonens L imp) 
 (ByC : ByContradiction L Nt)
 : (p q : P) -> (L |- p -> q) -> (L |- ~q) -> (L |- ~p)
 := by
@@ -102,10 +102,10 @@ def mtByMpContra
   contradiction Lq LNq
 
 instance iModusTollensByMpContra 
-{L : Logic P} [Im : Imp P] [Nt : LNot P]
-[Mp  : ModusPonens L Im.imp]
+{L : Logic P} {imp : Binar P} [Nt : LNot P]
+[Mp  : ModusPonens L imp]
 [ByC : ByContradiction L Nt]
-: ModusTollens L Im.imp Nt :=
+: ModusTollens L imp Nt :=
 {mt := mtByMpContra Mp ByC}
 
 end Gaea.Logic

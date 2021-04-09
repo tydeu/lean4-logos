@@ -1,4 +1,4 @@
-import Gaea.Logic.Basic.Rules
+import Gaea.Logic.Prop.Rules
 
 namespace Gaea.Logic
 

@@ -1,4 +1,4 @@
-import Gaea.Logic.Notation
+import Gaea.Logic.Judgment
 
 namespace Gaea.Logic
 
