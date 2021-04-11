@@ -17,11 +17,26 @@ macro_rules [byImplicationTactic]
 scoped macro "mp " pTq:term:max p:term:max : tactic => 
   `(tactic| exact mp $pTq $p)
 
+scoped macro "mpl " pTq:term:max p:term:max : tactic => 
+  `(tactic| exact mpl $pTq $p)
+
+scoped macro "mpr " pTq:term:max p:term:max : tactic => 
+  `(tactic| exact mpr $pTq $p)
+
 scoped macro "byContraposition " x:binderIdent : tactic => 
   `(tactic| apply byContraposition; intro $(x[0]))
 
 scoped macro "mt " pTq:term:max np:term:max : tactic => 
   `(tactic| exact mt $pTq $np)
+
+scoped macro "mtl " pTq:term:max np:term:max : tactic => 
+  `(tactic| exact mtl $pTq $np)
+
+scoped macro "mtr " pTq:term:max np:term:max : tactic => 
+  `(tactic| exact mtr $pTq $np)
+
+scoped macro "byEither " pDq:term:max p:term:max q:term:max : tactic => 
+  `(tactic| apply byEither $pDq $p $q)
 
 scoped macro "dblNegElim" : tactic => 
   `(tactic| apply dblNegElim (lnot := $(Lean.mkIdent `lnot)))

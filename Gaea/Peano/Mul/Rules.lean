@@ -118,15 +118,15 @@ class MulNatComm {P : Sort u} {T : Type v}
   (L : Logic P) (N : IsNat P T) (Q : LEq P T) (M : Mul T) :=
   (mulNatComm : (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- a * b = b * a))
 
-instance iCommTOfMulNatComm {P : Sort u} {T : Type v} 
+instance iCommOverTOfMulNatCommOverT {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] 
-  [K : MulNatComm L N Q M] : CommT L Q N.isNat M.mul 
-  := {commT := K.mulNatComm}
+  [K : MulNatComm L N Q M] : CommOverT L Q.eq N.isNat M.mul 
+  := {commOverT := K.mulNatComm}
 
-instance iMulNatCommTOfComm {P : Sort u} {T : Type v} 
+instance iMulNatCommOverOfCommOverT {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] 
-  [K : CommT L Q N.isNat M.mul ] : MulNatComm L N Q M
-  := {mulNatComm := K.commT}
+  [K : CommOverT L Q.eq N.isNat M.mul] : MulNatComm L N Q M
+  := {mulNatComm := K.commOverT}
 
 def mulNatComm {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T]
@@ -143,15 +143,15 @@ class MulNatAssoc {P : Sort u} {T : Type v}
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
     (L |- (a * b) * c = a * (b * c)))
 
-instance iAssocTOfMulNatAssoc {P : Sort u} {T : Type v} 
+instance iLtrAssocOverTOfMulNatAssoc {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] 
-  [K : MulNatAssoc L N Q M] : AssocT L Q N.isNat M.mul 
-  := {assocT := K.mulNatAssoc}
+  [K : MulNatAssoc L N Q M] : LtrAssocOverT L Q.eq N.isNat M.mul 
+  := {ltrAssocOverT := K.mulNatAssoc}
 
-instance iMulNatAssocTOfAssoc {P : Sort u} {T : Type v} 
+instance iMulNatAssocOfLtrAssocOverT {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T] 
-  [K : AssocT L Q N.isNat M.mul] : MulNatAssoc L N Q M 
-  := {mulNatAssoc := K.assocT}
+  [K : LtrAssocOverT L Q.eq N.isNat M.mul] : MulNatAssoc L N Q M 
+  := {mulNatAssoc := K.ltrAssocOverT}
 
 def mulNatAssoc {P : Sort u} {T : Type v}
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [M : Mul T]

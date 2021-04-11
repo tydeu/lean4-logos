@@ -109,15 +109,15 @@ class AddNatComm {P : Sort u} {T : Type v}
   (L : Logic P) (N : IsNat P T) (Q : LEq P T) (A : Add T) :=
   (addNatComm : (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- a + b = b + a))
 
-instance iCommTOfAddNatComm {P : Sort u} {T : Type v} 
+instance iCommOverTOfAddNatComm {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] 
-  [K : AddNatComm L N Q A] : CommT L Q N.isNat A.add 
-  := {commT := K.addNatComm}
+  [K : AddNatComm L N Q A] : CommOverT L Q.eq N.isNat A.add 
+  := {commOverT := K.addNatComm}
 
-instance iAddNatCommTOfComm {P : Sort u} {T : Type v} 
+instance iAddNatCommOverTOfComm {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] 
-  [K : CommT L Q N.isNat A.add ] : AddNatComm L N Q A
-  := {addNatComm := K.commT}
+  [K : CommOverT L Q.eq N.isNat A.add ] : AddNatComm L N Q A
+  := {addNatComm := K.commOverT}
 
 def addNatComm {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T]
@@ -135,15 +135,15 @@ class AddNatAssoc {P : Sort u} {T : Type v}
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
     (L |- (a + b) + c = a + (b + c)))
 
-instance iAssocTOfAddNatAssoc {P : Sort u} {T : Type v} 
+instance iLtrAssocOverTOfAddNatAssoc {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] 
-  [K : AddNatAssoc L N Q A] : AssocT L Q N.isNat A.add 
-  := {assocT := K.addNatAssoc}
+  [K : AddNatAssoc L N Q A] : LtrAssocOverT L Q.eq N.isNat A.add 
+  := {ltrAssocOverT := K.addNatAssoc}
 
-instance iAddNatAssocTOfAssoc {P : Sort u} {T : Type v} 
+instance iAddNatAssocOfLtrAssocOverT {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T] 
-  [K : AssocT L Q N.isNat A.add] : AddNatAssoc L N Q A 
-  := {addNatAssoc := K.assocT}
+  [K : LtrAssocOverT L Q.eq N.isNat A.add] : AddNatAssoc L N Q A 
+  := {addNatAssoc := K.ltrAssocOverT}
 
 def addNatAssoc {P : Sort u} {T : Type v}
   {L : Logic P} [N : IsNat P T] [Q : LEq P T] [A : Add T]

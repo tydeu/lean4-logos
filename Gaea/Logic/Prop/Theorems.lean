@@ -4,10 +4,13 @@ import Gaea.Logic.Prop.Modules
 import Gaea.Logic.Prop.Tactics
 import Gaea.Logic.Rel.Rules
 
-namespace Gaea.Logic
-
 universe u
 variable {P : Sort u}
+
+namespace Gaea.Logic
+
+instance iTautOfRefl {L : Logic P} {R} 
+  [K : Refl L R] : Tautology L R := {taut := fun p Lp => K.refl p}
 
 --------------------------------------------------------------------------------
 -- Implication
@@ -29,12 +32,14 @@ instance iImpReflByImp {L : Logic P}
 := {refl := impReflByImp ByI}
 
 namespace MImp
-abbrev toRefl {L : Logic P} (K : MImp L) : Refl L K.imp := iImpReflByImp
+abbrev toRefl {L : Logic P} (K : MImp L) 
+  : Refl L K.imp := iImpReflByImp
 abbrev impRefl {L : Logic P} (K : MImp L) := K.toRefl.refl
 abbrev refl {L : Logic P} (K : MImp L) := K.impRefl
--- abbrev toTaut {L : Logic P} (K : MImp L) : Taut L K.imp := iTautOfLRefl
--- abbrev impTaut {L : Logic P} (K : MImp L) := K.toTaut.taut
--- abbrev taut {L : Logic P} (K : MImp L) {p} := K.impTaut p
+abbrev toTautology {L : Logic P} (K : MImp L) 
+  : Tautology L K.imp := iTautOfRefl
+abbrev impTaut {L : Logic P} (K : MImp L) := K.toTautology.taut
+abbrev taut {L : Logic P} (K : MImp L) {p} := K.impTaut p
 end MImp
 
 -- Transitivity
@@ -54,7 +59,8 @@ instance iImpTransByImp {L : Logic P}
 : Trans L imp := {trans := impTransByImpMp ByI Mp}
 
 namespace MImp
-abbrev toTrans {L : Logic P} (K : MImp L) : Trans L K.imp := iImpTransByImp
+abbrev toTrans {L : Logic P} (K : MImp L) 
+  : Trans L K.imp := iImpTransByImp
 abbrev impTrans {L : Logic P} (K : MImp L) := K.toTrans.trans
 abbrev trans {L : Logic P} (K : MImp L) {p q r} := K.impTrans p q r
 end MImp

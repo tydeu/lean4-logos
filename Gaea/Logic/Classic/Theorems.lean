@@ -106,7 +106,7 @@ def cnstrDilByIfConjDisj {L : Logic P}
 := by
   intro p q r s
   assume (LpTq, LrTs, LpDr)
-  apply byEither LpDr ?pTqDs ?rTqDs
+  byEither LpDr ?pTqDs ?rTqDs
   case pTqDs =>
     intro Lp
     apply leftTaut
@@ -141,7 +141,7 @@ def destrDilByIfConjDisj {L : Logic P}
 := by
   intro p q r s
   assume (LpTq, LrTs, LNqDNs)
-  apply byEither LNqDNs ?NqTNpDNr ?NsTNpDNr
+  byEither LNqDNs ?NqTNpDNr ?NsTNpDNr
   case NqTNpDNr =>
     intro LNq
     apply leftTaut
@@ -177,7 +177,7 @@ def bidirDilByIfConjDisj {L : Logic P}
 := by
   intro p q r s
   assume (LpTq, LrTs, LpDNs)
-  apply byEither LpDNs ?pTqDNr ?NsTqDNr
+  byEither LpDNs ?pTqDNr ?NsTqDNr
   case pTqDNr =>
     intro Lp
     apply leftTaut

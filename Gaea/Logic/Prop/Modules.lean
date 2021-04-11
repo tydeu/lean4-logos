@@ -133,12 +133,12 @@ abbrev right {L : Logic P} (K : MConj L)
   {p q} := K.disjRightSimp p q
 
 -- Derived
--- abbrev toTautology {L : Logic P} (K : MConj L)
---   : Tautology L K.conj := iTautOfConjunction
--- abbrev conjTaut {L : Logic P} (K : MConj L)
---   := K.toTautology.taut
--- abbrev taut {L : Logic P} (K : MConj L)
---   {p} := K.conjTaut p
+abbrev toTautology {L : Logic P} (K : MConj L)
+  : Tautology L K.conj := iTautOfConjunction
+abbrev conjTaut {L : Logic P} (K : MConj L)
+  := K.toTautology.taut
+abbrev taut {L : Logic P} (K : MConj L)
+  {p} := K.conjTaut p
 abbrev toSimplification {L : Logic P} (K : MConj L)
   : Simplification L K.conj := iSimpOfLeft
 abbrev conjSimp {L : Logic P} (K : MConj L) 
@@ -160,7 +160,9 @@ abbrev uncurry {L : Logic P} (K : MConj L)
 
 end MConj
 
+--------------------------------------------------------------------------------
 -- Disjunction
+--------------------------------------------------------------------------------
 
 class MDisj (L : Logic P) extends Disj P :=
   toDisjByEither : ByEither L toDisj.disj
@@ -218,16 +220,18 @@ abbrev taut {L : Logic P} (K : MDisj L)
   {p} := K.disjTaut p
 abbrev intro {L : Logic P} (K : MDisj L)
   {p q} := K.disjTaut p q
--- abbrev toSimplification {L : Logic P} (K : MDisj L)
---   : Simplification L K.disj := iSimpOfByEither
--- abbrev disjSimp {L : Logic P} (K : MDisj L) 
---   := K.toSimplification.simp
--- abbrev simp {L : Logic P} (K : MDisj L) 
---   {p} := K.disjSimp p
+abbrev toSimplification {L : Logic P} (K : MDisj L)
+  : Simplification L K.disj := iSimpOfByEither
+abbrev disjSimp {L : Logic P} (K : MDisj L) 
+  := K.toSimplification.simp
+abbrev simp {L : Logic P} (K : MDisj L) 
+  {p} := K.disjSimp p
 
 end MDisj
 
+--------------------------------------------------------------------------------
 -- Not
+--------------------------------------------------------------------------------
 
 class MNot (L : Logic P) extends LNot P :=
   toNotAdFalso : AdFalso L toLNot.not
