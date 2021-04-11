@@ -9,23 +9,27 @@ namespace Gaea.Logic
 -- Implication
 
 class MImp (L : Logic P) extends Imp P :=
-  (toImpByAssumption : ByAssumption L toImp.imp)
-  (toImpModusPonens : ModusPonens L toImp.imp)
+  toImpByImplication : ByImplication L toImp.imp
+  toImpModusPonens : ModusPonens L toImp.imp
 
 instance iMImp {L : Logic P} 
-  [Imp : Imp P] [ByA : ByAssumption L Imp.imp] [Mp : ModusPonens L Imp.imp] :
-  MImp L := {toImp := Imp, toImpByAssumption := ByA, toImpModusPonens := Mp}
+  [Imp : Imp P] [ByI : ByImplication L Imp.imp] [Mp : ModusPonens L Imp.imp] :
+  MImp L := {toImp := Imp, toImpByImplication := ByI, toImpModusPonens := Mp}
+
+instance iByImplicationOfMImp {L : Logic P} {K : MImp L} :
+  ByImplication L K.imp := K.toImpByImplication
+
+instance iModusPonensOfMImp {L : Logic P} {K : MImp L} :
+  ModusPonens L K.imp := K.toImpModusPonens
 
 namespace MImp
-abbrev imp {L : Logic P} (K : MImp L) 
-  := K.toImp.imp
-abbrev toByAssumption {L : Logic P} (K : MImp L) 
-  := K.toImpByAssumption
+abbrev toByImplication {L : Logic P} (K : MImp L) 
+  := K.toImpByImplication
 abbrev impIntro {L : Logic P} (K : MImp L) 
-  := K.toImpByAssumption.byAssumption
+  := K.toImpByImplication.byImplication
 abbrev intro {L : Logic P} (K : MImp L) 
   {p q} := K.impIntro p q
-abbrev byAssumption {L : Logic P} (K : MImp L) 
+abbrev byImplication {L : Logic P} (K : MImp L) 
   {p q} := K.impIntro p q
 abbrev toModusPonens {L : Logic P} (K : MImp L) 
   := K.toImpModusPonens
@@ -37,55 +41,50 @@ abbrev mp {L : Logic P} (K : MImp L)
   {p q} := K.impElim p q
 end MImp
 
-instance iByAssumptionOfMImp {L : Logic P} {K : MImp L} :
-  ByAssumption L K.imp := K.toImpByAssumption
-
-instance iModusPonensOfMImp {L : Logic P} {K : MImp L} :
-  ModusPonens L K.imp := K.toImpModusPonens
-
 -- Iff
 
-class MIff (L : Logic P) (Imp : Imp P) extends LIff P :=
-  (toIffIntro : IffIntro L toLIff Imp)
-  (toIffForw : IffForw L toLIff Imp)
-  (toIffBack : IffBack L toLIff Imp)
+class MIff (L : Logic P) extends LIff P :=
+  toIffBicondition : Bicondition L toLIff.iff
+  toIffModusPonens : ModusPonens L toLIff.iff
+  toIffModusPonensRev : ModusPonensRev L toLIff.iff
 
-instance iMIff {L : Logic P} [Iff : LIff P]
-  [Imp : Imp P] [I : IffIntro L Iff Imp] [T : IffForw L Iff Imp] [F : IffBack L Iff Imp] :
-  MIff L Imp := {toLIff := Iff, toIffIntro := I, toIffForw := T, toIffBack := F}
+instance iMIff {L : Logic P} 
+[Iff : LIff P] [B : Bicondition L Iff.iff] 
+[Mp : ModusPonens L Iff.iff] [Mpr : ModusPonensRev L Iff.iff] 
+: MIff L := 
+{toLIff := Iff, 
+  toIffBicondition := B,  toIffModusPonens := Mp, toIffModusPonensRev := Mpr}
 
-instance iIffIntroOfMIff {L : Logic P} [Imp : Imp P] [K : MIff L Imp] :
-  IffIntro L K.toLIff Imp := K.toIffIntro
+instance iBiconditionOfMIff {L : Logic P} [K : MIff L] :
+  Bicondition L K.iff := K.toIffBicondition
 
-instance iIffForwOfMIff {L : Logic P} [Imp : Imp P] [K : MIff L Imp] :
-  IffForw L K.toLIff Imp := K.toIffForw
+instance iIffForwOfMIff {L : Logic P} [K : MIff L] :
+  ModusPonens L K.iff := K.toIffModusPonens
 
-instance iIffBackOfMIff {L : Logic P} [Imp : Imp P] [K : MIff L Imp] :
-  IffBack L K.toLIff Imp := K.toIffBack
+instance iIffBackOfMIff {L : Logic P} [K : MIff L] :
+  ModusPonensRev L K.iff := K.toIffModusPonensRev
 
 namespace MIff
-abbrev iff {L : Logic P} {Imp : Imp P} (K : MIff L Imp) 
-  := K.toLIff.iff
-abbrev iffIntro {L : Logic P} {Imp : Imp P} (K : MIff L Imp) 
-  := K.toIffIntro.iffIntro
-abbrev intro {L : Logic P} {Imp : Imp P} (K : MIff L Imp) 
-  {p q} := K.iffIntro p q
-abbrev iffForw {L : Logic P} {Imp : Imp P} (K : MIff L Imp) 
-  := K.toIffForw.iffForw
-abbrev forw {L : Logic P} {Imp : Imp P} (K : MIff L Imp) 
-  {p q} := K.iffForw p q
-abbrev iffBack {L : Logic P} {Imp : Imp P} (K : MIff L Imp) 
-  := K.toIffBack.iffBack
-abbrev back {L : Logic P} {Imp : Imp P} (K : MIff L Imp) 
-  {p q} := K.iffBack p q
+abbrev iffBicondition {L : Logic P} (K : MIff L) 
+  := K.toIffBicondition.bicondition
+abbrev intro {L : Logic P} (K : MIff L) 
+  {p q} := K.iffBicondition p q
+abbrev iffMp {L : Logic P} (K : MIff L) 
+  := K.toIffModusPonens.mp
+abbrev mp {L : Logic P} (K : MIff L) 
+  {p q} := K.iffMp p q
+abbrev iffMpr {L : Logic P} (K : MIff L) 
+  := K.toIffModusPonensRev.mpr
+abbrev mpr {L : Logic P} (K : MIff L) 
+  {p q} := K.iffMpr p q
 end MIff
 
 -- Conjunction
 
 class MConj (L : Logic P) extends Conj P :=
-  (toConjIntro : ConjIntro L toConj)
-  (toConjLeft : ConjLeft L toConj)
-  (toConjRight : ConjRight L toConj)
+  toConjIntro : ConjIntro L toConj
+  toConjLeft : ConjLeft L toConj
+  toConjRight : ConjRight L toConj
 
 instance iMConj {L : Logic P} [Cj : Conj P] 
   [I : ConjIntro L Cj] [CjL : ConjLeft L Cj] [CjR : ConjRight L Cj] : MConj L 
@@ -149,9 +148,9 @@ end MConj
 -- Disjunction
 
 class MDisj (L : Logic P) extends Disj P :=
-  (toDisjIntroLeft : DisjIntroLeft L toDisj)
-  (toDisjIntroRight : DisjIntroRight L toDisj)
-  (toDisjElim : DisjElim L toDisj)
+  toDisjIntroLeft : DisjIntroLeft L toDisj
+  toDisjIntroRight : DisjIntroRight L toDisj
+  toDisjElim : DisjElim L toDisj
 
 instance iMDisj {L : Logic P} [Dj : Disj P] 
   [IL : DisjIntroLeft L Dj] [IR : DisjIntroRight L Dj] [E : DisjElim L Dj] : MDisj L := 
@@ -203,22 +202,20 @@ end MDisj
 -- Not
 
 class MNot (L : Logic P) extends LNot P :=
-  (toNotIntro : NotIntro L toLNot)
-  (toNotElim : NotElim L toLNot)
+  toNotIntro : NotIntro L toLNot.not
+  toNotElim : NotElim L toLNot.not
 
 instance iMNot {L : Logic P} 
-  [Nt : LNot P] [I : NotIntro L Nt] [E : NotElim L Nt] : 
+  [Nt : LNot P] [I : NotIntro L Nt.not] [E : NotElim L Nt.not] : 
   MNot L := {toLNot := Nt, toNotIntro := I, toNotElim := E}
 
 instance iNotIntroOfMNot {L : Logic P} [F : LFalse P] [K : MNot L] : 
-  NotIntro L K.toLNot := K.toNotIntro
+  NotIntro L K.not := K.toNotIntro
 
 instance iNotElimOfMNot {L : Logic P} [F : LFalse P] [K : MNot L] : 
-  NotElim L K.toLNot := K.toNotElim
+  NotElim L K.not := K.toNotElim
 
 namespace MNot
-abbrev not {L : Logic P} (K : MNot L) 
-  := K.toLNot.not
 abbrev notIntro {L : Logic P} (K : MNot L) 
   := K.toNotIntro.notIntro
 abbrev intro {L : Logic P} (K : MNot L) 

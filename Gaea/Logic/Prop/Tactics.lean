@@ -6,13 +6,13 @@ syntax binderIdent := ident <|> "_"
 
 -- Proofs
 
-scoped syntax (name := byAssumptionTactic) 
-  "byAssumption " (colGt binderIdent)* : tactic
-macro_rules [byAssumptionTactic]
-  | `(tactic| byAssumption $x:binderIdent) => 
-    `(tactic| apply byAssumption; intro $(x[0]))
-  | `(tactic| byAssumption $x $y $zs*) => 
-    `(tactic| byAssumption $x; byAssumption $y $zs*)
+scoped syntax (name := byImplicationTactic) 
+  "byImplication " (colGt binderIdent)* : tactic
+macro_rules [byImplicationTactic]
+  | `(tactic| byImplication $x:binderIdent) => 
+    `(tactic| apply byImplication; intro $(x[0]))
+  | `(tactic| byImplication $x $y $zs*) => 
+    `(tactic| byImplication $x; byImplication $y $zs*)
 
 scoped macro "mp " pTq:term:max p:term:max : tactic => 
   `(tactic| exact mp $pTq $p)
@@ -22,6 +22,9 @@ scoped macro "byContraposition " x:binderIdent : tactic =>
 
 scoped macro "mt " pTq:term:max np:term:max : tactic => 
   `(tactic| exact mt $pTq $np)
+
+scoped macro "dblNegElim" : tactic => 
+  `(tactic| apply dblNegElim (lnot := $(Lean.mkIdent `lnot)))
 
 scoped macro "byContradiction " x:binderIdent : tactic => 
   `(tactic| apply byContradiction; intro $(x[0]))
@@ -53,7 +56,7 @@ macro_rules [assume]
   | `(tactic| assume ($x:binderIdent, $ys,*)) => 
     `(tactic| uncurry $x; assume ($ys,*))
   | `(tactic| assume [$xs,*]) => 
-    `(tactic| apply byAssumption; assume ($xs,*))
+    `(tactic| apply byImplication; assume ($xs,*))
   | `(tactic| assume $x $y $zs*) => 
     `(tactic| assume $x; assume $y $zs*)
 

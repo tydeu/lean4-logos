@@ -30,7 +30,7 @@ instance iConjMpByIfConj {L : Logic P} [Im : Imp P] [Cj : Conj P]
 def conjMtByContraIfConj {L : Logic P} 
 {Im : Imp P} {Cj : Conj P} {Nt : LNot P}
 (CjU : ConjUncurry L Cj)
-(Mt  : ModusTollens L Im.imp Nt)
+(Mt  : ModusTollens L Im.imp Nt.not)
 : (p q : P) -> (L |- (p -> q) /\ ~q) -> (L |- ~p)
 := by
   intro p q
@@ -40,7 +40,7 @@ def conjMtByContraIfConj {L : Logic P}
 instance iConjMtByContraIfConj {L : Logic P} 
 [Im : Imp P] [Cj : Conj P] [Nt : LNot P]
 [CjU : ConjUncurry L Cj]
-[Mt  : ModusTollens L Im.imp Nt]
+[Mt  : ModusTollens L Im.imp Nt.not]
 : ConjMt L Im Cj Nt :=
 {conjMt := conjMtByContraIfConj CjU Mt}
 
@@ -51,13 +51,13 @@ instance iConjMtByContraIfConj {L : Logic P}
 def hypoSylByIfConj {L : Logic P}
 {Im : Imp P} {Cj : Conj P}
 (Mp  : ModusPonens L Im.imp) 
-(ByA : ByAssumption L Im.imp) 
+(ByI : ByImplication L Im.imp) 
 (CjU : ConjUncurry L Cj) 
 : (p q r : P) -> (L |- (p -> q) /\ (q -> r)) -> (L |- p -> r)
 := by
   intro p q r 
   assume (LpTq, LqTr) 
-  byAssumption Lp
+  byImplication Lp
   have Lq := mp LpTq Lp
   have Lr := mp LqTr Lq 
   exact Lr
@@ -65,15 +65,15 @@ def hypoSylByIfConj {L : Logic P}
 instance iHypoSylByIfConj {L : Logic P} 
 [Im : Imp P] [Cj : Conj P]
 [Mp  : ModusPonens L Im.imp]
-[ByA : ByAssumption L Im.imp] 
+[ByI : ByImplication L Im.imp] 
 [CjU : ConjUncurry L Cj]
 : HypoSyl L Im Cj :=
-{hypoSyl := hypoSylByIfConj Mp ByA CjU}
+{hypoSyl := hypoSylByIfConj Mp ByI CjU}
 
 def disjSylByConjDisjNot {L : Logic P} 
 {Cj : Conj P} {Dj : Disj P} {Nt : LNot P}
 (CjU : ConjUncurry L Cj) 
-(DeL : DisjElimLeft L Dj Nt)
+(DeL : DisjElimLeft L Dj Nt.not)
 : (p q : P) -> (L |- (p \/ q) /\ ~p) -> (L |- q)
 := by
   intro p q
@@ -83,7 +83,7 @@ def disjSylByConjDisjNot {L : Logic P}
 instance iDisjSylByConjDisjNot {L : Logic P} 
 [Cj : Conj P] [Dj : Disj P] [Nt : LNot P] 
 [CjU : ConjUncurry L Cj]
-[DeL : DisjElimLeft L Dj Nt]
+[DeL : DisjElimLeft L Dj Nt.not]
 : DisjSyl L Cj Dj Nt :=
 {disjSyl := disjSylByConjDisjNot CjU DeL}
 
@@ -131,7 +131,7 @@ instance iCnstrDilByIfConjDisj {L : Logic P}
 
 def destrDilByIfConjDisj {L : Logic P} 
 {Im : Imp P} {Cj : Conj P} {Dj : Disj P} {Nt : LNot P}
-(Mt : ModusTollens L Im.imp Nt)
+(Mt : ModusTollens L Im.imp Nt.not)
 (CjU : ConjUncurry L Cj) 
 (DiL : DisjIntroLeft L Dj)
 (DiR : DisjIntroRight L Dj) 
@@ -153,7 +153,7 @@ def destrDilByIfConjDisj {L : Logic P}
 
 instance iDestrDilByIfConjDisj {L : Logic P} 
 [Im : Imp P] [Cj : Conj P] [Dj : Disj P] [Nt : LNot P]
-[Mt : ModusTollens L Im.imp Nt]
+[Mt : ModusTollens L Im.imp Nt.not]
 [CjU : ConjUncurry L Cj]
 [DiL : DisjIntroLeft L Dj]
 [DiR : DisjIntroRight L Dj] 
@@ -167,7 +167,7 @@ instance iDestrDilByIfConjDisj {L : Logic P}
 def bidirDilByIfConjDisj {L : Logic P} 
 {Im : Imp P} {Cj : Conj P} {Dj : Disj P} {Nt : LNot P}
 (Mp  : ModusPonens L Im.imp) 
-(Mt  : ModusTollens L Im.imp Nt)
+(Mt  : ModusTollens L Im.imp Nt.not)
 (CjU : ConjUncurry L Cj)
 (DiL : DisjIntroLeft L Dj)
 (DiR : DisjIntroRight L Dj) 
@@ -190,7 +190,7 @@ def bidirDilByIfConjDisj {L : Logic P}
 instance iBidirDilByIfConjDisj {L : Logic P} 
 [Im : Imp P] [Cj : Conj P] [Dj : Disj P] [Nt : LNot P]
 [Mp  : ModusPonens L Im.imp]
-[Mt  : ModusTollens L Im.imp Nt]
+[Mt  : ModusTollens L Im.imp Nt.not]
 [CjU : ConjUncurry L Cj]
 [DiL : DisjIntroLeft L Dj]
 [DiR : DisjIntroRight L Dj] 
