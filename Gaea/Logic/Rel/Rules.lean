@@ -1,7 +1,7 @@
-import Gaea.Function
+import Gaea.Logic.Fun.Types
 import Gaea.Logic.Rel.Type
 import Gaea.Logic.Judgment
-import Gaea.Logic.Rules
+import Gaea.Logic.Fun.Rules
 
 namespace Gaea.Logic
 
@@ -16,12 +16,6 @@ variable {P : Sort u} {T : Sort v}
 -- Unconstrained
 class Refl (L : Logic P) (R : Rel P T) :=
   refl : (a : T) -> (L |- R a a)
-
-instance iReflOfLRefl {L : Logic P} {F : Binar P}
-  [K : LRefl L F] : Refl L F := {refl := K.lRefl}
-
-instance iLReflOfRefl {L : Logic P} {F : Binar P}
-  [K : Refl L F] : LRefl L F := {lRefl := K.refl}
 
 def refl {L : Logic P} {R : Rel P T}
   [K : Refl L R] := K.refl
@@ -49,14 +43,14 @@ def reflT
 class Symm (L : Logic P) (R : Rel P T) :=
   symm : (a b : T) -> (L |- R a b) -> (L |- R b a)
 
-instance iSymmOfLSymm {L : Logic P} {F : Binar P}
-  [K : LSymm L F] : Symm L F := {symm := K.lSymm}
-
-instance iLSymmOfSymm {L : Logic P} {F : Binar P}
-  [K : Symm L F] : LSymm L F := {lSymm := K.symm}
-
 def symm {L : Logic P} {R : Rel P T}
   [K : Symm L R] {a b} := K.symm a b
+
+-- instance iSymmOfComm {L : Logic P} {F : Binar P}
+--   [K : Comm L F] : Symm L F := {symm := K.comm}
+
+-- instance iCommOfSymm {L : Logic P} {F : Binar P}
+--   [K : Symm L F] : Comm L F := {comm := K.symm}
 
 -- Constrained
 class SymmT (L : Logic P) (R : Rel P T) (C : T -> P)  :=
@@ -78,17 +72,11 @@ def symmT {L : Logic P} {R : Rel P T} {C : T -> P}
 class Trans (L : Logic P) (R : Rel P T) :=
   trans : (a b c : T) -> (L |- R a b) -> (L |- R b c) -> (L |- R a c)
 
-instance iTransOfLTrans {L : Logic P} {F : Binar P}
-  [K : LTrans L F] : Trans L F := {trans := K.lTrans}
-
-instance iLTransOfTrans {L : Logic P} {F : Binar P}
-  [K : Trans L F] : LTrans L F := {lTrans := K.trans}
-
 def trans {L : Logic P} {R : Rel P T}
   [K : Trans L R] {a b c} := K.trans a b c 
 
 def trans' {L : Logic P} {R : Rel P T}
-  [K : Trans L R] {b a c} := K.trans b a c 
+  [K : Trans L R] (b) {a c} := K.trans a b c 
 
 -- Constrained
 class TransT (L : Logic P) (R : Rel P T) (C : T -> P) :=

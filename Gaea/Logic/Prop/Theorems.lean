@@ -1,4 +1,4 @@
-import Gaea.Logic.Rules
+import Gaea.Logic.Fun.Rules
 import Gaea.Logic.Prop.Rules
 import Gaea.Logic.Prop.Modules
 import Gaea.Logic.Prop.Tactics
@@ -25,17 +25,16 @@ def impReflByImp {L : Logic P}
   exact Lp 
 
 instance iImpReflByImp {L : Logic P} 
-{imp : Binar P} [ByI : ByImplication L imp] : LRefl L imp 
-:= {lRefl := impReflByImp ByI}
+{imp : Binar P} [ByI : ByImplication L imp] : Refl L imp 
+:= {refl := impReflByImp ByI}
 
 namespace MImp
-abbrev toLRefl {L : Logic P} (K : MImp L) : LRefl L K.imp := iImpReflByImp
-abbrev toRefl {L : Logic P} (K : MImp L) : Refl L K.imp := iReflOfLRefl
-abbrev impRefl {L : Logic P} (K : MImp L) := K.toLRefl.lRefl
+abbrev toRefl {L : Logic P} (K : MImp L) : Refl L K.imp := iImpReflByImp
+abbrev impRefl {L : Logic P} (K : MImp L) := K.toRefl.refl
 abbrev refl {L : Logic P} (K : MImp L) := K.impRefl
-abbrev toTaut {L : Logic P} (K : MImp L) : Taut L K.imp := iTautOfLRefl
-abbrev impTaut {L : Logic P} (K : MImp L) := K.toTaut.taut
-abbrev taut {L : Logic P} (K : MImp L) {p} := K.impTaut p
+-- abbrev toTaut {L : Logic P} (K : MImp L) : Taut L K.imp := iTautOfLRefl
+-- abbrev impTaut {L : Logic P} (K : MImp L) := K.toTaut.taut
+-- abbrev taut {L : Logic P} (K : MImp L) {p} := K.impTaut p
 end MImp
 
 -- Transitivity
@@ -52,12 +51,11 @@ def impTransByImpMp {L : Logic P}
 
 instance iImpTransByImp {L : Logic P} 
 {imp : Binar P} [ByI : ByImplication L imp] [Mp : ModusPonens L imp]
-: LTrans L imp := {lTrans := impTransByImpMp ByI Mp}
+: Trans L imp := {trans := impTransByImpMp ByI Mp}
 
 namespace MImp
-abbrev toLTrans {L : Logic P} (K : MImp L) : LTrans L K.imp := iImpTransByImp
-abbrev toTrans {L : Logic P} (K : MImp L) : Trans L K.imp := iTransOfLTrans
-abbrev impTrans {L : Logic P} (K : MImp L) := K.toLTrans.lTrans
+abbrev toTrans {L : Logic P} (K : MImp L) : Trans L K.imp := iImpTransByImp
+abbrev impTrans {L : Logic P} (K : MImp L) := K.toTrans.trans
 abbrev trans {L : Logic P} (K : MImp L) {p q r} := K.impTrans p q r
 end MImp
 
@@ -80,7 +78,7 @@ def byContrapositionByDneImpContra
   dblNegElim
   byContradiction LNq
   have LNp := Nq_to_Np LNq
-  contradiction Lp LNp
+  contradiction LNp Lp
 
 instance iByContrapositionByDneImpContra 
 {L : Logic P} {imp : Binar P} {lnot : Unar P}
@@ -102,7 +100,7 @@ def mtByMpContra
   intro LpTq LNq
   byContradiction Lp
   have Lq := mp LpTq Lp
-  contradiction Lq LNq
+  contradiction LNq Lq
 
 instance iModusTollensByMpContra 
 {L : Logic P} {imp : Binar P} {lnot : Unar P}

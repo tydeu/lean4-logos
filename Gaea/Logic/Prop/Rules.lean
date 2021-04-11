@@ -1,4 +1,4 @@
-import Gaea.Function
+import Gaea.Logic.Fun.Types
 import Gaea.Logic.Judgment
 import Gaea.Logic.Prop.Syntax
 import Gaea.Logic.Prop.Notation
@@ -23,7 +23,7 @@ abbrev postulate {L : Logic P} {p}
 --------------------------------------------------------------------------------
 
 -- Conditional Proof
--- ((|- p) -> (|- q)) -> (|- p -> q) 
+-- (p |- q) -> (|- p -> q) 
 
 class ByImplication (L : Logic P) (imp : Binar P) := 
   byImplication : (p q : P) -> ((L |- p) -> (L |- q)) -> (L |- p -> q) 
@@ -36,7 +36,7 @@ abbrev byImplication {L : Logic P} {imp}
 --------------------------------------------------------------------------------
 
 -- Proof by Contraposition
--- ((|- ~q) -> (|- ~p)) -> (|- p -> q)
+-- (~q |- ~p) -> (|- p -> q)
 
 class ByContraposition (L : Logic P) (imp : Binar P) (lnot : Unar P) :=
   byContraposition : (p q : P) -> ((L |- ~q) -> (L |- ~p)) -> (L |- p -> q) 
@@ -49,7 +49,7 @@ abbrev byContraposition {L : Logic P} {imp lnot}
 --------------------------------------------------------------------------------
 
 -- Biconditional Introduction
--- ((|- p) -> (|- q)) -> ((|- q) -> (|- p)) -> (|- p <-> q)
+-- (p |- q) -> (q |- p) -> (|- p <-> q)
 
 class Bicondition (L : Logic P) (iff : Binar P) := 
   bicondition : (p q : P) -> 
@@ -62,7 +62,7 @@ abbrev bicondition {L : Logic P} {iff}
 -- Modus Ponens
 --------------------------------------------------------------------------------
 
--- (|- p <-> q) -> (|- p) -> (|- q)
+-- p <-> q, p |- q
 
 class ModusPonens (L : Logic P) (iff : Binar P) := 
   mp : (p q : P) -> (L |- p <-> q) -> (L |- p) -> (L |- q)
@@ -70,19 +70,22 @@ class ModusPonens (L : Logic P) (iff : Binar P) :=
 abbrev mp {L : Logic P} {iff} 
   [K : ModusPonens L iff] {p q} := K.mp p q
 
--- (|- p <-> q) -> (|- q) -> (|- p)
+abbrev mpl {L : Logic P} {iff} 
+  [K : ModusPonens L iff] {p q} := K.mp p q
+
+-- p <-> q, q |- p
 
 class ModusPonensRev (L : Logic P) (iff : Binar P) := 
-  mpr : (p q : P) -> (L |- p <-> q) -> (L |- q) -> (L |- p)
+  mp : (p q : P) -> (L |- p <-> q) -> (L |- q) -> (L |- p)
 
 abbrev mpr {L : Logic P} {iff} 
-  [K : ModusPonensRev L iff] {p q} := K.mpr p q
+  [K : ModusPonensRev L iff] {p q} := K.mp p q
 
 --------------------------------------------------------------------------------
 -- Modus Tollens
 --------------------------------------------------------------------------------
 
--- (|- p <-> q) -> (|- ~q) -> (|- ~p) 
+-- p <-> q, ~q |- ~p 
 
 class ModusTollens (L : Logic P) (iff : Binar P) (lnot : Unar P) :=
   mt : (p q : P) -> (L |- p <-> q) -> (L |- ~q) -> (L |- ~p)
@@ -90,13 +93,16 @@ class ModusTollens (L : Logic P) (iff : Binar P) (lnot : Unar P) :=
 abbrev mt {L : Logic P} {iff lnot} 
   [K : ModusTollens L iff lnot] {p q} := K.mt p q
 
--- (|- p <-> q) -> (|- ~p) -> (|- ~q) 
+abbrev mtr {L : Logic P} {iff lnot} 
+  [K : ModusTollens L iff lnot] {p q} := K.mt p q
+
+-- p <-> q, ~p |- q 
 
 class ModusTollensRev (L : Logic P) (iff : Binar P) (lnot : Unar P) :=
-  mtr : (p q : P) -> (L |- p <-> q) -> (L |- ~p) -> (L |- ~q) 
+  mt : (p q : P) -> (L |- p <-> q) -> (L |- ~p) -> (L |- ~q) 
 
-abbrev mtr {L : Logic P} {iff lnot} 
-  [K : ModusTollensRev L iff lnot] {p q} := K.mtr p q
+abbrev mtl {L : Logic P} {iff lnot} 
+  [K : ModusTollensRev L iff lnot] {p q} := K.mt p q
 
 --------------------------------------------------------------------------------
 -- Conjunction
@@ -104,410 +110,447 @@ abbrev mtr {L : Logic P} {iff lnot}
 
 -- p, q |- p /\ q
 
-class ConjIntro (L : Logic P) (Cj : Conj P) := 
-  conjIntro : (p q : P) -> (L |- p) -> (L |- q) -> (L |- p /\ q) 
+class Conjunction (L : Logic P) (C : Binar P) := 
+  conjoin : (p q : P) -> (L |- p) -> (L |- q) -> (L |- C p q) 
 
-abbrev conjIntro {L : Logic P} [Cj : Conj P] 
-  [K : ConjIntro L Cj] {p q} := K.conjIntro p q
+abbrev conjoin {L : Logic P} {C} 
+  [K : Conjunction L C] {p q} := K.conjoin p q
 
--- p /\ q -> p
+--------------------------------------------------------------------------------
+-- Simplification
+--------------------------------------------------------------------------------
 
-class ConjLeft (L : Logic P) (Cj : Conj P) := 
-  conjLeft : (p q : P) -> (L |- p /\ q) -> (L |- p)
+-- C p p |- p
 
-abbrev conjLeft {L : Logic P} [Cj : Conj P] 
-  [K : ConjLeft L Cj] {p q} := K.conjLeft p q
+class Simplification (L : Logic P) (C : Binar P)  :=
+  simp : (p : P) -> (L |- C p p) -> (L |- p)
 
--- p /\ q -> q
+abbrev simp {L : Logic P} {C} 
+  [K : Simplification L C] {p} := K.simp p
 
-class ConjRight (L : Logic P) (Cj : Conj P) := 
-  conjRight : (p q : P) -> (L |- p /\ q) -> (L |- q)
+-- C p q |- p
 
-abbrev conjRight {L : Logic P} [Cj : Conj P] 
-  [K : ConjRight L Cj] {p q} := K.conjRight p q
+class LeftSimp (L : Logic P) (C : Binar P) := 
+  leftSimp : (p q : P) -> (L |- C p q) -> (L |- p)
 
--- p -> p /\ p
+abbrev leftSimp {L : Logic P} {conj} 
+  [K : LeftSimp L conj] {p q} := K.leftSimp p q
 
-class ConjTaut (L : Logic P) (Cj : Conj P)  :=
-  conjTaut : (p : P) -> (L |- p) -> (L |- p /\ p)
+instance iSimpOfLeft {L : Logic P} {conj}
+  [K : LeftSimp L conj] : Simplification L conj := 
+  {simp := fun p LpCq => K.leftSimp p p LpCq}
 
-abbrev conjTaut {L : Logic P} [Cj : Conj P] 
-  [K : ConjTaut L Cj] {p} := K.conjTaut p
+-- C p q |- q
 
-instance iConjTautOfIntro {L : Logic P} [Cj : Conj P]
-  [K : ConjIntro L Cj] : ConjTaut L Cj := 
-  {conjTaut := fun p Lp => K.conjIntro p p Lp Lp}
+class RightSimp (L : Logic P) (C : Binar P) := 
+  rightSimp : (p q : P) -> (L |- C p q) -> (L |- q)
 
--- p /\ p -> p
+abbrev rightSimp {L : Logic P} {conj} 
+  [K : RightSimp L conj] {p q} := K.rightSimp p q
 
-class ConjSimp (L : Logic P) (Cj : Conj P)  :=
-  conjSimp : (p : P) -> (L |- p /\ p) -> (L |- p)
+instance iSimpOfRight {L : Logic P} {conj}
+  [K : RightSimp L conj] : Simplification L conj := 
+  {simp := fun p LpCq => K.rightSimp p p LpCq}
 
-abbrev conjSimp {L : Logic P} [Cj : Conj P] 
-  [K : ConjSimp L Cj] {p} := K.conjSimp p
-
-instance iConjSimpOfLeft {L : Logic P} [Cj : Conj P]
-  [K : ConjLeft L Cj] : ConjSimp L Cj := 
-  {conjSimp := fun p LpCq => K.conjLeft p p LpCq}
-
-instance iConjSimpOfRight {L : Logic P} [Cj : Conj P]
-  [K : ConjRight L Cj] : ConjSimp L Cj := 
-  {conjSimp := fun p LpCq => K.conjRight p p LpCq}
+--------------------------------------------------------------------------------
+-- Currying
+--------------------------------------------------------------------------------
 
 -- (p /\ q -> a) -> (p -> q -> a)
 
-class ConjCurry (L : Logic P) (Cj : Conj P) :=
-  conjCurry : (r : Sort w) -> (p q : P) -> 
-    ((L |- p /\ q) -> r) -> ((L |- p) -> (L |- q) -> r)
+class Curry (L : Logic P) (C : Binar P) :=
+  curry : (r : Sort w) -> (p q : P) -> 
+    ((L |- C p q) -> r) -> ((L |- p) -> (L |- q) -> r)
 
-abbrev conjCurry {L : Logic P} [Cj : Conj P] 
-  [K : ConjCurry L Cj] {r p q} := K.conjCurry r p q
+abbrev curry {L : Logic P} {C} 
+  [K : Curry L C] {r p q} := K.curry r p q
 
-instance iConjCurryOfIntro {L : Logic P} [Cj : Conj P]
-  [CjI : ConjIntro L Cj] : ConjCurry L Cj := 
-  {conjCurry := fun a p q fpCq Lp Lq  => fpCq (conjIntro Lp Lq)}
+instance iCurryOfConjunction {L : Logic P} {C}
+  [K : Conjunction L C] : Curry L C := 
+  {curry := fun a p q fpCq Lp Lq  => fpCq (conjoin Lp Lq)}
+
+instance iConjunctionOfCurry {L : Logic P} {C}
+  [K : Curry L C] : Conjunction L C := 
+  {conjoin := fun p q => K.curry _ p q id}
 
 -- (p -> q -> a) -> (p /\ q -> a)
 
-class ConjUncurry (L : Logic P) (Cj : Conj P) :=
-  conjUncurry : (r : Sort w) -> (p q : P) -> 
+class Uncurry (L : Logic P) (conj : Binar P) :=
+  uncurry : (r : Sort w) -> (p q : P) -> 
     ((L |- p) -> (L |- q) -> r) -> ((L |- p /\ q) -> r)
 
-abbrev conjUncurry {L : Logic P} [Cj : Conj P] 
-  [K : ConjUncurry L Cj] {r p q} := K.conjUncurry r p q
+abbrev uncurry {L : Logic P} {conj} 
+  [K : Uncurry L conj] {r p q} := K.uncurry r p q
 
-instance iConjUncurryOfLeftRight {L : Logic P} [Cj : Conj P]
-  [CjL : ConjLeft L Cj] [CjR : ConjRight L Cj] : ConjUncurry L Cj := 
-  {conjUncurry := fun a p q fpq LpCq => fpq (conjLeft LpCq) (conjRight LpCq)}
+instance iUncurryOfLeftRightSimp {L : Logic P} {conj}
+  [CjL : LeftSimp L conj] [CjR : RightSimp L conj] : Uncurry L conj := 
+  {uncurry := fun a p q fpq LpCq => fpq (leftSimp LpCq) (rightSimp LpCq)}
+
+instance iLeftSimpOfUncurry {L : Logic P} {conj}
+  [K : Uncurry L conj] : LeftSimp L conj := 
+  {leftSimp := fun p q => K.uncurry _ p q (fun Lp Lq => Lp)}
+
+instance iRightSimpOfUncurry {L : Logic P} {conj}
+  [K : Uncurry L conj] : RightSimp L conj := 
+  {rightSimp := fun p q => K.uncurry _ p q (fun Lp Lq => Lq)}
+
+--------------------------------------------------------------------------------
+-- Prod/PProd/And Import/Export
+--------------------------------------------------------------------------------
 
 -- Prod p q -> p /\ q 
 
-class ConjOfProd (L : Logic P) (Cj : Conj P) := 
-  conjOfProd : (p q : P) -> Prod (L |- p) (L |- q) -> (L |- p /\ q)
+class ImportProd (L : Logic P) (conj : Binar P) := 
+  importProd : (p q : P) -> Prod (L |- p) (L |- q) -> (L |- p /\ q)
 
-abbrev conjOfProd {L : Logic P} [Cj : Conj P] 
-  [K : ConjOfProd L Cj] {p q} := K.conjOfProd p q
+abbrev importProd {L : Logic P} {conj} 
+  [K : ImportProd L conj] {p q} := K.importProd p q
 
-instance iConjIntroOfProd {L : Logic P} [Cj : Conj P] 
-  [K : ConjOfProd L Cj] : ConjIntro L Cj := 
-  {conjIntro := fun p q Lp Lq => K.conjOfProd p q (Prod.mk Lp Lq)}
+instance iConjunctionOfImportProd {L : Logic P} {conj} 
+  [K : ImportProd L conj] : Conjunction L conj := 
+  {conjoin := fun p q Lp Lq => K.importProd p q (Prod.mk Lp Lq)}
 
-instance iConjOfProdOfIntro {L : Logic P} [Cj : Conj P] 
-  [K : ConjIntro L Cj] : ConjOfProd L Cj := 
-  {conjOfProd := fun p q Ppq => K.conjIntro p q Ppq.fst Ppq.snd}
+instance iImportProdOfConjunction {L : Logic P} {conj} 
+  [K : Conjunction L conj] : ImportProd L conj := 
+  {importProd := fun p q Ppq => K.conjoin p q Ppq.fst Ppq.snd}
 
 -- PProd p q -> p /\ q 
 
-class ConjOfPProd (L : Logic P) (Cj : Conj P) := 
-  conjOfPProd : (p q : P) -> PProd (L |- p) (L |- q) -> (L |- p /\ q)
+class ConjOfPProd (L : Logic P) (conj : Binar P) := 
+  importPProd : (p q : P) -> PProd (L |- p) (L |- q) -> (L |- p /\ q)
 
-abbrev conjOfPProd {L : Logic P} [Cj : Conj P] 
-  [K : ConjOfPProd L Cj] {p q} := K.conjOfPProd p q
+abbrev importPProd {L : Logic P} {conj} 
+  [K : ConjOfPProd L conj] {p q} := K.importPProd p q
 
-instance iConjIntroOfPProd {L : Logic P} [Cj : Conj P] 
-  [K : ConjOfPProd L Cj] : ConjIntro L Cj := 
-  {conjIntro := fun p q Lp Lq => K.conjOfPProd p q (PProd.mk Lp Lq)}
+instance iConjunctionOfImportPProd {L : Logic P} {conj} 
+  [K : ConjOfPProd L conj] : Conjunction L conj := 
+  {conjoin := fun p q Lp Lq => K.importPProd p q (PProd.mk Lp Lq)}
 
-instance iConjOfPProdOfIntro {L : Logic P} [Cj : Conj P] 
-  [K : ConjIntro L Cj] : ConjOfPProd L Cj := 
-  {conjOfPProd := fun p q Ppq => K.conjIntro p q Ppq.fst Ppq.snd}
+instance iImportPProdOfConjunction {L : Logic P} {conj} 
+  [K : Conjunction L conj] : ConjOfPProd L conj := 
+  {importPProd := fun p q Ppq => K.conjoin p q Ppq.fst Ppq.snd}
 
-instance iConjOfProdOfPProd {L : Logic P} [Cj : Conj P] 
-  [K : ConjOfPProd L Cj] : ConjOfProd L Cj := 
-  {conjOfProd := fun p q Ppq => K.conjOfPProd p q (PProd.mk (Ppq.fst) (Ppq.snd))}
+instance iImportProdOfImportPProd {L : Logic P} {conj} 
+  [K : ConjOfPProd L conj] : ImportProd L conj := 
+  {importProd := fun p q Ppq => K.importPProd p q (PProd.mk (Ppq.fst) (Ppq.snd))}
 
 -- And p q -> p /\ q 
 
-class ConjOfAnd (L : Logic P) (Cj : Conj P) := 
-  conjOfAnd : (p q : P) -> (L |- p) /\ (L |- q) -> (L |- p /\ q)
+class ImportAnd (L : Logic.{u,0} P) (conj : Binar P) := 
+  importAnd : (p q : P) -> (L |- p) /\ (L |- q) -> (L |- p /\ q)
 
-abbrev conjOfAnd {L : Logic P} [Cj : Conj P] 
-  [K : ConjOfAnd L Cj] {p q} := K.conjOfAnd p q
+abbrev importAnd {L : Logic.{u,0} P} {conj} 
+  [K : ImportAnd L conj] {p q} := K.importAnd p q
 
-instance iConjIntroOfAnd {L : Logic P} [Cj : Conj P] 
-  [K : ConjOfAnd L Cj] : ConjIntro L Cj := 
-  {conjIntro := fun p q Lp Lq => K.conjOfAnd p q (And.intro Lp Lq)}
+instance iConjunctionOfAnd {L : Logic P} {conj} 
+  [K : ImportAnd L conj] : Conjunction L conj := 
+  {conjoin := fun p q Lp Lq => K.importAnd p q (And.intro Lp Lq)}
 
-instance iConjOfAndOfIntro {L : Logic P} [Cj : Conj P] 
-  [K : ConjIntro L Cj] : ConjOfAnd L Cj := 
-  {conjOfAnd := fun p q Apq => K.conjIntro p q Apq.left Apq.right}
+instance iImportAndOfConjunction {L : Logic P} {conj} 
+  [K : Conjunction L conj] : ImportAnd L conj := 
+  {importAnd := fun p q Apq => K.conjoin p q Apq.left Apq.right}
 
 -- p /\ q -> Prod p q
 
-class ConjAsProd (L : Logic P) (Cj : Conj P) := 
-  conjAsProd : (p q : P) -> (L |- p /\ q) -> Prod (L |- p) (L |- q)
+class ExportProd (L : Logic P) (conj : Binar P) := 
+  exportProd : (p q : P) -> (L |- p /\ q) -> Prod (L |- p) (L |- q)
 
-abbrev conjAsProd {L : Logic P} [Cj : Conj P] 
-  [K : ConjAsProd L Cj] {p q} := K.conjAsProd p q
+abbrev exportProd {L : Logic P} {conj} 
+  [K : ExportProd L conj] {p q} := K.exportProd p q
 
-instance iConjAsProdOfLeftRight {L : Logic P} [Cj : Conj P]
-  [CjL : ConjLeft L Cj] [CjR : ConjRight L Cj] : ConjAsProd L Cj := 
-  {conjAsProd := fun p q LpCq => Prod.mk (conjLeft LpCq) (conjRight LpCq)}
+instance iExportProdOfLeftRight {L : Logic P} {conj}
+  [CjL : LeftSimp L conj] [CjR : RightSimp L conj] : ExportProd L conj := 
+  {exportProd := fun p q LpCq => Prod.mk (leftSimp LpCq) (rightSimp LpCq)}
 
-instance iConjLeftOfAsProd {L : Logic P} [Cj : Conj P]
-  [K : ConjAsProd L Cj] : ConjLeft L Cj := 
-  {conjLeft := fun p q LpCq => Prod.fst (K.conjAsProd p q LpCq)}
+instance iLeftSimpOfExportProd {L : Logic P} {conj}
+  [K : ExportProd L conj] : LeftSimp L conj := 
+  {leftSimp := fun p q LpCq => Prod.fst (K.exportProd p q LpCq)}
 
-instance iConjRightOfAsProd {L : Logic P} [Cj : Conj P]
-  [K : ConjAsProd L Cj] : ConjRight L Cj := 
-  {conjRight := fun p q LpCq => Prod.snd (K.conjAsProd p q LpCq)}
+instance iRightSimpOfExportProd {L : Logic P} {conj}
+  [K : ExportProd L conj] : RightSimp L conj := 
+  {rightSimp := fun p q LpCq => Prod.snd (K.exportProd p q LpCq)}
 
 -- p /\ q -> PProd p q
 
-class ConjAsPProd (L : Logic P) (Cj : Conj P) := 
-  conjAsPProd : (p q : P) -> (L |- p /\ q) -> PProd (L |- p) (L |- q)
+class ExportPProd (L : Logic P) (conj : Binar P) := 
+  exportPProd : (p q : P) -> (L |- p /\ q) -> PProd (L |- p) (L |- q)
 
-abbrev conjAsPProd {L : Logic P} [Cj : Conj P] 
-  [K : ConjAsPProd L Cj] {p q} := K.conjAsPProd p q
+abbrev exportPProd {L : Logic P} {conj} 
+  [K : ExportPProd L conj] {p q} := K.exportPProd p q
 
-instance iConjAsPProdOfLeftRight {L : Logic P} [Cj : Conj P]
-  [CjL : ConjLeft L Cj] [CjR : ConjRight L Cj] : ConjAsPProd L Cj := 
-  {conjAsPProd := fun p q LpCq => PProd.mk (conjLeft LpCq) (conjRight LpCq)}
+instance iExportPProdOfLeftRight {L : Logic P} {conj}
+  [CjL : LeftSimp L conj] [CjR : RightSimp L conj] : ExportPProd L conj := 
+  {exportPProd := fun p q LpCq => PProd.mk (leftSimp LpCq) (rightSimp LpCq)}
 
-instance iConjLeftOfAsPProd {L : Logic P} [Cj : Conj P]
-  [K : ConjAsPProd L Cj] : ConjLeft L Cj := 
-  {conjLeft := fun p q LpCq => PProd.fst (K.conjAsPProd p q LpCq)}
+instance iLeftSimpOfExportPProd {L : Logic P} {conj}
+  [K : ExportPProd L conj] : LeftSimp L conj := 
+  {leftSimp := fun p q LpCq => PProd.fst (K.exportPProd p q LpCq)}
 
-instance iConjRightOfAsPProd {L : Logic P} [Cj : Conj P]
-  [K : ConjAsPProd L Cj] : ConjRight L Cj := 
-  {conjRight := fun p q LpCq => PProd.snd (K.conjAsPProd p q LpCq)}
+instance iRightSimpOfExportPProd {L : Logic P} {conj}
+  [K : ExportPProd L conj] : RightSimp L conj := 
+  {rightSimp := fun p q LpCq => PProd.snd (K.exportPProd p q LpCq)}
 
-instance iConjAsProdOfPProd {L : Logic P} [Cj : Conj P]
-  [K : ConjAsPProd L Cj] : ConjAsProd L Cj := 
-  {conjAsProd := fun p q LpCq => Prod.mk (conjLeft LpCq) (conjRight LpCq)}
+instance iExportProdOfPProd {L : Logic P} {conj}
+  [K : ExportPProd L conj] : ExportProd L conj := 
+  {exportProd := fun p q LpCq => Prod.mk (leftSimp LpCq) (rightSimp LpCq)}
 
 -- p /\ q -> And p q
 
-class ConjAsAnd (L : Logic P) (Cj : Conj P) := 
-  conjAsAnd : (p q : P) -> (L |- p /\ q) -> (L |- p) /\ (L |- q)
+class ExportAnd (L : Logic.{u,0} P) (conj : Binar P) := 
+  exportAnd : (p q : P) -> (L |- p /\ q) -> (L |- p) /\ (L |- q)
 
-abbrev conjAsAnd {L : Logic P} [Cj : Conj P] 
-  [K : ConjAsAnd L Cj] {p q} := K.conjAsAnd p q
+abbrev exportAnd {L : Logic.{u,0} P} {conj} 
+  [K : ExportAnd L conj] {p q} := K.exportAnd p q
 
-instance iConjAsAndOfLeftRight {L : Logic P} [Cj : Conj P]
-  [CjL : ConjLeft L Cj] [CjR : ConjRight L Cj] : ConjAsAnd L Cj := 
-  {conjAsAnd := fun p q LpCq => And.intro (conjLeft LpCq) (conjRight LpCq)}
+instance iExportAndOfLeftRight {L : Logic P} {conj}
+  [CjL : LeftSimp L conj] [CjR : RightSimp L conj] : ExportAnd L conj := 
+  {exportAnd := fun p q LpCq => And.intro (leftSimp LpCq) (rightSimp LpCq)}
 
-instance iConjLeftOfAsAnd {L : Logic P} [Cj : Conj P]
-  [K : ConjAsAnd L Cj] : ConjLeft L Cj := 
-  {conjLeft := fun p q LpCq => And.left (K.conjAsAnd p q LpCq)}
+instance iLeftSimpOfExportAnd {L : Logic P} {conj}
+  [K : ExportAnd L conj] : LeftSimp L conj := 
+  {leftSimp := fun p q LpCq => And.left (K.exportAnd p q LpCq)}
 
-instance iConjRightOfAsAnd {L : Logic P} [Cj : Conj P]
-  [K : ConjAsAnd L Cj] : ConjRight L Cj := 
-  {conjRight := fun p q LpCq => And.right (K.conjAsAnd p q LpCq)}
+instance iRightSimpOfExportAnd {L : Logic P} {conj}
+  [K : ExportAnd L conj] : RightSimp L conj := 
+  {rightSimp := fun p q LpCq => And.right (K.exportAnd p q LpCq)}
 
 --------------------------------------------------------------------------------
 -- Disjunction
 --------------------------------------------------------------------------------
 
--- p -> p \/ q
+-- Proof by Cases
+-- (|- p \/ q) -> ((|- p) -> r) -> ((|- q) -> r) -> r
 
-class DisjIntroLeft (L : Logic P) (Dj : Disj P)  := 
-  disjIntroLeft : (p q : P) -> (L |- p) -> (L |- p \/ q) 
-
-abbrev disjIntroLeft {L : Logic P} [Dj : Disj P] 
-  [K : DisjIntroLeft L Dj] {p q} := K.disjIntroLeft p q
-
--- q -> p \/ q
-
-class DisjIntroRight (L : Logic P) (Dj : Disj P)  := 
-  disjIntroRight : (p q : P) -> (L |- q) -> (L |- p \/ q) 
-
-abbrev disjIntroRight {L : Logic P} [Dj : Disj P] 
-  [K : DisjIntroRight L Dj] {p q} := K.disjIntroRight p q
-
--- p \/ q -> (p -> r) -> (q -> r) -> r
-
-class DisjElim (L : Logic P) (Dj : Disj P) := 
-  disjElim : (r : Sort w) -> (p q : P) -> 
+class ByEither (L : Logic P) (disj : Binar P) := 
+  byEither : (r : Sort w) -> (p q : P) -> 
     (L |- p \/ q) -> ((L |- p) -> r) -> ((L |- q) -> r) -> r
 
-abbrev disjElim {L : Logic P} [Dj : Disj P]
-  [K : DisjElim L Dj] {r p q} := K.disjElim r p q
+abbrev byEither {L : Logic P} {disj}
+  [K : ByEither L disj] {r p q} := K.byEither r p q
 
--- p -> p \/ p
+--------------------------------------------------------------------------------
+-- Tautology
+--------------------------------------------------------------------------------
 
-class DisjTaut (L : Logic P) (Dj : Disj P) :=
-  disjTaut : (p : P) -> (L |- p) -> (L |- p \/ p)
+-- p |- D p p
 
-abbrev disjTaut {L : Logic P} [Dj : Disj P] 
-  [K : DisjTaut L Dj] {p} := K.disjTaut p
+class Tautology (L : Logic P) (D : Binar P)  :=
+  taut : (p : P) -> (L |- p) -> (L |- D p p)
 
-instance iDisjTautOfIntroLeft {L : Logic P} [Dj : Disj P]
-  [K : DisjIntroLeft L Dj] : DisjTaut L Dj := 
-  {disjTaut := fun p Lp => K.disjIntroLeft p p Lp}
+abbrev taut {L : Logic P} {D} 
+  [K : Tautology L D] {p} := K.taut p
 
-instance iDisjTautOfIntroRight {L : Logic P} [Dj : Disj P]
-  [K : DisjIntroRight L Dj] : DisjTaut L Dj := 
-  {disjTaut := fun p Lp => K.disjIntroRight p p Lp}
+-- p |- D p q
 
--- p \/ p -> p
+class LeftTaut (L : Logic P) (D : Binar P)  := 
+  leftTaut : (p q : P) -> (L |- p) -> (L |- D p q) 
 
-class DisjSimp (L : Logic P) (Dj : Disj P) :=
-  disjSimp : (p : P) -> (L |- p \/ p) -> (L |- p)
+abbrev leftTaut {L : Logic P} {D} 
+  [K : LeftTaut L D] {p q} := K.leftTaut p q
 
-abbrev disjSimp {L : Logic P} [Dj : Disj P] 
-  [K : DisjSimp L Dj] {p} := K.disjSimp p
+instance iTautOfLeft {L : Logic P} {D}
+  [K : LeftTaut L D] : Tautology L D := 
+  {taut := fun p Lp => K.leftTaut p p Lp}
 
-instance iDisjSimpOfElim {L : Logic P} [Dj : Disj P]
-  [K : DisjElim L Dj] : DisjSimp L Dj := 
-  {disjSimp := fun p LpDp => K.disjElim _ p p LpDp id id}
+-- q |- D p q
 
--- p \/ q -> ~p -> q
+class RightTaut (L : Logic P) (D : Binar P)  := 
+  rightTaut : (p q : P) -> (L |- q) -> (L |- D p q) 
 
-class DisjElimLeft (L : Logic P) (Dj : Disj P) (lnot : Unar P) := 
-  disjElimLeft : (p q : P) -> (L |- p \/ q) -> (L |- ~p) -> (L |- q)
+abbrev rightTaut {L : Logic P} {D} 
+  [K : RightTaut L D] {p q} := K.rightTaut p q
 
-abbrev disjElimLeft {L : Logic P} [Dj : Disj P] {lnot : Unar P} 
-  [K : DisjElimLeft L Dj lnot] {p q} := K.disjElimLeft p q
+instance iTautOfRight {L : Logic P} {D}
+  [K : RightTaut L D] : Tautology L D := 
+  {taut := fun p Lp => K.rightTaut p p Lp}
 
--- p \/ q -> ~q -> p
+--------------------------------------------------------------------------------
+-- Modus Tollendo Ponens / Disjunctive Syllogism / Disjuntive Elimination
+--------------------------------------------------------------------------------
 
-class DisjElimRight (L : Logic P) (Dj : Disj P) (lnot : Unar P) := 
-  disjElimRight : (p q : P) -> (L |- p \/ q) -> (L |- ~q) -> (L |- p)
+-- p \/ q, ~p |- q
 
-abbrev disjElimRight {L : Logic P} [Dj : Disj P] {lnot : Unar P} 
-  [K : DisjElimRight L Dj lnot] {p q} := K.disjElimRight p q
+class LeftNeg (L : Logic P) (D : Binar P) (lnot : Unar P) := 
+  leftNeg : (p q : P) -> (L |- D p q) -> (L |- ~p) -> (L |- q)
+
+abbrev leftNeg {L : Logic P} {D} {lnot : Unar P} 
+  [K : LeftNeg L D lnot] {p q} := K.leftNeg p q
+
+-- p \/ q, ~q |- p
+
+class RightNeg (L : Logic P) (D : Binar P) (lnot : Unar P) := 
+  rightNeg : (p q : P) -> (L |- D p q) -> (L |- ~q) -> (L |- p)
+
+abbrev rightNeg {L : Logic P} {D} {lnot : Unar P} 
+  [K : RightNeg L D lnot] {p q} := K.rightNeg p q
+
+--------------------------------------------------------------------------------
+-- Sum/PSum/Or Import/Export
+--------------------------------------------------------------------------------
 
 -- Sum p q -> p \/ q 
 
-class DisjOfSum (L : Logic P) (Dj : Disj P) := 
-  disjOfSum : (p q : P) -> Sum (L |- p) (L |- q) -> (L |- p \/ q)
+class ImportSum (L : Logic P) (disj : Binar P) := 
+  importSum : (p q : P) -> Sum (L |- p) (L |- q) -> (L |- p \/ q)
 
-abbrev disjOfSum {L : Logic P} [Dj : Disj P] 
-  [K : DisjOfSum L Dj] {p q} := K.disjOfSum p q
+abbrev importSum {L : Logic P} {disj} 
+  [K : ImportSum L disj] {p q} := K.importSum p q
 
-instance iDisjOfSumOfIntro {L : Logic P} [Dj : Disj P] 
-  [DiL : DisjIntroLeft L Dj] [DiR : DisjIntroRight L Dj] : DisjOfSum L Dj := 
-  {disjOfSum := fun p q Spq => match Spq with 
-    | Sum.inl Lp => disjIntroLeft Lp | Sum.inr Lq => disjIntroRight Lq}
+instance iImportSumOfLeftRightTaut {L : Logic P} {disj} 
+  [DiL : LeftTaut L disj] [DiR : RightTaut L disj] : ImportSum L disj := 
+  {importSum := fun p q Spq => match Spq with 
+    | Sum.inl Lp => leftTaut Lp | Sum.inr Lq => rightTaut Lq}
 
-instance iDisjIntroLeftOfSum {L : Logic P} [Dj : Disj P] 
-  [K : DisjOfSum L Dj] : DisjIntroLeft L Dj := 
-  {disjIntroLeft := fun p q Lp => K.disjOfSum p q (Sum.inl Lp)}
+instance iLeftTautOfImportSum {L : Logic P} {disj} 
+  [K : ImportSum L disj] : LeftTaut L disj := 
+  {leftTaut := fun p q Lp => K.importSum p q (Sum.inl Lp)}
 
-instance iDisjIntroRightOfSum {L : Logic P} [Dj : Disj P] 
-  [K : DisjOfSum L Dj] : DisjIntroRight L Dj := 
-  {disjIntroRight := fun p q Lq => K.disjOfSum p q (Sum.inr Lq)}
+instance iRightTautOfImportSum {L : Logic P} {disj} 
+  [K : ImportSum L disj] : RightTaut L disj := 
+  {rightTaut := fun p q Lq => K.importSum p q (Sum.inr Lq)}
 
 -- PSum p q -> p \/ q  
 
-class DisjOfPSum (L : Logic P) (Dj : Disj P) := 
-  disjOfPSum : (p q : P) -> PSum (L |- p) (L |- q) -> (L |- p \/ q)
+class ImportPSum (L : Logic P) (disj : Binar P) := 
+  importPSum : (p q : P) -> PSum (L |- p) (L |- q) -> (L |- p \/ q)
 
-abbrev disjOfPSum {L : Logic P} [Dj : Disj P] 
-  [K : DisjOfPSum L Dj] {p q} := K.disjOfPSum p q
+abbrev importPSum {L : Logic P} {disj} 
+  [K : ImportPSum L disj] {p q} := K.importPSum p q
 
-instance iDisjOfPSumOfIntro {L : Logic P} [Dj : Disj P] 
-  [DiL : DisjIntroLeft L Dj] [DiR : DisjIntroRight L Dj] : DisjOfPSum L Dj := 
-  {disjOfPSum := fun p q Spq => match Spq with 
-    | PSum.inl Lp => disjIntroLeft Lp | PSum.inr Lq => disjIntroRight Lq}
+instance iImportPSumOfLeftRightTaut {L : Logic P} {disj} 
+  [DiL : LeftTaut L disj] [DiR : RightTaut L disj] : ImportPSum L disj := 
+  {importPSum := fun p q Spq => match Spq with 
+    | PSum.inl Lp => leftTaut Lp | PSum.inr Lq => rightTaut Lq}
 
-instance iDisjIntroLeftOfPSum {L : Logic P} [Dj : Disj P] 
-  [K : DisjOfPSum L Dj] : DisjIntroLeft L Dj := 
-  {disjIntroLeft := fun p q Lp => K.disjOfPSum p q (PSum.inl Lp)}
+instance iLeftTautOfImportPSum {L : Logic P} {disj} 
+  [K : ImportPSum L disj] : LeftTaut L disj := 
+  {leftTaut := fun p q Lp => K.importPSum p q (PSum.inl Lp)}
 
-instance iDisjIntroRightOfPSum {L : Logic P} [Dj : Disj P] 
-  [K : DisjOfPSum L Dj] : DisjIntroRight L Dj := 
-  {disjIntroRight := fun p q Lq => K.disjOfPSum p q (PSum.inr Lq)}
+instance iRightTautOfImportPSum {L : Logic P} {disj} 
+  [K : ImportPSum L disj] : RightTaut L disj := 
+  {rightTaut := fun p q Lq => K.importPSum p q (PSum.inr Lq)}
 
 -- Or p q -> p \/ q 
 
-class DisjOfOr (L : Logic P) (Dj : Disj P) := 
-  disjOfOr : (p q : P) -> (L |- p) \/ (L |- q) -> (L |- p \/ q)
+class ImportOr (L : Logic.{u,0} P) (disj : Binar P) := 
+  importOr : (p q : P) -> (L |- p) \/ (L |- q) -> (L |- p \/ q)
 
-abbrev disjOfOr {L : Logic P} [Dj : Disj P] 
-  [K : DisjOfOr L Dj] {p q} := K.disjOfOr p q
+abbrev importOr {L : Logic.{u,0} P} {disj} 
+  [K : ImportOr L disj] {p q} := K.importOr p q
 
-instance iDisjOfOrOfIntro {L : Logic P} [Dj : Disj P] 
-  [DiL : DisjIntroLeft L Dj] [DiR : DisjIntroRight L Dj] : DisjOfOr L Dj := 
-  {disjOfOr := fun p q Spq => match Spq with 
-    | Or.inl Lp => disjIntroLeft Lp | Or.inr Lq => disjIntroRight Lq}
+instance iImportOrOfLeftRightTaut {L : Logic P} {disj} 
+  [DiL : LeftTaut L disj] [DiR : RightTaut L disj] : ImportOr L disj := 
+  {importOr := fun p q Spq => match Spq with 
+    | Or.inl Lp => leftTaut Lp | Or.inr Lq => rightTaut Lq}
 
-instance iDisjIntroLeftOfOr {L : Logic P} [Dj : Disj P] 
-  [K : DisjOfOr L Dj] : DisjIntroLeft L Dj := 
-  {disjIntroLeft := fun p q Lp => K.disjOfOr p q (Or.inl Lp)}
+instance iLeftTautOfImportOr {L : Logic P} {disj} 
+  [K : ImportOr L disj] : LeftTaut L disj := 
+  {leftTaut := fun p q Lp => K.importOr p q (Or.inl Lp)}
 
-instance iDisjIntroRightOfOr {L : Logic P} [Dj : Disj P] 
-  [K : DisjOfOr L Dj] : DisjIntroRight L Dj := 
-  {disjIntroRight := fun p q Lq => K.disjOfOr p q (Or.inr Lq)}
+instance iRightTautOfImportOr {L : Logic P} {disj} 
+  [K : ImportOr L disj] : RightTaut L disj := 
+  {rightTaut := fun p q Lq => K.importOr p q (Or.inr Lq)}
 
 -- p \/ q -> Sum p q 
 
-class DisjAsSum (L : Logic P) (Dj : Disj P) := 
-  disjAsSum : (p q : P) -> (L |- p \/ q) -> Sum (L |- p) (L |- q)
+class ExportSum (L : Logic P) (disj : Binar P) := 
+  exportSum : (p q : P) -> (L |- p \/ q) -> Sum (L |- p) (L |- q)
 
-abbrev disjAsSum {L : Logic P} [Dj : Disj P] 
-  [K : DisjAsSum L Dj] {p q} := K.disjAsSum p q
+abbrev exportSum {L : Logic P} {disj} 
+  [K : ExportSum L disj] {p q} := K.exportSum p q
 
-instance iDisjAsSumOfElim {L : Logic P} [Dj : Disj P] 
-  [K : DisjElim L Dj] : DisjAsSum L Dj := 
-  {disjAsSum := fun p q LpDq => K.disjElim _ p q LpDq Sum.inl Sum.inr}
+instance iExportSumOfByEither {L : Logic P} {disj} 
+  [K : ByEither L disj] : ExportSum L disj := 
+  {exportSum := fun p q LpDq => K.byEither _ p q LpDq Sum.inl Sum.inr}
 
-instance iDisjElimOfAsSum {L : Logic P} [Dj : Disj P] 
-  [K : DisjAsSum L Dj] : DisjElim L Dj := 
-  {disjElim := fun a p q LpDq fpa fqa => match K.disjAsSum p q LpDq with
+instance iByEitherOfExportSum {L : Logic P} {disj} 
+  [K : ExportSum L disj] : ByEither L disj := 
+  {byEither := fun a p q LpDq fpa fqa => match K.exportSum p q LpDq with
     | Sum.inl Lp => fpa Lp | Sum.inr Lq => fqa Lq}
 
 -- p \/ q -> PSum p q 
 
-class DisjAsPSum (L : Logic P) (Dj : Disj P) := 
-  disjAsPSum : (p q : P) -> (L |- p \/ q) -> PSum (L |- p) (L |- q)
+class ExportPSum (L : Logic P) (disj : Binar P) := 
+  exportPSum : (p q : P) -> (L |- p \/ q) -> PSum (L |- p) (L |- q)
 
-abbrev disjAsPSum {L : Logic P} [Dj : Disj P] 
-  [K : DisjAsPSum L Dj] {p q} := K.disjAsPSum p q
+abbrev exportPSum {L : Logic P} {disj} 
+  [K : ExportPSum L disj] {p q} := K.exportPSum p q
 
-instance iDisjAsPSumOfElim {L : Logic P} [Dj : Disj P] 
-  [K : DisjElim L Dj] : DisjAsPSum L Dj := 
-  {disjAsPSum := fun p q LpDq => K.disjElim _ p q LpDq PSum.inl PSum.inr}
+instance iExportPSumOfByEither {L : Logic P} {disj} 
+  [K : ByEither L disj] : ExportPSum L disj := 
+  {exportPSum := fun p q LpDq => K.byEither _ p q LpDq PSum.inl PSum.inr}
 
-instance iDisjElimOfAsPSum {L : Logic P} [Dj : Disj P] 
-  [K : DisjAsPSum L Dj] : DisjElim L Dj := 
-  {disjElim := fun a p q LpDq fpa fqa => match K.disjAsPSum p q LpDq with
+instance iByEitherOfExportPSum {L : Logic P} {disj} 
+  [K : ExportPSum L disj] : ByEither L disj := 
+  {byEither := fun a p q LpDq fpa fqa => match K.exportPSum p q LpDq with
     | PSum.inl Lp => fpa Lp | PSum.inr Lq => fqa Lq}
 
 -- p \/ q -> Or p q 
 
-class DisjAsOr (L : Logic P) (Dj : Disj P) := 
-  disjAsOr : (p q : P) -> (L |- p \/ q) -> (L |- p) \/ (L |- q)
+class ExportOr (L : Logic.{u,0} P) (disj : Binar P) := 
+  exportOr : (p q : P) -> (L |- p \/ q) -> (L |- p) \/ (L |- q)
 
-abbrev disjAsOr {L : Logic P} [Dj : Disj P] 
-  [K : DisjAsOr L Dj] {p q} := K.disjAsOr p q
+abbrev exportOr {L : Logic.{u,0} P} {disj} 
+  [K : ExportOr L disj] {p q} := K.exportOr p q
 
-instance iDisjAsOrOfElim {L : Logic P} [Dj : Disj P] 
-  [K : DisjElim L Dj] : DisjAsOr L Dj := 
-  {disjAsOr := fun p q LpDq => K.disjElim _ p q LpDq Or.inl Or.inr}
+instance iExportOrOfByEither {L : Logic P} {disj} 
+  [K : ByEither L disj] : ExportOr L disj := 
+  {exportOr := fun p q LpDq => K.byEither _ p q LpDq Or.inl Or.inr}
 
-instance iDisjElimOfAsOr {L : Logic P} [Dj : Disj P] 
-  [K : DisjAsOr L Dj] : DisjElim L Dj := 
-  {disjElim := fun (a : Prop) p q LpDq fpa fqa => match K.disjAsOr p q LpDq with
+instance iByEitherOfExportOr {L : Logic P} {disj} 
+  [K : ExportOr L disj] : ByEither L disj := 
+  {byEither := fun (a : Prop) p q LpDq fpa fqa => match K.exportOr p q LpDq with
     | Or.inl Lp => fpa Lp | Or.inr Lq => fqa Lq}
 
 --------------------------------------------------------------------------------
 -- Not
 --------------------------------------------------------------------------------
 
-class NotIntro (L : Logic P) (lnot : Unar P) := 
-  notIntro : (p : P) -> ((L |- p) -> False) -> (L |- ~p) 
+-- ((|- p) -> False) -> (|- ~p)
 
-abbrev notIntro {L : Logic P} {lnot}
-  [K : NotIntro L lnot] {p} := K.notIntro p
+class AdFalso (L : Logic P) (lnot : Unar P) := 
+  adFalso : (p : P) -> ((L |- p) -> False) -> (L |- ~p) 
 
-class NotElim (L : Logic P) (lnot : Unar P) := 
-  notElim : (p : P) -> (L |- lnot p) -> (L |- p) -> False
+abbrev adFalso {L : Logic.{u,0} P} {lnot}
+  [K : AdFalso L lnot] {p} := K.adFalso p
 
-abbrev notElim {L : Logic P} {lnot} 
-  [K : NotElim L lnot] {p} := K.notElim p
+-- not |- p, ~p
+
+class Noncontradiction (L : Logic P) (lnot : Unar P) := 
+  noncontradiction : (p : P) -> (L |- ~p) -> (L |- p) -> False
+
+abbrev noncontradiction {L : Logic P} {lnot} 
+  [K : Noncontradiction L lnot] {p} := K.noncontradiction p
+
+-- Not p -> (|- ~p)
+
+class ImportNot (L : Logic.{u,0} P) (lnot : Unar P) := 
+  importNot : (p : P) -> Not (L |- p) -> (L |- lnot p) 
+
+abbrev importNot {L : Logic P} {lnot}
+  [K : ImportNot L lnot] {p} := K.importNot p
+
+-- (|- ~p) -> Not p
+
+class ExportNot (L : Logic.{u,0} P) (lnot : Unar P) := 
+  exportNot : (p : P) -> (L |- lnot p) -> Not (L |- p) 
+
+abbrev exportNot {L : Logic.{u,0} P} {lnot}
+  [K : ExportNot L lnot] {p} := K.exportNot p
 
 --------------------------------------------------------------------------------
 -- Double Negation
 --------------------------------------------------------------------------------
+
+-- p |- ~~p
 
 class DblNegIntro (L : Logic P) (lnot : Unar P) :=
   dblNegIntro : (p : P) -> (L |- p) -> (L |- ~~p)
 
 abbrev dblNegIntro {L : Logic P} {lnot}
   [K : DblNegIntro L lnot] {p} := K.dblNegIntro p
+
+-- ~~p |- p
 
 class DblNegElim (L : Logic P) (lnot : Unar P) :=
   dblNegElim : (p : P) -> (L |- ~~p) -> (L |- p)
@@ -520,11 +563,11 @@ abbrev dblNegElim {L : Logic P} {lnot}
 --------------------------------------------------------------------------------
 
 def Contradiction (L : Logic P) (lnot : Unar P) :=
-  PSigma fun (p : P) => PProd (L |- p) (L |- lnot p)
+  PSigma fun (p : P) => PProd (L |- lnot p) (L |- p) 
 
 def contradiction {L : Logic P} {lnot}
-  {p} (Lp : L |- p) (LNp : L |- lnot p) : Contradiction L lnot := 
-    PSigma.mk p (PProd.mk Lp LNp)
+  {p} (LNp : L |- lnot p) (Lp : L |- p) : Contradiction L lnot := 
+    PSigma.mk p (PProd.mk LNp Lp)
 
 class ByContradiction (L : Logic P) (lnot : Unar P) :=
   byContradiction : (p : P) ->
@@ -534,20 +577,10 @@ abbrev byContradiction {L : Logic P} {lnot}
   [K : ByContradiction L lnot] {p} := K.byContradiction p
 
 --------------------------------------------------------------------------------
--- False
+-- Falsum
 --------------------------------------------------------------------------------
 
-class FalseImport (L : Logic P) (falsum : P) := 
-  falseImport : False -> (L |- falsum) 
-
-abbrev falseImport {L : Logic P} {falsum}
-  [K : FalseImport L falsum] := K.falseImport
-
-class FalseExport (L : Logic P) (falsum : P) := 
-  falseExport : (L |- falsum) -> False
-
-abbrev falseExport {L : Logic P} {falsum}
-  [K : FalseExport L falsum] := K.falseExport
+-- (p |- falsum) -> (|- ~p)
 
 class AdFalsum (L : Logic P) (falsum : P) (lnot : Unar P) :=
   adFalsum : (p : P) -> ((L |- p) -> (L |- falsum)) -> (L |- ~p)
@@ -555,10 +588,35 @@ class AdFalsum (L : Logic P) (falsum : P) (lnot : Unar P) :=
 abbrev adFalsum {L : Logic P} {falsum : P} {lnot : Unar P}
   [K : AdFalsum L falsum lnot] {p} := K.adFalsum p
 
+-- (|- falsum) -> (|- p)
+
 class ExFalsum (L : Logic P) (falsum : P) :=
   exFalsum : (p : P) -> (L |- falsum) -> (L |- p)
 
 abbrev exFalsum {L : Logic P} {falsum}
   [K : ExFalsum L falsum] {p} := K.exFalsum p
+
+-- False -> (|- falsum)
+
+class ImportFalse (L : Logic P) (falsum : P) := 
+  importFalse : False -> (L |- falsum) 
+
+abbrev importFalse {L : Logic P} {falsum}
+  [K : ImportFalse L falsum] := K.importFalse
+
+instance iImportFalse {L : Logic P} {p} 
+  : ImportFalse L p := {importFalse := False.elim}
+
+-- (|- falsum) -> False
+
+class ExportFalse (L : Logic P) (falsum : P) := 
+  exportFalse : (L |- falsum) -> False
+
+abbrev exportFalse {L : Logic P} {falsum}
+  [K : ExportFalse L falsum] := K.exportFalse
+
+instance iExFalsumOfExportFalse {L : Logic P} {falsum}
+  [K : ExportFalse L falsum] : ExFalsum L falsum 
+  := {exFalsum := fun p Lf => False.elim (K.exportFalse Lf)}
 
 end Gaea.Logic

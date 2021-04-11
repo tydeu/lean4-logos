@@ -1,6 +1,6 @@
 import Gaea.Logic.Logic
 import Gaea.Logic.Judgment
-import Gaea.Logic.Rules
+import Gaea.Logic.Fun.Rules
 import Gaea.Logic.Prop
 import Gaea.Logic.Classic
 import Gaea.Logic.Quant

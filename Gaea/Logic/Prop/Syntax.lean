@@ -1,4 +1,4 @@
-import Gaea.Function
+import Gaea.Logic.Fun.Types
 
 universe u
 

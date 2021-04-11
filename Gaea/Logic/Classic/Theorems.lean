@@ -12,7 +12,7 @@ variable {P : Sort u}
 --------------------------------------------------------------------------------
 
 def conjMpByIfConj {L : Logic P} {Im : Imp P} {Cj : Conj P} 
-(Mp : ModusPonens L Im.imp) (CjU : ConjUncurry L Cj)
+(Mp : ModusPonens L Im.imp) (CjU : Uncurry L Cj.conj)
 : (p q : P) -> (L |- (p -> q) /\ p) -> (L |- q)
 := by
   intro p q
@@ -20,7 +20,7 @@ def conjMpByIfConj {L : Logic P} {Im : Imp P} {Cj : Conj P}
   mp LpTq Lp
 
 instance iConjMpByIfConj {L : Logic P} [Im : Imp P] [Cj : Conj P] 
-[Mp : ModusPonens L Im.imp] [CjU : ConjUncurry L Cj]
+[Mp : ModusPonens L Im.imp] [CjU : Uncurry L Cj.conj]
 : ConjMp L Im Cj := {conjMp := conjMpByIfConj Mp CjU}
 
 --------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ instance iConjMpByIfConj {L : Logic P} [Im : Imp P] [Cj : Conj P]
 
 def conjMtByContraIfConj {L : Logic P} 
 {Im : Imp P} {Cj : Conj P} {Nt : LNot P}
-(CjU : ConjUncurry L Cj)
+(CjU : Uncurry L Cj.conj)
 (Mt  : ModusTollens L Im.imp Nt.not)
 : (p q : P) -> (L |- (p -> q) /\ ~q) -> (L |- ~p)
 := by
@@ -39,7 +39,7 @@ def conjMtByContraIfConj {L : Logic P}
 
 instance iConjMtByContraIfConj {L : Logic P} 
 [Im : Imp P] [Cj : Conj P] [Nt : LNot P]
-[CjU : ConjUncurry L Cj]
+[CjU : Uncurry L Cj.conj]
 [Mt  : ModusTollens L Im.imp Nt.not]
 : ConjMt L Im Cj Nt :=
 {conjMt := conjMtByContraIfConj CjU Mt}
@@ -52,7 +52,7 @@ def hypoSylByIfConj {L : Logic P}
 {Im : Imp P} {Cj : Conj P}
 (Mp  : ModusPonens L Im.imp) 
 (ByI : ByImplication L Im.imp) 
-(CjU : ConjUncurry L Cj) 
+(CjU : Uncurry L Cj.conj) 
 : (p q r : P) -> (L |- (p -> q) /\ (q -> r)) -> (L |- p -> r)
 := by
   intro p q r 
@@ -66,24 +66,24 @@ instance iHypoSylByIfConj {L : Logic P}
 [Im : Imp P] [Cj : Conj P]
 [Mp  : ModusPonens L Im.imp]
 [ByI : ByImplication L Im.imp] 
-[CjU : ConjUncurry L Cj]
+[CjU : Uncurry L Cj.conj]
 : HypoSyl L Im Cj :=
 {hypoSyl := hypoSylByIfConj Mp ByI CjU}
 
 def disjSylByConjDisjNot {L : Logic P} 
 {Cj : Conj P} {Dj : Disj P} {Nt : LNot P}
-(CjU : ConjUncurry L Cj) 
-(DeL : DisjElimLeft L Dj Nt.not)
+(CjU : Uncurry L Cj.conj) 
+(DeL : LeftNeg L Dj.disj Nt.not)
 : (p q : P) -> (L |- (p \/ q) /\ ~p) -> (L |- q)
 := by
   intro p q
   assume (LpDq, LNp)
-  exact disjElimLeft LpDq LNp
+  exact leftNeg LpDq LNp
 
 instance iDisjSylByConjDisjNot {L : Logic P} 
 [Cj : Conj P] [Dj : Disj P] [Nt : LNot P] 
-[CjU : ConjUncurry L Cj]
-[DeL : DisjElimLeft L Dj Nt.not]
+[CjU : Uncurry L Cj.conj]
+[DeL : LeftNeg L Dj.disj Nt.not]
 : DisjSyl L Cj Dj Nt :=
 {disjSyl := disjSylByConjDisjNot CjU DeL}
 
@@ -97,32 +97,32 @@ instance iDisjSylByConjDisjNot {L : Logic P}
 def cnstrDilByIfConjDisj {L : Logic P} 
 {Im : Imp P} {Cj : Conj P} {Dj : Disj P}
 (Mp  : ModusPonens L Im.imp) 
-(CjU : ConjUncurry L Cj) 
-(DiL : DisjIntroLeft L Dj)
-(DiR : DisjIntroRight L Dj) 
-(DjE : DisjElim L Dj)
+(CjU : Uncurry L Cj.conj) 
+(DiL : LeftTaut L Dj.disj)
+(DiR : RightTaut L Dj.disj) 
+(DjE : ByEither L Dj.disj)
 : (p q r s : P) -> 
     (L |- (p -> q) /\ (r -> s) /\ (p \/ r)) -> (L |- q \/ s) 
 := by
   intro p q r s
   assume (LpTq, LrTs, LpDr)
-  apply disjElim LpDr ?pTqDs ?rTqDs
+  apply byEither LpDr ?pTqDs ?rTqDs
   case pTqDs =>
     intro Lp
-    apply disjIntroLeft
+    apply leftTaut
     mp LpTq Lp
   case rTqDs =>
     intro Lr
-    apply disjIntroRight
+    apply rightTaut
     mp LrTs Lr
 
 instance iCnstrDilByIfConjDisj {L : Logic P} 
 [Im : Imp P] [Cj : Conj P] [Dj : Disj P]
 [Mp  : ModusPonens L Im.imp]
-[CjU : ConjUncurry L Cj]
-[DiL : DisjIntroLeft L Dj]
-[DiR : DisjIntroRight L Dj] 
-[DjE : DisjElim L Dj]
+[CjU : Uncurry L Cj.conj]
+[DiL : LeftTaut L Dj.disj]
+[DiR : RightTaut L Dj.disj] 
+[DjE : ByEither L Dj.disj]
 : CnstrDil L Im Cj Dj :=
 {cnstrDil := cnstrDilByIfConjDisj Mp CjU DiL DiR DjE} 
 
@@ -132,32 +132,32 @@ instance iCnstrDilByIfConjDisj {L : Logic P}
 def destrDilByIfConjDisj {L : Logic P} 
 {Im : Imp P} {Cj : Conj P} {Dj : Disj P} {Nt : LNot P}
 (Mt : ModusTollens L Im.imp Nt.not)
-(CjU : ConjUncurry L Cj) 
-(DiL : DisjIntroLeft L Dj)
-(DiR : DisjIntroRight L Dj) 
-(DjE : DisjElim L Dj)
+(CjU : Uncurry L Cj.conj) 
+(DiL : LeftTaut L Dj.disj)
+(DiR : RightTaut L Dj.disj) 
+(DjE : ByEither L Dj.disj)
 : (p q r s : P) -> 
     (L |- (p -> q) /\ (r -> s) /\ (~q \/ ~s)) -> (L |- ~p \/ ~r) 
 := by
   intro p q r s
   assume (LpTq, LrTs, LNqDNs)
-  apply disjElim LNqDNs ?NqTNpDNr ?NsTNpDNr
+  apply byEither LNqDNs ?NqTNpDNr ?NsTNpDNr
   case NqTNpDNr =>
     intro LNq
-    apply disjIntroLeft
+    apply leftTaut
     mt LpTq LNq
   case NsTNpDNr =>
     intro LNs
-    apply disjIntroRight
+    apply rightTaut
     mt LrTs LNs
 
 instance iDestrDilByIfConjDisj {L : Logic P} 
 [Im : Imp P] [Cj : Conj P] [Dj : Disj P] [Nt : LNot P]
 [Mt : ModusTollens L Im.imp Nt.not]
-[CjU : ConjUncurry L Cj]
-[DiL : DisjIntroLeft L Dj]
-[DiR : DisjIntroRight L Dj] 
-[DjE : DisjElim L Dj]
+[CjU : Uncurry L Cj.conj]
+[DiL : LeftTaut L Dj.disj]
+[DiR : RightTaut L Dj.disj] 
+[DjE : ByEither L Dj.disj]
 : DestrDil L Im Cj Dj Nt :=
 {destrDil := destrDilByIfConjDisj Mt CjU DiL DiR DjE } 
 
@@ -168,33 +168,33 @@ def bidirDilByIfConjDisj {L : Logic P}
 {Im : Imp P} {Cj : Conj P} {Dj : Disj P} {Nt : LNot P}
 (Mp  : ModusPonens L Im.imp) 
 (Mt  : ModusTollens L Im.imp Nt.not)
-(CjU : ConjUncurry L Cj)
-(DiL : DisjIntroLeft L Dj)
-(DiR : DisjIntroRight L Dj) 
-(DjE : DisjElim L Dj)
+(CjU : Uncurry L Cj.conj)
+(DiL : LeftTaut L Dj.disj)
+(DiR : RightTaut L Dj.disj) 
+(DjE : ByEither L Dj.disj)
 : (p q r s : P) -> 
     (L |- (p -> q) /\ (r -> s) /\ (p \/ ~s)) -> (L |- q \/ ~r) 
 := by
   intro p q r s
   assume (LpTq, LrTs, LpDNs)
-  apply disjElim LpDNs ?pTqDNr ?NsTqDNr
+  apply byEither LpDNs ?pTqDNr ?NsTqDNr
   case pTqDNr =>
     intro Lp
-    apply disjIntroLeft
+    apply leftTaut
     mp LpTq Lp
   case NsTqDNr =>
     intro LNs
-    apply disjIntroRight
+    apply rightTaut
     mt LrTs LNs
 
 instance iBidirDilByIfConjDisj {L : Logic P} 
 [Im : Imp P] [Cj : Conj P] [Dj : Disj P] [Nt : LNot P]
 [Mp  : ModusPonens L Im.imp]
 [Mt  : ModusTollens L Im.imp Nt.not]
-[CjU : ConjUncurry L Cj]
-[DiL : DisjIntroLeft L Dj]
-[DiR : DisjIntroRight L Dj] 
-[DjE : DisjElim L Dj]
+[CjU : Uncurry L Cj.conj]
+[DiL : LeftTaut L Dj.disj]
+[DiR : RightTaut L Dj.disj] 
+[DjE : ByEither L Dj.disj]
 : BidirDil L Im Cj Dj Nt :=
 {bidirDil := bidirDilByIfConjDisj Mp Mt CjU DiL DiR DjE} 
 

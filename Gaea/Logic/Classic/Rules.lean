@@ -169,10 +169,10 @@ def em {L} [Dj : Disj P] [Nt : LNot P]
 -- Law of Non-Contradiction
 -- |- p \/ ~p
 
-class NonContradiction (Cj : Conj P) (Nt : LNot P) :=
-  nc : (p : P) -> (L |- ~(p /\ ~p))
+-- class NonContradiction (Cj : Conj P) (Nt : LNot P) :=
+--   nc : (p : P) -> (L |- ~(p /\ ~p))
 
-def nc {L} [Cj : Conj P] [Nt : LNot P]
-[K : NonContradiction L Cj Nt] {p : P} := K.nc p
+-- def nc {L} [Cj : Conj P] [Nt : LNot P]
+-- [K : NonContradiction L Cj Nt] {p : P} := K.nc p
 
 end Gaea.Logic

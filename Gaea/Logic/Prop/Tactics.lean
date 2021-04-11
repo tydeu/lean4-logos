@@ -29,17 +29,17 @@ scoped macro "dblNegElim" : tactic =>
 scoped macro "byContradiction " x:binderIdent : tactic => 
   `(tactic| apply byContradiction; intro $(x[0]))
 
-scoped macro "contradiction " p:term:max np:term:max : tactic => 
-  `(tactic| exact contradiction $p $np)
+scoped macro "contradiction " np:term:max p:term:max : tactic => 
+  `(tactic| exact contradiction $np $p)
 
 -- Util
 
 scoped syntax (name := uncurryTactic) "uncurry " (colGt binderIdent)* : tactic
 macro_rules [uncurryTactic]
   | `(tactic| uncurry) => 
-    `(tactic| apply conjUncurry)
+    `(tactic| apply uncurry)
   | `(tactic| uncurry $x) => 
-    `(tactic| apply conjUncurry; intro $(x[0]))
+    `(tactic| apply uncurry; intro $(x[0]))
   | `(tactic| uncurry $x $y $ys*) => 
     `(tactic| uncurry $x; uncurry $y $ys*)
 
