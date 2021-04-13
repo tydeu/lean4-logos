@@ -52,23 +52,41 @@ scoped macro "noncontradiction " np:term:max p:term:max : tactic =>
 
 -- Util
 
-scoped macro "mp " pTq:term:max p:term:max : tactic => 
-  `(tactic| exact mp $pTq $p)
+scoped macro "mp " pq:term:max p:term:max : tactic => 
+  `(tactic| exact mp $pq $p)
 
-scoped macro "mpl " pTq:term:max p:term:max : tactic => 
-  `(tactic| exact mpl $pTq $p)
+scoped macro "mpr " pq:term:max q:term:max : tactic => 
+  `(tactic| exact mpr $pq $q)
 
-scoped macro "mpr " pTq:term:max p:term:max : tactic => 
-  `(tactic| exact mpr $pTq $p)
+scoped macro "leftMp " pq:term:max p:term:max : tactic => 
+  `(tactic| exact leftMp $pq $p)
 
-scoped macro "mt " pTq:term:max np:term:max : tactic => 
-  `(tactic| exact mt $pTq $np)
+scoped macro "rightMp " pq:term:max p:term:max : tactic => 
+  `(tactic| exact rightMp $pq $p)
 
-scoped macro "mtl " pTq:term:max np:term:max : tactic => 
-  `(tactic| exact mtl $pTq $np)
+scoped macro "mt " pq:term:max np:term:max : tactic => 
+  `(tactic| exact mt $pq $np)
 
-scoped macro "mtr " pTq:term:max np:term:max : tactic => 
-  `(tactic| exact mtr $pTq $np)
+scoped macro "mtr " pq:term:max nq:term:max : tactic => 
+  `(tactic| exact mtr $pq $nq)
+
+scoped macro "leftMt " pq:term:max np:term:max : tactic => 
+  `(tactic| exact leftMt $pq $np)
+
+scoped macro "rightMt " pq:term:max nq:term:max : tactic => 
+  `(tactic| exact rightMt $pq $nq)
+
+scoped macro "mtp " pq:term:max np:term:max : tactic => 
+  `(tactic| exact mtp $pq $np)
+
+scoped macro "mtpr " pq:term:max nq:term:max : tactic => 
+  `(tactic| exact mtpr $pq $nq)
+
+scoped macro "leftMtp " pq:term:max np:term:max : tactic => 
+  `(tactic| exact leftMtrp $pq $np)
+
+scoped macro "rightMtp " pq:term:max nq:term:max : tactic => 
+  `(tactic| exact rightMtp $pq $nq)
 
 scoped macro "dblNegElim" : tactic => 
   `(tactic| apply dblNegElim (lnot := $(Lean.mkIdent `lnot)))

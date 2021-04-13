@@ -10,7 +10,7 @@ variable {P : Sort u}
 namespace Gaea.Logic
 
 instance iTautOfRefl {L : Logic P} {R} 
-  [K : Refl L R] : Tautology L R := {taut := fun p Lp => K.refl p}
+  [K : Refl L R] : Taut L R := {taut := fun p Lp => K.refl p}
 
 --------------------------------------------------------------------------------
 -- Implication
@@ -36,9 +36,9 @@ abbrev toRefl {L : Logic P} (K : MImp L)
   : Refl L K.imp := iImpReflByImp
 abbrev impRefl {L : Logic P} (K : MImp L) := K.toRefl.refl
 abbrev refl {L : Logic P} (K : MImp L) := K.impRefl
-abbrev toTautology {L : Logic P} (K : MImp L) 
-  : Tautology L K.imp := iTautOfRefl
-abbrev impTaut {L : Logic P} (K : MImp L) := K.toTautology.taut
+abbrev toTaut {L : Logic P} (K : MImp L) 
+  : Taut L K.imp := iTautOfRefl
+abbrev impTaut {L : Logic P} (K : MImp L) := K.toTaut.taut
 abbrev taut {L : Logic P} (K : MImp L) {p} := K.impTaut p
 end MImp
 

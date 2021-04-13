@@ -77,19 +77,19 @@ instance iHypoSylByUncurryImp {L : Logic P}
 def disjSylByUncurryMtp {L : Logic P} 
 {conj : Binar P} {disj : Binar P} {lnot : Unar P}
 (CjU : Uncurry L conj) 
-(DeL : LeftNeg L disj lnot)
+(Mtp : LeftMtp L disj lnot)
 : (p q : P) -> (L |- (p \/ q) /\ ~p) -> (L |- q)
 := by
   intro p q
   assume (LpDq, LNp)
-  exact leftNeg LpDq LNp
+  exact leftMtp LpDq LNp
 
 instance iDisjSylByUncurryMtp {L : Logic P} 
 {conj : Binar P} {disj : Binar P} {lnot : Unar P} 
 [CjU : Uncurry L conj]
-[DeL : LeftNeg L disj lnot]
+[Mtp : LeftMtp L disj lnot]
 : DisjSyl L conj disj lnot :=
-{disjSyl := disjSylByUncurryMtp CjU DeL}
+{disjSyl := disjSylByUncurryMtp CjU Mtp}
 
 --------------------------------------------------------------------------------
 -- Dilemmas

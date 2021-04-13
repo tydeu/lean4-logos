@@ -75,65 +75,128 @@ abbrev byEither {L : Logic P} {disj}
 
 -- p <-> q, p |- q
 
-class ModusPonens (L : Logic P) (iff : Binar P) := 
+class LeftMp (L : Logic P) (iff : Binar P) := 
   mp : (p q : P) -> (L |- p <-> q) -> (L |- p) -> (L |- q)
 
-abbrev mp {L : Logic P} {iff} 
-  [K : ModusPonens L iff] {p q} := K.mp p q
+abbrev leftMp {L : Logic P} {iff} 
+  [K : LeftMp L iff] {p q} := K.mp p q
 
-abbrev mpl {L : Logic P} {iff} 
-  [K : ModusPonens L iff] {p q} := K.mp p q
+abbrev ModusPonens (L : Logic P) (imp : Binar P) 
+  := LeftMp L imp
+
+abbrev mp {L : Logic P} {imp} 
+  [K : LeftMp L imp] {p q} := K.mp p q
 
 -- p <-> q, q |- p
 
-class ModusPonensRev (L : Logic P) (iff : Binar P) := 
+class RightMp (L : Logic P) (iff : Binar P) := 
   mp : (p q : P) -> (L |- p <-> q) -> (L |- q) -> (L |- p)
 
+abbrev rightMp {L : Logic P} {iff} 
+  [K : RightMp L iff] {p q} := K.mp p q
+
 abbrev mpr {L : Logic P} {iff} 
-  [K : ModusPonensRev L iff] {p q} := K.mp p q
+  [K : RightMp L iff] {p q} := K.mp p q
+
 
 --------------------------------------------------------------------------------
 -- Modus Tollens
 --------------------------------------------------------------------------------
 
--- p <-> q, ~q |- ~p 
-
-class ModusTollens (L : Logic P) (iff : Binar P) (lnot : Unar P) :=
-  mt : (p q : P) -> (L |- p <-> q) -> (L |- ~q) -> (L |- ~p)
-
-abbrev mt {L : Logic P} {iff lnot} 
-  [K : ModusTollens L iff lnot] {p q} := K.mt p q
-
-abbrev mtr {L : Logic P} {iff lnot} 
-  [K : ModusTollens L iff lnot] {p q} := K.mt p q
-
 -- p <-> q, ~p |- q 
 
-class ModusTollensRev (L : Logic P) (iff : Binar P) (lnot : Unar P) :=
+class LeftMt (L : Logic P) (iff : Binar P) (lnot : Unar P) :=
   mt : (p q : P) -> (L |- p <-> q) -> (L |- ~p) -> (L |- ~q) 
 
-abbrev mtl {L : Logic P} {iff lnot} 
-  [K : ModusTollensRev L iff lnot] {p q} := K.mt p q
+abbrev leftMt {L : Logic P} {iff lnot} 
+  [K : LeftMt L iff lnot] {p q} := K.mt p q
+
+abbrev mtr {L : Logic P} {iff lnot} 
+  [K : LeftMt L iff lnot] {p q} := K.mt p q
+
+-- p <-> q, ~q |- ~p 
+
+class RightMt (L : Logic P) (iff : Binar P) (lnot : Unar P) :=
+  mt : (p q : P) -> (L |- p <-> q) -> (L |- ~q) -> (L |- ~p)
+
+abbrev rightMt {L : Logic P} {iff lnot} 
+  [K : RightMt L iff lnot] {p q} := K.mt p q
+
+abbrev ModusTollens (L : Logic P) (imp : Binar P) (lnot : Unar P)
+  := RightMt L imp lnot
+
+abbrev mt {L : Logic P} {imp lnot} 
+  [K : RightMt L imp lnot] {p q} := K.mt p q
+
 
 --------------------------------------------------------------------------------
--- Modus Tollendo Ponens / Disjunctive Syllogism
+-- Modus Tollendo Ponens
 --------------------------------------------------------------------------------
 
 -- p \/ q, ~p |- q
 
-class LeftNeg (L : Logic P) (D : Binar P) (lnot : Unar P) := 
-  leftNeg : (p q : P) -> (L |- D p q) -> (L |- ~p) -> (L |- q)
+class LeftMtp (L : Logic P) (disj : Binar P) (lnot : Unar P) := 
+  mtp : (p q : P) -> (L |- p \/ q) -> (L |- ~p) -> (L |- q)
 
-abbrev leftNeg {L : Logic P} {D} {lnot : Unar P} 
-  [K : LeftNeg L D lnot] {p q} := K.leftNeg p q
+abbrev leftMtp {L : Logic P} {disj} {lnot : Unar P} 
+  [K : LeftMtp L disj lnot] {p q} := K.mtp p q
+
+abbrev ModusTollendoPonens (L : Logic P) (imp : Binar P) (lnot : Unar P)
+  := LeftMtp L imp lnot
+
+abbrev mtp {L : Logic P} {disj} {lnot : Unar P} 
+  [K : LeftMtp L disj lnot] {p q} := K.mtp p q
 
 -- p \/ q, ~q |- p
 
-class RightNeg (L : Logic P) (D : Binar P) (lnot : Unar P) := 
-  rightNeg : (p q : P) -> (L |- D p q) -> (L |- ~q) -> (L |- p)
+class RightMtp (L : Logic P) (disj : Binar P) (lnot : Unar P) := 
+  mtp : (p q : P) -> (L |- p \/ q) -> (L |- ~q) -> (L |- p)
 
-abbrev rightNeg {L : Logic P} {D} {lnot : Unar P} 
-  [K : RightNeg L D lnot] {p q} := K.rightNeg p q
+abbrev rightMtp {L : Logic P} {disj} {lnot : Unar P} 
+  [K : RightMtp L disj lnot] {p q} := K.mtp p q
+
+abbrev mtpr {L : Logic P} {disj} {lnot : Unar P} 
+  [K : RightMtp L disj lnot] {p q} := K.mtp p q
+
+--------------------------------------------------------------------------------
+-- Tautology
+--------------------------------------------------------------------------------
+
+-- p |- D p p
+
+class Taut (L : Logic P) (D : Binar P)  :=
+  taut : (p : P) -> (L |- p) -> (L |- D p p)
+
+abbrev taut {L : Logic P} {D} 
+  [K : Taut L D] {p} := K.taut p
+
+instance iTautOfConjunction {L : Logic P} {C}
+  [K : Conjunction L C] : Taut L C := 
+  {taut := fun p Lp => K.conjoin p p Lp Lp}
+
+-- p |- D p q
+
+class LeftTaut (L : Logic P) (D : Binar P)  := 
+  leftTaut : (p q : P) -> (L |- p) -> (L |- D p q) 
+
+abbrev leftTaut {L : Logic P} {D} 
+  [K : LeftTaut L D] {p q} := K.leftTaut p q
+
+instance iTautOfLeft {L : Logic P} {D}
+  [K : LeftTaut L D] : Taut L D := 
+  {taut := fun p Lp => K.leftTaut p p Lp}
+
+-- q |- D p q
+
+class RightTaut (L : Logic P) (D : Binar P)  := 
+  rightTaut : (p q : P) -> (L |- q) -> (L |- D p q) 
+
+abbrev rightTaut {L : Logic P} {D} 
+  [K : RightTaut L D] {p q} := K.rightTaut p q
+
+instance iTautOfRight {L : Logic P} {D}
+  [K : RightTaut L D] : Taut L D := 
+  {taut := fun p Lp => K.rightTaut p p Lp}
 
 --------------------------------------------------------------------------------
 -- Simplification
@@ -141,14 +204,14 @@ abbrev rightNeg {L : Logic P} {D} {lnot : Unar P}
 
 -- C p p |- p
 
-class Simplification (L : Logic P) (C : Binar P)  :=
+class Simp (L : Logic P) (C : Binar P)  :=
   simp : (p : P) -> (L |- C p p) -> (L |- p)
 
 abbrev simp {L : Logic P} {C} 
-  [K : Simplification L C] {p} := K.simp p
+  [K : Simp L C] {p} := K.simp p
 
 instance iSimpOfByEither {L : Logic P} {D}
-  [K : ByEither L D] : Simplification L D := 
+  [K : ByEither L D] : Simp L D := 
   {simp := fun p LpDp => K.byEither _ p p LpDp id id}
 
 -- C p q |- p
@@ -160,7 +223,7 @@ abbrev leftSimp {L : Logic P} {conj}
   [K : LeftSimp L conj] {p q} := K.leftSimp p q
 
 instance iSimpOfLeft {L : Logic P} {conj}
-  [K : LeftSimp L conj] : Simplification L conj := 
+  [K : LeftSimp L conj] : Simp L conj := 
   {simp := fun p LpCq => K.leftSimp p p LpCq}
 
 -- C p q |- q
@@ -172,7 +235,7 @@ abbrev rightSimp {L : Logic P} {conj}
   [K : RightSimp L conj] {p q} := K.rightSimp p q
 
 instance iSimpOfRight {L : Logic P} {conj}
-  [K : RightSimp L conj] : Simplification L conj := 
+  [K : RightSimp L conj] : Simp L conj := 
   {simp := fun p LpCq => K.rightSimp p p LpCq}
 
 --------------------------------------------------------------------------------
@@ -216,46 +279,6 @@ instance iLeftSimpOfUncurry {L : Logic P} {conj}
 instance iRightSimpOfUncurry {L : Logic P} {conj}
   [K : Uncurry L conj] : RightSimp L conj := 
   {rightSimp := fun p q => K.uncurry _ p q (fun Lp Lq => Lq)}
-
---------------------------------------------------------------------------------
--- Tautology
---------------------------------------------------------------------------------
-
--- p |- D p p
-
-class Tautology (L : Logic P) (D : Binar P)  :=
-  taut : (p : P) -> (L |- p) -> (L |- D p p)
-
-abbrev taut {L : Logic P} {D} 
-  [K : Tautology L D] {p} := K.taut p
-
-instance iTautOfConjunction {L : Logic P} {C}
-  [K : Conjunction L C] : Tautology L C := 
-  {taut := fun p Lp => K.conjoin p p Lp Lp}
-
--- p |- D p q
-
-class LeftTaut (L : Logic P) (D : Binar P)  := 
-  leftTaut : (p q : P) -> (L |- p) -> (L |- D p q) 
-
-abbrev leftTaut {L : Logic P} {D} 
-  [K : LeftTaut L D] {p q} := K.leftTaut p q
-
-instance iTautOfLeft {L : Logic P} {D}
-  [K : LeftTaut L D] : Tautology L D := 
-  {taut := fun p Lp => K.leftTaut p p Lp}
-
--- q |- D p q
-
-class RightTaut (L : Logic P) (D : Binar P)  := 
-  rightTaut : (p q : P) -> (L |- q) -> (L |- D p q) 
-
-abbrev rightTaut {L : Logic P} {D} 
-  [K : RightTaut L D] {p q} := K.rightTaut p q
-
-instance iTautOfRight {L : Logic P} {D}
-  [K : RightTaut L D] : Tautology L D := 
-  {taut := fun p Lp => K.rightTaut p p Lp}
 
 --------------------------------------------------------------------------------
 -- Contradiction

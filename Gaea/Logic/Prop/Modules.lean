@@ -49,38 +49,46 @@ end MImp
 
 class MIff (L : Logic P) extends LIff P :=
   toIffBicondition : Bicondition L toLIff.iff
-  toIffModusPonens : ModusPonens L toLIff.iff
-  toIffModusPonensRev : ModusPonensRev L toLIff.iff
+  toIffLeftMp : LeftMp L toLIff.iff
+  toIffRightMp : RightMp L toLIff.iff
 
 instance iMIff {L : Logic P} 
 [Iff : LIff P] [B : Bicondition L Iff.iff] 
-[Mp : ModusPonens L Iff.iff] [Mpr : ModusPonensRev L Iff.iff] 
+[Mpl : LeftMp L Iff.iff] [Mpr : RightMp L Iff.iff] 
 : MIff L := 
 {toLIff := Iff, 
-  toIffBicondition := B,  toIffModusPonens := Mp, toIffModusPonensRev := Mpr}
+  toIffBicondition := B,  toIffLeftMp := Mpl, toIffRightMp := Mpr}
 
 instance iBiconditionOfMIff {L : Logic P} [K : MIff L] :
   Bicondition L K.iff := K.toIffBicondition
 
-instance iIffForwOfMIff {L : Logic P} [K : MIff L] :
-  ModusPonens L K.iff := K.toIffModusPonens
+instance iLeftMpOfMIff {L : Logic P} [K : MIff L] :
+  LeftMp L K.iff := K.toIffLeftMp
 
-instance iIffBackOfMIff {L : Logic P} [K : MIff L] :
-  ModusPonensRev L K.iff := K.toIffModusPonensRev
+instance iRightMpOfMIff {L : Logic P} [K : MIff L] :
+  RightMp L K.iff := K.toIffRightMp
 
 namespace MIff
 abbrev iffBicondition {L : Logic P} (K : MIff L) 
   := K.toIffBicondition.bicondition
 abbrev intro {L : Logic P} (K : MIff L) 
   {p q} := K.iffBicondition p q
-abbrev iffMp {L : Logic P} (K : MIff L) 
-  := K.toIffModusPonens.mp
+abbrev toLeftMp {L : Logic P} (K : MIff L) 
+  := K.toIffLeftMp
+abbrev iffLeftMp {L : Logic P} (K : MIff L) 
+  := K.toIffLeftMp.mp
+abbrev leftMp {L : Logic P} (K : MIff L) 
+  {p q} := K.iffLeftMp p q
 abbrev mp {L : Logic P} (K : MIff L) 
-  {p q} := K.iffMp p q
-abbrev iffMpr {L : Logic P} (K : MIff L) 
-  := K.toIffModusPonensRev.mp
+  {p q} := K.iffLeftMp p q
+abbrev toRightMp {L : Logic P} (K : MIff L) 
+  := K.toIffRightMp
+abbrev iffRightMp {L : Logic P} (K : MIff L) 
+  := K.toIffLeftMp.mp
+abbrev rightMp {L : Logic P} (K : MIff L) 
+  {p q} := K.iffRightMp p q
 abbrev mpr {L : Logic P} (K : MIff L) 
-  {p q} := K.iffMpr p q
+  {p q} := K.iffRightMp p q
 end MIff
 
 --------------------------------------------------------------------------------
@@ -133,16 +141,16 @@ abbrev right {L : Logic P} (K : MConj L)
   {p q} := K.disjRightSimp p q
 
 -- Derived
-abbrev toTautology {L : Logic P} (K : MConj L)
-  : Tautology L K.conj := iTautOfConjunction
+abbrev toTaut {L : Logic P} (K : MConj L)
+  : Taut L K.conj := iTautOfConjunction
 abbrev conjTaut {L : Logic P} (K : MConj L)
-  := K.toTautology.taut
+  := K.toTaut.taut
 abbrev taut {L : Logic P} (K : MConj L)
   {p} := K.conjTaut p
-abbrev toSimplification {L : Logic P} (K : MConj L)
-  : Simplification L K.conj := iSimpOfLeft
+abbrev toSimp {L : Logic P} (K : MConj L)
+  : Simp L K.conj := iSimpOfLeft
 abbrev conjSimp {L : Logic P} (K : MConj L) 
-  := K.toSimplification.simp
+  := K.toSimp.simp
 abbrev simp {L : Logic P} (K : MConj L) 
   {p} := K.conjSimp p
 abbrev toCurry {L : Logic P} (K : MConj L)
@@ -212,18 +220,18 @@ abbrev elim {L : Logic P} (K : MDisj L)
   {a p q} := K.disjByEither a p q
 
 -- Derived
-abbrev toTautology {L : Logic P} (K : MDisj L)
-  : Tautology L K.disj := iTautOfLeft
+abbrev toTaut {L : Logic P} (K : MDisj L)
+  : Taut L K.disj := iTautOfLeft
 abbrev disjTaut {L : Logic P} (K : MDisj L)
-  := K.toTautology.taut
+  := K.toTaut.taut
 abbrev taut {L : Logic P} (K : MDisj L)
   {p} := K.disjTaut p
 abbrev intro {L : Logic P} (K : MDisj L)
   {p q} := K.disjTaut p q
-abbrev toSimplification {L : Logic P} (K : MDisj L)
-  : Simplification L K.disj := iSimpOfByEither
+abbrev toSimp {L : Logic P} (K : MDisj L)
+  : Simp L K.disj := iSimpOfByEither
 abbrev disjSimp {L : Logic P} (K : MDisj L) 
-  := K.toSimplification.simp
+  := K.toSimp.simp
 abbrev simp {L : Logic P} (K : MDisj L) 
   {p} := K.disjSimp p
 
