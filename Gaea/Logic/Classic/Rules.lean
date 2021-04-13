@@ -1,5 +1,6 @@
 import Gaea.Logic.Judgment
 import Gaea.Logic.Prop.Rules
+import Gaea.Logic.Rel.Rules
 
 namespace Gaea.Logic
 
@@ -15,6 +16,11 @@ class ConjMp (L : Logic P) (imp : Binar P) (conj : Binar P) :=
 def conjMp {L : Logic p} {imp conj}
   [K : ConjMp L imp conj] {p q} := K.conjMp p q
 
+instance iConjMpByUncurryMp
+  {L : Logic P} {imp : Binar P} {conj : Binar P} 
+  [CjU : Uncurry L conj] [Mp : ModusPonens L imp] 
+  : ConjMp L imp conj := {conjMp := fun p q => uncurry mp}
+
 -- Modus Tollens
 -- (p -> q) /\ ~q |- ~p 
 
@@ -23,6 +29,11 @@ class ConjMt (L : Logic P) (imp : Binar P) (conj : Binar P) (lnot : Unar P) :=
 
 def conjMt {L : Logic P} {imp conj lnot}
   [K : ConjMt L imp conj lnot] {p q} := K.conjMt p q
+
+instance iConjMtByUncurryMt {L : Logic P} 
+  {imp : Binar P} {conj : Binar P} {lnot : Unar P}
+  [CjU : Uncurry L conj] [Mt : ModusTollens L imp lnot] 
+  : ConjMt L imp conj lnot := {conjMt := fun p q => uncurry mt}
 
 -- Hypothetical Syllogism
 -- (p -> q) /\ (q -> r) |- (p -> r) 
@@ -33,6 +44,11 @@ class HypoSyl (L : Logic P) (imp : Binar P) (conj : Binar P) :=
 def hypoSyl {L : Logic P} {imp conj}
   [K : HypoSyl L imp conj] {p q r} := K.hypoSyl p q r
 
+instance iHypoSylByUncurryTrans {L : Logic P} 
+  {imp : Binar P} {conj : Binar P}
+  [CjU : Uncurry L conj] [Itr : Trans L imp]
+  : HypoSyl L imp conj := {hypoSyl := fun p q r => uncurry trans}
+
 -- Disjunctive Syllogism
 -- (p \/ q) /\ ~p |- q 
 
@@ -41,6 +57,11 @@ class DisjSyl (L : Logic P) (conj : Binar P) (disj : Binar P) (lnot : Unar P) :=
 
 def disjSyl {L : Logic P} {conj disj lnot}
   [K : DisjSyl L conj disj lnot] {p q} := K.disjSyl p q
+
+instance iDisjSylByUncurryMtp {L : Logic P} 
+  {conj : Binar P} {disj : Binar P} {lnot : Unar P} 
+  [CjU : Uncurry L conj] [Mtp : ModusTollendoPonens L disj lnot]
+  : DisjSyl L conj disj lnot :=  {disjSyl := fun p q => uncurry mtp}
 
 -- Constructive Dilemma
 -- (p -> q) /\ (r -> s) /\ (p \/ r) |- q \/ s 
