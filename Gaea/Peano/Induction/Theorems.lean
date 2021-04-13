@@ -1,8 +1,6 @@
 import Gaea.Peano.Nat
-import Gaea.Math.Notation
-import Gaea.Logic.Notation
-import Gaea.Peano.Induction.Rules
 import Gaea.Peano.Forall
+import Gaea.Peano.Induction.Rules
 
 universes u v
 
@@ -18,7 +16,7 @@ namespace Gaea.Peano
 -- By Schema
 
 def natInductionBySchema {P : Sort u} {T : Type v} 
-{L : Logic P} {N : PNat P T} (I : NatInduction' L N)
+{L : Gaea.Logic P} {N : PNat P T} (I : NatInduction' L N)
 : (f : T -> P) -> (L |- f 0) -> 
   ((a : T) -> (L |- nat a) -> (L |- f a) -> (L |- f (S a))) ->
   ((a : T) -> (L |- nat a) -> (L |- f a))

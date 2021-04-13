@@ -1,9 +1,28 @@
 import Gaea.Peano.Eq.Rules
-import Gaea.Logic.Eq.Theorems
+import Gaea.Logic.Rel.Theorems
 
 open Gaea.Logic
 
 namespace Gaea.Peano 
+
+--------------------------------------------------------------------------------
+-- Derivative Instances
+--------------------------------------------------------------------------------
+
+instance iEqNatLeftEucBySymmTransT
+{P : Sort u} {T : Type v} {L : Logic P} [N : IsNat P T]
+[Q : LEq P T] [QSm : EqNatSymm L N Q] [QTr : EqNatTrans L N Q]
+: EqNatLeftEuc L N Q := iEqNatLeftEucOfLeftEucT (K := iLeftEucBySymmTransT)
+
+instance iEqNatJoinBySymmTransT
+{P : Sort u} {T : Type v} {L : Logic P} [N : IsNat P T]
+[Q : LEq P T] [QSm : EqNatSymm L N Q] [QTr : EqNatTrans L N Q]
+: EqNatJoin L N Q := iEqNatJoinOfEqJoinT 
+  (K := iEqJoinTOfRelJoinT (K := iRelJoinBySymmTransT))
+
+--------------------------------------------------------------------------------
+-- NatEqNat Variations
+--------------------------------------------------------------------------------
 
 -- (a = b) /\ (b = c) -> (a = c)
 

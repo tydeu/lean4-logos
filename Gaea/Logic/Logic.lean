@@ -1,27 +1,16 @@
 namespace Gaea
 
-namespace Logic
-
-def Logic.{u,v} (prop : Sort u) 
-  := prop -> Sort v
+class Logic.{u,v} (P : Sort u) :=
+  judgment : P -> Sort v
 
 namespace Logic
 
 def prop.{u,v} {P : Sort u} (L : Logic.{u,v} P) : Sort u 
   := P
 
-def Proof.{u,v} {P : Sort u} (L : Logic.{u,v} P) : Type v 
+def proof.{u,v} {P : Sort u} (L : Logic.{u,v} P) : Type v 
   := Sort v
 
-def Judgment.{u,v} {P : Sort u} (L : Logic.{u,v} P) (prop : P) : Sort v 
-  := L prop
-
 end Logic
-
-export Logic (Proof Judgment)
-
-end Logic
-
-export Logic (Logic)
 
 end Gaea

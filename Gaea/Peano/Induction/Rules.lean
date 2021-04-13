@@ -1,5 +1,5 @@
 import Gaea.Math.Notation
-import Gaea.Logic.Notation
+import Gaea.Logic.Judgment
 import Gaea.Peano.Nat
 
 universes u v w

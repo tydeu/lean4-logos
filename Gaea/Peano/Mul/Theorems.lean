@@ -486,7 +486,7 @@ instance iMulSuccNatEqAddMulByPeano
   mulSuccNatEqAddMulProof 
     iNatInductionRightByForallNat 
     N0 NS iNatAddNatByPeano iNatMulNatByPeano 
-    QTr iEqNatLeftEucOfLeftEucT QtS 
+    QTr iEqNatLeftEucBySymmTransT QtS 
     iEqNatAddNatLeftByPeano iEqNatAddNatRightByPeano 
     iAddNatCommByPeano iAddNatAssocByPeano iAddNatAssocRevByPeano 
     iAddZeroNatEqNatByPeano iAddSuccNatEqSuccByPeano Mn0 MnS}
@@ -601,7 +601,7 @@ instance iMulNatCommByPeano
 {mulNatComm := 
   mulNatCommProof iNatInductionRightByForallNat 
     iNatAddNatByPeano iNatMulNatByPeano NS 
-    QTr iEqNatLeftEucOfLeftEucT iEqNatAddNatLeftByPeano 
+    QTr iEqNatLeftEucBySymmTransT iEqNatAddNatLeftByPeano 
     iMulNatZeroCommByNatMulZero iMulSuccNatEqAddMulByPeano MnS}
 
 --------------------------------------------------------------------------------
@@ -694,7 +694,7 @@ instance iEqNatMulNatLeftByPeano
 {eqNatMulNatLeft := 
   eqNatMulNatLeftProof iNatInductionRight3IfByForallNatIf 
     N0 NS iNatAddNatByPeano iNatMulNatByPeano 
-    QTr iEqNatLeftEucOfLeftEucT 
+    QTr iEqNatLeftEucBySymmTransT 
     iEqNatAddNatLeftByPeano iEqNatAddNatRightByPeano 
     iMulZeroNatEqZeroByPeano iMulSuccNatEqAddMulByPeano}
 
@@ -783,7 +783,7 @@ instance iEqNatMulNatRightByPeano
 : EqNatMulNatRight L N.toIsNat Q M := 
 {eqNatMulNatRight := 
   eqNatMulNatRightProof iNatInductionRight3IfByForallNatIf 
-    N0 NS iNatAddNatByPeano iNatMulNatByPeano QTr iEqNatLeftEucOfLeftEucT 
+    N0 NS iNatAddNatByPeano iNatMulNatByPeano QTr iEqNatLeftEucBySymmTransT 
     iEqNatAddNatLeftByPeano iEqNatAddNatRightByPeano Mn0 MnS}
 
 --------------------------------------------------------------------------------
@@ -913,7 +913,7 @@ instance iMulNatAddEqAddMulByPeano
 : MulNatAddEqAddMul L N.toIsNat Q M A := 
 {mulNatAddEqAddMul := 
   mulNatAddEqAddMulProof iNatInductionRight3ByForallNat 
-    N0 NS iNatAddNatByPeano iNatMulNatByPeano QTr iEqNatLeftEucOfLeftEucT 
+    N0 NS iNatAddNatByPeano iNatMulNatByPeano QTr iEqNatLeftEucBySymmTransT 
     iEqNatAddNatLeftByPeano iEqNatMulNatLeftByPeano 
     iAddNatCommByPeano iAddNatAssocByPeano An0 AnS Mn0 MnS}
 
@@ -1041,7 +1041,7 @@ instance iMulAddNatEqAddMulByPeano
 {mulAddNatEqAddMul := 
   mulAddNatEqAddMulProof iNatInductionRight3ByForallNat 
     N0 NS iNatAddNatByPeano iNatMulNatByPeano 
-    QTr iEqNatLeftEucOfLeftEucT 
+    QTr iEqNatLeftEucBySymmTransT 
     iEqNatAddNatLeftByPeano iEqNatMulNatRightByPeano 
     iAddNatCommByPeano iAddNatAssocByPeano An0 AnS 
     iMulZeroNatEqZeroByPeano iMulSuccNatEqAddMulByPeano}
@@ -1149,7 +1149,7 @@ instance iMulNatAssocByPeano
 : MulNatAssoc L N.toIsNat Q M := 
 {mulNatAssoc := 
   mulNatAssocProof iNatInductionRight3ByForallNat 
-    N0 NS iNatAddNatByPeano iNatMulNatByPeano QTr iEqNatLeftEucOfLeftEucT 
+    N0 NS iNatAddNatByPeano iNatMulNatByPeano QTr iEqNatLeftEucBySymmTransT 
     iEqNatAddNatLeftByPeano iEqNatMulNatLeftByPeano Mn0 MnS 
     iMulNatAddEqAddMulByPeano}
 
