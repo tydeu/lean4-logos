@@ -74,22 +74,22 @@ instance iImportProdOfConjunction {L : Logic P} {conj}
 
 -- PProd p q -> p /\ q 
 
-class ConjOfPProd (L : Logic P) (conj : Binar P) := 
+class ImportPProd (L : Logic P) (conj : Binar P) := 
   importPProd : (p q : P) -> PProd (L |- p) (L |- q) -> (L |- p /\ q)
 
 abbrev importPProd {L : Logic P} {conj} 
-  [K : ConjOfPProd L conj] {p q} := K.importPProd p q
+  [K : ImportPProd L conj] {p q} := K.importPProd p q
 
 instance iConjunctionOfImportPProd {L : Logic P} {conj} 
-  [K : ConjOfPProd L conj] : Conjunction L conj := 
+  [K : ImportPProd L conj] : Conjunction L conj := 
   {conjoin := fun p q Lp Lq => K.importPProd p q (PProd.mk Lp Lq)}
 
 instance iImportPProdOfConjunction {L : Logic P} {conj} 
-  [K : Conjunction L conj] : ConjOfPProd L conj := 
+  [K : Conjunction L conj] : ImportPProd L conj := 
   {importPProd := fun p q Ppq => K.conjoin p q Ppq.fst Ppq.snd}
 
 instance iImportProdOfImportPProd {L : Logic P} {conj} 
-  [K : ConjOfPProd L conj] : ImportProd L conj := 
+  [K : ImportPProd L conj] : ImportProd L conj := 
   {importProd := fun p q Ppq => K.importPProd p q (PProd.mk (Ppq.fst) (Ppq.snd))}
 
 -- And p q -> p /\ q 
@@ -173,7 +173,7 @@ instance iRightSimpOfExportAnd {L : Logic P} {conj}
   {rightSimp := fun p q LpCq => And.right (K.exportAnd p q LpCq)}
 
 --------------------------------------------------------------------------------
--- Sum/PSum/Or Import/Export
+-- Sum/PSum/Or
 --------------------------------------------------------------------------------
 
 -- Sum p q -> p \/ q 
