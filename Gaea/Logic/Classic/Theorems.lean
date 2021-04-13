@@ -11,48 +11,52 @@ variable {P : Sort u}
 -- Modus Ponens
 --------------------------------------------------------------------------------
 
-def conjMpByIfConj {L : Logic P} {Im : Imp P} {Cj : Conj P} 
-(Mp : ModusPonens L Im.imp) (CjU : Uncurry L Cj.conj)
+def conjMpByUncurryMp
+{L : Logic P} {imp : Binar P} {conj : Binar P} 
+(CjU : Uncurry L conj) 
+(Mp  : ModusPonens L imp) 
 : (p q : P) -> (L |- (p -> q) /\ p) -> (L |- q)
 := by
   intro p q
   assume (LpTq, Lp)
   mp LpTq Lp
 
-instance iConjMpByIfConj {L : Logic P} [Im : Imp P] [Cj : Conj P] 
-[Mp : ModusPonens L Im.imp] [CjU : Uncurry L Cj.conj]
-: ConjMp L Im Cj := {conjMp := conjMpByIfConj Mp CjU}
+instance iConjMpByUncurryMp
+{L : Logic P} {imp : Binar P} {conj : Binar P} 
+[CjU : Uncurry L conj] 
+[Mp  : ModusPonens L imp] 
+: ConjMp L imp conj := {conjMp := conjMpByUncurryMp CjU Mp}
 
 --------------------------------------------------------------------------------
 -- Modus Tollens
 --------------------------------------------------------------------------------
 
-def conjMtByContraIfConj {L : Logic P} 
-{Im : Imp P} {Cj : Conj P} {Nt : LNot P}
-(CjU : Uncurry L Cj.conj)
-(Mt  : ModusTollens L Im.imp Nt.not)
+def conjMtByUncurryMp {L : Logic P} 
+{imp : Binar P} {conj : Binar P} {lnot : Unar P}
+(CjU : Uncurry L conj) 
+(Mt  : ModusTollens L imp lnot) 
 : (p q : P) -> (L |- (p -> q) /\ ~q) -> (L |- ~p)
 := by
   intro p q
   assume (LpTq, LNq)
   mt LpTq LNq
 
-instance iConjMtByContraIfConj {L : Logic P} 
-[Im : Imp P] [Cj : Conj P] [Nt : LNot P]
-[CjU : Uncurry L Cj.conj]
-[Mt  : ModusTollens L Im.imp Nt.not]
-: ConjMt L Im Cj Nt :=
-{conjMt := conjMtByContraIfConj CjU Mt}
+instance iConjMtByUncurryMp {L : Logic P} 
+{imp : Binar P} {conj : Binar P} {lnot : Unar P}
+[CjU : Uncurry L conj]  
+[Mt  : ModusTollens L imp lnot] 
+: ConjMt L imp conj lnot :=
+{conjMt := conjMtByUncurryMp CjU Mt}
 
 --------------------------------------------------------------------------------
 -- Syllogisms
 --------------------------------------------------------------------------------
 
-def hypoSylByIfConj {L : Logic P}
-{Im : Imp P} {Cj : Conj P}
-(Mp  : ModusPonens L Im.imp) 
-(ByI : ByImplication L Im.imp) 
-(CjU : Uncurry L Cj.conj) 
+def hypoSylByUncurryImp {L : Logic P} 
+{imp : Binar P} {conj : Binar P}
+(CjU : Uncurry L conj) 
+(Mp  : ModusPonens L imp) 
+(ByI : ByImplication L imp) 
 : (p q r : P) -> (L |- (p -> q) /\ (q -> r)) -> (L |- p -> r)
 := by
   intro p q r 
@@ -62,30 +66,30 @@ def hypoSylByIfConj {L : Logic P}
   have Lr := mp LqTr Lq 
   exact Lr
 
-instance iHypoSylByIfConj {L : Logic P} 
-[Im : Imp P] [Cj : Conj P]
-[Mp  : ModusPonens L Im.imp]
-[ByI : ByImplication L Im.imp] 
-[CjU : Uncurry L Cj.conj]
-: HypoSyl L Im Cj :=
-{hypoSyl := hypoSylByIfConj Mp ByI CjU}
+instance iHypoSylByUncurryImp {L : Logic P} 
+{imp : Binar P} {conj : Binar P}
+[CjU : Uncurry L conj]
+[Mp  : ModusPonens L imp]
+[ByI : ByImplication L imp] 
+: HypoSyl L imp conj :=
+{hypoSyl := hypoSylByUncurryImp CjU Mp ByI}
 
-def disjSylByConjDisjNot {L : Logic P} 
-{Cj : Conj P} {Dj : Disj P} {Nt : LNot P}
-(CjU : Uncurry L Cj.conj) 
-(DeL : LeftNeg L Dj.disj Nt.not)
+def disjSylByUncurryMtp {L : Logic P} 
+{conj : Binar P} {disj : Binar P} {lnot : Unar P}
+(CjU : Uncurry L conj) 
+(DeL : LeftNeg L disj lnot)
 : (p q : P) -> (L |- (p \/ q) /\ ~p) -> (L |- q)
 := by
   intro p q
   assume (LpDq, LNp)
   exact leftNeg LpDq LNp
 
-instance iDisjSylByConjDisjNot {L : Logic P} 
-[Cj : Conj P] [Dj : Disj P] [Nt : LNot P] 
-[CjU : Uncurry L Cj.conj]
-[DeL : LeftNeg L Dj.disj Nt.not]
-: DisjSyl L Cj Dj Nt :=
-{disjSyl := disjSylByConjDisjNot CjU DeL}
+instance iDisjSylByUncurryMtp {L : Logic P} 
+{conj : Binar P} {disj : Binar P} {lnot : Unar P} 
+[CjU : Uncurry L conj]
+[DeL : LeftNeg L disj lnot]
+: DisjSyl L conj disj lnot :=
+{disjSyl := disjSylByUncurryMtp CjU DeL}
 
 --------------------------------------------------------------------------------
 -- Dilemmas
@@ -94,13 +98,13 @@ instance iDisjSylByConjDisjNot {L : Logic P}
 -- Constructive Dilemma
 -- (p -> q) /\ (r -> s) /\ (p \/ r) |- q \/ s 
 
-def cnstrDilByIfConjDisj {L : Logic P} 
-{Im : Imp P} {Cj : Conj P} {Dj : Disj P}
-(Mp  : ModusPonens L Im.imp) 
-(CjU : Uncurry L Cj.conj) 
-(DiL : LeftTaut L Dj.disj)
-(DiR : RightTaut L Dj.disj) 
-(DjE : ByEither L Dj.disj)
+def cnstrDilByUncurryMpDisj {L : Logic P} 
+{imp : Binar P} {conj : Binar P} {disj : Binar P}
+(CjU : Uncurry L conj) 
+(Mp  : ModusPonens L imp) 
+(DiL : LeftTaut L disj)
+(DiR : RightTaut L disj) 
+(DjE : ByEither L disj)
 : (p q r s : P) -> 
     (L |- (p -> q) /\ (r -> s) /\ (p \/ r)) -> (L |- q \/ s) 
 := by
@@ -116,26 +120,26 @@ def cnstrDilByIfConjDisj {L : Logic P}
     apply rightTaut
     mp LrTs Lr
 
-instance iCnstrDilByIfConjDisj {L : Logic P} 
-[Im : Imp P] [Cj : Conj P] [Dj : Disj P]
-[Mp  : ModusPonens L Im.imp]
-[CjU : Uncurry L Cj.conj]
-[DiL : LeftTaut L Dj.disj]
-[DiR : RightTaut L Dj.disj] 
-[DjE : ByEither L Dj.disj]
-: CnstrDil L Im Cj Dj :=
-{cnstrDil := cnstrDilByIfConjDisj Mp CjU DiL DiR DjE} 
+instance iCnstrDilByUncurryMpDisj {L : Logic P} 
+{imp : Binar P} {conj : Binar P} {disj : Binar P}
+[Mp  : ModusPonens L imp]
+[CjU : Uncurry L conj]
+[DiL : LeftTaut L disj]
+[DiR : RightTaut L disj] 
+[DjE : ByEither L disj]
+: CnstrDil L imp conj disj :=
+{cnstrDil := cnstrDilByUncurryMpDisj CjU Mp DiL DiR DjE} 
 
 -- Destructive Dilemma
 -- (p -> q) /\ (r -> s) /\ (~q \/ ~s) |- ~p \/ ~r 
 
-def destrDilByIfConjDisj {L : Logic P} 
-{Im : Imp P} {Cj : Conj P} {Dj : Disj P} {Nt : LNot P}
-(Mt : ModusTollens L Im.imp Nt.not)
-(CjU : Uncurry L Cj.conj) 
-(DiL : LeftTaut L Dj.disj)
-(DiR : RightTaut L Dj.disj) 
-(DjE : ByEither L Dj.disj)
+def destrDilByUncurryMtDisj {L : Logic P} 
+{imp : Binar P} {conj : Binar P} {disj : Binar P} {lnot : Unar P}
+(CjU : Uncurry L conj) 
+(Mt : ModusTollens L imp lnot)
+(DiL : LeftTaut L disj)
+(DiR : RightTaut L disj) 
+(DjE : ByEither L disj)
 : (p q r s : P) -> 
     (L |- (p -> q) /\ (r -> s) /\ (~q \/ ~s)) -> (L |- ~p \/ ~r) 
 := by
@@ -151,27 +155,27 @@ def destrDilByIfConjDisj {L : Logic P}
     apply rightTaut
     mt LrTs LNs
 
-instance iDestrDilByIfConjDisj {L : Logic P} 
-[Im : Imp P] [Cj : Conj P] [Dj : Disj P] [Nt : LNot P]
-[Mt : ModusTollens L Im.imp Nt.not]
-[CjU : Uncurry L Cj.conj]
-[DiL : LeftTaut L Dj.disj]
-[DiR : RightTaut L Dj.disj] 
-[DjE : ByEither L Dj.disj]
-: DestrDil L Im Cj Dj Nt :=
-{destrDil := destrDilByIfConjDisj Mt CjU DiL DiR DjE } 
+instance iDestrDilByUncurryMtDisj {L : Logic P} 
+{imp : Binar P} {conj : Binar P} {disj : Binar P} {lnot : Unar P}
+[CjU : Uncurry L conj]
+[Mt : ModusTollens L imp lnot]
+[DiL : LeftTaut L disj]
+[DiR : RightTaut L disj] 
+[DjE : ByEither L disj]
+: DestrDil L imp conj disj lnot :=
+{destrDil := destrDilByUncurryMtDisj CjU Mt DiL DiR DjE } 
 
 -- Bidirectional Dilemma
 -- (p -> q) /\ (r -> s) /\ (p \/ ~s) |- q \/ ~r 
 
-def bidirDilByIfConjDisj {L : Logic P} 
-{Im : Imp P} {Cj : Conj P} {Dj : Disj P} {Nt : LNot P}
-(Mp  : ModusPonens L Im.imp) 
-(Mt  : ModusTollens L Im.imp Nt.not)
-(CjU : Uncurry L Cj.conj)
-(DiL : LeftTaut L Dj.disj)
-(DiR : RightTaut L Dj.disj) 
-(DjE : ByEither L Dj.disj)
+def bidirDilByUncurryMpMtDisj {L : Logic P} 
+{imp : Binar P} {conj : Binar P} {disj : Binar P} {lnot : Unar P}
+(CjU : Uncurry L conj)
+(Mp  : ModusPonens L imp) 
+(Mt  : ModusTollens L imp lnot)
+(DiL : LeftTaut L disj)
+(DiR : RightTaut L disj) 
+(DjE : ByEither L disj)
 : (p q r s : P) -> 
     (L |- (p -> q) /\ (r -> s) /\ (p \/ ~s)) -> (L |- q \/ ~r) 
 := by
@@ -187,15 +191,15 @@ def bidirDilByIfConjDisj {L : Logic P}
     apply rightTaut
     mt LrTs LNs
 
-instance iBidirDilByIfConjDisj {L : Logic P} 
-[Im : Imp P] [Cj : Conj P] [Dj : Disj P] [Nt : LNot P]
-[Mp  : ModusPonens L Im.imp]
-[Mt  : ModusTollens L Im.imp Nt.not]
-[CjU : Uncurry L Cj.conj]
-[DiL : LeftTaut L Dj.disj]
-[DiR : RightTaut L Dj.disj] 
-[DjE : ByEither L Dj.disj]
-: BidirDil L Im Cj Dj Nt :=
-{bidirDil := bidirDilByIfConjDisj Mp Mt CjU DiL DiR DjE} 
+instance iBidirDilByUncurryMpMtDisj {L : Logic P} 
+{imp : Binar P} {conj : Binar P} {disj : Binar P} {lnot : Unar P}
+[Mp  : ModusPonens L imp]
+[Mt  : ModusTollens L imp lnot]
+[CjU : Uncurry L conj]
+[DiL : LeftTaut L disj]
+[DiR : RightTaut L disj] 
+[DjE : ByEither L disj]
+: BidirDil L imp conj disj lnot :=
+{bidirDil := bidirDilByUncurryMpMtDisj CjU Mp Mt DiL DiR DjE} 
 
 end Gaea.Logic

@@ -260,7 +260,7 @@ abbrev toNoncontradiction {L : Logic P} (K : MNot L)
   := K.toNotNoncontradiction
 abbrev notNoncontradiction {L : Logic P} (K : MNot L) 
   := K.toNotNoncontradiction.noncontradiction
-abbrev nc {L : Logic P} (K : MNot L) 
+abbrev noncontradiction {L : Logic P} (K : MNot L) 
   {p} := K.notNoncontradiction p
 abbrev elim {L : Logic P} (K : MNot L) 
   {p} := K.notNoncontradiction p

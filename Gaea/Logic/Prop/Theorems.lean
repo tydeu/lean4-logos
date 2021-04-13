@@ -50,7 +50,7 @@ def impTransByImpMp {L : Logic P}
 : (p q r : P) -> (L |- p -> q) -> (L |- q -> r) -> (L |- p -> r)
 := by
   intro p q r 
-  intro LpTq LqTr
+  assume LpTq LqTr
   byImplication Lp
   mp LqTr (mp LpTq Lp) 
 
@@ -79,11 +79,11 @@ def byContrapositionByDneImpContra
 : (p q : P) -> ((L |- ~q) -> (L |- ~p)) -> (L |- p -> q)
 := by
   intro p q 
-  intro Nq_to_Np
+  assume LNq_to_LNp
   byImplication Lp
   dblNegElim
   byContradiction LNq
-  have LNp := Nq_to_Np LNq
+  have LNp := LNq_to_LNp LNq
   contradiction LNp Lp
 
 instance iByContrapositionByDneImpContra 
@@ -103,7 +103,7 @@ def mtByMpContra
 : (p q : P) -> (L |- p -> q) -> (L |- ~q) -> (L |- ~p)
 := by
   intro p q 
-  intro LpTq LNq
+  assume LpTq LNq
   byContradiction Lp
   have Lq := mp LpTq Lp
   contradiction LNq Lq
