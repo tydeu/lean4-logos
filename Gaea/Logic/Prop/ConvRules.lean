@@ -1,7 +1,7 @@
 import Gaea.Logic.Prop.Rules
 
-universes u v w
-variable {P : Sort u} {T : Sort v}
+universes u
+variable {P : Sort u}
 
 namespace Gaea.Logic
 
@@ -41,8 +41,16 @@ instance iExFalsumOfExportFalse {L : Logic P} {falsum}
 class ImportNot (L : Logic.{u,0} P) (lnot : Unar P) := 
   importNot : (p : P) -> Not (L |- p) -> (L |- lnot p) 
 
-abbrev importNot {L : Logic P} {lnot}
+abbrev importNot {L : Logic.{u,0} P} {lnot}
   [K : ImportNot L lnot] {p} := K.importNot p
+
+instance iImportNotOfAdFalso 
+  {L : Logic.{u,0} P} {lnot} [K : ImportNot L lnot] : AdFalso L lnot := 
+  {adFalso := K.importNot}
+
+instance iAdFalsoOfImportNot 
+  {L : Logic.{u,0} P} {lnot} [K : AdFalso L lnot] : ImportNot L lnot := 
+  {importNot := K.adFalso}
 
 -- (|- ~p) -> Not p
 
@@ -51,6 +59,14 @@ class ExportNot (L : Logic.{u,0} P) (lnot : Unar P) :=
 
 abbrev exportNot {L : Logic.{u,0} P} {lnot}
   [K : ExportNot L lnot] {p} := K.exportNot p
+
+instance iExportNotOfNoncontradiction 
+  {L : Logic.{u,0} P} {lnot} [K : ExportNot L lnot] : Noncontradiction L lnot := 
+  {noncontradiction := K.exportNot}
+
+instance iNoncontradictionOfExportNot
+  {L : Logic.{u,0} P} {lnot} [K : Noncontradiction L lnot] : ExportNot L lnot := 
+  {exportNot := K.noncontradiction}
 
 --------------------------------------------------------------------------------
 -- Prod/PProd/And

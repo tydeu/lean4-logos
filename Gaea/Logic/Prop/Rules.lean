@@ -3,8 +3,8 @@ import Gaea.Logic.Judgment
 import Gaea.Logic.Prop.Syntax
 import Gaea.Logic.Prop.Notation
 
-universes u v w
-variable {P : Sort u} {T : Sort v}
+universes u w
+variable {P : Sort u}
 
 namespace Gaea.Logic
 
