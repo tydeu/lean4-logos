@@ -33,20 +33,20 @@ def forallNatElim   {L : Logic P} [N : IsNat P T] [FaN : ForallNat P T]
 
 def forallIfNatIntro {L : Logic P} 
 [N : IsNat P T] [Fa : LForall P T] [Im : Imp P]
-[Ug : UnivGen L Fa.lForall] [ByI : ByImplication L Im.imp]
+[Ug : UnivGen L Fa.lForall] [ByI : Condition L Im.imp]
 {f : T -> P} (F : (a : T) -> (L |- nat a) -> (L |- f a))
 : L |- forall a => nat a -> f a
-:= ug fun a => byImplication fun Na => F a Na
+:= ug fun a => condition fun Na => F a Na
 
 def LForallIfNatIntro {L : Logic P} 
 (N : IsNat P T) [Fa : LForall P T] [Im : Imp P] 
-(Ug : UnivGen L Fa.lForall) (ByI : ByImplication L Im.imp) 
+(Ug : UnivGen L Fa.lForall) (ByI : Condition L Im.imp) 
 : ForallNatIntro L N (LForallIfNat N Fa Im)
 := {forallNatIntro := fun _ F => forallIfNatIntro F}
 
 instance iForallIfNatIntro {L : Logic P} 
 [N : IsNat P T] [Fa : LForall P T] [Im : Imp P]
-[Ug : UnivGen L Fa.lForall] [ByI : ByImplication L Im.imp]
+[Ug : UnivGen L Fa.lForall] [ByI : Condition L Im.imp]
 : ForallNatIntro L N (LForallIfNat N Fa Im)
 := LForallIfNatIntro N Ug ByI
 

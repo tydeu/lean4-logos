@@ -42,18 +42,18 @@ abbrev rtlAssoc {L : Logic P} {C}
 
 -- C p (G q r) -> C (G p q) (G p r)
 
-class LeftDistr (L : Logic P) (C : Binar P) (G : Binar P) :=
-  leftDistr : (p q r : P) -> (L |- C p (G q r)) -> (L |- G (C p q) (C p r))
+class LeftDistrib (L : Logic P) (C : Binar P) (G : Binar P) :=
+  leftDistrib : (p q r : P) -> (L |- C p (G q r)) -> (L |- G (C p q) (C p r))
 
-abbrev leftDistr {L : Logic P} {C G}
-  [K : LeftDistr L C G] {p q r} := K.leftDistr p q r
+abbrev leftDistrib {L : Logic P} {C G}
+  [K : LeftDistrib L C G] {p q r} := K.leftDistrib p q r
 
 -- C (G q r) p -> C (G q p) (G r p)
 
-class RightDistr (L : Logic P) (C : Binar P) (G : Binar P) :=
-  rightDistr : (p q r : P) -> (L |- C (G q r) p) -> (L |- G (C q p) (C r p))
+class RightDistrib (L : Logic P) (C : Binar P) (G : Binar P) :=
+  rightDistrib : (p q r : P) -> (L |- C (G q r) p) -> (L |- G (C q p) (C r p))
 
-abbrev rightDistr {L : Logic P} {C G}
-  [K : RightDistr L C G] {p q r} := K.rightDistr p q r
+abbrev rightDistrib {L : Logic P} {C G}
+  [K : RightDistrib L C G] {p q r} := K.rightDistrib p q r
 
 end Gaea.Logic

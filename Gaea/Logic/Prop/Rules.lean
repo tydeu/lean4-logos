@@ -25,11 +25,11 @@ abbrev postulate {L : Logic P} {p}
 -- Conditional Proof
 -- (p |- q) -> (|- p -> q) 
 
-class ByImplication (L : Logic P) (imp : Binar P) := 
-  byImplication : (p q : P) -> ((L |- p) -> (L |- q)) -> (L |- p -> q) 
+class Condition (L : Logic P) (imp : Binar P) := 
+  condition : (p q : P) -> ((L |- p) -> (L |- q)) -> (L |- p -> q) 
 
-abbrev byImplication {L : Logic P} {imp} 
-  [K : ByImplication L imp] {p q} := K.byImplication p q
+abbrev condition {L : Logic P} {imp} 
+  [K : Condition L imp] {p q} := K.condition p q
 
 -- Proof by Contraposition
 -- (~q |- ~p) -> (|- p -> q)

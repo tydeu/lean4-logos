@@ -20,15 +20,15 @@ instance iTautOfRefl {L : Logic P} {R}
 -- p -> (p -> p)
 
 def impReflByImp {L : Logic P} 
-{imp : Binar P} (ByI : ByImplication L imp)
+{imp : Binar P} (ByI : Condition L imp)
 : (p : P) -> (L |- p -> p)
 := by
   intro p
-  byImplication Lp
+  condition Lp
   exact Lp 
 
 instance iImpReflByImp {L : Logic P} 
-{imp : Binar P} [ByI : ByImplication L imp] : Refl L imp 
+{imp : Binar P} [ByI : Condition L imp] : Refl L imp 
 := {refl := impReflByImp ByI}
 
 namespace MImp
@@ -46,16 +46,16 @@ end MImp
 -- (p -> q) -> (q -> r) -> (p -> r)
 
 def impTransByImpMp {L : Logic P} 
-{imp : Binar P} (ByI : ByImplication L imp) (Mp : ModusPonens L imp)
+{imp : Binar P} (ByI : Condition L imp) (Mp : ModusPonens L imp)
 : (p q r : P) -> (L |- p -> q) -> (L |- q -> r) -> (L |- p -> r)
 := by
   intro p q r 
   assume LpTq LqTr
-  byImplication Lp
+  condition Lp
   mp LqTr (mp LpTq Lp) 
 
 instance iImpTransByImp {L : Logic P} 
-{imp : Binar P} [ByI : ByImplication L imp] [Mp : ModusPonens L imp]
+{imp : Binar P} [ByI : Condition L imp] [Mp : ModusPonens L imp]
 : Trans L imp := {trans := impTransByImpMp ByI Mp}
 
 namespace MImp
@@ -74,13 +74,13 @@ end MImp
 def byContrapositionByDneImpContra 
 {L : Logic P} {imp : Binar P} {lnot : Unar P}
 (DnE : DblNegElim L lnot)
-(ByI : ByImplication L imp)
+(ByI : Condition L imp)
 (ByC : ByContradiction L lnot)
 : (p q : P) -> ((L |- ~q) -> (L |- ~p)) -> (L |- p -> q)
 := by
   intro p q 
   assume LNq_to_LNp
-  byImplication Lp
+  condition Lp
   dblNegElim
   byContradiction LNq
   have LNp := LNq_to_LNp LNq
@@ -89,7 +89,7 @@ def byContrapositionByDneImpContra
 instance iByContrapositionByDneImpContra 
 {L : Logic P} {imp : Binar P} {lnot : Unar P}
 [DnE : DblNegElim L lnot]
-[ByI : ByImplication L imp]
+[ByI : Condition L imp]
 [ByC : ByContradiction L lnot]
 : ByContraposition L imp lnot :=
 {byContraposition := byContrapositionByDneImpContra DnE ByI ByC}

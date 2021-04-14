@@ -48,7 +48,7 @@ def MForallIfNat {L : Logic P}
   (N : IsNat P T) (Fa : MForall L T) (Im : MImp L) 
   : MForallNat L N := {
     toForallNat := LForallIfNat N Fa.toLForall Im.toImp, 
-    toForallNatIntro := LForallIfNatIntro N Fa.toUnivGen Im.toByImplication,
+    toForallNatIntro := LForallIfNatIntro N Fa.toUnivGen Im.toCondition,
     toForallNatElim := LForallIfNatElim N Fa.toUnivInst Im.toModusPonens,
   }
 

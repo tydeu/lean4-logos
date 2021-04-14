@@ -11,27 +11,27 @@ namespace Gaea.Logic
 --------------------------------------------------------------------------------
 
 class MImp (L : Logic P) extends Imp P :=
-  toImpByImplication : ByImplication L toImp.imp
+  toImpCondition : Condition L toImp.imp
   toImpModusPonens : ModusPonens L toImp.imp
 
 instance iMImp {L : Logic P} 
-  [Imp : Imp P] [ByI : ByImplication L Imp.imp] [Mp : ModusPonens L Imp.imp] :
-  MImp L := {toImp := Imp, toImpByImplication := ByI, toImpModusPonens := Mp}
+  [Imp : Imp P] [ByI : Condition L Imp.imp] [Mp : ModusPonens L Imp.imp] :
+  MImp L := {toImp := Imp, toImpCondition := ByI, toImpModusPonens := Mp}
 
-instance iByImplicationOfMImp {L : Logic P} {K : MImp L} :
-  ByImplication L K.imp := K.toImpByImplication
+instance iConditionOfMImp {L : Logic P} {K : MImp L} :
+  Condition L K.imp := K.toImpCondition
 
 instance iModusPonensOfMImp {L : Logic P} {K : MImp L} :
   ModusPonens L K.imp := K.toImpModusPonens
 
 namespace MImp
-abbrev toByImplication {L : Logic P} (K : MImp L) 
-  := K.toImpByImplication
+abbrev toCondition {L : Logic P} (K : MImp L) 
+  := K.toImpCondition
 abbrev impIntro {L : Logic P} (K : MImp L) 
-  := K.toImpByImplication.byImplication
+  := K.toImpCondition.condition
 abbrev intro {L : Logic P} (K : MImp L) 
   {p q} := K.impIntro p q
-abbrev byImplication {L : Logic P} (K : MImp L) 
+abbrev condition {L : Logic P} (K : MImp L) 
   {p q} := K.impIntro p q
 abbrev toModusPonens {L : Logic P} (K : MImp L) 
   := K.toImpModusPonens

@@ -24,19 +24,19 @@ macro_rules [assume]
 
 -- Proofs
 
-scoped syntax (name := byImplicationTactic) 
-  "byImplication " (colGt binderPat)+ : tactic
-macro_rules [byImplicationTactic]
-  | `(tactic| byImplication $x:binderPat) => 
-    `(tactic| apply byImplication; assume $x)
-  | `(tactic| byImplication $x $y $zs*) => 
-    `(tactic| byImplication $x; byImplication $y $zs*)
+scoped syntax (name := conditionTactic) 
+  "condition " (colGt binderPat)+ : tactic
+macro_rules [conditionTactic]
+  | `(tactic| condition $x:binderPat) => 
+    `(tactic| apply condition; assume $x)
+  | `(tactic| condition $x $y $zs*) => 
+    `(tactic| condition $x; condition $y $zs*)
 
 scoped macro "byContraposition " x:binderIdent : tactic => 
   `(tactic| apply byContraposition; intro $(x[0]))
 
-scoped macro "byEither " pDq:term:max p:term:max q:term:max : tactic => 
-  `(tactic| apply byEither $pDq $p $q)
+scoped macro "byEither " pq:term:max pr:term:max qr:term:max : tactic => 
+  `(tactic| apply byEither $pq $pr $qr)
 
 scoped macro "byContradiction " x:binderPat : tactic => 
   `(tactic| apply byContradiction; assume $x)
