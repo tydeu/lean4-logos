@@ -24,11 +24,11 @@ def nat1 {P : Sort u} {T : Type v}
   := K.natOne
 
 class OneEqSuccZero {P : Sort u} {T : Type v} 
-  (L : Logic P) (Q : LEq P T) (Z : Zero T) (O : One T) (Su : Succ T) :=
+  (L : Logic P) (Q : SEq P T) (Z : Zero T) (O : One T) (Su : Succ T) :=
   (oneEqSuccZero : L |- (1 : T) = S (0 : T))
 
 def oneEqSuccZero {P : Sort u} {T : Type v} 
-  {L : Logic P} [Q : LEq P T] [Z : Zero T] [O : One T] [Su : Succ T]
+  {L : Logic P} [Q : SEq P T] [Z : Zero T] [O : One T] [Su : Succ T]
   [K : OneEqSuccZero L Q Z O Su] := K.oneEqSuccZero
 
 end Gaea.Peano
