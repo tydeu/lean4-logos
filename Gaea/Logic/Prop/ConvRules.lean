@@ -56,7 +56,7 @@ abbrev exportNot {L : Logic.{u,0} P} {lnot}
 -- Prod/PProd/And
 --------------------------------------------------------------------------------
 
--- Prod p q -> p /\ q 
+-- Prod p q -> (|- p /\ q)
 
 class ImportProd (L : Logic P) (conj : Binar P) := 
   importProd : (p q : P) -> Prod (L |- p) (L |- q) -> (L |- p /\ q)
@@ -72,7 +72,7 @@ instance iImportProdOfConjunction {L : Logic P} {conj}
   [K : Conjunction L conj] : ImportProd L conj := 
   {importProd := fun p q Ppq => K.conjoin p q Ppq.fst Ppq.snd}
 
--- PProd p q -> p /\ q 
+-- PProd p q -> (|- p /\ q)
 
 class ImportPProd (L : Logic P) (conj : Binar P) := 
   importPProd : (p q : P) -> PProd (L |- p) (L |- q) -> (L |- p /\ q)
@@ -92,10 +92,10 @@ instance iImportProdOfImportPProd {L : Logic P} {conj}
   [K : ImportPProd L conj] : ImportProd L conj := 
   {importProd := fun p q Ppq => K.importPProd p q (PProd.mk (Ppq.fst) (Ppq.snd))}
 
--- And p q -> p /\ q 
+-- And p q -> (|- p /\ q)
 
 class ImportAnd (L : Logic.{u,0} P) (conj : Binar P) := 
-  importAnd : (p q : P) -> (L |- p) /\ (L |- q) -> (L |- p /\ q)
+  importAnd : (p q : P) -> ((L |- p) /\ (L |- q)) -> (L |- p /\ q)
 
 abbrev importAnd {L : Logic.{u,0} P} {conj} 
   [K : ImportAnd L conj] {p q} := K.importAnd p q
@@ -108,7 +108,7 @@ instance iImportAndOfConjunction {L : Logic P} {conj}
   [K : Conjunction L conj] : ImportAnd L conj := 
   {importAnd := fun p q Apq => K.conjoin p q Apq.left Apq.right}
 
--- p /\ q -> Prod p q
+-- (|- p /\ q) -> Prod p q
 
 class ExportProd (L : Logic P) (conj : Binar P) := 
   exportProd : (p q : P) -> (L |- p /\ q) -> Prod (L |- p) (L |- q)
@@ -128,7 +128,7 @@ instance iRightSimpOfExportProd {L : Logic P} {conj}
   [K : ExportProd L conj] : RightSimp L conj := 
   {rightSimp := fun p q LpCq => Prod.snd (K.exportProd p q LpCq)}
 
--- p /\ q -> PProd p q
+-- (|- p /\ q) -> PProd p q
 
 class ExportPProd (L : Logic P) (conj : Binar P) := 
   exportPProd : (p q : P) -> (L |- p /\ q) -> PProd (L |- p) (L |- q)
@@ -152,7 +152,7 @@ instance iExportProdOfPProd {L : Logic P} {conj}
   [K : ExportPProd L conj] : ExportProd L conj := 
   {exportProd := fun p q LpCq => Prod.mk (leftSimp LpCq) (rightSimp LpCq)}
 
--- p /\ q -> And p q
+-- (|- p /\ q) -> And p q
 
 class ExportAnd (L : Logic.{u,0} P) (conj : Binar P) := 
   exportAnd : (p q : P) -> (L |- p /\ q) -> (L |- p) /\ (L |- q)
@@ -176,7 +176,7 @@ instance iRightSimpOfExportAnd {L : Logic P} {conj}
 -- Sum/PSum/Or
 --------------------------------------------------------------------------------
 
--- Sum p q -> p \/ q 
+-- Sum p q -> (|- p \/ q)
 
 class ImportSum (L : Logic P) (disj : Binar P) := 
   importSum : (p q : P) -> Sum (L |- p) (L |- q) -> (L |- p \/ q)
@@ -197,7 +197,7 @@ instance iRightTautOfImportSum {L : Logic P} {disj}
   [K : ImportSum L disj] : RightTaut L disj := 
   {rightTaut := fun p q Lq => K.importSum p q (Sum.inr Lq)}
 
--- PSum p q -> p \/ q  
+-- PSum p q -> (|- p \/ q) 
 
 class ImportPSum (L : Logic P) (disj : Binar P) := 
   importPSum : (p q : P) -> PSum (L |- p) (L |- q) -> (L |- p \/ q)
@@ -218,10 +218,10 @@ instance iRightTautOfImportPSum {L : Logic P} {disj}
   [K : ImportPSum L disj] : RightTaut L disj := 
   {rightTaut := fun p q Lq => K.importPSum p q (PSum.inr Lq)}
 
--- Or p q -> p \/ q 
+-- Or p q -> (|- p \/ q) 
 
 class ImportOr (L : Logic.{u,0} P) (disj : Binar P) := 
-  importOr : (p q : P) -> (L |- p) \/ (L |- q) -> (L |- p \/ q)
+  importOr : (p q : P) -> ((L |- p) \/ (L |- q)) -> (L |- p \/ q)
 
 abbrev importOr {L : Logic.{u,0} P} {disj} 
   [K : ImportOr L disj] {p q} := K.importOr p q
@@ -239,7 +239,7 @@ instance iRightTautOfImportOr {L : Logic P} {disj}
   [K : ImportOr L disj] : RightTaut L disj := 
   {rightTaut := fun p q Lq => K.importOr p q (Or.inr Lq)}
 
--- p \/ q -> Sum p q 
+-- (|- p \/ q) -> Sum p q 
 
 class ExportSum (L : Logic P) (disj : Binar P) := 
   exportSum : (p q : P) -> (L |- p \/ q) -> Sum (L |- p) (L |- q)
@@ -256,7 +256,7 @@ instance iByEitherOfExportSum {L : Logic P} {disj}
   {byEither := fun a p q LpDq fpa fqa => match K.exportSum p q LpDq with
     | Sum.inl Lp => fpa Lp | Sum.inr Lq => fqa Lq}
 
--- p \/ q -> PSum p q 
+-- (|- p \/ q) -> PSum p q 
 
 class ExportPSum (L : Logic P) (disj : Binar P) := 
   exportPSum : (p q : P) -> (L |- p \/ q) -> PSum (L |- p) (L |- q)
@@ -273,7 +273,7 @@ instance iByEitherOfExportPSum {L : Logic P} {disj}
   {byEither := fun a p q LpDq fpa fqa => match K.exportPSum p q LpDq with
     | PSum.inl Lp => fpa Lp | PSum.inr Lq => fqa Lq}
 
--- p \/ q -> Or p q 
+-- (|- p \/ q) -> Or p q 
 
 class ExportOr (L : Logic.{u,0} P) (disj : Binar P) := 
   exportOr : (p q : P) -> (L |- p \/ q) -> (L |- p) \/ (L |- q)
