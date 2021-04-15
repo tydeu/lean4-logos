@@ -111,12 +111,12 @@ class AddNatComm {P : Sort u} {T : Type v}
 
 instance iCommOverTOfAddNatComm {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : Add T] 
-  [K : AddNatComm L N Q A] : CommOverT L Q.eq N.isNat A.add 
+  [K : AddNatComm L N Q A] : CommOverT L Q.toFun N.isNat A.add 
   := {commOverT := K.addNatComm}
 
 instance iAddNatCommOverTOfComm {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : Add T] 
-  [K : CommOverT L Q.eq N.isNat A.add ] : AddNatComm L N Q A
+  [K : CommOverT L Q.toFun N.isNat A.add ] : AddNatComm L N Q A
   := {addNatComm := K.commOverT}
 
 def addNatComm {P : Sort u} {T : Type v} 
@@ -137,12 +137,12 @@ class AddNatAssoc {P : Sort u} {T : Type v}
 
 instance iLtrAssocOverTOfAddNatAssoc {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : Add T] 
-  [K : AddNatAssoc L N Q A] : LtrAssocOverT L Q.eq N.isNat A.add 
+  [K : AddNatAssoc L N Q A] : LtrAssocOverT L Q.toFun N.isNat A.add 
   := {ltrAssocOverT := K.addNatAssoc}
 
 instance iAddNatAssocOfLtrAssocOverT {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : Add T] 
-  [K : LtrAssocOverT L Q.eq N.isNat A.add] : AddNatAssoc L N Q A 
+  [K : LtrAssocOverT L Q.toFun N.isNat A.add] : AddNatAssoc L N Q A 
   := {addNatAssoc := K.ltrAssocOverT}
 
 def addNatAssoc {P : Sort u} {T : Type v}

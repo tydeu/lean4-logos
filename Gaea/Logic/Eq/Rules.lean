@@ -21,11 +21,11 @@ class EqJoinT {P : Sort u} {T : Sort v}
 
 instance iRelJoinTOfEqJoinT 
 {P : Sort u} {T : Sort v}  {L : Logic P} [Q : SEq P T] {C : T -> P}
-[K : EqJoinT L Q C] : RelJoinT L Q.eq C := {relJoinT := K.eqJoinT}
+[K : EqJoinT L Q C] : RelJoinT L Q.toFun C := {relJoinT := K.eqJoinT}
 
 instance iEqJoinTOfRelJoinT 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : SEq P T] {C : T -> P}
-[K : RelJoinT L Q.eq C] : EqJoinT L Q C := {eqJoinT := K.relJoinT}
+[K : RelJoinT L Q.toFun C] : EqJoinT L Q C := {eqJoinT := K.relJoinT}
 
 def eqJoinT 
 {P : Sort u} {T : Sort v} {L : Logic P} [Q : SEq P T] {C : T -> P}
@@ -51,7 +51,7 @@ class EqToEqFunT {P : Sort u} {T : Sort v}
     (L |- C a) -> (L |- C b) -> (L |- a = b) -> (L |- f a = f b))
 
 instance iEqToEqFunTOfFSubst {P : Sort u} {T : Sort v}
-{L : Logic P} [Q : SEq P T] {C : T -> P} {f : T -> T} [K : FSubst L Q.eq f] 
+{L : Logic P} [Q : SEq P T] {C : T -> P} {f : T -> T} [K : FSubst L Q.toFun f] 
 : EqToEqFunT L Q C f := {eqToEqFunT := fun a b _ _  => K.fSubst a b}
 
 def eqToEqFunT {P : Sort u} {T : Sort v}

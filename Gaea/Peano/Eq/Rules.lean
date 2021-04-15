@@ -36,12 +36,12 @@ class EqNatRefl {P : Sort u} {T : Sort v}
 
 instance iReflTOfEqNatRefl {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T]
-  [K : EqNatRefl L N Q] : ReflT L Q.eq N.isNat 
+  [K : EqNatRefl L N Q] : ReflT L Q.toFun N.isNat 
   := {reflT := K.eqNatRefl}
 
 instance iEqNatReflOfReflT {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T]
-  [K : ReflT L Q.eq N.isNat] : EqNatRefl L N Q
+  [K : ReflT L Q.toFun N.isNat] : EqNatRefl L N Q
   := {eqNatRefl := K.reflT}
 
 def eqNatRefl {P : Sort u} {T : Sort v} 
@@ -61,12 +61,12 @@ class EqNatSymm {P : Sort u} {T : Sort v}
 
 instance iSymmTOfEqNatSymm {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T]
-  [K : EqNatSymm L N Q] : SymmT L Q.eq N.isNat 
+  [K : EqNatSymm L N Q] : SymmT L Q.toFun N.isNat 
   := {symmT := K.eqNatSymm}
 
 instance iEqNatSymmOfSymmT {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T]
-  [K : SymmT L Q.eq N.isNat] : EqNatSymm L N Q
+  [K : SymmT L Q.toFun N.isNat] : EqNatSymm L N Q
   := {eqNatSymm := K.symmT}
 
 def eqNatSymm {P : Sort u} {T : Sort v} 
@@ -86,12 +86,12 @@ class EqNatTrans {P : Sort u} {T : Sort v}
 
 instance iTransTOfEqNatTrans {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T]
-  [K : EqNatTrans L N Q] : TransT L Q.eq N.isNat 
+  [K : EqNatTrans L N Q] : TransT L Q.toFun N.isNat 
   := {transT := K.eqNatTrans}
 
 instance iEqNatTransOfEqTransT {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T]
-  [K : TransT L Q.eq N.isNat] : EqNatTrans L N Q
+  [K : TransT L Q.toFun N.isNat] : EqNatTrans L N Q
   := {eqNatTrans := K.transT}
 
 def eqNatTrans {P : Sort u} {T : Sort v} 
@@ -167,10 +167,10 @@ class EqNatLeftEuc {P : Sort u} {T : Sort v}
 
 instance iLeftEucTOfEqNatLeftEuc {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [K : EqNatLeftEuc L N Q] 
-  : LeftEucT L Q.eq N.isNat := {leftEucT := K.eqNatLeftEuc}
+  : LeftEucT L Q.toFun N.isNat := {leftEucT := K.eqNatLeftEuc}
 
 instance iEqNatLeftEucOfLeftEucT {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [K : LeftEucT L Q.eq N.isNat] 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [K : LeftEucT L Q.toFun N.isNat] 
   : EqNatLeftEuc L N Q := {eqNatLeftEuc := K.leftEucT}
 
 def eqNatLeftEuc {P : Sort u} {T : Sort v} 
@@ -198,10 +198,10 @@ class EqNatRightEuc {P : Sort u} {T : Sort v}
 
 instance iRightEucTOfEqNatRightEuc {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [K : EqNatRightEuc L N Q] 
-  : RightEucT L Q.eq N.isNat := {rightEucT := K.eqNatRightEuc}
+  : RightEucT L Q.toFun N.isNat := {rightEucT := K.eqNatRightEuc}
 
 instance iEqNatRightEucOfEqRightEucT {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [K : RightEucT L Q.eq N.isNat] 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [K : RightEucT L Q.toFun N.isNat] 
   : EqNatRightEuc L N Q := {eqNatRightEuc := K.rightEucT}
 
 def eqNatRightEuc {P : Sort u} {T : Sort v} 

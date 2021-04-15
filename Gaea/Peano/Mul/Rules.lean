@@ -120,12 +120,12 @@ class MulNatComm {P : Sort u} {T : Type v}
 
 instance iCommOverTOfMulNatCommOverT {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] 
-  [K : MulNatComm L N Q M] : CommOverT L Q.eq N.isNat M.mul 
+  [K : MulNatComm L N Q M] : CommOverT L Q.toFun N.isNat M.mul 
   := {commOverT := K.mulNatComm}
 
 instance iMulNatCommOverOfCommOverT {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] 
-  [K : CommOverT L Q.eq N.isNat M.mul] : MulNatComm L N Q M
+  [K : CommOverT L Q.toFun N.isNat M.mul] : MulNatComm L N Q M
   := {mulNatComm := K.commOverT}
 
 def mulNatComm {P : Sort u} {T : Type v} 
@@ -145,12 +145,12 @@ class MulNatAssoc {P : Sort u} {T : Type v}
 
 instance iLtrAssocOverTOfMulNatAssoc {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] 
-  [K : MulNatAssoc L N Q M] : LtrAssocOverT L Q.eq N.isNat M.mul 
+  [K : MulNatAssoc L N Q M] : LtrAssocOverT L Q.toFun N.isNat M.mul 
   := {ltrAssocOverT := K.mulNatAssoc}
 
 instance iMulNatAssocOfLtrAssocOverT {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] 
-  [K : LtrAssocOverT L Q.eq N.isNat M.mul] : MulNatAssoc L N Q M 
+  [K : LtrAssocOverT L Q.toFun N.isNat M.mul] : MulNatAssoc L N Q M 
   := {mulNatAssoc := K.ltrAssocOverT}
 
 def mulNatAssoc {P : Sort u} {T : Type v}
