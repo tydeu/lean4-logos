@@ -10,15 +10,15 @@ namespace Gaea.Logic
 --------------------------------------------------------------------------------
 
 def funSubstByReflPredSubst {P : Sort u} {T : Sort v} 
-{L : Logic P} {R : T -> T -> P} (Rf : Refl L R) (PSb : PredSubst L R)
+{L : Logic P} {R : Rel P T} (Rf : Refl L R) (PSb : PredSubst L R)
 : (f : T -> T) -> (a b : T) -> (L |- R a b) -> (L |- R (f a) (f b))
 := by 
   intro f a b Rab
-  apply predSubst (fun x => R (f a) (f x)) Rab 
+  apply predSubst (F := fun x => R (f a) (f x)) Rab 
   exact refl (f a)
 
 instance iFunSubstByReflPredSubst {P : Sort u} {T : Sort v} 
-{L : Logic P} {R : T -> T -> P} [Rf : Refl L R] [PSb : PredSubst L R]
+{L : Logic P} {R : Rel P T} [Rf : Refl L R] [PSb : PredSubst L R]
 : FunSubst L R := {funSubst := funSubstByReflPredSubst Rf PSb}
 
 --------------------------------------------------------------------------------
@@ -27,15 +27,15 @@ instance iFunSubstByReflPredSubst {P : Sort u} {T : Sort v}
 --------------------------------------------------------------------------------
 
 def symmByReflPredSubst {P : Sort u} {T : Sort v} 
-{L : Logic P} {R : T -> T -> P} (Rf : Refl L R) (PSb : PredSubst L R)
+{L : Logic P} {R : Rel P T} (Rf : Refl L R) (PSb : PredSubst L R)
 : (a b : T) -> (L |- R a b) -> (L |- R b a)
 := by 
   intro a b Rab 
-  apply predSubst (fun x => R x a) Rab 
+  apply predSubst (F := fun x => R x a) Rab 
   exact refl a
 
 instance iSymmByReflPredSubst {P : Sort u} {T : Sort v} 
-{L : Logic P} {R : T -> T -> P} [Rf : Refl L R] [PSb : PredSubst L R]
+{L : Logic P} {R : Rel P T} [Rf : Refl L R] [PSb : PredSubst L R]
 : Symm L R := {symm := symmByReflPredSubst Rf PSb}
 
 --------------------------------------------------------------------------------
@@ -44,15 +44,15 @@ instance iSymmByReflPredSubst {P : Sort u} {T : Sort v}
 --------------------------------------------------------------------------------
 
 def transByPredSubst {P : Sort u} {T : Sort v} 
-{L : Logic P} {R : T -> T -> P} (PSb : PredSubst L R)
+{L : Logic P} {R : Rel P T} (PSb : PredSubst L R)
 : (a b c : T) -> (L |- R a b) -> (L |- R b c) -> (L |- R a c) 
 := by 
   intro a b c Rab Rbc 
-  apply predSubst (fun x => R a x) Rbc
+  apply predSubst (F := fun x => R a x) Rbc
   exact Rab
 
 instance iTransByPredSubst {P : Sort u} {T : Sort v} 
-{L : Logic P} {R : T -> T -> P} [PSb : PredSubst L R]
+{L : Logic P} {R : Rel P T} [PSb : PredSubst L R]
 : Trans L R := {trans := transByPredSubst PSb}
 
 --------------------------------------------------------------------------------
@@ -64,7 +64,7 @@ instance iTransByPredSubst {P : Sort u} {T : Sort v}
 
 def leftEucBySymmTrans
 {P : Sort u} {T : Sort v} 
-{L : Logic P} {R : T -> T -> P}
+{L : Logic P} {R : Rel P T}
 (Sm : Symm L R) (Tr : Trans L R)
 : (a b c : T) -> 
     (L |- R b a) -> (L |- R c a) -> (L |- R b c)
@@ -74,14 +74,14 @@ def leftEucBySymmTrans
   exact trans Rba Rac
 
 instance iLeftEucBySymmTrans 
-{P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P} 
+{P : Sort u} {T : Sort v} {L : Logic P} {R : Rel P T} 
 [Sm : Symm L R] [Tr : Trans L R] : LeftEuc L R := 
 {leftEuc := leftEucBySymmTrans Sm Tr}
 
 -- Constrained
 
 def leftEucBySymmTransT 
-{P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P} {C : T -> P} 
+{P : Sort u} {T : Sort v} {L : Logic P} {R : Rel P T} {C : T -> P} 
 (Sm : SymmT L R C) (Tr : TransT L R C)
 : (a b c : T) -> 
     (L |- C a) -> (L |- C b) -> (L |- C c) -> 
@@ -92,7 +92,7 @@ def leftEucBySymmTransT
   exact transT Cb Ca Cc Rba Rac
 
 instance iLeftEucBySymmTransT 
-{P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P} {C : T -> P}  
+{P : Sort u} {T : Sort v} {L : Logic P} {R : Rel P T} {C : T -> P}  
 [Sm : SymmT L R C] [Tr : TransT L R C] : LeftEucT L R C := 
 {leftEucT := leftEucBySymmTransT Sm Tr}
 
@@ -105,7 +105,7 @@ instance iLeftEucBySymmTransT
 
 def rightEucBySymmTrans
 {P : Sort u} {T : Sort v} 
-{L : Logic P} {R : T -> T -> P}
+{L : Logic P} {R : Rel P T}
 (Sm : Symm L R) (Tr : Trans L R)
 : (a b c : T) -> 
     (L |- R a b) -> (L |- R a c) -> (L |- R b c)
@@ -115,14 +115,14 @@ def rightEucBySymmTrans
   exact trans Rba Rac
 
 instance iRightEucBySymmTrans
-{P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P} 
+{P : Sort u} {T : Sort v} {L : Logic P} {R : Rel P T} 
 [Sm : Symm L R] [Tr : Trans L R] : RightEuc L R := 
 {rightEuc := rightEucBySymmTrans Sm Tr}
 
 -- Constrained
 
 def rightEucBySymmTransT
-{P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P} {C : T -> P} 
+{P : Sort u} {T : Sort v} {L : Logic P} {R : Rel P T} {C : T -> P} 
 (Sm : SymmT L R C) (Tr : TransT L R C)
 : (a b c : T) -> 
     (L |- C a) -> (L |- C b) -> (L |- C c) -> 
@@ -133,7 +133,7 @@ def rightEucBySymmTransT
   exact transT Cb Ca Cc Rba Rac
 
 instance iRightEucBySymmTransT 
-{P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P} {C : T -> P}  
+{P : Sort u} {T : Sort v} {L : Logic P} {R : Rel P T} {C : T -> P}  
 [Sm : SymmT L R C] [Tr : TransT L R C] : RightEucT L R C := 
 {rightEucT := rightEucBySymmTransT Sm Tr}
 
@@ -145,34 +145,34 @@ instance iRightEucBySymmTransT
 -- By Trans/LeftEuc
 
 def relJoinByTransLeftEucT
-{P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P} {C : T -> P}
+{P : Sort u} {T : Sort v} {L : Logic P} {R : Rel P T} {C : T -> P}
 (Tr : TransT L R C) (LEu : LeftEucT L R C)
-: (x y a b : T) -> 
-  (L |- C x) -> (L |- C y) -> (L |- C a) -> (L |- C b) ->
-  (L |- R x a) -> (L |- R y b) -> (L |- R a b) -> (L |- R x y)
+: (a b c d : T) -> 
+  (L |- C a) -> (L |- C b) -> (L |- C c) -> (L |- C d) ->
+  (L |- R a c) -> (L |- R b d) -> (L |- R c d) -> (L |- R a b)
 := by
-  intro x y a b Cx Cy Ca Cb Rxa Ryb Rab
-  exact leftEucT Cb Cx Cy (transT Cx Ca Cb Rxa Rab) Ryb
+  intro a b c d Ca Cb Cc Cd Rac Rbd Rcd
+  exact leftEucT Cd Ca Cb (transT Ca Cc Cd Rac Rcd) Rbd
 
 instance iRelJoinByTransLeftEucT
-{P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P} {C : T -> P} 
+{P : Sort u} {T : Sort v} {L : Logic P} {R : Rel P T} {C : T -> P} 
 [Tr : TransT L R C] [LEu : LeftEucT L R C] : RelJoinT L R C := 
 {relJoinT := relJoinByTransLeftEucT Tr LEu}
 
 -- By Symm/Trans
 
 def relJoinBySymmTransT
-{P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P} {C : T -> P} 
+{P : Sort u} {T : Sort v} {L : Logic P} {R : Rel P T} {C : T -> P} 
 (Sm : SymmT L R C) (Tr : TransT L R C)
-: (x y a b : T) -> 
-  (L |- C x) -> (L |- C y) -> (L |- C a) -> (L |- C b) ->
-  (L |- R x a) -> (L |- R y b) -> (L |- R a b) -> (L |- R x y)
+: (a b c d : T) -> 
+  (L |- C a) -> (L |- C b) -> (L |- C c) -> (L |- C d) ->
+  (L |- R a c) -> (L |- R b d) -> (L |- R c d) -> (L |- R a b)
 := by
-  intro x y a b Cx Cy Ca Cb Rxa Ryb Rab
-  exact transT Cx Cb Cy (transT Cx Ca Cb Rxa Rab) (symmT Cy Cb Ryb)
+  intro a b c d Ca Cb Cc Cd Rac Rbd Rcd
+  exact transT Ca Cd Cb (transT Ca Cc Cd Rac Rcd) (symmT Cb Cd Rbd)
 
 instance iRelJoinBySymmTransT 
-{P : Sort u} {T : Sort v} {L : Logic P} {R : T -> T -> P} {C : T -> P} 
+{P : Sort u} {T : Sort v} {L : Logic P} {R : Rel P T} {C : T -> P} 
 [Sm : SymmT L R C] [Tr : TransT L R C] : RelJoinT L R C 
 := {relJoinT := relJoinBySymmTransT Sm Tr}
 

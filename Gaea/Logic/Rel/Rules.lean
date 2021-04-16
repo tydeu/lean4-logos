@@ -10,7 +10,7 @@ namespace Gaea.Logic
 
 --------------------------------------------------------------------------------
 -- Predicate Substitution
--- R a b -> (P a -> P b)
+-- (|- R a b) -> ((|- F a) -> (|- F b))
 --------------------------------------------------------------------------------
 
 class PSubst (L : Logic P) (R : Rel P T) (F : T -> P) :=
@@ -24,14 +24,14 @@ instance iPSubstOfPredSubst {L : Logic P} {R : Rel P T}
   [K : PredSubst L R] {F} : PSubst L R F := {pSubst := K.predSubst F}
 
 def predSubst {L : Logic P} {R : Rel P T}
-  (F) {a b} [K : PSubst L R F] := K.pSubst a b
+  {F} [K : PSubst L R F] {a b} := K.pSubst a b
 
 def predSubst' {L : Logic P} {R : Rel P T}
-  {F} {a b} [K : PSubst L R F] := K.pSubst a b
+  (F) [K : PSubst L R F] {a b} := K.pSubst a b
 
 --------------------------------------------------------------------------------
 -- Function Substitution
--- R a b -> R (f a) (f b)
+-- R a b |- R (f a) (f b)
 --------------------------------------------------------------------------------
 
 -- Unconstrained
@@ -46,10 +46,7 @@ instance iFSubstOfFunSubst {L : Logic P} {R : Rel P T}
   [K : FunSubst L R] {f : Unar T} : FSubst L R f := {fSubst := K.funSubst f}
 
 def funSubst {L : Logic P} {R : Rel P T}
-  (f) {a b} [K : FSubst L R f] := K.fSubst a b
-
-def funSubst' {L : Logic P} {R : Rel P T}
-  {f} {a b} [K : FSubst L R f] := K.fSubst a b
+  {f} [K : FSubst L R f] {a b} := K.fSubst a b
 
 -- Constrained
 
@@ -74,17 +71,14 @@ instance iFunSubstTOfFunSubst {L : Logic P}
   {funSubstT := fun f a b _ _  => K.funSubst f a b}
 
 def funSubstT {L : Logic P} {R : Rel P T} {C}
-  (f) {a b} [K : FSubstT L R C f] := K.fSubstT a b
-
-def funSubstT' {L : Logic P} {R : Rel P T} {C}
-  {f} {a b} [K : FSubstT L R C f] := K.fSubstT a b
+  {f} [K : FSubstT L R C f] {a b} := K.fSubstT a b
 
 --------------------------------------------------------------------------------
 -- Binar Substitution
 --------------------------------------------------------------------------------
 
 -- Left Reflection / Right Substitution
--- (a = b) -> (f c a = f c b)
+-- R a b |- R (f c a) (f c b)
 
 -- Constrained for a given function
 class LeftReflT (L : Logic P) (R : Rel P T) (C : T -> P) (f : Binar T) :=
@@ -96,7 +90,7 @@ def leftReflT {L : Logic P} {R : Rel P T} {C f}
   [K : LeftReflT L R C f] {a b c} := K.leftReflT a b c
 
 -- Right Reflection / Left Substitution
--- (a = b) -> (f a c = f b c)
+-- R a b |- R (f a c) (f b c)
 
 -- Constrained for a given function
 class RightReflT (L : Logic P) (R : Rel P T) (C : T -> P) (f : Binar T) :=
@@ -109,7 +103,7 @@ def rightReflT {L : Logic P} {R : Rel P T} {C f}
 
 --------------------------------------------------------------------------------
 -- Reflexivity
--- a -> (R a a)
+-- a -> (|- R a a)
 --------------------------------------------------------------------------------
 
 -- Unconstrained
@@ -120,7 +114,7 @@ class Refl (L : Logic P) (R : Rel P T) :=
 def refl {L : Logic P} {R : Rel P T}
   [K : Refl L R] := K.refl
 
-def refl' {L : Logic P} {R : Rel P T}
+def rfl {L : Logic P} {R : Rel P T}
   [K : Refl L R] {a} := K.refl a
 
 -- Constrained
@@ -137,7 +131,7 @@ def reflT
 
 --------------------------------------------------------------------------------
 -- Symmetry
--- (R a b) -> (R b a)
+-- R a b |- R b a
 --------------------------------------------------------------------------------
 
 -- Unconstrained
@@ -168,7 +162,7 @@ def symmT {L : Logic P} {R : Rel P T} {C}
 
 --------------------------------------------------------------------------------
 -- Transitivity
--- (R a b) /\ (R b c) -> (R a c)
+-- R a b, R b c |- R a c
 --------------------------------------------------------------------------------
 
 -- Unconstrained
@@ -201,7 +195,7 @@ def transT' {L : Logic P} {R : Rel P T} {C}
 
 --------------------------------------------------------------------------------
 -- Left Euclidean
--- (R b a) /\ (R c a) -> (R b c)
+-- R b a, R c a |- R b c
 --------------------------------------------------------------------------------
 
 -- Unconstrained
@@ -228,7 +222,7 @@ def leftEucT {L : Logic P} {R : Rel P T} {C}
 
 --------------------------------------------------------------------------------
 -- Right Euclidean
--- (a = b) /\ (a = c) -> (b = c)
+-- R a b, R a c |- R b c
 --------------------------------------------------------------------------------
 
 -- Unconstrained
@@ -257,27 +251,28 @@ def rightEucT {L : Logic P} {R : Rel P T} {C}
 -- Join
 --------------------------------------------------------------------------------
 
--- (R x a) /\ (R y b) /\ (R a b) -> (R x y)
+-- R a c, R b d, R c d |- R a b
 
 class RelJoinT (L : Logic P) (R : Rel P T) (C : T -> P) :=
-  relJoinT : (x y a b : T) -> 
-    (L |- C x) -> (L |- C y) -> (L |- C a) -> (L |- C b) ->
-    (L |- R x a) -> (L |- R y b) -> (L |- R a b) -> (L |- R x y)
+  relJoinT : (a b c d : T) -> 
+    (L |- C a) -> (L |- C b) -> (L |- C c) -> (L |- C d) ->
+    (L |- R a c) -> (L |- R b d) -> (L |- R c d) -> (L |- R a b)
 
 def relJoinT {L : Logic P} {R : Rel P T} {C} 
-  [K : RelJoinT L R C] {x y a b} := K.relJoinT x y a b 
+  [K : RelJoinT L R C] {a b c d} := K.relJoinT a b c d
 
--- (R a b) /\ (R x a) /\ (R y b) -> (R x y)
+-- R c d, R a c, R b d |- R a b
 
-def relJoinT' {L : Logic P} {R : Rel P T} {C} [K : RelJoinT L R C] {a b x y}
-  := fun Ca Cb Cx Cy Rab Rxa Ryb => K.relJoinT x y a b Cx Cy Ca Cb Rxa Ryb Rab
+def relJoinT' {L : Logic P} {R : Rel P T} {C} [K : RelJoinT L R C] {a b c d}
+  (Ca Cb Cc Cd Rcd Rac Rbd) := K.relJoinT a b c d Ca Cb Cc Cd Rac Rbd Rcd
 
 --------------------------------------------------------------------------------
 -- Commutativity
--- f a b = f b a
+-- R (f a b) (f b a)
 --------------------------------------------------------------------------------
 
 -- Unconstrained
+
 class CommOver (L : Logic P) (R : Rel P T) (f : Binar T) :=
   commOver : (a b : T) -> (L |- R (f a b) (f b a))
 
@@ -285,6 +280,7 @@ def commOver {L : Logic P} {R : Rel P T} {f}
   [K : CommOver L R f] {a b} := K.commOver a b
 
 -- Constrained
+
 class CommOverT (L : Logic P) (R : Rel P T) (C : T -> P) (f : Binar T) :=
   commOverT : (a b : T) -> (L |- C a) -> (L |- C b) -> (L |- R (f a b) (f b a))
 
@@ -295,6 +291,7 @@ def commOverT {L : Logic P} {R : Rel P T} {C f}
 -- Associativity
 --------------------------------------------------------------------------------
 
+-- Left-to-Right
 -- R (f (f a b) c) (f a (f b c))
 
 -- Unconstrained
@@ -313,6 +310,7 @@ class LtrAssocOverT (L : Logic P) (R : Rel P T) (C : T -> P) (f : Binar T) :=
 def ltrAssocOverT {L : Logic P} [R : Rel P T] {C f}
   [K : LtrAssocOverT L R C f] {a b c} := K.ltrAssocOverT a b c
 
+-- Right-to-Left
 -- R (f a (f b c)) (f (f a b) c)
 
 -- Unconstrained
