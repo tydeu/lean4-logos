@@ -34,6 +34,8 @@ def predSubst' {L : Logic P} {R : Rel P T}
 -- R a b -> R (f a) (f b)
 --------------------------------------------------------------------------------
 
+-- Unconstrained
+
 class FSubst (L : Logic P) (R : Rel P T) (f : Unar T) :=
   fSubst : (a b : T) -> (L |- R a b) -> (L |- R (f a) (f b))
 
@@ -49,6 +51,61 @@ def funSubst {L : Logic P} {R : Rel P T}
 def funSubst' {L : Logic P} {R : Rel P T}
   {f} {a b} [K : FSubst L R f] := K.fSubst a b
 
+-- Constrained
+
+class FSubstT (L : Logic P) (R : Rel P T) (C : T -> P) (f : Unar T) :=
+  fSubstT : (a b : T) -> (L |- C a) -> (L |- C b) -> 
+    (L |- R a b) -> (L |- R (f a) (f b))
+
+class FunSubstT (L : Logic P) (R : Rel P T) (C : T -> P) :=
+  funSubstT : (f : Unar T) -> (a b : T) -> 
+    (L |- C a) -> (L |- C b) -> (L |- R a b) -> (L |- R (f a) (f b))
+
+instance iFSubstTOfFunSubstT {L : Logic P} 
+  {R : Rel P T} {C} [K : FunSubstT L R C] {f : Unar T} : FSubstT L R C f := 
+  {fSubstT := K.funSubstT f}
+
+instance iFSubstTOfFSubst {L : Logic P} 
+  {R : Rel P T} {C : T -> P} {f} [K : FSubst L R f]  : FSubstT L R C f := 
+  {fSubstT := fun a b _ _  => K.fSubst a b}
+
+instance iFunSubstTOfFunSubst {L : Logic P} 
+  {R : Rel P T} {C : T -> P} [K : FunSubst L R] : FunSubstT L R C := 
+  {funSubstT := fun f a b _ _  => K.funSubst f a b}
+
+def funSubstT {L : Logic P} {R : Rel P T} {C}
+  (f) {a b} [K : FSubstT L R C f] := K.fSubstT a b
+
+def funSubstT' {L : Logic P} {R : Rel P T} {C}
+  {f} {a b} [K : FSubstT L R C f] := K.fSubstT a b
+
+--------------------------------------------------------------------------------
+-- Binar Substitution
+--------------------------------------------------------------------------------
+
+-- Left Reflection / Right Substitution
+-- (a = b) -> (f c a = f c b)
+
+-- Constrained for a given function
+class LeftReflT (L : Logic P) (R : Rel P T) (C : T -> P) (f : Binar T) :=
+  leftReflT : (a b c : T) -> 
+    (L |- C a) -> (L |- C b) -> (L |- C c) ->
+    (L |- R b c) -> (L |- R (f a b) (f a c))
+
+def leftReflT {L : Logic P} {R : Rel P T} {C f}
+  [K : LeftReflT L R C f] {a b c} := K.leftReflT a b c
+
+-- Right Reflection / Left Substitution
+-- (a = b) -> (f a c = f b c)
+
+-- Constrained for a given function
+class RightReflT (L : Logic P) (R : Rel P T) (C : T -> P) (f : Binar T) :=
+  rightReflT : (a b c : T) -> 
+    (L |- C a) -> (L |- C b) -> (L |- C c) ->
+    (L |- R b c) -> (L |- R (f b a) (f c a))
+
+def rightReflT {L : Logic P} {R : Rel P T} {C f}
+  [K : RightReflT L R C f] {a b c} := K.rightReflT a b c
 
 --------------------------------------------------------------------------------
 -- Reflexivity
@@ -56,6 +113,7 @@ def funSubst' {L : Logic P} {R : Rel P T}
 --------------------------------------------------------------------------------
 
 -- Unconstrained
+
 class Refl (L : Logic P) (R : Rel P T) :=
   refl : (a : T) -> (L |- R a a)
 
@@ -66,6 +124,7 @@ def refl' {L : Logic P} {R : Rel P T}
   [K : Refl L R] {a} := K.refl a
 
 -- Constrained
+
 class ReflT (L : Logic P) (R : Rel P T) (C : T -> P) :=
   reflT : (a : T) -> (L |- C a) -> (L |- R a a)
 
@@ -82,6 +141,7 @@ def reflT
 --------------------------------------------------------------------------------
 
 -- Unconstrained
+
 class Symm (L : Logic P) (R : Rel P T) :=
   symm : (a b : T) -> (L |- R a b) -> (L |- R b a)
 
@@ -95,6 +155,7 @@ instance iCommOfSymm {L : Logic P} {R : Rel P P}
   [K : Symm L R] : Comm L R := {comm := K.symm}
 
 -- Constrained
+
 class SymmT (L : Logic P) (R : Rel P T) (C : T -> P)  :=
   symmT : (a b : T) -> (L |- C a) -> (L |- C b) ->
     (L |- R a b) -> (L |- R b a)
@@ -111,6 +172,7 @@ def symmT {L : Logic P} {R : Rel P T} {C}
 --------------------------------------------------------------------------------
 
 -- Unconstrained
+
 class Trans (L : Logic P) (R : Rel P T) :=
   trans : (a b c : T) -> (L |- R a b) -> (L |- R b c) -> (L |- R a c)
 
@@ -121,6 +183,7 @@ def trans' {L : Logic P} {R : Rel P T}
   [K : Trans L R] (b) {a c} := K.trans a b c 
 
 -- Constrained
+
 class TransT (L : Logic P) (R : Rel P T) (C : T -> P) :=
   transT : (a b c : T) -> 
     (L |- C a) -> (L |- C b) -> (L |- C c) -> 
@@ -137,13 +200,12 @@ def transT' {L : Logic P} {R : Rel P T} {C}
   [K : TransT L R C] {b a c Cb Ca Cc} := K.transT a b c Ca Cb Cc
 
 --------------------------------------------------------------------------------
--- Euclideaness
+-- Left Euclidean
+-- (R b a) /\ (R c a) -> (R b c)
 --------------------------------------------------------------------------------
 
--- Left Eucldean
--- (R b a) /\ (R c a) -> (R b c)
-
 -- Unconstrained
+
 class LeftEuc (L : Logic P) (R : Rel P T) :=
   leftEuc : (a b c : T) -> (L |- R b a) -> (L |- R c a) -> (L |- R b c)
 
@@ -151,6 +213,7 @@ def leftEuc {L : Logic P} {R : Rel P T}
   [K : LeftEuc L R] {a b c} := K.leftEuc a b c 
 
 -- Constrained
+
 class LeftEucT (L : Logic P) (R : Rel P T) (C : T -> P) :=
   leftEucT : (a b c : T) -> 
     (L |- C a) -> (L |- C b) -> (L |- C c) -> 
@@ -163,10 +226,13 @@ instance iLeftEucOfLeftEucT {L : Logic P} {R : Rel P T} {C}
 def leftEucT {L : Logic P} {R : Rel P T} {C} 
   [K : LeftEucT L R C] {a b c} := K.leftEucT a b c 
 
+--------------------------------------------------------------------------------
 -- Right Euclidean
 -- (a = b) /\ (a = c) -> (b = c)
+--------------------------------------------------------------------------------
 
 -- Unconstrained
+
 class RightEuc (L : Logic P) (R : Rel P T) :=
   rightEuc : (a b c : T) -> (L |- R a b) -> (L |- R a c) -> (L |- R b c)
 
@@ -174,6 +240,7 @@ def rightEuc {L : Logic P} {R : Rel P T}
   [K : RightEuc L R] {a b c} := K.rightEuc a b c 
 
 -- Constrained
+
 class RightEucT (L : Logic P) (R : Rel P T) (C : T -> P)  :=
   rightEucT : (a b c : T) -> 
     (L |- C a) -> (L |- C b) -> (L |- C c) -> 
@@ -207,9 +274,8 @@ def relJoinT' {L : Logic P} {R : Rel P T} {C} [K : RelJoinT L R C] {a b x y}
 
 --------------------------------------------------------------------------------
 -- Commutativity
---------------------------------------------------------------------------------
-
 -- f a b = f b a
+--------------------------------------------------------------------------------
 
 -- Unconstrained
 class CommOver (L : Logic P) (R : Rel P T) (f : Binar T) :=
@@ -231,14 +297,14 @@ def commOverT {L : Logic P} {R : Rel P T} {C f}
 
 -- R (f (f a b) c) (f a (f b c))
 
--- Unconstrained for a given function
+-- Unconstrained
 class LtrAssocOver (L : Logic P) (R : Rel P T) (f : Binar T) :=
   ltrAssocOver :  (a b c : T) ->  (L |- R (f (f a b) c) (f a (f b c)))
 
 def ltrAssocOver {L : Logic P} {R : Rel P T} {f}
   [K : LtrAssocOver L R f] {a b c} := K.ltrAssocOver a b c
 
--- Constrained for a given function
+-- Constrained
 class LtrAssocOverT (L : Logic P) (R : Rel P T) (C : T -> P) (f : Binar T) :=
   ltrAssocOverT :  (a b c : T) -> 
     (L |- C a) -> (L |- C b) -> (L |- C c) -> 
@@ -249,14 +315,14 @@ def ltrAssocOverT {L : Logic P} [R : Rel P T] {C f}
 
 -- R (f a (f b c)) (f (f a b) c)
 
--- Unconstrained for a given function
+-- Unconstrained
 class RtlAssocOver (L : Logic P) (R : Rel P T) (f : Binar T) :=
   rtlAssocOver :  (a b c : T) ->  (L |- R (f a (f b c)) (f (f a b) c))
 
 def rtlAssocOver {L : Logic P} {R : Rel P T} {f}
   [K : RtlAssocOver L R f] {a b c} := K.rtlAssocOver a b c
 
--- Constrained for a given function
+-- Constrained
 class RtlAssocOverT (L : Logic P) (R : Rel P T) (C : T -> P) (f : Binar T) :=
   rtlAssocOverT :  (a b c : T) -> 
     (L |- C a) -> (L |- C b) -> (L |- C c) -> 

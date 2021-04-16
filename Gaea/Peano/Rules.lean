@@ -2,7 +2,9 @@ import Gaea.Math.Notation
 import Gaea.Logic.Judgment
 import Gaea.Logic.Prop.Syntax
 import Gaea.Logic.Prop.Notation
-import Gaea.Logic.Eq.Rules
+import Gaea.Logic.Eq.Syntax
+import Gaea.Logic.Eq.Notation
+import Gaea.Logic.Rel.Rules
 import Gaea.Peano.Nat
 
 universes u v w
@@ -42,15 +44,15 @@ class EqNatToEqSucc {P : Sort u} {T : Sort v}
   (eqNatToEqSucc : (m n : T) -> (L |- nat m) -> (L |- nat n) -> 
     (L |- m = n) -> (L |- S m = S n))
 
-instance {P : Sort u} {T : Type v} 
+instance iEqNatToEqSuccOfFSubstT {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [Su : Succ T]
-  [K : EqNatToEqSucc L N Q Su] : EqToEqFunT L Q N.isNat Su.succ 
-  := {eqToEqFunT := K.eqNatToEqSucc}
+  [K : EqNatToEqSucc L N Q Su] : FSubstT L Q.toFun N.isNat Su.succ 
+  := {fSubstT := K.eqNatToEqSucc}
 
-instance {P : Sort u} {T : Type v} 
+instance iFSubstTOfEqNatToEqSucc {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [Su : Succ T]
-  [K : EqToEqFunT L Q N.isNat Su.succ] : EqNatToEqSucc L N Q Su
-  := {eqNatToEqSucc := K.eqToEqFunT}
+  [K : FSubstT L Q.toFun N.isNat Su.succ] : EqNatToEqSucc L N Q Su
+  := {eqNatToEqSucc := K.fSubstT}
 
 def eqNatToEqSucc {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [Su : Succ T]

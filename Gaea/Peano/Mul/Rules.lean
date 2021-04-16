@@ -1,6 +1,7 @@
-import Gaea.Logic.Eq
-import Gaea.Math.Notation
+import Gaea.Peano.Eq
 import Gaea.Peano.Nat
+import Gaea.Math.Notation
+
 
 
 universes u v w
@@ -199,15 +200,15 @@ class EqNatMulNatLeft {P : Sort u} {T : Type v}
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
     (L |- a = b) -> (L |- c * a = c * b))
 
-instance iEqMagLeftTOfEqNatMulNatLeft {P : Sort u} {T : Type v} 
+instance iLeftReflTOfEqNatMulNatLeft {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] 
-  [K : EqNatMulNatLeft L N Q M] : EqMagLeftT L Q N.isNat M.mul 
-  := {eqMagLeftT := K.eqNatMulNatLeft}
+  [K : EqNatMulNatLeft L N Q M] : LeftReflT L Q.toFun N.isNat M.mul 
+  := {leftReflT := fun a b c Na Nb Nc => K.eqNatMulNatLeft b c a Nb Nc Na}
 
-instance iEqNatMulNatLeftTOfEqMagLeft  {P : Sort u} {T : Type v} 
+instance iEqNatMulNatLeftTOfLeftReflT {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] 
-  [K : EqMagLeftT L Q N.isNat M.mul ] : EqNatMulNatLeft L N Q M
-  := {eqNatMulNatLeft := K.eqMagLeftT}
+  [K : LeftReflT L Q.toFun N.isNat M.mul] : EqNatMulNatLeft L N Q M
+  := {eqNatMulNatLeft := fun a b c Na Nb Nc => K.leftReflT c a b Nc Na Nb}
 
 def eqNatMulNatLeft {P : Sort u} {T : Type v}
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T]
@@ -226,15 +227,15 @@ class EqNatMulNatRight {P : Sort u} {T : Type v}
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
     (L |- a = b) -> (L |- a * c = b * c))
 
-instance iEqMagRightTOfEqNatMulNatRight {P : Sort u} {T : Type v} 
+instance iRightReflTOfEqNatMulNatRight {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] 
-  [K : EqNatMulNatRight L N Q M] : EqMagRightT L Q N.isNat M.mul 
-  := {eqMagRightT := K.eqNatMulNatRight}
+  [K : EqNatMulNatRight L N Q M] : RightReflT L Q.toFun N.isNat M.mul 
+  := {rightReflT := fun a b c Na Nb Nc => K.eqNatMulNatRight b c a Nb Nc Na}
 
-instance iEqNatMulNatRightTOfEqMagRight  {P : Sort u} {T : Type v} 
+instance iEqNatMulNatRightOfRightReflT {P : Sort u} {T : Type v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] 
-  [K : EqMagRightT L Q N.isNat M.mul] : EqNatMulNatRight L N Q M
-  := {eqNatMulNatRight := K.eqMagRightT}
+  [K : RightReflT L Q.toFun N.isNat M.mul] : EqNatMulNatRight L N Q M
+  := {eqNatMulNatRight := fun a b c Na Nb Nc => K.rightReflT c a b Nc Na Nb}
 
 def eqNatMulNatRight {P : Sort u} {T : Type v}
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T]

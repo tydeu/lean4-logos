@@ -1,5 +1,7 @@
 import Gaea.Peano.Nat
-import Gaea.Logic.Eq.Rules
+import Gaea.Logic.Rel.Rules
+import Gaea.Logic.Eq.Notation
+import Gaea.Logic.Eq.Syntax
 
 universes u v w
 
@@ -129,15 +131,15 @@ class EqNatJoin {P : Sort u} {T : Sort v}
     (L |- nat x) -> (L |- nat y) -> (L |- nat a) -> (L |- nat b) ->
     (L |- x = a) -> (L |- y = b) -> (L |- a = b) -> (L |- x = y))
 
-instance iEqJoinTOfEqNatJoin {P : Sort u} {T : Sort v} 
+instance iRelJoinTOfEqNatJoin {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
-  [K : EqNatJoin L N Q] : EqJoinT L Q N.isNat 
-  := {eqJoinT := K.eqNatJoin}
+  [K : EqNatJoin L N Q] : RelJoinT L Q.toFun N.isNat 
+  := {relJoinT := K.eqNatJoin}
 
-instance iEqNatJoinOfEqJoinT {P : Sort u} {T : Sort v} 
+instance iEqNatJoinOfRelJoinT {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
-  [K : EqJoinT L Q N.isNat] : EqNatJoin L N Q 
-  := {eqNatJoin := K.eqJoinT}
+  [K : RelJoinT L Q.toFun N.isNat] : EqNatJoin L N Q 
+  := {eqNatJoin := K.relJoinT}
 
 def eqNatJoin {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T]

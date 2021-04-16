@@ -1,4 +1,4 @@
-import Gaea.Logic.Eq.Rules
+import Gaea.Logic.Eq.Syntax
 import Gaea.Logic.Rel.Theorems
 
 namespace Gaea.Logic
