@@ -1,46 +1,72 @@
 import Gaea.Logic.Fun.Types
 
 universe u
+variable {P : Sort u}
 
 namespace Gaea.Logic 
 
 -- Constants
 
 class LTrue (P : Sort u) :=
-  (true : P)
+  toProp : P
 
-abbrev true {P : Sort u} [K : LTrue P] := K.true
+abbrev true {P : Sort u} [K : LTrue P] := K.toProp
 
 class LFalse (P : Sort u) :=
-  (false : P)
+  toProp : P
 
-abbrev false {P : Sort u} [K : LFalse P] := K.false
+abbrev false {P : Sort u} [K : LFalse P] := K.toProp
 
 -- Connectives
 
 class Imp (P : Sort u) :=
-  (imp : Binar P)
+  toFun : Binar P
 
-abbrev imp {P : Sort u} [K : Imp P] := K.imp
+namespace Imp
+abbrev funType (K : Imp P) := Binar P
+instance : CoeFun (Imp P) funType := {coe := fun K => K.toFun}
+end Imp
+
+abbrev imp {P : Sort u} [K : Imp P] := K.toFun
 
 class LIff (P : Sort u) :=
-  (iff : Binar P)
+  toFun : Binar P
 
-abbrev iff {P : Sort u} [K : LIff P] := K.iff
+namespace LIff
+abbrev funType (K : LIff P) := Binar P
+instance : CoeFun (LIff P) funType := {coe := fun K => K.toFun}
+end LIff
+
+abbrev iff {P : Sort u} [K : LIff P] := K.toFun
 
 class Conj (P : Sort u):=
-  (conj : Binar P)
+  toFun : Binar P
 
-abbrev conj {P : Sort u} [K : Conj P] := K.conj
+namespace Conj
+abbrev funType (K : Conj P) := Binar P
+instance : CoeFun (Conj P) funType := {coe := fun K => K.toFun}
+end Conj
+
+abbrev conj {P : Sort u} [K : Conj P] := K.toFun
 
 class Disj (P : Sort u) :=
-  (disj : Binar P)
+  toFun : Binar P
 
-abbrev disj {P : Sort u} [K : Disj P] := K.disj
+namespace Disj
+abbrev funType (K : Disj P) := Binar P
+instance : CoeFun (Disj P) funType := {coe := fun K => K.toFun}
+end Disj
+
+abbrev disj {P : Sort u} [K : Disj P] := K.toFun
 
 class LNot (P : Sort u) :=
-  (not : Unar P)
+  toFun : Unar P
 
-abbrev lnot {P : Sort u} [K : LNot P] := K.not
+namespace LNot
+abbrev funType (K : LNot P) := Unar P
+instance : CoeFun (LNot P) funType := {coe := fun K => K.toFun}
+end LNot
+
+abbrev lnot {P : Sort u} [K : LNot P] := K.toFun
 
 end Gaea.Logic

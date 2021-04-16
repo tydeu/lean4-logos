@@ -8,14 +8,9 @@ class SEq (P : Sort u) (T : Sort v) :=
   toFun : Rel P T
 
 namespace SEq
-
 variable {P : Sort u} {T : Sort v}
-
-def funType (K : SEq P T) := Rel P T
-
-instance : CoeFun (SEq P T) funType :=
-  {coe := fun K => K.toFun}
-
+abbrev funType (K : SEq P T) := Rel P T
+instance : CoeFun (SEq P T) funType := {coe := fun K => K.toFun}
 end SEq
 
 abbrev eq {P : Sort u} {T : Sort v} [K : SEq P T] := K.toFun

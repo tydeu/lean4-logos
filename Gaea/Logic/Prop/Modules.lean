@@ -1,46 +1,42 @@
 import Gaea.Logic.Logic
 import Gaea.Logic.Prop.Rules
 
-universes u v
-variable {P : Sort u} {T : Sort v}
+universe u
+variable {P : Sort u}
 
 namespace Gaea.Logic
+
+variable {L : Logic P}
 
 --------------------------------------------------------------------------------
 -- Implication
 --------------------------------------------------------------------------------
 
 class MImp (L : Logic P) extends Imp P :=
-  toImpCondition : Condition L toImp.imp
-  toImpModusPonens : ModusPonens L toImp.imp
+  Condition : Condition L toFun
+  ModusPonens : ModusPonens L toFun
 
 instance iMImp {L : Logic P} 
-  [Imp : Imp P] [ByI : Condition L Imp.imp] [Mp : ModusPonens L Imp.imp] :
-  MImp L := {toImp := Imp, toImpCondition := ByI, toImpModusPonens := Mp}
-
-instance iConditionOfMImp {L : Logic P} {K : MImp L} :
-  Condition L K.imp := K.toImpCondition
-
-instance iModusPonensOfMImp {L : Logic P} {K : MImp L} :
-  ModusPonens L K.imp := K.toImpModusPonens
+  [Imp : Imp P] [ByI : Condition L Imp.toFun] [Mp : ModusPonens L Imp.toFun] :
+  MImp L := {toImp := Imp, Condition := ByI, ModusPonens := Mp}
 
 namespace MImp
-abbrev toCondition {L : Logic P} (K : MImp L) 
-  := K.toImpCondition
-abbrev impIntro {L : Logic P} (K : MImp L) 
-  := K.toImpCondition.condition
-abbrev intro {L : Logic P} (K : MImp L) 
-  {p q} := K.impIntro p q
-abbrev condition {L : Logic P} (K : MImp L) 
-  {p q} := K.impIntro p q
-abbrev toModusPonens {L : Logic P} (K : MImp L) 
-  := K.toImpModusPonens
-abbrev impElim {L : Logic P} (K : MImp L) 
-  := K.toImpModusPonens.mp
-abbrev elim {L : Logic P} (K : MImp L) 
-  {p q} := K.impElim p q
-abbrev mp {L : Logic P} (K : MImp L) 
-  {p q} := K.impElim p q
+
+instance [K : MImp L] : 
+  Logic.Condition L K.toFun := K.Condition
+instance [K : MImp L] : 
+  Logic.ModusPonens L K.toFun := K.ModusPonens
+
+-- Basic
+abbrev condition (K : MImp L) 
+  {p q} := K.Condition.condition p q
+abbrev intro (K : MImp L) 
+  {p q} := K.Condition.condition p q
+abbrev elim (K : MImp L) 
+  {p q} := K.ModusPonens.mp p q
+abbrev mp (K : MImp L) 
+  {p q} := K.ModusPonens.mp p q
+
 end MImp
 
 --------------------------------------------------------------------------------
@@ -48,47 +44,38 @@ end MImp
 --------------------------------------------------------------------------------
 
 class MIff (L : Logic P) extends LIff P :=
-  toIffBicondition : Bicondition L toLIff.iff
-  toIffLeftMp : LeftMp L toLIff.iff
-  toIffRightMp : RightMp L toLIff.iff
+  Bicondition : Bicondition L toFun
+  LeftMp : LeftMp L toFun
+  RightMp : RightMp L toFun
 
 instance iMIff {L : Logic P} 
-[Iff : LIff P] [B : Bicondition L Iff.iff] 
-[Mpl : LeftMp L Iff.iff] [Mpr : RightMp L Iff.iff] 
-: MIff L := 
-{toLIff := Iff, 
-  toIffBicondition := B,  toIffLeftMp := Mpl, toIffRightMp := Mpr}
-
-instance iBiconditionOfMIff {L : Logic P} [K : MIff L] :
-  Bicondition L K.iff := K.toIffBicondition
-
-instance iLeftMpOfMIff {L : Logic P} [K : MIff L] :
-  LeftMp L K.iff := K.toIffLeftMp
-
-instance iRightMpOfMIff {L : Logic P} [K : MIff L] :
-  RightMp L K.iff := K.toIffRightMp
+  [Iff : LIff P] [B : Bicondition L Iff.toFun] 
+  [Mpl : LeftMp L Iff.toFun] [Mpr : RightMp L Iff.toFun] : MIff L := 
+  {toLIff := Iff, Bicondition := B, LeftMp := Mpl, RightMp := Mpr}
 
 namespace MIff
-abbrev iffBicondition {L : Logic P} (K : MIff L) 
-  := K.toIffBicondition.bicondition
-abbrev intro {L : Logic P} (K : MIff L) 
-  {p q} := K.iffBicondition p q
-abbrev toLeftMp {L : Logic P} (K : MIff L) 
-  := K.toIffLeftMp
-abbrev iffLeftMp {L : Logic P} (K : MIff L) 
-  := K.toIffLeftMp.mp
-abbrev leftMp {L : Logic P} (K : MIff L) 
-  {p q} := K.iffLeftMp p q
-abbrev mp {L : Logic P} (K : MIff L) 
-  {p q} := K.iffLeftMp p q
-abbrev toRightMp {L : Logic P} (K : MIff L) 
-  := K.toIffRightMp
-abbrev iffRightMp {L : Logic P} (K : MIff L) 
-  := K.toIffLeftMp.mp
-abbrev rightMp {L : Logic P} (K : MIff L) 
-  {p q} := K.iffRightMp p q
-abbrev mpr {L : Logic P} (K : MIff L) 
-  {p q} := K.iffRightMp p q
+
+variable {L : Logic P}
+
+instance [K : MIff L] :
+  Logic.Bicondition L K.toFun := K.Bicondition
+instance [K : MIff L] :
+  Logic.LeftMp L K.toFun := K.LeftMp
+instance [K : MIff L] :
+  Logic.RightMp L K.toFun := K.RightMp
+
+-- Basic
+abbrev intro (K : MIff L) 
+  {p q} := K.Bicondition.bicondition p q
+abbrev leftMp (K : MIff L) 
+  {p q} := K.LeftMp.mp p q
+abbrev mp (K : MIff L) 
+  {p q} := K.LeftMp.mp p q
+abbrev rightMp (K : MIff L) 
+  {p q} := K.RightMp.mp p q
+abbrev mpr (K : MIff L) 
+  {p q} := K.RightMp.mp p q
+
 end MIff
 
 --------------------------------------------------------------------------------
@@ -96,75 +83,53 @@ end MIff
 --------------------------------------------------------------------------------
 
 class LConj (L : Logic P) extends Conj P :=
-  toConjunction : Conjunction L toConj.conj
-  toConjLeftSimp : LeftSimp L toConj.conj
-  toConjRightSimp : RightSimp L toConj.conj
+  Conjunction : Conjunction L toFun
+  LeftSimp : LeftSimp L toFun
+  RightSimp : RightSimp L toFun
 
 instance iLConj {L : Logic P} 
-  [Cj : Conj P] [CjI : Conjunction L Cj.conj] 
-  [CjL : LeftSimp L Cj.conj] [CjR : RightSimp L Cj.conj] 
-  : LConj L := 
-  {toConj := Cj, toConjunction := CjI, 
-    toConjLeftSimp := CjL, toConjRightSimp := CjR}
-
-instance iConjunctionOfLConj {L : Logic P} [K : LConj L] :
-  Conjunction L K.conj := K.toConjunction
-
-instance iLeftSimpOfLConj {L : Logic P} [K : LConj L] :
-  LeftSimp L K.conj := K.toConjLeftSimp
-
-instance iRightSimpOfLConj {L : Logic P} [K : LConj L] :
-  RightSimp L K.conj := K.toConjRightSimp
+  [Cj : Conj P] [CjI : Conjunction L Cj.toFun] 
+  [CjL : LeftSimp L Cj.toFun] [CjR : RightSimp L Cj.toFun] : LConj L := 
+  {toConj := Cj, Conjunction := CjI, LeftSimp := CjL, RightSimp := CjR}
 
 namespace LConj
 
+instance [K : LConj L] :
+  Logic.Conjunction L K.toFun := K.Conjunction
+instance [K : LConj L] :
+  Logic.LeftSimp L K.toFun := K.LeftSimp
+instance [K : LConj L] :
+  Logic.RightSimp L K.toFun := K.RightSimp
+
 -- Basic
-abbrev conjoin {L : Logic P} (K : LConj L) 
-  := K.toConjunction.conjoin
-abbrev intro {L : Logic P} (K : LConj L) 
-  {p q} := K.conjoin p q
-abbrev toLeftSimp {L : Logic P} (K : LConj L)
-  := K.toConjLeftSimp
-abbrev disjLeftSimp {L : Logic P} (K : LConj L)
-  := K.toConjLeftSimp.leftSimp
-abbrev leftSimp {L : Logic P} (K : LConj L)
-  {p q} := K.disjLeftSimp p q
-abbrev left {L : Logic P} (K : LConj L)
-  {p q} := K.disjLeftSimp p q
-abbrev toRightSimp {L : Logic P} (K : LConj L) 
-  := K.toConjRightSimp
-abbrev disjRightSimp {L : Logic P} (K : LConj L) 
-  := K.toConjRightSimp.rightSimp
-abbrev rightSimp {L : Logic P} (K : LConj L) 
-  {p q} := K.disjRightSimp p q
-abbrev right {L : Logic P} (K : LConj L) 
-  {p q} := K.disjRightSimp p q
+abbrev intro (K : LConj L) 
+  {p q} := K.Conjunction.conjoin p q
+abbrev leftSimp (K : LConj L)
+  {p q} := K.LeftSimp.leftSimp p q
+abbrev left (K : LConj L)
+  {p q} := K.LeftSimp.leftSimp p q
+abbrev rightSimp (K : LConj L) 
+  {p q} := K.RightSimp.rightSimp p q
+abbrev right (K : LConj L) 
+  {p q} := K.RightSimp.rightSimp p q
 
 -- Derived
-abbrev toTaut {L : Logic P} (K : LConj L)
-  : Taut L K.conj := iTautOfConjunction
-abbrev conjTaut {L : Logic P} (K : LConj L)
-  := K.toTaut.taut
-abbrev taut {L : Logic P} (K : LConj L)
-  {p} := K.conjTaut p
-abbrev toSimp {L : Logic P} (K : LConj L)
-  : Simp L K.conj := iSimpOfLeft
-abbrev conjSimp {L : Logic P} (K : LConj L) 
-  := K.toSimp.simp
-abbrev simp {L : Logic P} (K : LConj L) 
-  {p} := K.conjSimp p
-abbrev toCurry {L : Logic P} (K : LConj L)
-  : Curry L K.conj := iCurryOfConjunction
-abbrev conjCurry {L : Logic P} (K : LConj L) 
-  := K.toCurry.curry
-abbrev curry {L : Logic P} (K : LConj L) 
-  {p q} := K.conjCurry p q
-abbrev toUncurry {L : Logic P} (K : LConj L)
-  : Uncurry L K.conj := iUncurryOfLeftRightSimp
-abbrev conjUncurry {L : Logic P} (K : LConj L) 
-  := K.toUncurry.uncurry
-abbrev uncurry {L : Logic P} (K : LConj L) 
-  {p q} := K.conjUncurry p q
+abbrev Taut (K : LConj L)
+  : Taut L K.toFun := iTautOfConjunction
+abbrev taut (K : LConj L)
+  {p} := K.Taut.taut p
+abbrev Simp (K : LConj L)
+  : Simp L K.toFun := iSimpOfLeft
+abbrev simp (K : LConj L) 
+  {p} := K.Simp.simp p
+abbrev Curry (K : LConj L)
+  : Curry L K.toFun := iCurryOfConjunction
+abbrev curry (K : LConj L) 
+  {p q} := K.Curry.curry p q
+abbrev Uncurry (K : LConj L)
+  : Uncurry L K.toFun := iUncurryOfLeftRightSimp
+abbrev uncurry (K : LConj L) 
+  {p q} := K.Uncurry.uncurry p q
 
 end LConj
 
@@ -173,103 +138,77 @@ end LConj
 --------------------------------------------------------------------------------
 
 class LSum (L : Logic P) extends Disj P :=
-  toDisjByEither : ByEither L toDisj.disj
-  toDisjLeftTaut : LeftTaut L toDisj.disj
-  toDisjRightTaut : RightTaut L toDisj.disj
+  ByEither : ByEither L toFun
+  LeftTaut : LeftTaut L toFun
+  RightTaut : RightTaut L toFun
 
 instance iLSum {L : Logic P} [Dj : Disj P] 
-  [IL : LeftTaut L Dj.disj] [IR : RightTaut L Dj.disj] [E : ByEither L Dj.disj] 
-  : LSum L := 
-  {toDisj := Dj, toDisjLeftTaut := IL, toDisjRightTaut := IR, toDisjByEither := E}
-
-instance iLeftTautOfLSum {L : Logic P} [K : LSum L] :
-  LeftTaut L K.disj := K.toDisjLeftTaut
-
-instance iRightTautOfLSum {L : Logic P} [K : LSum L] :
-  RightTaut L K.disj := K.toDisjRightTaut
-
-instance iByEitherOfLSum {L : Logic P} [K : LSum L] :
-  ByEither L K.disj := K.toDisjByEither
+  [E : ByEither L Dj.toFun] [IL : LeftTaut L Dj.toFun] [IR : RightTaut L Dj.toFun]  
+  : LSum L := {toDisj := Dj, ByEither := E, LeftTaut := IL, RightTaut := IR}
 
 namespace LSum
 
+instance [K : LSum L] :
+  Logic.LeftTaut L K.toFun := K.LeftTaut
+instance [K : LSum L] :
+  Logic.RightTaut L K.toFun := K.RightTaut
+instance [K : LSum L] :
+  Logic.ByEither L K.toFun := K.ByEither
+
 -- Basic
-abbrev toLeftTaut {L : Logic P} (K : LSum L)
-  := K.toDisjLeftTaut
-abbrev disjLeftTaut {L : Logic P} (K : LSum L)
-  := K.toDisjLeftTaut.leftTaut
-abbrev leftTaut {L : Logic P} (K : LSum L)
-  {p q} := K.disjLeftTaut p q
-abbrev inl {L : Logic P} (K : LSum L)
-  {p q} := K.disjLeftTaut p q
-abbrev toRightTaut {L : Logic P} (K : LSum L) 
-  := K.toDisjRightTaut
-abbrev disjRightTaut {L : Logic P} (K : LSum L) 
-  := K.toDisjRightTaut.rightTaut
-abbrev rightTaut {L : Logic P} (K : LSum L) 
-  {p q} := K.disjRightTaut p q
-abbrev inr {L : Logic P} (K : LSum L) 
-  {p q} := K.disjRightTaut p q
-abbrev toByEither {L : Logic P} (K : LSum L) 
-  := K.toDisjByEither
-abbrev disjByEither {L : Logic P} (K : LSum L) 
-  := K.toDisjByEither.byEither
-abbrev byEither {L : Logic P} (K : LSum L) 
-  {a p q} := K.disjByEither a p q
-abbrev elim {L : Logic P} (K : LSum L) 
-  {a p q} := K.disjByEither a p q
+abbrev leftTaut (K : LSum L)
+  {p q} := K.LeftTaut.leftTaut p q
+abbrev inl (K : LSum L)
+  {p q} := K.LeftTaut.leftTaut p q
+abbrev rightTaut (K : LSum L) 
+  {p q} := K.RightTaut.rightTaut p q
+abbrev inr (K : LSum L) 
+  {p q} := K.RightTaut.rightTaut p q
+abbrev byEither (K : LSum L) 
+  {a p q} := K.ByEither.byEither a p q
+abbrev elim (K : LSum L) 
+  {a p q} := K.ByEither.byEither a p q
 
 -- Derived
-abbrev toTaut {L : Logic P} (K : LSum L)
-  : Taut L K.disj := iTautOfLeft
-abbrev disjTaut {L : Logic P} (K : LSum L)
-  := K.toTaut.taut
-abbrev taut {L : Logic P} (K : LSum L)
-  {p} := K.disjTaut p
-abbrev toSimp {L : Logic P} (K : LSum L)
-  : Simp L K.disj := iSimpOfByEither
-abbrev disjSimp {L : Logic P} (K : LSum L) 
-  := K.toSimp.simp
-abbrev simp {L : Logic P} (K : LSum L) 
-  {p} := K.disjSimp p
+abbrev Taut (K : LSum L)
+  : Taut L K.toFun := iTautOfLeft
+abbrev taut (K : LSum L)
+  {p} := K.Taut.taut p
+abbrev Simp (K : LSum L)
+  : Simp L K.toFun := iSimpOfByEither
+abbrev simp (K : LSum L) 
+  {p} := K.Simp.simp p
 
 end LSum
 
 class LDisj (L : Logic P) (lnot : Unar P) extends LSum L :=
-  toDisjLeftMtp : LeftMtp L disj lnot
-  toDisjRightMtp : RightMtp L disj lnot
+  LeftMtp : LeftMtp L toFun lnot
+  RightMtp : RightMtp L toFun lnot
 
 instance iLDisj {L : Logic P} [Dj: Disj P] {lnot}
-  [ByE : ByEither L Dj.disj]  [LT : LeftTaut L Dj.disj] [RT : RightTaut L Dj.disj] 
-  [LMtp : LeftMtp L Dj.disj lnot] [RMtp : RightMtp L Dj.disj lnot] 
+  [ByE : ByEither L Dj.toFun]  [LT : LeftTaut L Dj.toFun] [RT : RightTaut L Dj.toFun] 
+  [LMtp : LeftMtp L Dj.toFun lnot] [RMtp : RightMtp L Dj.toFun lnot] 
   : LDisj L lnot := 
-  {toDisj := Dj, toDisjByEither := ByE, 
-    toDisjLeftTaut := LT, toDisjRightTaut := RT, 
-    toDisjLeftMtp := LMtp, toDisjRightMtp := RMtp}
-
-instance iLeftMtpOfLDisj {L : Logic P} {lnot} [K : LDisj L lnot] :
-  LeftMtp L K.disj lnot := K.toDisjLeftMtp
-
-instance iRightMtpOfLDisj {L : Logic P} {lnot} [K : LDisj L lnot] :
-  RightMtp L K.disj lnot := K.toDisjRightMtp
+  {toDisj := Dj, ByEither := ByE, 
+    LeftTaut := LT, RightTaut := RT, LeftMtp := LMtp, RightMtp := RMtp}
 
 namespace LDisj
-abbrev toLeftMtp {L : Logic P} {lnot} (K : LDisj L lnot)
-  := K.toDisjLeftMtp
-abbrev disjLeftMtp {L : Logic P} {lnot} (K : LDisj L lnot)
-  := K.toDisjLeftMtp.mtp
-abbrev leftMtp {L : Logic P} {lnot} (K : LDisj L lnot)
-  {p q} := K.disjLeftMtp p q
-abbrev mtp {L : Logic P} {lnot} (K : LDisj L lnot)
-  {p q} := K.disjLeftMtp p q
-abbrev toRightMtp {L : Logic P} {lnot} (K : LDisj L lnot) 
-  := K.toDisjRightMtp
-abbrev disjRightMtp {L : Logic P} {lnot} (K : LDisj L lnot) 
-  := K.toDisjRightMtp.mtp
-abbrev rightMtp {L : Logic P} {lnot} (K : LDisj L lnot)
-  {p q} := K.disjRightMtp p q
-abbrev mtpr {L : Logic P} {lnot} (K : LDisj L lnot)
-  {p q} := K.disjRightMtp p q
+
+instance {lnot} [K : LDisj L lnot] :
+  Logic.LeftMtp L K.toFun lnot := K.LeftMtp
+instance {lnot} [K : LDisj L lnot] :
+  Logic.RightMtp L K.toFun lnot := K.RightMtp
+
+-- Basic
+abbrev leftMtp {lnot} (K : LDisj L lnot)
+  {p q} := K.LeftMtp.mtp p q
+abbrev mtp {lnot} (K : LDisj L lnot)
+  {p q} := K.LeftMtp.mtp p q
+abbrev rightMtp {lnot} (K : LDisj L lnot)
+  {p q} := K.RightMtp.mtp p q
+abbrev mtpr {lnot} (K : LDisj L lnot)
+  {p q} := K.RightMtp.mtp p q
+
 end LDisj
 
 --------------------------------------------------------------------------------
@@ -277,36 +216,30 @@ end LDisj
 --------------------------------------------------------------------------------
 
 class MNot (L : Logic P) extends LNot P :=
-  toNotAdFalso : AdFalso L toLNot.not
-  toNotNoncontradiction : Noncontradiction L toLNot.not
+  AdFalso : AdFalso L toFun
+  Noncontradiction : Noncontradiction L toFun
 
-instance iMNot {L : Logic P} 
-  [Nt : LNot P] [Af : AdFalso L Nt.not] [Nc : Noncontradiction L Nt.not] : 
-  MNot L := {toLNot := Nt, toNotAdFalso := Af, toNotNoncontradiction := Nc}
-
-instance iAdFalsoOfMNot {L : Logic P} [F : LFalse P] [K : MNot L] : 
-  AdFalso L K.not := K.toNotAdFalso
-
-instance iNoncontradictionOfMNot {L : Logic P} [F : LFalse P] [K : MNot L] : 
-  Noncontradiction L K.not := K.toNotNoncontradiction
+instance iMNot {L : Logic P} [Nt : LNot P] 
+  [Af : AdFalso L Nt.toFun] [Nc : Noncontradiction L Nt.toFun] : MNot L := 
+  {toLNot := Nt, AdFalso := Af, Noncontradiction := Nc}
 
 namespace MNot
-abbrev toAdFalso {L : Logic P} (K : MNot L) 
-  := K.toNotAdFalso
-abbrev notAdFalso {L : Logic P} (K : MNot L) 
-  := K.toNotAdFalso.adFalso
-abbrev adFalso {L : Logic P} (K : MNot L) 
-  {p} := K.notAdFalso p
-abbrev intro {L : Logic P} (K : MNot L) 
-  {p} := K.notAdFalso p
-abbrev toNoncontradiction {L : Logic P} (K : MNot L) 
-  := K.toNotNoncontradiction
-abbrev notNoncontradiction {L : Logic P} (K : MNot L) 
-  := K.toNotNoncontradiction.noncontradiction
-abbrev noncontradiction {L : Logic P} (K : MNot L) 
-  {p} := K.notNoncontradiction p
-abbrev elim {L : Logic P} (K : MNot L) 
-  {p} := K.notNoncontradiction p
+
+instance [K : MNot L] : 
+  Logic.AdFalso L K.toFun := K.AdFalso
+instance [K : MNot L] : 
+  Logic.Noncontradiction L K.toFun := K.Noncontradiction
+
+-- Basic
+abbrev adFalso (K : MNot L) 
+  {p} := K.AdFalso.adFalso p
+abbrev intro (K : MNot L) 
+  {p} := K.AdFalso.adFalso p
+abbrev noncontradiction (K : MNot L) 
+  {p} := K.Noncontradiction.noncontradiction p
+abbrev elim (K : MNot L) 
+  {p} := K.Noncontradiction.noncontradiction p
+
 end MNot
 
 end Gaea.Logic

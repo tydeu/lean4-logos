@@ -32,14 +32,13 @@ instance iImpReflByImp {L : Logic P}
 := {refl := impReflByImp ByI}
 
 namespace MImp
-abbrev toRefl {L : Logic P} (K : MImp L) 
-  : Refl L K.imp := iImpReflByImp
-abbrev impRefl {L : Logic P} (K : MImp L) := K.toRefl.refl
-abbrev refl {L : Logic P} (K : MImp L) := K.impRefl
-abbrev toTaut {L : Logic P} (K : MImp L) 
-  : Taut L K.imp := iTautOfRefl
-abbrev impTaut {L : Logic P} (K : MImp L) := K.toTaut.taut
-abbrev taut {L : Logic P} (K : MImp L) {p} := K.impTaut p
+abbrev Refl {L : Logic P} (K : MImp L) 
+  : Refl L K.toFun := iImpReflByImp
+abbrev refl {L : Logic P} (K : MImp L) := K.Refl.refl
+abbrev rfl {L : Logic P} (K : MImp L) {p} := K.Refl.refl p
+abbrev Taut {L : Logic P} (K : MImp L) 
+  : Taut L K.toFun := iTautOfRefl
+abbrev taut {L : Logic P} (K : MImp L) {p} := K.Taut.taut p
 end MImp
 
 -- Transitivity
@@ -59,10 +58,9 @@ instance iImpTransByImp {L : Logic P}
 : Trans L imp := {trans := impTransByImpMp ByI Mp}
 
 namespace MImp
-abbrev toTrans {L : Logic P} (K : MImp L) 
-  : Trans L K.imp := iImpTransByImp
-abbrev impTrans {L : Logic P} (K : MImp L) := K.toTrans.trans
-abbrev trans {L : Logic P} (K : MImp L) {p q r} := K.impTrans p q r
+abbrev Trans {L : Logic P} (K : MImp L) 
+  : Trans L K.toFun := iImpTransByImp
+abbrev trans {L : Logic P} (K : MImp L) {p q r} := K.Trans.trans p q r
 end MImp
 
 --------------------------------------------------------------------------------

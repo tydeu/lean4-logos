@@ -41,15 +41,15 @@ abbrev elim {L : Logic P} {N : IsNat P T} (K : MForallNat L N)
 end MForallNat
 
 --------------------------------------------------------------------------------
--- Forall/Im Implementation Module
+-- Forall/Imp Implementation Module
 --------------------------------------------------------------------------------
 
 def MForallIfNat {L : Logic P} 
   (N : IsNat P T) (Fa : MForall L T) (Im : MImp L) 
   : MForallNat L N := {
     toForallNat := LForallIfNat N Fa.toLForall Im.toImp, 
-    toForallNatIntro := LForallIfNatIntro N Fa.toUnivGen Im.toCondition,
-    toForallNatElim := LForallIfNatElim N Fa.toUnivInst Im.toModusPonens,
+    toForallNatIntro := LForallIfNatIntro N Fa.toUnivGen Im.Condition,
+    toForallNatElim := LForallIfNatElim N Fa.toUnivInst Im.ModusPonens,
   }
 
 instance iMForallIfNat {P : Sort u} {T : Type v} {L : Logic P} 
