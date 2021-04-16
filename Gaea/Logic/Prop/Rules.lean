@@ -34,11 +34,11 @@ abbrev condition {L : Logic P} {imp}
 -- Proof by Contraposition
 -- (~q |- ~p) -> (|- p -> q)
 
-class ByContraposition (L : Logic P) (imp : Binar P) (lnot : Unar P) :=
+class ByContraposition (L : Logic P) (imp : Binar P) (lneg : Unar P) :=
   byContraposition : (p q : P) -> ((L |- ~q) -> (L |- ~p)) -> (L |- p -> q) 
 
-abbrev byContraposition {L : Logic P} {imp lnot}
-  [K : ByContraposition L imp lnot] {p q} := K.byContraposition p q
+abbrev byContraposition {L : Logic P} {imp lneg}
+  [K : ByContraposition L imp lneg] {p q} := K.byContraposition p q
 
 -- Biconditional Proof
 -- (p |- q) -> (q |- p) -> (|- p <-> q)
@@ -53,11 +53,11 @@ abbrev bicondition {L : Logic P} {iff}
 -- Conjunctive Proof
 -- p, q |- p /\ q
 
-class Conjunction (L : Logic P) (C : Binar P) := 
+class Conjoin (L : Logic P) (C : Binar P) := 
   conjoin : (p q : P) -> (L |- p) -> (L |- q) -> (L |- C p q) 
 
 abbrev conjoin {L : Logic P} {C} 
-  [K : Conjunction L C] {p q} := K.conjoin p q
+  [K : Conjoin L C] {p q} := K.conjoin p q
 
 -- Proof by Cases
 -- (|- p \/ q) -> ((|- p) -> r) -> ((|- q) -> r) -> r
@@ -105,28 +105,28 @@ abbrev mpr {L : Logic P} {iff}
 
 -- p <-> q, ~p |- q 
 
-class LeftMt (L : Logic P) (iff : Binar P) (lnot : Unar P) :=
+class LeftMt (L : Logic P) (iff : Binar P) (lneg : Unar P) :=
   mt : (p q : P) -> (L |- p <-> q) -> (L |- ~p) -> (L |- ~q) 
 
-abbrev leftMt {L : Logic P} {iff lnot} 
-  [K : LeftMt L iff lnot] {p q} := K.mt p q
+abbrev leftMt {L : Logic P} {iff lneg} 
+  [K : LeftMt L iff lneg] {p q} := K.mt p q
 
-abbrev mtr {L : Logic P} {iff lnot} 
-  [K : LeftMt L iff lnot] {p q} := K.mt p q
+abbrev mtr {L : Logic P} {iff lneg} 
+  [K : LeftMt L iff lneg] {p q} := K.mt p q
 
 -- p <-> q, ~q |- ~p 
 
-class RightMt (L : Logic P) (iff : Binar P) (lnot : Unar P) :=
+class RightMt (L : Logic P) (iff : Binar P) (lneg : Unar P) :=
   mt : (p q : P) -> (L |- p <-> q) -> (L |- ~q) -> (L |- ~p)
 
-abbrev rightMt {L : Logic P} {iff lnot} 
-  [K : RightMt L iff lnot] {p q} := K.mt p q
+abbrev rightMt {L : Logic P} {iff lneg} 
+  [K : RightMt L iff lneg] {p q} := K.mt p q
 
-abbrev ModusTollens (L : Logic P) (imp : Binar P) (lnot : Unar P)
-  := RightMt L imp lnot
+abbrev ModusTollens (L : Logic P) (imp : Binar P) (lneg : Unar P)
+  := RightMt L imp lneg
 
-abbrev mt {L : Logic P} {imp lnot} 
-  [K : RightMt L imp lnot] {p q} := K.mt p q
+abbrev mt {L : Logic P} {imp lneg} 
+  [K : RightMt L imp lneg] {p q} := K.mt p q
 
 
 --------------------------------------------------------------------------------
@@ -135,28 +135,28 @@ abbrev mt {L : Logic P} {imp lnot}
 
 -- p \/ q, ~p |- q
 
-class LeftMtp (L : Logic P) (disj : Binar P) (lnot : Unar P) := 
+class LeftMtp (L : Logic P) (disj : Binar P) (lneg : Unar P) := 
   mtp : (p q : P) -> (L |- p \/ q) -> (L |- ~p) -> (L |- q)
 
-abbrev leftMtp {L : Logic P} {disj} {lnot : Unar P} 
-  [K : LeftMtp L disj lnot] {p q} := K.mtp p q
+abbrev leftMtp {L : Logic P} {disj} {lneg : Unar P} 
+  [K : LeftMtp L disj lneg] {p q} := K.mtp p q
 
-abbrev ModusTollendoPonens (L : Logic P) (imp : Binar P) (lnot : Unar P)
-  := LeftMtp L imp lnot
+abbrev ModusTollendoPonens (L : Logic P) (imp : Binar P) (lneg : Unar P)
+  := LeftMtp L imp lneg
 
-abbrev mtp {L : Logic P} {disj} {lnot : Unar P} 
-  [K : LeftMtp L disj lnot] {p q} := K.mtp p q
+abbrev mtp {L : Logic P} {disj} {lneg : Unar P} 
+  [K : LeftMtp L disj lneg] {p q} := K.mtp p q
 
 -- p \/ q, ~q |- p
 
-class RightMtp (L : Logic P) (disj : Binar P) (lnot : Unar P) := 
+class RightMtp (L : Logic P) (disj : Binar P) (lneg : Unar P) := 
   mtp : (p q : P) -> (L |- p \/ q) -> (L |- ~q) -> (L |- p)
 
-abbrev rightMtp {L : Logic P} {disj} {lnot : Unar P} 
-  [K : RightMtp L disj lnot] {p q} := K.mtp p q
+abbrev rightMtp {L : Logic P} {disj} {lneg : Unar P} 
+  [K : RightMtp L disj lneg] {p q} := K.mtp p q
 
-abbrev mtpr {L : Logic P} {disj} {lnot : Unar P} 
-  [K : RightMtp L disj lnot] {p q} := K.mtp p q
+abbrev mtpr {L : Logic P} {disj} {lneg : Unar P} 
+  [K : RightMtp L disj lneg] {p q} := K.mtp p q
 
 --------------------------------------------------------------------------------
 -- Tautology
@@ -170,8 +170,8 @@ class Taut (L : Logic P) (D : Binar P)  :=
 abbrev taut {L : Logic P} {D} 
   [K : Taut L D] {p} := K.taut p
 
-instance iTautOfConjunction {L : Logic P} {C}
-  [K : Conjunction L C] : Taut L C := 
+instance iTautOfConjoin {L : Logic P} {C}
+  [K : Conjoin L C] : Taut L C := 
   {taut := fun p Lp => K.conjoin p p Lp Lp}
 
 -- p |- D p q
@@ -251,12 +251,12 @@ class Curry (L : Logic P) (C : Binar P) :=
 abbrev curry {L : Logic P} {C} 
   [K : Curry L C] {r p q} := K.curry r p q
 
-instance iCurryOfConjunction {L : Logic P} {C}
-  [K : Conjunction L C] : Curry L C := 
+instance iCurryOfConjoin {L : Logic P} {C}
+  [K : Conjoin L C] : Curry L C := 
   {curry := fun a p q fpCq Lp Lq  => fpCq (conjoin Lp Lq)}
 
-instance iConjunctionOfCurry {L : Logic P} {C}
-  [K : Curry L C] : Conjunction L C := 
+instance iConjoinOfCurry {L : Logic P} {C}
+  [K : Curry L C] : Conjoin L C := 
   {conjoin := fun p q => K.curry _ p q id}
 
 -- (p -> q -> a) -> (p /\ q -> a)
@@ -284,22 +284,22 @@ instance iRightSimpOfUncurry {L : Logic P} {conj}
 -- Contradiction
 --------------------------------------------------------------------------------
 
-def Contradiction (L : Logic P) (lnot : Unar P) :=
-  PSigma fun (p : P) => PProd (L |- lnot p) (L |- p) 
+def Contradiction (L : Logic P) (lneg : Unar P) :=
+  PSigma fun (p : P) => PProd (L |- lneg p) (L |- p) 
 
-def contradiction {L : Logic P} {lnot}
-  {p} (LNp : L |- lnot p) (Lp : L |- p) : Contradiction L lnot := 
+def contradiction {L : Logic P} {lneg}
+  {p} (LNp : L |- lneg p) (Lp : L |- p) : Contradiction L lneg := 
     PSigma.mk p (PProd.mk LNp Lp)
 
 -- Proof by Contradiction
 -- ((|- p) -> Contradiction) -> (|- ~p)
 
-class ByContradiction (L : Logic P) (lnot : Unar P) :=
+class ByContradiction (L : Logic P) (lneg : Unar P) :=
   byContradiction : (p : P) ->
-     ((L |- p) -> Contradiction L lnot) -> (L |- lnot p)
+     ((L |- p) -> Contradiction L lneg) -> (L |- lneg p)
 
-abbrev byContradiction {L : Logic P} {lnot}
-  [K : ByContradiction L lnot] {p} := K.byContradiction p
+abbrev byContradiction {L : Logic P} {lneg}
+  [K : ByContradiction L lneg] {p} := K.byContradiction p
 
 --------------------------------------------------------------------------------
 -- Falsity
@@ -307,27 +307,27 @@ abbrev byContradiction {L : Logic P} {lnot}
 
 -- Not |- p, ~p
 
-class Noncontradiction (L : Logic P) (lnot : Unar P) := 
+class Noncontradiction (L : Logic P) (lneg : Unar P) := 
   noncontradiction : (p : P) -> (L |- ~p) -> (L |- p) -> False
 
-abbrev noncontradiction {L : Logic P} {lnot} 
-  [K : Noncontradiction L lnot] {p} := K.noncontradiction p
+abbrev noncontradiction {L : Logic P} {lneg} 
+  [K : Noncontradiction L lneg] {p} := K.noncontradiction p
 
 -- ((|- p) -> False) -> (|- ~p)
 
-class AdFalso (L : Logic P) (lnot : Unar P) := 
+class AdFalso (L : Logic P) (lneg : Unar P) := 
   adFalso : (p : P) -> ((L |- p) -> False) -> (L |- ~p) 
 
-abbrev adFalso {L : Logic.{u,0} P} {lnot}
-  [K : AdFalso L lnot] {p} := K.adFalso p
+abbrev adFalso {L : Logic.{u,0} P} {lneg}
+  [K : AdFalso L lneg] {p} := K.adFalso p
 
 -- (p |- falsum) -> (|- ~p)
 
-class AdFalsum (L : Logic P) (falsum : P) (lnot : Unar P) :=
+class AdFalsum (L : Logic P) (falsum : P) (lneg : Unar P) :=
   adFalsum : (p : P) -> ((L |- p) -> (L |- falsum)) -> (L |- ~p)
 
-abbrev adFalsum {L : Logic P} {falsum : P} {lnot : Unar P}
-  [K : AdFalsum L falsum lnot] {p} := K.adFalsum p
+abbrev adFalsum {L : Logic P} {falsum : P} {lneg : Unar P}
+  [K : AdFalsum L falsum lneg] {p} := K.adFalsum p
 
 -- (|- falsum) -> (|- p)
 
@@ -343,18 +343,18 @@ abbrev exFalsum {L : Logic P} {falsum}
 
 -- p |- ~~p
 
-class DblNegIntro (L : Logic P) (lnot : Unar P) :=
+class DblNegIntro (L : Logic P) (lneg : Unar P) :=
   dblNegIntro : (p : P) -> (L |- p) -> (L |- ~~p)
 
-abbrev dblNegIntro {L : Logic P} {lnot}
-  [K : DblNegIntro L lnot] {p} := K.dblNegIntro p
+abbrev dblNegIntro {L : Logic P} {lneg}
+  [K : DblNegIntro L lneg] {p} := K.dblNegIntro p
 
 -- ~~p |- p
 
-class DblNegElim (L : Logic P) (lnot : Unar P) :=
+class DblNegElim (L : Logic P) (lneg : Unar P) :=
   dblNegElim : (p : P) -> (L |- ~~p) -> (L |- p)
 
-abbrev dblNegElim {L : Logic P} {lnot}
-  [K : DblNegElim L lnot] {p} := K.dblNegElim p
+abbrev dblNegElim {L : Logic P} {lneg}
+  [K : DblNegElim L lneg] {p} := K.dblNegElim p
 
 end Gaea.Logic

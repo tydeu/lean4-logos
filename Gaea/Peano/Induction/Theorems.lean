@@ -307,11 +307,11 @@ instance iNatInductionRight3BySchema
 -- Right Ternary Induction (Conditioned)
 --------------------------------------------------------------------------------
 
--- By Predicate Induction & ForallNat & Im
+-- By Predicate Induction & ForallNat & imp
 
 def natInductionRight3IfByForallNatIf_induct
 {P : Sort u} {T : Type v} {L : Logic P} {N : PNat P T} 
-(I : NatInduction L N) (FaN : MForallNat L N.toIsNat) (Im : MImp L)
+(I : NatInduction L N) (FaN : MForallNat L N.toIsNat) (imp : LImp L)
 : (C : T -> T -> P) -> (f : T -> T -> T -> P) ->
   (L |- forallNat a b => C a b -> f a b 0) -> 
   ((c : T) -> (L |- nat c) -> 
@@ -324,7 +324,7 @@ def natInductionRight3IfByForallNatIf_induct
 
 def natInductionRight3IfByForallNatIf
 {P : Sort u} {T : Type v} {L : Logic P} {N : PNat P T} 
-(I : NatInduction L N) (FaN : MForallNat L N.toIsNat) (Im : MImp L)
+(I : NatInduction L N) (FaN : MForallNat L N.toIsNat) (imp : LImp L)
 : (C : T -> T -> P) -> (f : T -> T -> T -> P) ->
   ((a b : T) -> (L |- nat a) -> (L |- nat b) ->  
     (L |- C a b) -> (L |- f a b 0)) -> 
@@ -337,28 +337,28 @@ def natInductionRight3IfByForallNatIf
     (L |- C a b) -> (L |- f a b c))
 := by
   intro C f f0 fS a b c Na Nb Nc
-  have h := natInductionRight3IfByForallNatIf_induct I FaN Im
+  have h := natInductionRight3IfByForallNatIf_induct I FaN imp
     C f ?p_f0 ?p_fS c Nc
   case p_f0 =>
     apply FaN.intro; intro a Na
     apply FaN.intro; intro b Nb
-    apply Im.intro; intro Cab
+    apply imp.intro; intro Cab
     exact f0 a b Na Nb Cab
   case p_fS =>
     intro c Nc p_ih
     apply FaN.intro; intro a Na
     apply FaN.intro; intro b Nb
-    apply Im.intro; intro Cab
+    apply imp.intro; intro Cab
     have ih := fun a b (Na : L |- nat a) (Nb : L |- nat b) Cab => 
-      Im.elim (FaN.elim (FaN.elim p_ih Na) Nb) Cab
+      imp.elim (FaN.elim (FaN.elim p_ih Na) Nb) Cab
     exact fS c Nc ih a b Na Nb Cab
-  exact Im.elim (FaN.elim (FaN.elim h Na) Nb)
+  exact imp.elim (FaN.elim (FaN.elim h Na) Nb)
 
 instance iNatInductionRight3IfByForallNatIf
 {P : Sort u} {T : Type v} {L : Logic P} [N : PNat P T] 
-[I : NatInduction L N] [FaN : MForallNat L N.toIsNat] [Im : MImp L]
+[I : NatInduction L N] [FaN : MForallNat L N.toIsNat] [imp : LImp L]
 : NatInductionRight3If L N
-:= {natInductionRight3If := natInductionRight3IfByForallNatIf I FaN Im}
+:= {natInductionRight3If := natInductionRight3IfByForallNatIf I FaN imp}
 
 -- By Schema Induction
 

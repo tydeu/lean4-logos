@@ -89,7 +89,7 @@ scoped macro "rightMtp " pq:term:max nq:term:max : tactic =>
   `(tactic| exact rightMtp $pq $nq)
 
 scoped macro "dblNegElim" : tactic => 
-  `(tactic| apply dblNegElim (lnot := $(Lean.mkIdent `lnot)))
+  `(tactic| apply dblNegElim (lneg := $(Lean.mkIdent `lneg)))
 
 scoped syntax (name := uncurryTactic) 
   "uncurry " (colGt binderPat)* : tactic

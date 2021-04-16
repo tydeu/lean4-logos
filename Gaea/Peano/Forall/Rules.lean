@@ -32,41 +32,41 @@ def forallNatElim   {L : Logic P} [N : IsNat P T] [FaN : ForallNat P T]
 --------------------------------------------------------------------------------
 
 def forallIfNatIntro {L : Logic P} 
-[N : IsNat P T] [Fa : LForall P T] [Im : Imp P]
-[Ug : UnivGen L Fa.lForall] [ByI : Condition L Im.toFun]
+[N : IsNat P T] [Fa : LForall P T] [imp : Imp P]
+[Ug : UnivGen L Fa.lForall] [ByI : Condition L imp.toFun]
 {f : T -> P} (F : (a : T) -> (L |- nat a) -> (L |- f a))
 : L |- forall a => nat a -> f a
 := ug fun a => condition fun Na => F a Na
 
 def LForallIfNatIntro {L : Logic P} 
-(N : IsNat P T) [Fa : LForall P T] [Im : Imp P] 
-(Ug : UnivGen L Fa.lForall) (ByI : Condition L Im.toFun) 
-: ForallNatIntro L N (LForallIfNat N Fa Im)
+(N : IsNat P T) [Fa : LForall P T] [imp : Imp P] 
+(Ug : UnivGen L Fa.lForall) (ByI : Condition L imp.toFun) 
+: ForallNatIntro L N (LForallIfNat N Fa imp)
 := {forallNatIntro := fun _ F => forallIfNatIntro F}
 
 instance iForallIfNatIntro {L : Logic P} 
-[N : IsNat P T] [Fa : LForall P T] [Im : Imp P]
-[Ug : UnivGen L Fa.lForall] [ByI : Condition L Im.toFun]
-: ForallNatIntro L N (LForallIfNat N Fa Im)
+[N : IsNat P T] [Fa : LForall P T] [imp : Imp P]
+[Ug : UnivGen L Fa.lForall] [ByI : Condition L imp.toFun]
+: ForallNatIntro L N (LForallIfNat N Fa imp)
 := LForallIfNatIntro N Ug ByI
 
 def forallIfNatElim {L : Logic P} 
-[N : IsNat P T] [Fa : LForall P T] [Im : Imp P]
-[Ui : UnivInst L Fa.lForall] [Mp : ModusPonens L Im.toFun]
+[N : IsNat P T] [Fa : LForall P T] [imp : Imp P]
+[Ui : UnivInst L Fa.lForall] [Mp : ModusPonens L imp.toFun]
 {f : T -> P} (p : L |- forall (a : T) => nat a -> f a) 
 {a : T} (Na : L |- nat a) : L |- f a
 := mp (ui p a) Na
 
 def LForallIfNatElim {L : Logic P} 
-(N : IsNat P T) [Fa : LForall P T] [Im : Imp P]
-(Ui : UnivInst L Fa.lForall) (Mp : ModusPonens L Im.toFun) 
-: ForallNatElim L N (LForallIfNat N Fa Im)
+(N : IsNat P T) [Fa : LForall P T] [imp : Imp P]
+(Ui : UnivInst L Fa.lForall) (Mp : ModusPonens L imp.toFun) 
+: ForallNatElim L N (LForallIfNat N Fa imp)
 := {forallNatElim := fun _ p a Na => forallIfNatElim p Na}
 
 instance iForallIfNatElim {L : Logic P} 
-[N : IsNat P T] [Fa : LForall P T] [Im : Imp P]
-[Ui : UnivInst L Fa.lForall] [Mp : ModusPonens L Im.toFun]
-: ForallNatElim L N (LForallIfNat N Fa Im)
+[N : IsNat P T] [Fa : LForall P T] [imp : Imp P]
+[Ui : UnivInst L Fa.lForall] [Mp : ModusPonens L imp.toFun]
+: ForallNatElim L N (LForallIfNat N Fa imp)
 := LForallIfNatElim N Ui Mp
 
 end Gaea.Peano

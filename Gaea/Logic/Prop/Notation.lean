@@ -13,7 +13,7 @@ scoped infixr:35 " ∧ "   => $(mkIdent `conj)
 scoped infixr:30 " \\/ " => $(mkIdent `disj)
 scoped infixr:30 " ∨ "   => $(mkIdent `disj)
 
-scoped prefix:max "~"    => $(mkIdent `lnot)
-scoped prefix:max "¬"    => $(mkIdent `lnot)
+scoped prefix:max "~"    => $(mkIdent `lneg)
+scoped prefix:max "¬"    => $(mkIdent `lneg)
 
 end Gaea.Logic

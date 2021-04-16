@@ -50,7 +50,7 @@ def natSuccNat {P : Sort u} (T : Sort v)
 
 -- Axiom 7
 def eqNatIffEqSucc {P : Sort u} (T : Sort v) 
-  [SEq P T] [Succ T] [LIff P] [ForallNat P T] : P :=
+  [SEq P T] [Succ T] [SIff P] [ForallNat P T] : P :=
   forallNat (m n : T) => m = n <-> S m = S n
 
 -- Axiom 7a
@@ -114,7 +114,7 @@ def mulNatSuccEqAddMul {P : Sort u} (T : Type v)
 def leIffAddNat 
   {P : Sort u} (T : Type v) 
   [IsNat P T] [LE P T] [SEq P T] [Add T] 
-  [Imp P] [LIff P] [ForallNat P T] [LExists P T] : P :=
+  [Imp P] [SIff P] [ForallNat P T] [LExists P T] : P :=
   forallNat (a b : T) => a <= b <-> exists c => nat c -> a + c = b
 
 -- Axiom 2

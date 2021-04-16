@@ -1,5 +1,6 @@
 import Gaea.Logic.Logic
 import Gaea.Logic.Prop.Rules
+import Gaea.Logic.Prop.Theorems
 
 universe u
 variable {P : Sort u}
@@ -12,90 +13,122 @@ variable {L : Logic P}
 -- Implication
 --------------------------------------------------------------------------------
 
-class MImp (L : Logic P) extends Imp P :=
+class LImp (L : Logic P) extends Imp P :=
   Condition : Condition L toFun
   ModusPonens : ModusPonens L toFun
 
-instance iMImp {L : Logic P} 
-  [Imp : Imp P] [ByI : Condition L Imp.toFun] [Mp : ModusPonens L Imp.toFun] :
-  MImp L := {toImp := Imp, Condition := ByI, ModusPonens := Mp}
+instance iLImp {L : Logic P} [imp : Imp P] 
+  [ByI : Condition L imp.toFun] [Mp : ModusPonens L imp.toFun] : LImp L := 
+  {toImp := imp, Condition := ByI, ModusPonens := Mp}
 
-namespace MImp
+namespace LImp
 
-instance [K : MImp L] : 
+abbrev funType (K : LImp L) := Binar P
+instance : CoeFun (LImp L) funType := {coe := fun K => K.toFun}
+
+instance [K : LImp L] : 
   Logic.Condition L K.toFun := K.Condition
-instance [K : MImp L] : 
+instance [K : LImp L] : 
   Logic.ModusPonens L K.toFun := K.ModusPonens
 
 -- Basic
-abbrev condition (K : MImp L) 
+abbrev condition (K : LImp L) 
   {p q} := K.Condition.condition p q
-abbrev intro (K : MImp L) 
+abbrev intro (K : LImp L) 
   {p q} := K.Condition.condition p q
-abbrev elim (K : MImp L) 
+abbrev elim (K : LImp L) 
   {p q} := K.ModusPonens.mp p q
-abbrev mp (K : MImp L) 
+abbrev mp (K : LImp L) 
   {p q} := K.ModusPonens.mp p q
 
-end MImp
+-- Derived
+abbrev Refl (K : LImp L) 
+  : Refl L K.toFun := iImpReflByImp
+abbrev refl (K : LImp L) 
+  := K.Refl.refl
+abbrev rfl (K : LImp L) 
+  {p} := K.Refl.refl p
+abbrev Taut (K : LImp L) 
+  : Taut L K.toFun := iTautOfRefl
+abbrev taut (K : LImp L) 
+  {p} := K.Taut.taut p
+abbrev RightTaut (K : LImp L) 
+  : RightTaut L K.toFun := iImpRightTautByImp
+abbrev rightTaut (K : LImp L) 
+  {p q} := K.RightTaut.rightTaut p q
+abbrev Trans (K : LImp L) 
+  : Trans L K.toFun := iImpTransByImp
+abbrev trans (K : LImp L) 
+  {p q r} := K.Trans.trans p q r
+
+end LImp
 
 --------------------------------------------------------------------------------
 -- Iff
 --------------------------------------------------------------------------------
 
-class MIff (L : Logic P) extends LIff P :=
+class LIff (L : Logic P) extends SIff P :=
   Bicondition : Bicondition L toFun
   LeftMp : LeftMp L toFun
   RightMp : RightMp L toFun
 
-instance iMIff {L : Logic P} 
-  [Iff : LIff P] [B : Bicondition L Iff.toFun] 
-  [Mpl : LeftMp L Iff.toFun] [Mpr : RightMp L Iff.toFun] : MIff L := 
-  {toLIff := Iff, Bicondition := B, LeftMp := Mpl, RightMp := Mpr}
+instance iLIff {L : Logic P} 
+  [iff : SIff P] [B : Bicondition L iff.toFun] 
+  [Mpl : LeftMp L iff.toFun] [Mpr : RightMp L iff.toFun] : LIff L := 
+  {toSIff := iff, Bicondition := B, LeftMp := Mpl, RightMp := Mpr}
 
-namespace MIff
+namespace LIff
 
-variable {L : Logic P}
+abbrev funType (K : LIff L) := Binar P
+instance : CoeFun (LIff L) funType := {coe := fun K => K.toFun}
 
-instance [K : MIff L] :
+instance [K : LIff L] :
   Logic.Bicondition L K.toFun := K.Bicondition
-instance [K : MIff L] :
+instance [K : LIff L] :
   Logic.LeftMp L K.toFun := K.LeftMp
-instance [K : MIff L] :
+instance [K : LIff L] :
   Logic.RightMp L K.toFun := K.RightMp
 
 -- Basic
-abbrev intro (K : MIff L) 
+abbrev intro (K : LIff L) 
   {p q} := K.Bicondition.bicondition p q
-abbrev leftMp (K : MIff L) 
+abbrev leftMp (K : LIff L) 
   {p q} := K.LeftMp.mp p q
-abbrev mp (K : MIff L) 
+abbrev mp (K : LIff L) 
   {p q} := K.LeftMp.mp p q
-abbrev rightMp (K : MIff L) 
+abbrev rightMp (K : LIff L) 
   {p q} := K.RightMp.mp p q
-abbrev mpr (K : MIff L) 
+abbrev mpr (K : LIff L) 
   {p q} := K.RightMp.mp p q
 
-end MIff
+end LIff
 
 --------------------------------------------------------------------------------
 -- Conjunction
 --------------------------------------------------------------------------------
 
 class LConj (L : Logic P) extends Conj P :=
-  Conjunction : Conjunction L toFun
+  Conjoin : Conjoin L toFun
   LeftSimp : LeftSimp L toFun
   RightSimp : RightSimp L toFun
+  Curry : Curry L toFun
+  Uncurry : Uncurry L toFun
 
-instance iLConj {L : Logic P} 
-  [Cj : Conj P] [CjI : Conjunction L Cj.toFun] 
+instance iLConjOfCurryUncurry {L : Logic P} [Cj : Conj P] 
+  [CjC : Curry L Cj.toFun] [CjU : Uncurry L Cj.toFun] : LConj L := 
+  {toConj := Cj, Curry := CjC, Uncurry := CjU, Conjoin := iConjoinOfCurry, 
+    LeftSimp := iLeftSimpOfUncurry, RightSimp := iRightSimpOfUncurry}
+
+instance iLConjOfLeftRightSimp 
+  {L : Logic P} [Cj : Conj P] [Cjn : Conjoin L Cj.toFun] 
   [CjL : LeftSimp L Cj.toFun] [CjR : RightSimp L Cj.toFun] : LConj L := 
-  {toConj := Cj, Conjunction := CjI, LeftSimp := CjL, RightSimp := CjR}
+  {toConj := Cj, Conjoin := Cjn, LeftSimp := CjL, RightSimp := CjR,
+    Curry := iCurryOfConjoin, Uncurry := iUncurryOfLeftRightSimp}
 
 namespace LConj
 
 instance [K : LConj L] :
-  Logic.Conjunction L K.toFun := K.Conjunction
+  Logic.Conjoin L K.toFun := K.Conjoin
 instance [K : LConj L] :
   Logic.LeftSimp L K.toFun := K.LeftSimp
 instance [K : LConj L] :
@@ -103,7 +136,7 @@ instance [K : LConj L] :
 
 -- Basic
 abbrev intro (K : LConj L) 
-  {p q} := K.Conjunction.conjoin p q
+  {p q} := K.Conjoin.conjoin p q
 abbrev leftSimp (K : LConj L)
   {p q} := K.LeftSimp.leftSimp p q
 abbrev left (K : LConj L)
@@ -112,24 +145,20 @@ abbrev rightSimp (K : LConj L)
   {p q} := K.RightSimp.rightSimp p q
 abbrev right (K : LConj L) 
   {p q} := K.RightSimp.rightSimp p q
+abbrev curry (K : LConj L) 
+  {p q} := K.Curry.curry p q
+abbrev uncurry (K : LConj L) 
+  {p q} := K.Uncurry.uncurry p q
 
 -- Derived
 abbrev Taut (K : LConj L)
-  : Taut L K.toFun := iTautOfConjunction
+  : Taut L K.toFun := iTautOfConjoin
 abbrev taut (K : LConj L)
   {p} := K.Taut.taut p
 abbrev Simp (K : LConj L)
   : Simp L K.toFun := iSimpOfLeft
 abbrev simp (K : LConj L) 
   {p} := K.Simp.simp p
-abbrev Curry (K : LConj L)
-  : Curry L K.toFun := iCurryOfConjunction
-abbrev curry (K : LConj L) 
-  {p q} := K.Curry.curry p q
-abbrev Uncurry (K : LConj L)
-  : Uncurry L K.toFun := iUncurryOfLeftRightSimp
-abbrev uncurry (K : LConj L) 
-  {p q} := K.Uncurry.uncurry p q
 
 end LConj
 
@@ -147,6 +176,9 @@ instance iLSum {L : Logic P} [Dj : Disj P]
   : LSum L := {toDisj := Dj, ByEither := E, LeftTaut := IL, RightTaut := IR}
 
 namespace LSum
+
+abbrev funType (K : LSum L) := Binar P
+instance : CoeFun (LSum L) funType := {coe := fun K => K.toFun}
 
 instance [K : LSum L] :
   Logic.LeftTaut L K.toFun := K.LeftTaut
@@ -181,32 +213,35 @@ abbrev simp (K : LSum L)
 
 end LSum
 
-class LDisj (L : Logic P) (lnot : Unar P) extends LSum L :=
-  LeftMtp : LeftMtp L toFun lnot
-  RightMtp : RightMtp L toFun lnot
+class LDisj (L : Logic P) (lneg : Unar P) extends LSum L :=
+  LeftMtp : LeftMtp L toFun lneg
+  RightMtp : RightMtp L toFun lneg
 
-instance iLDisj {L : Logic P} [Dj: Disj P] {lnot}
+instance iLDisj {L : Logic P} [Dj: Disj P] {lneg}
   [ByE : ByEither L Dj.toFun]  [LT : LeftTaut L Dj.toFun] [RT : RightTaut L Dj.toFun] 
-  [LMtp : LeftMtp L Dj.toFun lnot] [RMtp : RightMtp L Dj.toFun lnot] 
-  : LDisj L lnot := 
+  [LMtp : LeftMtp L Dj.toFun lneg] [RMtp : RightMtp L Dj.toFun lneg] 
+  : LDisj L lneg := 
   {toDisj := Dj, ByEither := ByE, 
     LeftTaut := LT, RightTaut := RT, LeftMtp := LMtp, RightMtp := RMtp}
 
 namespace LDisj
 
-instance {lnot} [K : LDisj L lnot] :
-  Logic.LeftMtp L K.toFun lnot := K.LeftMtp
-instance {lnot} [K : LDisj L lnot] :
-  Logic.RightMtp L K.toFun lnot := K.RightMtp
+abbrev funType {lneg} (K : LDisj L lneg) := Binar P
+instance {lneg} : CoeFun (LDisj L lneg) funType := {coe := fun K => K.toFun}
+
+instance {lneg} [K : LDisj L lneg] :
+  Logic.LeftMtp L K.toFun lneg := K.LeftMtp
+instance {lneg} [K : LDisj L lneg] :
+  Logic.RightMtp L K.toFun lneg := K.RightMtp
 
 -- Basic
-abbrev leftMtp {lnot} (K : LDisj L lnot)
+abbrev leftMtp {lneg} (K : LDisj L lneg)
   {p q} := K.LeftMtp.mtp p q
-abbrev mtp {lnot} (K : LDisj L lnot)
+abbrev mtp {lneg} (K : LDisj L lneg)
   {p q} := K.LeftMtp.mtp p q
-abbrev rightMtp {lnot} (K : LDisj L lnot)
+abbrev rightMtp {lneg} (K : LDisj L lneg)
   {p q} := K.RightMtp.mtp p q
-abbrev mtpr {lnot} (K : LDisj L lnot)
+abbrev mtpr {lneg} (K : LDisj L lneg)
   {p q} := K.RightMtp.mtp p q
 
 end LDisj
@@ -215,31 +250,34 @@ end LDisj
 -- Not
 --------------------------------------------------------------------------------
 
-class MNot (L : Logic P) extends LNot P :=
+class LNot (L : Logic P) extends LNeg P :=
   AdFalso : AdFalso L toFun
   Noncontradiction : Noncontradiction L toFun
 
-instance iMNot {L : Logic P} [Nt : LNot P] 
-  [Af : AdFalso L Nt.toFun] [Nc : Noncontradiction L Nt.toFun] : MNot L := 
-  {toLNot := Nt, AdFalso := Af, Noncontradiction := Nc}
+instance iLNot {L : Logic P} [Nt : LNeg P] 
+  [Af : AdFalso L Nt.toFun] [Nc : Noncontradiction L Nt.toFun] : LNot L := 
+  {toLNeg := Nt, AdFalso := Af, Noncontradiction := Nc}
 
-namespace MNot
+namespace LNot
 
-instance [K : MNot L] : 
+abbrev funType (K : LNot L) := Unar P
+instance : CoeFun (LNot L) funType := {coe := fun K => K.toFun}
+
+instance [K : LNot L] : 
   Logic.AdFalso L K.toFun := K.AdFalso
-instance [K : MNot L] : 
+instance [K : LNot L] : 
   Logic.Noncontradiction L K.toFun := K.Noncontradiction
 
 -- Basic
-abbrev adFalso (K : MNot L) 
+abbrev adFalso (K : LNot L) 
   {p} := K.AdFalso.adFalso p
-abbrev intro (K : MNot L) 
+abbrev intro (K : LNot L) 
   {p} := K.AdFalso.adFalso p
-abbrev noncontradiction (K : MNot L) 
+abbrev noncontradiction (K : LNot L) 
   {p} := K.Noncontradiction.noncontradiction p
-abbrev elim (K : MNot L) 
+abbrev elim (K : LNot L) 
   {p} := K.Noncontradiction.noncontradiction p
 
-end MNot
+end LNot
 
 end Gaea.Logic

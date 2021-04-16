@@ -77,11 +77,12 @@ end REq
 
 class LEq (L : Logic P) (T : Sort v) extends REq L T :=
   PredSubst : PredSubst L toFun
+  Symm := iSymmByReflPredSubst
+  Trans := iTransByPredSubst
 
 instance iLEq {L : Logic P} [Q : SEq P T] 
   [R : Refl L Q.toFun] [Ps : PredSubst L Q.toFun] : LEq L T := 
-  {toSEq := Q, PredSubst := Ps, Refl := R, 
-    Symm := iSymmByReflPredSubst, Trans := iTransByPredSubst}
+  {toSEq := Q, PredSubst := Ps, Refl := R}
 
 namespace LEq
 
@@ -93,10 +94,10 @@ abbrev predSubst (K : LEq L T)
   {F a b} := K.PredSubst.predSubst F a b
 
 -- FunSubst
-abbrev toFunSubst (K : LEq L T) 
+abbrev FunSubst (K : LEq L T) 
   : FunSubst L K.toFun := iFunSubstByReflPredSubst
 abbrev funSubst (K : LEq L T) 
-  {f a b} := K.toFunSubst.funSubst f a b
+  {f a b} := K.FunSubst.funSubst f a b
 
 end LEq
 

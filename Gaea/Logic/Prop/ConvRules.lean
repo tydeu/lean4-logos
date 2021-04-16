@@ -38,34 +38,34 @@ instance iExFalsumOfExportFalse {L : Logic P} {falsum}
 
 -- Not p -> (|- ~p)
 
-class ImportNot (L : Logic.{u,0} P) (lnot : Unar P) := 
-  importNot : (p : P) -> Not (L |- p) -> (L |- lnot p) 
+class ImportNot (L : Logic.{u,0} P) (lneg : Unar P) := 
+  importNot : (p : P) -> Not (L |- p) -> (L |- lneg p) 
 
-abbrev importNot {L : Logic.{u,0} P} {lnot}
-  [K : ImportNot L lnot] {p} := K.importNot p
+abbrev importNot {L : Logic.{u,0} P} {lneg}
+  [K : ImportNot L lneg] {p} := K.importNot p
 
 instance iImportNotOfAdFalso 
-  {L : Logic.{u,0} P} {lnot} [K : ImportNot L lnot] : AdFalso L lnot := 
+  {L : Logic.{u,0} P} {lneg} [K : ImportNot L lneg] : AdFalso L lneg := 
   {adFalso := K.importNot}
 
 instance iAdFalsoOfImportNot 
-  {L : Logic.{u,0} P} {lnot} [K : AdFalso L lnot] : ImportNot L lnot := 
+  {L : Logic.{u,0} P} {lneg} [K : AdFalso L lneg] : ImportNot L lneg := 
   {importNot := K.adFalso}
 
 -- (|- ~p) -> Not p
 
-class ExportNot (L : Logic.{u,0} P) (lnot : Unar P) := 
-  exportNot : (p : P) -> (L |- lnot p) -> Not (L |- p) 
+class ExportNot (L : Logic.{u,0} P) (lneg : Unar P) := 
+  exportNot : (p : P) -> (L |- lneg p) -> Not (L |- p) 
 
-abbrev exportNot {L : Logic.{u,0} P} {lnot}
-  [K : ExportNot L lnot] {p} := K.exportNot p
+abbrev exportNot {L : Logic.{u,0} P} {lneg}
+  [K : ExportNot L lneg] {p} := K.exportNot p
 
 instance iExportNotOfNoncontradiction 
-  {L : Logic.{u,0} P} {lnot} [K : ExportNot L lnot] : Noncontradiction L lnot := 
+  {L : Logic.{u,0} P} {lneg} [K : ExportNot L lneg] : Noncontradiction L lneg := 
   {noncontradiction := K.exportNot}
 
 instance iNoncontradictionOfExportNot
-  {L : Logic.{u,0} P} {lnot} [K : Noncontradiction L lnot] : ExportNot L lnot := 
+  {L : Logic.{u,0} P} {lneg} [K : Noncontradiction L lneg] : ExportNot L lneg := 
   {exportNot := K.noncontradiction}
 
 --------------------------------------------------------------------------------
@@ -80,12 +80,12 @@ class ImportProd (L : Logic P) (conj : Binar P) :=
 abbrev importProd {L : Logic P} {conj} 
   [K : ImportProd L conj] {p q} := K.importProd p q
 
-instance iConjunctionOfImportProd {L : Logic P} {conj} 
-  [K : ImportProd L conj] : Conjunction L conj := 
+instance iConjoinOfImportProd {L : Logic P} {conj} 
+  [K : ImportProd L conj] : Conjoin L conj := 
   {conjoin := fun p q Lp Lq => K.importProd p q (Prod.mk Lp Lq)}
 
-instance iImportProdOfConjunction {L : Logic P} {conj} 
-  [K : Conjunction L conj] : ImportProd L conj := 
+instance iImportProdOfConjoin {L : Logic P} {conj} 
+  [K : Conjoin L conj] : ImportProd L conj := 
   {importProd := fun p q Ppq => K.conjoin p q Ppq.fst Ppq.snd}
 
 -- PProd p q -> (|- p /\ q)
@@ -96,12 +96,12 @@ class ImportPProd (L : Logic P) (conj : Binar P) :=
 abbrev importPProd {L : Logic P} {conj} 
   [K : ImportPProd L conj] {p q} := K.importPProd p q
 
-instance iConjunctionOfImportPProd {L : Logic P} {conj} 
-  [K : ImportPProd L conj] : Conjunction L conj := 
+instance iConjoinOfImportPProd {L : Logic P} {conj} 
+  [K : ImportPProd L conj] : Conjoin L conj := 
   {conjoin := fun p q Lp Lq => K.importPProd p q (PProd.mk Lp Lq)}
 
-instance iImportPProdOfConjunction {L : Logic P} {conj} 
-  [K : Conjunction L conj] : ImportPProd L conj := 
+instance iImportPProdOfConjoin {L : Logic P} {conj} 
+  [K : Conjoin L conj] : ImportPProd L conj := 
   {importPProd := fun p q Ppq => K.conjoin p q Ppq.fst Ppq.snd}
 
 instance iImportProdOfImportPProd {L : Logic P} {conj} 
@@ -116,12 +116,12 @@ class ImportAnd (L : Logic.{u,0} P) (conj : Binar P) :=
 abbrev importAnd {L : Logic.{u,0} P} {conj} 
   [K : ImportAnd L conj] {p q} := K.importAnd p q
 
-instance iConjunctionOfAnd {L : Logic P} {conj} 
-  [K : ImportAnd L conj] : Conjunction L conj := 
+instance iConjoinOfAnd {L : Logic P} {conj} 
+  [K : ImportAnd L conj] : Conjoin L conj := 
   {conjoin := fun p q Lp Lq => K.importAnd p q (And.intro Lp Lq)}
 
-instance iImportAndOfConjunction {L : Logic P} {conj} 
-  [K : Conjunction L conj] : ImportAnd L conj := 
+instance iImportAndOfConjoin {L : Logic P} {conj} 
+  [K : Conjoin L conj] : ImportAnd L conj := 
   {importAnd := fun p q Apq => K.conjoin p q Apq.left Apq.right}
 
 -- (|- p /\ q) -> Prod p q

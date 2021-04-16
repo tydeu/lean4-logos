@@ -29,15 +29,15 @@ end Imp
 
 abbrev imp {P : Sort u} [K : Imp P] := K.toFun
 
-class LIff (P : Sort u) :=
+class SIff (P : Sort u) :=
   toFun : Binar P
 
-namespace LIff
-abbrev funType (K : LIff P) := Binar P
-instance : CoeFun (LIff P) funType := {coe := fun K => K.toFun}
-end LIff
+namespace SIff
+abbrev funType (K : SIff P) := Binar P
+instance : CoeFun (SIff P) funType := {coe := fun K => K.toFun}
+end SIff
 
-abbrev iff {P : Sort u} [K : LIff P] := K.toFun
+abbrev iff {P : Sort u} [K : SIff P] := K.toFun
 
 class Conj (P : Sort u):=
   toFun : Binar P
@@ -59,14 +59,14 @@ end Disj
 
 abbrev disj {P : Sort u} [K : Disj P] := K.toFun
 
-class LNot (P : Sort u) :=
+class LNeg (P : Sort u) :=
   toFun : Unar P
 
-namespace LNot
-abbrev funType (K : LNot P) := Unar P
-instance : CoeFun (LNot P) funType := {coe := fun K => K.toFun}
-end LNot
+namespace LNeg
+abbrev funType (K : LNeg P) := Unar P
+instance : CoeFun (LNeg P) funType := {coe := fun K => K.toFun}
+end LNeg
 
-abbrev lnot {P : Sort u} [K : LNot P] := K.toFun
+abbrev lneg {P : Sort u} [K : LNeg P] := K.toFun
 
 end Gaea.Logic

@@ -15,7 +15,7 @@ class ForallNat (P : Sort u) (T : Sort v) :=
   (xForallNat : (T -> P) -> P)
 
 def LForallIfNat {P : Sort u} {T : Sort v}
-  (N : IsNat P T) (Fa : LForall P T) (Im : Imp P) : ForallNat P T
+  (N : IsNat P T) (Fa : LForall P T) (imp : Imp P) : ForallNat P T
   := {xForallNat := fun f => forall a => nat a -> f a}
 
 end Gaea.Peano

@@ -469,7 +469,7 @@ instance iMulSuccNatEqAddMul
 instance iMulSuccNatEqAddMulByPeano 
 {P : Sort u} {T : Type v} {L : Logic P} 
 [N : PNat P T] [Q : SEq P T] [M : Mul T] [A : Add T]
-[FaN : MForallNat L N.toIsNat] [Im : MImp L]
+[FaN : MForallNat L N.toIsNat] [imp : LImp L]
 [I   : NatInduction L N]
 [N0  : NatZero L N.toIsNat N.toZero]
 [NS  : NatSuccNat L N.toIsNat N.toSucc]
@@ -585,7 +585,7 @@ instance iMulNatComm
 instance iMulNatCommByPeano 
 {P : Sort u} {T : Type v} {L : Logic P} 
 [N : PNat P T] [Q : SEq P T] [M : Mul T] [A : Add T] 
-[FaN : MForallNat L N.toIsNat] [Im : MImp L]
+[FaN : MForallNat L N.toIsNat] [imp : LImp L]
 [I   : NatInduction L N]
 [N0  : NatZero L N.toIsNat N.toZero]
 [NS  : NatSuccNat L N.toIsNat N.toSucc]
@@ -678,7 +678,7 @@ instance iEqNatMulNatLeft
 instance iEqNatMulNatLeftByPeano
 {P : Sort u} {T : Type v} {L : Logic P} 
 [N : PNat P T] [Q : SEq P T] [M : Mul T] [A : Add T]
-[FaN : MForallNat L N.toIsNat] [Im : MImp L]
+[FaN : MForallNat L N.toIsNat] [imp : LImp L]
 [I   : NatInduction L N]
 [N0  : NatZero L N.toIsNat N.toZero]
 [NS  : NatSuccNat L N.toIsNat N.toSucc]
@@ -768,7 +768,7 @@ instance iEqNatMulNatRight
 instance iEqNatMulNatRightByPeano
 {P : Sort u} {T : Type v} {L : Logic P} 
 [N : PNat P T] [Q : SEq P T] [M : Mul T] [A : Add T]
-[FaN : MForallNat L N.toIsNat] [Im : MImp L]
+[FaN : MForallNat L N.toIsNat] [imp : LImp L]
 [I   : NatInduction L N]
 [N0  : NatZero L N.toIsNat N.toZero]
 [NS  : NatSuccNat L N.toIsNat N.toSucc]
@@ -898,7 +898,7 @@ instance iMulNatAddEqAddMul
 instance iMulNatAddEqAddMulByPeano
 {P : Sort u} {T : Type v} {L : Logic P} 
 [N : PNat P T] [Q : SEq P T] [M : Mul T] [A : Add T]
-[FaN : MForallNat L N.toIsNat] [Im : MImp L]
+[FaN : MForallNat L N.toIsNat] [imp : LImp L]
 [I   : NatInduction L N]
 [N0  : NatZero L N.toIsNat N.toZero]
 [NS  : NatSuccNat L N.toIsNat N.toSucc]
@@ -1025,7 +1025,7 @@ instance iMulAddNatEqAddMul
 instance iMulAddNatEqAddMulByPeano
 {P : Sort u} {T : Type v} {L : Logic P} 
 [N : PNat P T] [Q : SEq P T] [M : Mul T] [A : Add T]
-[FaN : MForallNat L N.toIsNat] [Im : MImp L]
+[FaN : MForallNat L N.toIsNat] [imp : LImp L]
 [I   : NatInduction L N]
 [N0  : NatZero L N.toIsNat N.toZero]
 [NS  : NatSuccNat L N.toIsNat N.toSucc]
@@ -1134,7 +1134,7 @@ instance iMulNatAssoc
 instance iMulNatAssocByPeano 
 {P : Sort u} {T : Type v} {L : Logic P} 
 [N : PNat P T] [Q : SEq P T] [M : Mul T] [A : Add T]
-[FaN : MForallNat L N.toIsNat] [Im : MImp L]
+[FaN : MForallNat L N.toIsNat] [imp : LImp L]
 [I   : NatInduction L N]
 [N0  : NatZero L N.toIsNat N.toZero]
 [NS  : NatSuccNat L N.toIsNat N.toSucc]

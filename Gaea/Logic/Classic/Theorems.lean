@@ -50,9 +50,9 @@ instance iCnstrDilByUncurryMpDisj {L : Logic P}
 -- (p -> q) /\ (r -> s) /\ (~q \/ ~s) |- ~p \/ ~r 
 
 def destrDilByUncurryMtDisj {L : Logic P} 
-{imp : Binar P} {conj : Binar P} {disj : Binar P} {lnot : Unar P}
+{imp : Binar P} {conj : Binar P} {disj : Binar P} {lneg : Unar P}
 (CjU : Uncurry L conj) 
-(Mt : ModusTollens L imp lnot)
+(Mt : ModusTollens L imp lneg)
 (DiL : LeftTaut L disj)
 (DiR : RightTaut L disj) 
 (DjE : ByEither L disj)
@@ -72,23 +72,23 @@ def destrDilByUncurryMtDisj {L : Logic P}
     mt LrTs LNs
 
 instance iDestrDilByUncurryMtDisj {L : Logic P} 
-{imp : Binar P} {conj : Binar P} {disj : Binar P} {lnot : Unar P}
+{imp : Binar P} {conj : Binar P} {disj : Binar P} {lneg : Unar P}
 [CjU : Uncurry L conj]
-[Mt : ModusTollens L imp lnot]
+[Mt : ModusTollens L imp lneg]
 [DiL : LeftTaut L disj]
 [DiR : RightTaut L disj] 
 [DjE : ByEither L disj]
-: DestrDil L imp conj disj lnot :=
+: DestrDil L imp conj disj lneg :=
 {destrDil := destrDilByUncurryMtDisj CjU Mt DiL DiR DjE } 
 
 -- Bidirectional Dilemma
 -- (p -> q) /\ (r -> s) /\ (p \/ ~s) |- q \/ ~r 
 
 def bidirDilByUncurryMpMtDisj {L : Logic P} 
-{imp : Binar P} {conj : Binar P} {disj : Binar P} {lnot : Unar P}
+{imp : Binar P} {conj : Binar P} {disj : Binar P} {lneg : Unar P}
 (CjU : Uncurry L conj)
 (Mp  : ModusPonens L imp) 
-(Mt  : ModusTollens L imp lnot)
+(Mt  : ModusTollens L imp lneg)
 (DiL : LeftTaut L disj)
 (DiR : RightTaut L disj) 
 (DjE : ByEither L disj)
@@ -108,14 +108,14 @@ def bidirDilByUncurryMpMtDisj {L : Logic P}
     mt LrTs LNs
 
 instance iBidirDilByUncurryMpMtDisj {L : Logic P} 
-{imp : Binar P} {conj : Binar P} {disj : Binar P} {lnot : Unar P}
+{imp : Binar P} {conj : Binar P} {disj : Binar P} {lneg : Unar P}
 [Mp  : ModusPonens L imp]
-[Mt  : ModusTollens L imp lnot]
+[Mt  : ModusTollens L imp lneg]
 [CjU : Uncurry L conj]
 [DiL : LeftTaut L disj]
 [DiR : RightTaut L disj] 
 [DjE : ByEither L disj]
-: BidirDil L imp conj disj lnot :=
+: BidirDil L imp conj disj lneg :=
 {bidirDil := bidirDilByUncurryMpMtDisj CjU Mp Mt DiL DiR DjE} 
 
 end Gaea.Logic

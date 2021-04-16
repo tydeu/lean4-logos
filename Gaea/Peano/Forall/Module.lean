@@ -45,15 +45,15 @@ end MForallNat
 --------------------------------------------------------------------------------
 
 def MForallIfNat {L : Logic P} 
-  (N : IsNat P T) (Fa : MForall L T) (Im : MImp L) 
+  (N : IsNat P T) (Fa : MForall L T) (imp : LImp L) 
   : MForallNat L N := {
-    toForallNat := LForallIfNat N Fa.toLForall Im.toImp, 
-    toForallNatIntro := LForallIfNatIntro N Fa.toUnivGen Im.Condition,
-    toForallNatElim := LForallIfNatElim N Fa.toUnivInst Im.ModusPonens,
+    toForallNat := LForallIfNat N Fa.toLForall imp.toImp, 
+    toForallNatIntro := LForallIfNatIntro N Fa.toUnivGen imp.Condition,
+    toForallNatElim := LForallIfNatElim N Fa.toUnivInst imp.ModusPonens,
   }
 
 instance iMForallIfNat {P : Sort u} {T : Type v} {L : Logic P} 
-  [N : IsNat P T] [Fa : MForall L T] [Im : MImp L] : MForallNat L N
-  := MForallIfNat N Fa Im
+  [N : IsNat P T] [Fa : MForall L T] [imp : LImp L] : MForallNat L N
+  := MForallIfNat N Fa imp
 
 end Gaea.Peano
