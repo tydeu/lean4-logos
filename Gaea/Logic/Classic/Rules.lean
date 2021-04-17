@@ -131,20 +131,20 @@ class Transposition (L : Logic P) (imp : Binar P) (lneg : Unar P) :=
 def transposition {L : Logic P} [imp : Binar P] [lneg : Unar P]
 [K : Transposition L imp lneg] {p q} := K.transposition p q
 
--- Material impplication
+-- Material Implication
 -- p -> q -|- ~p \/ q
 
-class MatimppIntro (L : Logic P) (imp : Binar P) (disj : Binar P) (lneg : Unar P) :=
-  matimppIntro : (p q : P) -> (L |- ~p \/ q) -> (L |- p -> q)
+class MatImpIntro (L : Logic P) (imp : Binar P) (disj : Binar P) (lneg : Unar P) :=
+  matImpIntro : (p q : P) -> (L |- ~p \/ q) -> (L |- p -> q)
 
-def matimppIntro {L : Logic P} {imp disj lneg}
-  [K : MatimppIntro L imp disj lneg] {p q} := K.matimppIntro p q
+def matImpIntro {L : Logic P} {imp disj lneg}
+  [K : MatImpIntro L imp disj lneg] {p q} := K.matImpIntro p q
 
-class MatimppElim (L : Logic P) (imp : Binar P) (disj : Binar P) (lneg : Unar P) :=
-  matimppElim : (p q : P) -> (L |- p -> q) -> (L |- ~p \/ q)
+class MatImpElim (L : Logic P) (imp : Binar P) (disj : Binar P) (lneg : Unar P) :=
+  matImpElim : (p q : P) -> (L |- p -> q) -> (L |- ~p \/ q)
 
-def matimppElim {L : Logic P} {imp disj lneg}
-  [K : MatimppElim L imp disj lneg] {p q} := K.matimppElim p q
+def matImpElim {L : Logic P} {imp disj lneg}
+  [K : MatImpElim L imp disj lneg] {p q} := K.matImpElim p q
 
 -- Material Equivalence
 -- (p <-> q) -|- (p /\ q) \/ (~p /\ ~q)
@@ -172,14 +172,14 @@ class Exprt (L : Logic P) (imp : Binar P) (conj : Binar P) :=
 def exprt {L : Logic P} {imp conj}
   [K : Exprt L imp conj] {p q r} := K.exprt p q r
 
--- impportation
+-- Importation
 -- p -> (q -> r) |- (p /\ q) -> r
 
-class impprt (L : Logic P) (imp : Binar P) (conj : Binar P) :=
+class Imprt (L : Logic P) (imp : Binar P) (conj : Binar P) :=
   imprt : (p q r : P) -> (L |- p -> (q -> r)) -> (L |- (p /\ q) -> r)
 
 def imprt {L : Logic P} {imp conj}
-  [K : impprt L imp conj] {p q} := K.imprt p q
+  [K : Imprt L imp conj] {p q} := K.imprt p q
 
 -- Law of the Excluded Middle
 -- |- p \/ ~p
