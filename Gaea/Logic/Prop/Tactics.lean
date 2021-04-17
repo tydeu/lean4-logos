@@ -1,4 +1,4 @@
-import Gaea.Logic.Prop.Rules
+import Gaea.Logic.Fun.Rules
 
 namespace Gaea.Logic
 
@@ -21,75 +21,6 @@ macro_rules [assume]
     `(tactic| apply uncurry; assume $x; assume ($ys,*))
   | `(tactic| assume $x $y $zs*) => 
     `(tactic| assume $x; assume $y $zs*)
-
--- Proofs
-
-scoped syntax (name := conditionTactic) 
-  "condition " (colGt binderPat)+ : tactic
-macro_rules [conditionTactic]
-  | `(tactic| condition $x:binderPat) => 
-    `(tactic| apply condition; assume $x)
-  | `(tactic| condition $x $y $zs*) => 
-    `(tactic| condition $x; condition $y $zs*)
-
-scoped macro "byContraposition " x:binderIdent : tactic => 
-  `(tactic| apply byContraposition; intro $(x[0]))
-
-scoped macro "byEither " pq:term:max pr:term:max qr:term:max : tactic => 
-  `(tactic| apply byEither $pq $pr $qr)
-
-scoped macro "byContradiction " x:binderPat : tactic => 
-  `(tactic| apply byContradiction; assume $x)
-
-scoped macro "contradiction " np:term:max p:term:max : tactic => 
-  `(tactic| exact contradiction $np $p)
-
-scoped macro "adFalso " x:binderPat : tactic => 
-  `(tactic| apply adFalso; assume $x)
-
-scoped macro "noncontradiction " np:term:max p:term:max : tactic => 
-  `(tactic| exact noncontradiction $np $p)
-
--- Util
-
-scoped macro "mp " pq:term:max p:term:max : tactic => 
-  `(tactic| exact mp $pq $p)
-
-scoped macro "mpr " pq:term:max q:term:max : tactic => 
-  `(tactic| exact mpr $pq $q)
-
-scoped macro "leftMp " pq:term:max p:term:max : tactic => 
-  `(tactic| exact leftMp $pq $p)
-
-scoped macro "rightMp " pq:term:max p:term:max : tactic => 
-  `(tactic| exact rightMp $pq $p)
-
-scoped macro "mt " pq:term:max np:term:max : tactic => 
-  `(tactic| exact mt $pq $np)
-
-scoped macro "mtr " pq:term:max nq:term:max : tactic => 
-  `(tactic| exact mtr $pq $nq)
-
-scoped macro "leftMt " pq:term:max np:term:max : tactic => 
-  `(tactic| exact leftMt $pq $np)
-
-scoped macro "rightMt " pq:term:max nq:term:max : tactic => 
-  `(tactic| exact rightMt $pq $nq)
-
-scoped macro "mtp " pq:term:max np:term:max : tactic => 
-  `(tactic| exact mtp $pq $np)
-
-scoped macro "mtpr " pq:term:max nq:term:max : tactic => 
-  `(tactic| exact mtpr $pq $nq)
-
-scoped macro "leftMtp " pq:term:max np:term:max : tactic => 
-  `(tactic| exact leftMtrp $pq $np)
-
-scoped macro "rightMtp " pq:term:max nq:term:max : tactic => 
-  `(tactic| exact rightMtp $pq $nq)
-
-scoped macro "dblNegElim" : tactic => 
-  `(tactic| apply dblNegElim (lneg := $(Lean.mkIdent `lneg)))
 
 scoped syntax (name := uncurryTactic) 
   "uncurry " (colGt binderPat)* : tactic

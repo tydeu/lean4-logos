@@ -1,4 +1,4 @@
-import Gaea.Logic.Prop.Rules
+import Gaea.Logic.Unit.Rules
 import Gaea.Logic.Quant.Rules
 import Gaea.Peano.Forall.Notation
 
@@ -33,22 +33,22 @@ def forallNatElim   {L : Logic P} [N : IsNat P T] [FaN : ForallNat P T]
 
 def forallIfNatIntro {L : Logic P} 
 [N : IsNat P T] [Fa : LForall P T] [larr : LArr P]
-[Ug : UnivGen L Fa.lForall] [ByI : Condition L larr.toFun]
+[Ug : UnivGen L Fa.lForall] [C : Condition L larr.toFun]
 {f : T -> P} (F : (a : T) -> (L |- nat a) -> (L |- f a))
 : L |- forall a => nat a -> f a
 := ug fun a => condition fun Na => F a Na
 
 def LForallIfNatIntro {L : Logic P} 
 (N : IsNat P T) [Fa : LForall P T] [larr : LArr P] 
-(Ug : UnivGen L Fa.lForall) (ByI : Condition L larr.toFun) 
+(Ug : UnivGen L Fa.lForall) (C : Condition L larr.toFun) 
 : ForallNatIntro L N (LForallIfNat N Fa larr)
 := {forallNatIntro := fun _ F => forallIfNatIntro F}
 
 instance iForallIfNatIntro {L : Logic P} 
 [N : IsNat P T] [Fa : LForall P T] [larr : LArr P]
-[Ug : UnivGen L Fa.lForall] [ByI : Condition L larr.toFun]
+[Ug : UnivGen L Fa.lForall] [C : Condition L larr.toFun]
 : ForallNatIntro L N (LForallIfNat N Fa larr)
-:= LForallIfNatIntro N Ug ByI
+:= LForallIfNatIntro N Ug C
 
 def forallIfNatElim {L : Logic P} 
 [N : IsNat P T] [Fa : LForall P T] [larr : LArr P]

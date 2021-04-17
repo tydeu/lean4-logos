@@ -1,6 +1,8 @@
 import Gaea.Logic.Judgment
-import Gaea.Logic.Prop.Rules
 import Gaea.Logic.Rel.Rules
+import Gaea.Logic.Fun.Rules
+import Gaea.Logic.Unit.Rules
+import Gaea.Logic.Dual.Rules
 
 namespace Gaea.Logic
 

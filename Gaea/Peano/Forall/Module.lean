@@ -1,4 +1,4 @@
-import Gaea.Logic.Prop.Modules
+import Gaea.Logic.Unit.Modules
 import Gaea.Logic.Quant.Modules
 import Gaea.Peano.Forall.Rules
 
