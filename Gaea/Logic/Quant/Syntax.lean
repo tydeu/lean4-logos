@@ -1,21 +1,32 @@
 import Gaea.Logic.Quant.Type
 
 universes u v
+variable {P : Sort u} {T : Sort v}
 
 namespace Gaea.Logic
 
-class LForall (P : Sort u) (T : Sort v) :=
-  (lForall : Quant P T)
+-- Forall
 
-namespace LForall
-abbrev Forall {P : Sort u} {T : Sort v} (K : LForall P T) := K.lForall
-end LForall
+class SForall (P : Sort u) (T : Sort v) :=
+  toFun : Quant P T
 
-class LExists (P : Sort u) (T : Sort v) :=
-  (lExists : Quant P T)
+namespace SForall
+abbrev funType (K : SForall P T) := Quant P T
+instance : CoeFun (SForall P T) funType := {coe := fun K => K.toFun}
+end SForall
 
-namespace LExists
-abbrev Exists {P : Sort u} {T : Sort v} (K : LExists P T) := K.lExists
-end LExists
+abbrev lForall [K : SForall P T] := K.toFun
+
+-- Exists
+
+class SExists (P : Sort u) (T : Sort v) :=
+  toFun : Quant P T
+
+namespace SExists
+abbrev funType (K : SExists P T) := Quant P T
+instance : CoeFun (SExists P T) funType := {coe := fun K => K.toFun}
+end SExists
+
+abbrev lExists [K : SExists P T] := K.toFun
 
 end Gaea.Logic

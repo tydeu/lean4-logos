@@ -1,7 +1,6 @@
 import Gaea.Logic.Quant.Syntax
 
 open Lean
-open Gaea.Logic
 
 macro "∀ " xs:explicitBinders " => " b:term : term => 
   expandExplicitBinders `lForall xs b
@@ -14,10 +13,10 @@ macro "exists " xs:explicitBinders " => " b:term : term =>
   expandExplicitBinders `lExists xs b
 
 -- Required for the unexpanders to work
-export Gaea.Logic.LForall (lForall)
-export Gaea.Logic.LExists (lExists)
+export Gaea.Logic (lForall)
+export Gaea.Logic (lExists)
 
-@[appUnexpander Gaea.Logic.LForall.lForall] 
+@[appUnexpander Gaea.Logic.lForall] 
 def unexpandLForall : Lean.PrettyPrinter.Unexpander
   | `(lForall fun $x:ident => ∀ $xs:binderIdent* => $b)
     => `(∀ $x:ident $xs:binderIdent* => $b)
@@ -27,7 +26,7 @@ def unexpandLForall : Lean.PrettyPrinter.Unexpander
     => `(∀ ($x:ident : $t) => $b)
   | _  => throw ()
 
-@[appUnexpander Gaea.Logic.LExists.lExists] 
+@[appUnexpander Gaea.Logic.lExists] 
 def unexpandLExists : Lean.PrettyPrinter.Unexpander
   | `(lExists fun $x:ident => ∃ $xs:binderIdent* => $b)
     => `(∃ $x:ident $xs:binderIdent* => $b)

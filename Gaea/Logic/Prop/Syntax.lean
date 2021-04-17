@@ -10,12 +10,12 @@ namespace Gaea.Logic
 class LTrue (P : Sort u) :=
   toProp : P
 
-abbrev true {P : Sort u} [K : LTrue P] := K.toProp
+abbrev true [K : LTrue P] := K.toProp
 
 class LFalse (P : Sort u) :=
   toProp : P
 
-abbrev false {P : Sort u} [K : LFalse P] := K.toProp
+abbrev false [K : LFalse P] := K.toProp
 
 -- Connectives
 
@@ -27,7 +27,7 @@ abbrev funType (K : LArr P) := Binar P
 instance : CoeFun (LArr P) funType := {coe := fun K => K.toFun}
 end LArr
 
-abbrev larr {P : Sort u} [K : LArr P] := K.toFun
+abbrev larr [K : LArr P] := K.toFun
 
 class SIff (P : Sort u) :=
   toFun : Binar P
@@ -37,7 +37,7 @@ abbrev funType (K : SIff P) := Binar P
 instance : CoeFun (SIff P) funType := {coe := fun K => K.toFun}
 end SIff
 
-abbrev iff {P : Sort u} [K : SIff P] := K.toFun
+abbrev iff [K : SIff P] := K.toFun
 
 class Conj (P : Sort u):=
   toFun : Binar P
@@ -47,7 +47,7 @@ abbrev funType (K : Conj P) := Binar P
 instance : CoeFun (Conj P) funType := {coe := fun K => K.toFun}
 end Conj
 
-abbrev conj {P : Sort u} [K : Conj P] := K.toFun
+abbrev conj [K : Conj P] := K.toFun
 
 class Disj (P : Sort u) :=
   toFun : Binar P
@@ -57,7 +57,7 @@ abbrev funType (K : Disj P) := Binar P
 instance : CoeFun (Disj P) funType := {coe := fun K => K.toFun}
 end Disj
 
-abbrev disj {P : Sort u} [K : Disj P] := K.toFun
+abbrev disj [K : Disj P] := K.toFun
 
 class LNeg (P : Sort u) :=
   toFun : Unar P
@@ -67,6 +67,6 @@ abbrev funType (K : LNeg P) := Unar P
 instance : CoeFun (LNeg P) funType := {coe := fun K => K.toFun}
 end LNeg
 
-abbrev lneg {P : Sort u} [K : LNeg P] := K.toFun
+abbrev lneg [K : LNeg P] := K.toFun
 
 end Gaea.Logic

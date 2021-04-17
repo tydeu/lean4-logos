@@ -13,47 +13,46 @@ namespace Gaea.Peano
 -- Abstract Module
 --------------------------------------------------------------------------------
 
-class MForallNat (L : Logic P) (N : IsNat P T) extends ForallNat P T :=
-  (toForallNatIntro : ForallNatIntro L N toForallNat)
-  (toForallNatElim : ForallNatElim L N toForallNat)
+class LForallNat (L : Logic P) (N : IsNat P T) extends SForallNat P T :=
+  ForallNatIntro : ForallNatIntro L N toSForallNat
+  ForallNatElim : ForallNatElim L N toSForallNat
 
-instance iMForallNat {L : Logic P} [N : IsNat P T]
-  [FaN : ForallNat P T] [I : ForallNatIntro L N FaN] [E : ForallNatElim L N FaN] 
-  : MForallNat L N := {toForallNat := FaN, toForallNatIntro := I, toForallNatElim := E}
+instance iLForallNat {L : Logic P} [N : IsNat P T]
+  [FaN : SForallNat P T] [I : ForallNatIntro L N FaN] [E : ForallNatElim L N FaN] 
+  : LForallNat L N := {toSForallNat := FaN, ForallNatIntro := I, ForallNatElim := E}
 
-instance iForallNatIntroOfMForallNat {L : Logic P} [N : IsNat P T] 
-  [K : MForallNat L N] : ForallNatIntro L N K.toForallNat 
-  := {forallNatIntro := K.toForallNatIntro.forallNatIntro}
+namespace LForallNat
 
-instance iForallNatElimOfMForallNat {L : Logic P} [N : IsNat P T] 
-  [K : MForallNat L N] : ForallNatElim L N K.toForallNat 
-  := {forallNatElim := K.toForallNatElim.forallNatElim}
+variable {L : Logic P} [N : IsNat P T]
+abbrev funType (K : LForallNat L N) := Quant P T
+instance : CoeFun (LForallNat L N) funType := {coe := fun K => K.toFun}
 
-namespace MForallNat
-abbrev forallNatIntro {L : Logic P} {N : IsNat P T} (K : MForallNat L N) 
-  := K.toForallNatIntro.forallNatIntro
-abbrev intro {L : Logic P} {N : IsNat P T} (K : MForallNat L N) 
-  {f} := K.toForallNatIntro.forallNatIntro f
-abbrev forallNatElim {L : Logic P} {N : IsNat P T} (K : MForallNat L N) 
-  := K.toForallNatElim.forallNatElim
-abbrev elim {L : Logic P} {N : IsNat P T} (K : MForallNat L N) 
-  {f} (p) {a} := K.toForallNatElim.forallNatElim f p a
-end MForallNat
+instance [K : LForallNat L N] 
+  : Peano.ForallNatIntro L N K.toSForallNat := K.ForallNatIntro
+instance [K : LForallNat L N] 
+  : Peano.ForallNatElim L N K.toSForallNat := K.ForallNatElim
+
+abbrev intro (K : LForallNat L N) 
+  {f} := K.ForallNatIntro.forallNatIntro f
+abbrev elim (K : LForallNat L N) 
+  {f} (p) {a} := K.ForallNatElim.forallNatElim f p a
+
+end LForallNat
 
 --------------------------------------------------------------------------------
 -- Forall/Ent Implementation Module
 --------------------------------------------------------------------------------
 
 def MForallIfNat {L : Logic P} 
-  (N : IsNat P T) (Fa : MForall L T) (ent : LEnt L) 
-  : MForallNat L N := {
-    toForallNat := LForallIfNat N Fa.toLForall ent.toLArr, 
-    toForallNatIntro := LForallIfNatIntro N Fa.toUnivGen ent.Condition,
-    toForallNatElim := LForallIfNatElim N Fa.toUnivInst ent.ModusPonens,
+  (N : IsNat P T) (Fa : LForall L T) (ent : LEnt L) 
+  : LForallNat L N := {
+    toSForallNat := LForallIfNat N Fa.toSForall ent.toLArr, 
+    ForallNatIntro := LForallIfNatIntro N Fa.UnivGen ent.Condition,
+    ForallNatElim := LForallIfNatElim N Fa.UnivInst ent.ModusPonens,
   }
 
 instance iMForallIfNat {P : Sort u} {T : Type v} {L : Logic P} 
-  [N : IsNat P T] [Fa : MForall L T] [ent : LEnt L] : MForallNat L N
+  [N : IsNat P T] [Fa : LForall L T] [ent : LEnt L] : LForallNat L N
   := MForallIfNat N Fa ent
 
 end Gaea.Peano

@@ -7,74 +7,72 @@ variable {P : Sort u} {T : Sort v}
 
 namespace Gaea.Logic
 
+variable {L : Logic P}
+
+--------------------------------------------------------------------------------
 -- Forall
+--------------------------------------------------------------------------------
 
-class MForall (L : Logic P) (T : Sort v) extends LForall P T :=
-  toForallGen : UnivGen L toLForall.lForall
-  toForallInst : UnivInst L toLForall.lForall
+class LForall (L : Logic P) (T : Sort v) extends SForall P T :=
+  UnivGen : UnivGen L toFun
+  UnivInst : UnivInst L toFun
 
-instance iMForall {L : Logic P} 
-  [Fa : LForall P T] [G : UnivGen L Fa.lForall] [I : UnivInst L Fa.lForall] :
-  MForall L T := {toLForall := Fa, toForallGen := G, toForallInst := I}
+instance iLForall [Fa : SForall P T] 
+  [G : UnivGen L Fa.toFun] [I : UnivInst L Fa.toFun] :
+  LForall L T := {toSForall := Fa, UnivGen := G, UnivInst := I}
 
-namespace MForall
-abbrev Forall {L : Logic P} (K : MForall L T) 
-  := K.toLForall.lForall
-abbrev toUnivGen {L : Logic P} (K : MForall L T) 
-  := K.toForallGen
-abbrev forallGen {L : Logic P} (K : MForall L T) 
-  := K.toForallGen.ug
-abbrev gen {L : Logic P} (K : MForall L T) 
-  {f} := K.forallGen f
-abbrev intro {L : Logic P} (K : MForall L T) 
-  {f} := K.forallGen f
-abbrev toUnivInst {L : Logic P} (K : MForall L T) 
-  := K.toForallInst
-abbrev forallInst {L : Logic P} (K : MForall L T) 
-  := K.toForallInst.ui
-abbrev inst {L : Logic P} (K : MForall L T) 
-  {f} := K.forallInst f
-abbrev elim {L : Logic P} (K : MForall L T) 
-  {f} := K.forallInst f
-end MForall
+namespace LForall
 
-instance iUnivGenOfMForall {L : Logic P} [K : MForall L T] :
-  UnivGen L K.Forall := K.toForallGen
+abbrev funType (K : LForall L T) := Quant P T
+instance : CoeFun (LForall L T) funType := {coe := fun K => K.toFun}
 
-instance iUnivInstOfMForall {L : Logic P} [K : MForall L T] :
-  UnivInst L K.Forall := K.toForallInst
+instance iUnivGenOfMForall [K : LForall L T] :
+  Logic.UnivGen L K.toFun := K.UnivGen
+instance iUnivInstOfMForall [K : LForall L T] :
+  Logic.UnivInst L K.toFun := K.UnivInst
 
+abbrev gen (K : LForall L T) 
+  {f} := K.UnivGen.ug f
+abbrev intro (K : LForall L T) 
+  {f} := K.UnivGen.ug f
+abbrev inst {L : Logic P} (K : LForall L T) 
+  {f} := K.UnivInst.ui f
+abbrev elim {L : Logic P} (K : LForall L T) 
+  {f} := K.UnivInst.ui f
+
+end LForall
+
+--------------------------------------------------------------------------------
 -- Exists
+--------------------------------------------------------------------------------
 
-class MExists (L : Logic P) (T : Sort v) extends LExists P T :=
-  toExistsGen : ExstGen L toLExists.lExists
-  toExistsInst : ExstInst L toLExists.lExists
+class LExists (L : Logic P) (T : Sort v) extends SExists P T :=
+  ExstGen : ExstGen L toFun
+  ExstInst : ExstInst L toFun
 
-namespace MExists
-abbrev Exists {L : Logic P} (K : MExists L T) 
-  := K.toLExists.lExists
-abbrev existsGen {L : Logic P} (K : MExists L T) 
-  := K.toExistsGen.xg
-abbrev gen {L : Logic P} (K : MExists L T) 
-  {f} := K.existsGen f
-abbrev intro {L : Logic P} (K : MExists L T) 
-  {f} := K.existsGen f
-abbrev existsInst {L : Logic P} (K : MExists L T) 
-  := K.toExistsInst.xi
-abbrev inst {L : Logic P} (K : MExists L T) 
-  {f} := K.existsInst f
-abbrev elim {L : Logic P} (K : MExists L T) 
-  {f} := K.existsInst f
-end MExists
+instance iLExists [X : SExists P T] 
+  [G : ExstGen L X.toFun] [I : ExstInst L X.toFun] :
+  LExists L T := {toSExists := X, ExstGen := G, ExstInst := I}
 
-instance iMExists {L : Logic P} 
-  [X : LExists P T] [G : ExstGen L X.lExists] [I : ExstInst L X.lExists] :
-  MExists L T := {toLExists := X, toExistsGen := G, toExistsInst := I}
+namespace LExists
 
-instance iExistsIntroOfMExists {L : Logic P} [K : MExists L T] :
-  ExstGen L K.Exists := K.toExistsGen
+abbrev funType (K : LExists L T) := Quant P T
+instance : CoeFun (LExists L T) funType := {coe := fun K => K.toFun}
 
-instance iExistsElimOfMExists {L : Logic P} [K : MExists L T] :
-  ExstInst L K.Exists := K.toExistsInst
+instance [K : LExists L T] :
+  Logic.ExstGen L K.toFun := K.ExstGen
+instance [K : LExists L T] :
+  Logic.ExstInst L K.toFun := K.ExstInst
+
+abbrev gen {L : Logic P} (K : LExists L T) 
+  {f} := K.ExstGen.xg f
+abbrev intro {L : Logic P} (K : LExists L T) 
+  {f} := K.ExstGen.xg f
+abbrev inst {L : Logic P} (K : LExists L T) 
+  {f} := K.ExstInst.xi f
+abbrev elim {L : Logic P} (K : LExists L T) 
+  {f} := K.ExstInst.xi f
+
+end LExists
 
 end Gaea.Logic
