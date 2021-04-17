@@ -1,5 +1,6 @@
 import Gaea.Logic.Judgment
 import Gaea.Logic.Fun.Types
+import Gaea.Logic.Rel.Rules
 
 namespace Gaea.Logic
 
@@ -17,6 +18,12 @@ class Comm (L : Logic P) (C : Binar P) :=
 
 abbrev comm {L : Logic P} {C} 
   [K : Comm L C] {p q} := K.comm p q
+
+instance iSymmOfComm {L : Logic P} {R : Rel P P}
+  [K : Comm L R] : Symm L R := {symm := K.comm}
+
+instance iCommOfSymm {L : Logic P} {R : Rel P P}
+  [K : Symm L R] : Comm L R := {comm := K.symm}
 
 --------------------------------------------------------------------------------
 -- Associativity
