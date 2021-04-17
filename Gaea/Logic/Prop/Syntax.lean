@@ -19,15 +19,15 @@ abbrev false {P : Sort u} [K : LFalse P] := K.toProp
 
 -- Connectives
 
-class Imp (P : Sort u) :=
+class LArr (P : Sort u) :=
   toFun : Binar P
 
-namespace Imp
-abbrev funType (K : Imp P) := Binar P
-instance : CoeFun (Imp P) funType := {coe := fun K => K.toFun}
-end Imp
+namespace LArr
+abbrev funType (K : LArr P) := Binar P
+instance : CoeFun (LArr P) funType := {coe := fun K => K.toFun}
+end LArr
 
-abbrev imp {P : Sort u} [K : Imp P] := K.toFun
+abbrev larr {P : Sort u} [K : LArr P] := K.toFun
 
 class SIff (P : Sort u) :=
   toFun : Binar P

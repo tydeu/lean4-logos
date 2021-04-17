@@ -10,44 +10,44 @@ variable {P : Sort u}
 -- Modus Ponens
 -- (p -> q) /\ p |- q 
 
-class ConjMp (L : Logic P) (imp : Binar P) (conj : Binar P) :=
+class ConjMp (L : Logic P) (larr : Binar P) (conj : Binar P) :=
   conjMp : (p q : P) -> (L |- (p -> q) /\ p) -> (L |- q) 
 
-def conjMp {L : Logic p} {imp conj}
-  [K : ConjMp L imp conj] {p q} := K.conjMp p q
+def conjMp {L : Logic p} {larr conj}
+  [K : ConjMp L larr conj] {p q} := K.conjMp p q
 
 instance iConjMpByUncurryMp
-  {L : Logic P} {imp : Binar P} {conj : Binar P} 
-  [CjU : Uncurry L conj] [Mp : ModusPonens L imp] 
-  : ConjMp L imp conj := {conjMp := fun p q => uncurry mp}
+  {L : Logic P} {larr : Binar P} {conj : Binar P} 
+  [CjU : Uncurry L conj] [Mp : ModusPonens L larr] 
+  : ConjMp L larr conj := {conjMp := fun p q => uncurry mp}
 
 -- Modus Tollens
 -- (p -> q) /\ ~q |- ~p 
 
-class ConjMt (L : Logic P) (imp : Binar P) (conj : Binar P) (lneg : Unar P) :=
+class ConjMt (L : Logic P) (larr : Binar P) (conj : Binar P) (lneg : Unar P) :=
   conjMt : (p q : P) -> (L |- (p -> q) /\ ~q) -> (L |- ~p) 
 
-def conjMt {L : Logic P} {imp conj lneg}
-  [K : ConjMt L imp conj lneg] {p q} := K.conjMt p q
+def conjMt {L : Logic P} {larr conj lneg}
+  [K : ConjMt L larr conj lneg] {p q} := K.conjMt p q
 
 instance iConjMtByUncurryMt {L : Logic P} 
-  {imp : Binar P} {conj : Binar P} {lneg : Unar P}
-  [CjU : Uncurry L conj] [Mt : ModusTollens L imp lneg] 
-  : ConjMt L imp conj lneg := {conjMt := fun p q => uncurry mt}
+  {larr : Binar P} {conj : Binar P} {lneg : Unar P}
+  [CjU : Uncurry L conj] [Mt : ModusTollens L larr lneg] 
+  : ConjMt L larr conj lneg := {conjMt := fun p q => uncurry mt}
 
 -- Hypothetical Syllogism
 -- (p -> q) /\ (q -> r) |- (p -> r) 
 
-class HypoSyl (L : Logic P) (imp : Binar P) (conj : Binar P) :=
+class HypoSyl (L : Logic P) (larr : Binar P) (conj : Binar P) :=
   hypoSyl : (p q r : P) -> (L |- (p -> q) /\ (q -> r)) -> (L |- p -> r) 
 
-def hypoSyl {L : Logic P} {imp conj}
-  [K : HypoSyl L imp conj] {p q r} := K.hypoSyl p q r
+def hypoSyl {L : Logic P} {larr conj}
+  [K : HypoSyl L larr conj] {p q r} := K.hypoSyl p q r
 
 instance iHypoSylByUncurryTrans {L : Logic P} 
-  {imp : Binar P} {conj : Binar P}
-  [CjU : Uncurry L conj] [Itr : Trans L imp]
-  : HypoSyl L imp conj := {hypoSyl := fun p q r => uncurry trans}
+  {larr : Binar P} {conj : Binar P}
+  [CjU : Uncurry L conj] [Itr : Trans L larr]
+  : HypoSyl L larr conj := {hypoSyl := fun p q r => uncurry trans}
 
 -- Disjunctive Syllogism
 -- (p \/ q) /\ ~p |- q 
@@ -66,43 +66,43 @@ instance iDisjSylByUncurryMtp {L : Logic P}
 -- Constructive Dilemma
 -- (p -> q) /\ (r -> s) /\ (p \/ r) |- q \/ s 
 
-class CnstrDil (L : Logic P) (imp : Binar P) (conj : Binar P) (disj : Binar P) :=
+class CnstrDil (L : Logic P) (larr : Binar P) (conj : Binar P) (disj : Binar P) :=
   cnstrDil : (p q r s : P) -> 
     (L |- (p -> q) /\ (r -> s) /\ (p \/ r)) -> (L |- q \/ s) 
 
-def cnstrDil {L : Logic P} {imp conj disj}
-  [K : CnstrDil L imp conj disj] {p q r s} := K.cnstrDil p q r s
+def cnstrDil {L : Logic P} {larr conj disj}
+  [K : CnstrDil L larr conj disj] {p q r s} := K.cnstrDil p q r s
 
 -- Destructive Dilemma
 -- (p -> q) /\ (r -> s) /\ (~q \/ ~s) |- ~p \/ ~r 
 
 class DestrDil (L : Logic P) 
-  (imp : Binar P) (conj : Binar P) (disj : Binar P) (lneg : Unar P) :=
+  (larr : Binar P) (conj : Binar P) (disj : Binar P) (lneg : Unar P) :=
   destrDil : (p q r s : P) -> 
     (L |- (p -> q) /\ (r -> s) /\ (~q \/ ~s)) -> (L |- ~p \/ ~r) 
 
-def destrDil {L : Logic P} {imp conj disj lneg}
-  [K : DestrDil L imp conj disj lneg] {p q r s} := K.destrDil p q r s
+def destrDil {L : Logic P} {larr conj disj lneg}
+  [K : DestrDil L larr conj disj lneg] {p q r s} := K.destrDil p q r s
 
 -- Bidirectional Dilemma
 -- (p -> q) /\ (r -> s) /\ (p \/ ~s) |- q \/ ~r 
 
 class BidirDil (L : Logic P) 
-  (imp : Binar P) (conj : Binar P) (disj : Binar P) (lneg : Unar P) :=
+  (larr : Binar P) (conj : Binar P) (disj : Binar P) (lneg : Unar P) :=
   bidirDil : (p q r s : P) -> 
     (L |- (p -> q) /\ (r -> s) /\ (p \/ ~s)) -> (L |- q \/ ~r) 
 
-def bidirDil {L : Logic P} {imp conj disj lneg}
-  [K : BidirDil L imp conj disj lneg] {p q r s} := K.bidirDil p q r s
+def bidirDil {L : Logic P} {larr conj disj lneg}
+  [K : BidirDil L larr conj disj lneg] {p q r s} := K.bidirDil p q r s
 
 -- Composition
 -- (p -> q) /\ (p -> r) |- p -> (q /\ r)
 
-class Composition (L : Logic P) (imp : Binar P) (conj : Binar P) :=
+class Composition (L : Logic P) (larr : Binar P) (conj : Binar P) :=
   composition : (p q r : P) -> (L |- (p -> q) /\ (p -> r)) -> (L |- p -> (q /\ r))
 
-def composition {L : Logic P} {imp conj} 
-  [K : Composition L imp conj] {p q} := K.composition p q
+def composition {L : Logic P} {larr conj} 
+  [K : Composition L larr conj] {p q} := K.composition p q
 
 -- DeMorgan's Law (1)
 -- ~(p /\ q) |- ~p \/ ~q
@@ -125,26 +125,26 @@ def disjDeMorgan {L : Logic P} {conj disj lneg}
 -- Transposition
 -- p -> q |- ~q -> ~p
 
-class Transposition (L : Logic P) (imp : Binar P) (lneg : Unar P) :=
+class Transposition (L : Logic P) (larr : Binar P) (lneg : Unar P) :=
   transposition : (p q : P) -> (L |- p -> q) -> (L |- ~q -> ~p)
 
-def transposition {L : Logic P} [imp : Binar P] [lneg : Unar P]
-[K : Transposition L imp lneg] {p q} := K.transposition p q
+def transposition {L : Logic P} [larr : Binar P] [lneg : Unar P]
+[K : Transposition L larr lneg] {p q} := K.transposition p q
 
 -- Material Implication
 -- p -> q -|- ~p \/ q
 
-class MatImpIntro (L : Logic P) (imp : Binar P) (disj : Binar P) (lneg : Unar P) :=
+class MatImpIntro (L : Logic P) (larr : Binar P) (disj : Binar P) (lneg : Unar P) :=
   matImpIntro : (p q : P) -> (L |- ~p \/ q) -> (L |- p -> q)
 
-def matImpIntro {L : Logic P} {imp disj lneg}
-  [K : MatImpIntro L imp disj lneg] {p q} := K.matImpIntro p q
+def matImpIntro {L : Logic P} {larr disj lneg}
+  [K : MatImpIntro L larr disj lneg] {p q} := K.matImpIntro p q
 
-class MatImpElim (L : Logic P) (imp : Binar P) (disj : Binar P) (lneg : Unar P) :=
+class MatImpElim (L : Logic P) (larr : Binar P) (disj : Binar P) (lneg : Unar P) :=
   matImpElim : (p q : P) -> (L |- p -> q) -> (L |- ~p \/ q)
 
-def matImpElim {L : Logic P} {imp disj lneg}
-  [K : MatImpElim L imp disj lneg] {p q} := K.matImpElim p q
+def matImpElim {L : Logic P} {larr disj lneg}
+  [K : MatImpElim L larr disj lneg] {p q} := K.matImpElim p q
 
 -- Material Equivalence
 -- (p <-> q) -|- (p /\ q) \/ (~p /\ ~q)
@@ -166,20 +166,20 @@ def matEqvElim {L : Logic P} {iff conj disj lneg}
 -- Exportation
 -- (p /\ q) -> r |- p -> (q -> r)
 
-class Exprt (L : Logic P) (imp : Binar P) (conj : Binar P) :=
+class Exprt (L : Logic P) (larr : Binar P) (conj : Binar P) :=
   exprt : (p q r : P) -> (L |- (p /\ q) -> r) -> (L |- p -> (q -> r))
 
-def exprt {L : Logic P} {imp conj}
-  [K : Exprt L imp conj] {p q r} := K.exprt p q r
+def exprt {L : Logic P} {larr conj}
+  [K : Exprt L larr conj] {p q r} := K.exprt p q r
 
 -- Importation
 -- p -> (q -> r) |- (p /\ q) -> r
 
-class Imprt (L : Logic P) (imp : Binar P) (conj : Binar P) :=
+class Imprt (L : Logic P) (larr : Binar P) (conj : Binar P) :=
   imprt : (p q r : P) -> (L |- p -> (q -> r)) -> (L |- (p /\ q) -> r)
 
-def imprt {L : Logic P} {imp conj}
-  [K : Imprt L imp conj] {p q} := K.imprt p q
+def imprt {L : Logic P} {larr conj}
+  [K : Imprt L larr conj] {p q} := K.imprt p q
 
 -- Law of the Excluded Middle
 -- |- p \/ ~p

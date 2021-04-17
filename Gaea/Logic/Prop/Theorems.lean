@@ -19,7 +19,7 @@ instance iTautOfRefl {L : Logic P} {R}
 -- p -> (|- p -> p)
 
 def impReflByImp {L : Logic P} 
-{imp : Binar P} (ByI : Condition L imp)
+{larr : Binar P} (ByI : Condition L larr)
 : (p : P) -> (L |- p -> p)
 := by
   intro p
@@ -27,14 +27,14 @@ def impReflByImp {L : Logic P}
   exact Lp 
 
 instance iImpReflByImp {L : Logic P} 
-{imp : Binar P} [ByI : Condition L imp] : Refl L imp 
+{larr : Binar P} [ByI : Condition L larr] : Refl L larr 
 := {refl := impReflByImp ByI}
 
 -- Right Tautology
 -- p -> (|- q) -> (|- p -> q)
 
 def impRightTautByImp {L : Logic P} 
-{imp : Binar P} (ByI : Condition L imp)
+{larr : Binar P} (ByI : Condition L larr)
 : (p q : P) -> (L |- q) -> (L |- p -> q)
 := by
   intro p q
@@ -43,14 +43,14 @@ def impRightTautByImp {L : Logic P}
   exact Lq 
 
 instance iImpRightTautByImp {L : Logic P} 
-{imp : Binar P} [ByI : Condition L imp] : RightTaut L imp 
+{larr : Binar P} [ByI : Condition L larr] : RightTaut L larr 
 := {rightTaut := impRightTautByImp ByI}
 
 -- Transitivity
 -- (|- p -> q) -> (|- q -> r) -> (|- p -> r)
 
 def impTransByImpMp {L : Logic P} 
-{imp : Binar P} (ByI : Condition L imp) (Mp : ModusPonens L imp)
+{larr : Binar P} (ByI : Condition L larr) (Mp : ModusPonens L larr)
 : (p q r : P) -> (L |- p -> q) -> (L |- q -> r) -> (L |- p -> r)
 := by
   intro p q r 
@@ -59,8 +59,8 @@ def impTransByImpMp {L : Logic P}
   mp LqTr (mp LpTq Lp) 
 
 instance iImpTransByImp {L : Logic P} 
-{imp : Binar P} [ByI : Condition L imp] [Mp : ModusPonens L imp]
-: Trans L imp := {trans := impTransByImpMp ByI Mp}
+{larr : Binar P} [ByI : Condition L larr] [Mp : ModusPonens L larr]
+: Trans L larr := {trans := impTransByImpMp ByI Mp}
 
 --------------------------------------------------------------------------------
 -- Contraposition
@@ -69,9 +69,9 @@ instance iImpTransByImp {L : Logic P}
 -- ((|- ~q) -> (|- ~p)) -> (|- p -> q)
 
 def byContrapositionByDneImpContra 
-{L : Logic P} {imp : Binar P} {lneg : Unar P}
+{L : Logic P} {larr : Binar P} {lneg : Unar P}
 (DnE : DblNegElim L lneg)
-(ByI : Condition L imp)
+(ByI : Condition L larr)
 (ByC : ByContradiction L lneg)
 : (p q : P) -> ((L |- ~q) -> (L |- ~p)) -> (L |- p -> q)
 := by
@@ -84,18 +84,18 @@ def byContrapositionByDneImpContra
   contradiction LNp Lp
 
 instance iByContrapositionByDneImpContra 
-{L : Logic P} {imp : Binar P} {lneg : Unar P}
+{L : Logic P} {larr : Binar P} {lneg : Unar P}
 [DnE : DblNegElim L lneg]
-[ByI : Condition L imp]
+[ByI : Condition L larr]
 [ByC : ByContradiction L lneg]
-: ByContraposition L imp lneg :=
+: ByContraposition L larr lneg :=
 {byContraposition := byContrapositionByDneImpContra DnE ByI ByC}
 
 -- (|- p -> q) -> (|- ~q) -> (|- ~p) 
 
 def mtByMpContra
-{L : Logic P} {imp : Binar P} {lneg : Unar P}
-(Mp  : ModusPonens L imp) 
+{L : Logic P} {larr : Binar P} {lneg : Unar P}
+(Mp  : ModusPonens L larr) 
 (ByC : ByContradiction L lneg)
 : (p q : P) -> (L |- p -> q) -> (L |- ~q) -> (L |- ~p)
 := by
@@ -106,10 +106,10 @@ def mtByMpContra
   contradiction LNq Lq
 
 instance iModusTollensByMpContra 
-{L : Logic P} {imp : Binar P} {lneg : Unar P}
-[Mp  : ModusPonens L imp]
+{L : Logic P} {larr : Binar P} {lneg : Unar P}
+[Mp  : ModusPonens L larr]
 [ByC : ByContradiction L lneg]
-: ModusTollens L imp lneg :=
+: ModusTollens L larr lneg :=
 {mt := mtByMpContra Mp ByC}
 
 end Gaea.Logic

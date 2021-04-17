@@ -2,8 +2,8 @@ open Lean
 
 namespace Gaea.Logic
 
-scoped infixr:25 " -> "  => $(mkIdent `imp)
-scoped infixr:25 " ⇒ "   => $(mkIdent `imp)
+scoped infixr:25 " -> "  => $(mkIdent `larr)
+scoped infixr:25 " ⇒ "   => $(mkIdent `larr)
 
 scoped infix:20 " <-> "  => $(mkIdent `iff)
 scoped infix:20 " ⇔ "   => $(mkIdent `iff)

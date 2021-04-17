@@ -25,20 +25,20 @@ abbrev postulate {L : Logic P} {p}
 -- Conditional Proof
 -- (p |- q) -> (|- p -> q) 
 
-class Condition (L : Logic P) (imp : Binar P) := 
+class Condition (L : Logic P) (larr : Binar P) := 
   condition : (p q : P) -> ((L |- p) -> (L |- q)) -> (L |- p -> q) 
 
-abbrev condition {L : Logic P} {imp} 
-  [K : Condition L imp] {p q} := K.condition p q
+abbrev condition {L : Logic P} {larr} 
+  [K : Condition L larr] {p q} := K.condition p q
 
 -- Proof by Contraposition
 -- (~q |- ~p) -> (|- p -> q)
 
-class ByContraposition (L : Logic P) (imp : Binar P) (lneg : Unar P) :=
+class ByContraposition (L : Logic P) (larr : Binar P) (lneg : Unar P) :=
   byContraposition : (p q : P) -> ((L |- ~q) -> (L |- ~p)) -> (L |- p -> q) 
 
-abbrev byContraposition {L : Logic P} {imp lneg}
-  [K : ByContraposition L imp lneg] {p q} := K.byContraposition p q
+abbrev byContraposition {L : Logic P} {larr lneg}
+  [K : ByContraposition L larr lneg] {p q} := K.byContraposition p q
 
 -- Biconditional Proof
 -- (p |- q) -> (q |- p) -> (|- p <-> q)
@@ -81,11 +81,11 @@ class LeftMp (L : Logic P) (iff : Binar P) :=
 abbrev leftMp {L : Logic P} {iff} 
   [K : LeftMp L iff] {p q} := K.mp p q
 
-abbrev ModusPonens (L : Logic P) (imp : Binar P) 
-  := LeftMp L imp
+abbrev ModusPonens (L : Logic P) (larr : Binar P) 
+  := LeftMp L larr
 
-abbrev mp {L : Logic P} {imp} 
-  [K : LeftMp L imp] {p q} := K.mp p q
+abbrev mp {L : Logic P} {larr} 
+  [K : LeftMp L larr] {p q} := K.mp p q
 
 -- p <-> q, q |- p
 
@@ -122,11 +122,11 @@ class RightMt (L : Logic P) (iff : Binar P) (lneg : Unar P) :=
 abbrev rightMt {L : Logic P} {iff lneg} 
   [K : RightMt L iff lneg] {p q} := K.mt p q
 
-abbrev ModusTollens (L : Logic P) (imp : Binar P) (lneg : Unar P)
-  := RightMt L imp lneg
+abbrev ModusTollens (L : Logic P) (larr : Binar P) (lneg : Unar P)
+  := RightMt L larr lneg
 
-abbrev mt {L : Logic P} {imp lneg} 
-  [K : RightMt L imp lneg] {p q} := K.mt p q
+abbrev mt {L : Logic P} {larr lneg} 
+  [K : RightMt L larr lneg] {p q} := K.mt p q
 
 
 --------------------------------------------------------------------------------
@@ -141,8 +141,8 @@ class LeftMtp (L : Logic P) (disj : Binar P) (lneg : Unar P) :=
 abbrev leftMtp {L : Logic P} {disj} {lneg : Unar P} 
   [K : LeftMtp L disj lneg] {p q} := K.mtp p q
 
-abbrev ModusTollendoPonens (L : Logic P) (imp : Binar P) (lneg : Unar P)
-  := LeftMtp L imp lneg
+abbrev ModusTollendoPonens (L : Logic P) (larr : Binar P) (lneg : Unar P)
+  := LeftMtp L larr lneg
 
 abbrev mtp {L : Logic P} {disj} {lneg : Unar P} 
   [K : LeftMtp L disj lneg] {p q} := K.mtp p q

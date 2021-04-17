@@ -15,9 +15,9 @@ variable {P : Sort u}
 -- (p -> q) /\ (r -> s) /\ (p \/ r) |- q \/ s 
 
 def cnstrDilByUncurryMpDisj {L : Logic P} 
-{imp : Binar P} {conj : Binar P} {disj : Binar P}
+{larr : Binar P} {conj : Binar P} {disj : Binar P}
 (CjU : Uncurry L conj) 
-(Mp  : ModusPonens L imp) 
+(Mp  : ModusPonens L larr) 
 (DiL : LeftTaut L disj)
 (DiR : RightTaut L disj) 
 (DjE : ByEither L disj)
@@ -37,22 +37,22 @@ def cnstrDilByUncurryMpDisj {L : Logic P}
     mp LrTs Lr
 
 instance iCnstrDilByUncurryMpDisj {L : Logic P} 
-{imp : Binar P} {conj : Binar P} {disj : Binar P}
-[Mp  : ModusPonens L imp]
+{larr : Binar P} {conj : Binar P} {disj : Binar P}
+[Mp  : ModusPonens L larr]
 [CjU : Uncurry L conj]
 [DiL : LeftTaut L disj]
 [DiR : RightTaut L disj] 
 [DjE : ByEither L disj]
-: CnstrDil L imp conj disj :=
+: CnstrDil L larr conj disj :=
 {cnstrDil := cnstrDilByUncurryMpDisj CjU Mp DiL DiR DjE} 
 
 -- Destructive Dilemma
 -- (p -> q) /\ (r -> s) /\ (~q \/ ~s) |- ~p \/ ~r 
 
 def destrDilByUncurryMtDisj {L : Logic P} 
-{imp : Binar P} {conj : Binar P} {disj : Binar P} {lneg : Unar P}
+{larr : Binar P} {conj : Binar P} {disj : Binar P} {lneg : Unar P}
 (CjU : Uncurry L conj) 
-(Mt : ModusTollens L imp lneg)
+(Mt : ModusTollens L larr lneg)
 (DiL : LeftTaut L disj)
 (DiR : RightTaut L disj) 
 (DjE : ByEither L disj)
@@ -72,23 +72,23 @@ def destrDilByUncurryMtDisj {L : Logic P}
     mt LrTs LNs
 
 instance iDestrDilByUncurryMtDisj {L : Logic P} 
-{imp : Binar P} {conj : Binar P} {disj : Binar P} {lneg : Unar P}
+{larr : Binar P} {conj : Binar P} {disj : Binar P} {lneg : Unar P}
 [CjU : Uncurry L conj]
-[Mt : ModusTollens L imp lneg]
+[Mt : ModusTollens L larr lneg]
 [DiL : LeftTaut L disj]
 [DiR : RightTaut L disj] 
 [DjE : ByEither L disj]
-: DestrDil L imp conj disj lneg :=
+: DestrDil L larr conj disj lneg :=
 {destrDil := destrDilByUncurryMtDisj CjU Mt DiL DiR DjE } 
 
 -- Bidirectional Dilemma
 -- (p -> q) /\ (r -> s) /\ (p \/ ~s) |- q \/ ~r 
 
 def bidirDilByUncurryMpMtDisj {L : Logic P} 
-{imp : Binar P} {conj : Binar P} {disj : Binar P} {lneg : Unar P}
+{larr : Binar P} {conj : Binar P} {disj : Binar P} {lneg : Unar P}
 (CjU : Uncurry L conj)
-(Mp  : ModusPonens L imp) 
-(Mt  : ModusTollens L imp lneg)
+(Mp  : ModusPonens L larr) 
+(Mt  : ModusTollens L larr lneg)
 (DiL : LeftTaut L disj)
 (DiR : RightTaut L disj) 
 (DjE : ByEither L disj)
@@ -108,14 +108,14 @@ def bidirDilByUncurryMpMtDisj {L : Logic P}
     mt LrTs LNs
 
 instance iBidirDilByUncurryMpMtDisj {L : Logic P} 
-{imp : Binar P} {conj : Binar P} {disj : Binar P} {lneg : Unar P}
-[Mp  : ModusPonens L imp]
-[Mt  : ModusTollens L imp lneg]
+{larr : Binar P} {conj : Binar P} {disj : Binar P} {lneg : Unar P}
+[Mp  : ModusPonens L larr]
+[Mt  : ModusTollens L larr lneg]
 [CjU : Uncurry L conj]
 [DiL : LeftTaut L disj]
 [DiR : RightTaut L disj] 
 [DjE : ByEither L disj]
-: BidirDil L imp conj disj lneg :=
+: BidirDil L larr conj disj lneg :=
 {bidirDil := bidirDilByUncurryMpMtDisj CjU Mp Mt DiL DiR DjE} 
 
 end Gaea.Logic

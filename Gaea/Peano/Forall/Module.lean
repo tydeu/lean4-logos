@@ -41,19 +41,19 @@ abbrev elim {L : Logic P} {N : IsNat P T} (K : MForallNat L N)
 end MForallNat
 
 --------------------------------------------------------------------------------
--- Forall/Imp Implementation Module
+-- Forall/Ent Implementation Module
 --------------------------------------------------------------------------------
 
 def MForallIfNat {L : Logic P} 
-  (N : IsNat P T) (Fa : MForall L T) (imp : LImp L) 
+  (N : IsNat P T) (Fa : MForall L T) (ent : LEnt L) 
   : MForallNat L N := {
-    toForallNat := LForallIfNat N Fa.toLForall imp.toImp, 
-    toForallNatIntro := LForallIfNatIntro N Fa.toUnivGen imp.Condition,
-    toForallNatElim := LForallIfNatElim N Fa.toUnivInst imp.ModusPonens,
+    toForallNat := LForallIfNat N Fa.toLForall ent.toLArr, 
+    toForallNatIntro := LForallIfNatIntro N Fa.toUnivGen ent.Condition,
+    toForallNatElim := LForallIfNatElim N Fa.toUnivInst ent.ModusPonens,
   }
 
 instance iMForallIfNat {P : Sort u} {T : Type v} {L : Logic P} 
-  [N : IsNat P T] [Fa : MForall L T] [imp : LImp L] : MForallNat L N
-  := MForallIfNat N Fa imp
+  [N : IsNat P T] [Fa : MForall L T] [ent : LEnt L] : MForallNat L N
+  := MForallIfNat N Fa ent
 
 end Gaea.Peano
