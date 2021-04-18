@@ -44,7 +44,7 @@ abbrev mp (K : LEnt L)
 
 -- Derived
 abbrev Refl (K : LEnt L) 
-  : Refl L K.toFun := iReflOfCondition
+  : Refl L K.toFun := iReflOfLeftCond
 abbrev refl (K : LEnt L) 
   := K.Refl.refl
 abbrev rfl (K : LEnt L) 
@@ -54,7 +54,7 @@ abbrev Taut (K : LEnt L)
 abbrev taut (K : LEnt L) 
   {p} := K.Taut.taut p
 abbrev RightTaut (K : LEnt L) 
-  : RightTaut L K.toFun := iRightTautOfCondition
+  : RightTaut L K.toFun := iRightTautOfLeftCond
 abbrev rightTaut (K : LEnt L) 
   {p q} := K.RightTaut.rightTaut p q
 abbrev Trans (K : LEnt L) 
@@ -101,6 +101,14 @@ abbrev rightMp (K : LIff L)
   {p q} := K.RightMp.mp p q
 abbrev mpr (K : LIff L) 
   {p q} := K.RightMp.mp p q
+
+-- Derived
+abbrev Refl (K : LIff L) 
+  : Refl L K.toFun := iReflOfBicondition
+abbrev refl (K : LIff L) 
+  := K.Refl.refl
+abbrev rfl (K : LIff L) 
+  {p} := K.Refl.refl p
 
 end LIff
 

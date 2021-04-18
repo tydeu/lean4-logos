@@ -12,6 +12,22 @@ macro_rules [conditionTactic]
   | `(tactic| condition $x $y $zs*) => 
     `(tactic| condition $x; condition $y $zs*)
 
+scoped syntax (name := leftCondTactic) 
+  "leftCond " (colGt binderPat)+ : tactic
+macro_rules [leftCondTactic]
+  | `(tactic| leftCond $x:binderPat) => 
+    `(tactic| apply leftCond; assume $x)
+  | `(tactic| leftCond $x $y $zs*) => 
+    `(tactic| leftCond $x; leftCond $y $zs*)
+
+scoped syntax (name := rightCondTactic) 
+  "rightCond " (colGt binderPat)+ : tactic
+macro_rules [rightCondTactic]
+  | `(tactic| rightCond $x:binderPat) => 
+    `(tactic| apply rightCond; assume $x)
+  | `(tactic| rightCond $x $y $zs*) => 
+    `(tactic| rightCond $x; rightCond $y $zs*)
+
 scoped macro "byEither " pq:term:max pr:term:max qr:term:max : tactic => 
   `(tactic| apply byEither $pq $pr $qr)
 

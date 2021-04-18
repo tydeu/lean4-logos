@@ -32,9 +32,13 @@ abbrev funType (K : LImp L lneg) := Binar P
 instance : CoeFun (LImp L lneg) funType := {coe := fun K => K.toFun}
 
 instance [K : LImp L lneg] : 
+  Logic.ByContraposition L K.toFun lneg := K.ByContraposition
+instance [K : LImp L lneg] : 
   Logic.ModusTollens L K.toFun lneg := K.ModusTollens
 
 -- Basic
+abbrev byContraposition (K : LImp L lneg) 
+  {p q} := K.ByContraposition.byContraposition p q
 abbrev mt (K : LImp L lneg) 
   {p q} := K.ModusTollens.mt p q
 

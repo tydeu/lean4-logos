@@ -58,22 +58,47 @@ instance iSimpOfByEither {L : Logic P} {F}
 
 --------------------------------------------------------------------------------
 -- Conditional Proof
--- (p |- q) -> (|- F p q) 
 --------------------------------------------------------------------------------
 
-class Condition (L : Logic P) (F : Binar P) := 
+-- Left Condition
+-- (p |- q) -> (|- F p q) 
+
+class LeftCond (L : Logic P) (F : Binar P) := 
   condition : (p q : P) -> ((L |- p) -> (L |- q)) -> (L |- F p q) 
+
+abbrev leftCond {L : Logic P} {F} 
+  [K : LeftCond L F] {p q} := K.condition p q
+
+abbrev Condition (L : Logic P) (F : Binar P) 
+  := LeftCond L F
 
 abbrev condition {L : Logic P} {F} 
   [K : Condition L F] {p q} := K.condition p q
 
-instance iReflOfCondition {L : Logic P} {F} 
+instance iReflOfLeftCond {L : Logic P} {F} 
   [K : Condition L F] : Refl L F := 
-  {refl := fun p => condition id}
+  {refl := fun p => K.condition p p id}
 
-instance iRightTautOfCondition {L : Logic P} {F} 
-  [C : Condition L F] : RightTaut L F := 
-  {rightTaut := fun p q Lq => condition (fun Lp => Lq)}
+instance iRightTautOfLeftCond {L : Logic P} {F} 
+  [K : Condition L F] : RightTaut L F := 
+  {rightTaut := fun p q Lq => K.condition p q (fun Lp => Lq)}
+
+-- Right Condition
+-- (q |- p) -> (|- F p q) 
+
+class RightCond (L : Logic P) (F : Binar P) := 
+  condition : (p q : P) -> ((L |- q) -> (L |- p)) -> (L |- F p q) 
+
+abbrev rightCond {L : Logic P} {F} 
+  [K : RightCond L F] {p q} := K.condition p q
+
+instance iReflOfRightCond {L : Logic P} {F} 
+  [K : RightCond L F] : Refl L F := 
+  {refl := fun p => K.condition p p id}
+
+instance iLeftTautOfRightCond {L : Logic P} {F} 
+  [K : RightCond L F] : LeftTaut L F := 
+  {leftTaut := fun p q Lp => K.condition p q (fun Lq => Lp)}
 
 --------------------------------------------------------------------------------
 -- Biconditional Proof
@@ -87,6 +112,10 @@ class Bicondition (L : Logic P) (F : Binar P) :=
 abbrev bicondition {L : Logic P} {F}
   [K : Bicondition L F] {p q} := K.bicondition p q
 
+instance iReflOfBicondition {L : Logic P} {F} 
+  [K : Bicondition L F] : Refl L F := 
+  {refl := fun p => K.bicondition p p id id}
+
 --------------------------------------------------------------------------------
 -- Modus Ponens
 --------------------------------------------------------------------------------
@@ -99,11 +128,11 @@ class LeftMp (L : Logic P) (F : Binar P) :=
 abbrev leftMp {L : Logic P} {F} 
   [K : LeftMp L F] {p q} := K.mp p q
 
-abbrev ModusPonens (L : Logic P) (larr : Binar P) 
-  := LeftMp L larr
+abbrev ModusPonens (L : Logic P) (F : Binar P) 
+  := LeftMp L F
 
-abbrev mp {L : Logic P} {larr} 
-  [K : LeftMp L larr] {p q} := K.mp p q
+abbrev mp {L : Logic P} {F} 
+  [K : LeftMp L F] {p q} := K.mp p q
 
 -- F p q, q |- p
 
