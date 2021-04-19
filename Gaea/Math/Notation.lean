@@ -1,5 +1,7 @@
 import Gaea.Math.Syntax
 
+universe u
+
 open Gaea.Math
 
 -- Functions
@@ -12,13 +14,27 @@ infix:50 " < "  => LT.lt
 infix:50 " <= " => LE.le
 infix:50 " ≤ "  => LE.le
 
--- Natural Literals
+-- Sort-polymorphic Natural Literals
 
-instance (N : Type u) [K : Zero N] : OfNat N (natLit! 0)
-  := {ofNat := K.zero}
+class OfNatLit (A : Sort u) (n : Nat) :=
+  ofNatLit : A
 
-instance (N : Type u) [K : One N] : OfNat N (natLit! 1)
-  := {ofNat := K.one}
+@[defaultInstance low]
+instance {A : Type u} {n : Nat} [K : OfNat A n] : OfNatLit A n
+  := {ofNatLit := K.ofNat}
 
-instance (N : Type u) [K : Succ N] (n : Nat) [T : OfNat N n] 
-  : OfNat N (Nat.succ n) := {ofNat := K.succ T.ofNat}
+instance {A : Type u} {n : Nat} [K : OfNatLit A n] : OfNat A n
+  := {ofNat := K.ofNatLit}
+
+instance (A : Sort u) [K : Zero A] 
+  : OfNatLit A (natLit! 0) := {ofNatLit := K.zero}
+
+instance (A : Sort u) [K : One A] 
+  : OfNatLit A (natLit! 1) := {ofNatLit := K.one}
+
+instance (A : Sort u) [K : Succ A] (n : Nat) [T : OfNatLit A n] 
+  : OfNatLit A (Nat.succ n) := {ofNatLit := K.succ T.ofNatLit}
+
+syntax (name := sortNumLit) (priority := default + low) num : term
+macro_rules [sortNumLit]
+  | `( $n:numLit) => `(OfNatLit.ofNatLit (natLit! $n))

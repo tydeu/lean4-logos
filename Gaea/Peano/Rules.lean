@@ -15,14 +15,14 @@ open Gaea.Logic
 namespace Gaea.Peano
 
 -- Axiom 1
-class NatZero {P : Sort u} {T : Type v} 
+class NatZero {P : Sort u} {T : Sort v} 
   (L : Logic P) (N : IsNat P T) (Z : Zero T) :=
   (natZero : L |- nat (0 : T))
 
-def natZero {P : Sort u} (L : Logic P) (T : Type v) 
+def natZero {P : Sort u} (L : Logic P) (T : Sort v) 
   [N : IsNat P T] [Z : Zero T] [K : NatZero L N Z] := K.natZero
 
-def nat0 {P : Sort u} {T : Type v} 
+def nat0 {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Z : Zero T] [K : NatZero L N Z] := K.natZero
 
 -- Axiom 6
@@ -44,12 +44,12 @@ class EqNatToEqSucc {P : Sort u} {T : Sort v}
   (eqNatToEqSucc : (m n : T) -> (L |- nat m) -> (L |- nat n) -> 
     (L |- m = n) -> (L |- S m = S n))
 
-instance iEqNatToEqSuccOfFSubstT {P : Sort u} {T : Type v} 
+instance iEqNatToEqSuccOfFSubstT {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [Su : Succ T]
   [K : EqNatToEqSucc L N Q Su] : FSubstT L Q.toFun N.isNat Su.succ 
   := {fSubstT := K.eqNatToEqSucc}
 
-instance iFSubstTOfEqNatToEqSucc {P : Sort u} {T : Type v} 
+instance iFSubstTOfEqNatToEqSucc {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [Su : Succ T]
   [K : FSubstT L Q.toFun N.isNat Su.succ] : EqNatToEqSucc L N Q Su
   := {eqNatToEqSucc := K.fSubstT}
@@ -69,12 +69,12 @@ def eqSuccToEqNat {P : Sort u} {T : Sort v}
   [K : EqSuccToEqNat L N Q Su] {m n : T} := K.eqSuccToEqNat
 
 -- Axiom 8
-class SuccNatEqZeroFalse {P : Sort u} {T : Type v} 
+class SuccNatEqZeroFalse {P : Sort u} {T : Sort v} 
   (L : Logic P) (N : PNat P T) (Q : SEq P T) (F : LFalse P) :=
   (succNatEqZeroFalse : (m n : T) -> (L |- nat m) -> (L |- nat n) -> 
     (L |- S n = 0) -> (L |- false))
 
-def succNatEqZeroFalse {P : Sort u} {T : Type v} 
+def succNatEqZeroFalse {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : PNat P T] [Q : SEq P T] [F : LFalse P]
   [K : SuccNatEqZeroFalse L N Q F] {m n : T} := K.succNatEqZeroFalse m n
 

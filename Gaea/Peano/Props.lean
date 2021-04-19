@@ -20,7 +20,7 @@ namespace Gaea.Peano.Props
 --------------------------------------------------------------------------------
 
 -- Axiom 1
-def natZero {P : Sort u} (T : Type v) [IsNat P T] [Zero T] : P :=
+def natZero {P : Sort u} (T : Sort v) [IsNat P T] [Zero T] : P :=
   nat (0 : T)
 
 -- Axiom 2
@@ -64,17 +64,15 @@ def eqSuccToEqNat {P : Sort u} (T : Sort v)
   forallNat (m n : T) => S m = S n -> m = n
 
 -- Axiom 8
-def succNatEqZeroFalse {P : Sort u} (T : Type v) 
+def succNatEqZeroFalse {P : Sort u} (T : Sort v) 
   [SEq P T] [LFalse P] [Zero T] [Succ T] [LArr P] [SForallNat P T] : P :=
   forallNat (m n : T) => S n = 0 -> false
 
 -- Axiom 9
-def natInduction 
-  {P : Sort u} (T : Type v) 
-  [LArr P] [SForall P (T -> P)]
-  [SForallNat P T] [Zero T] [Succ T] : P := 
+def natInduction {P : Sort u} (T : Sort v) 
+  [LArr P] [SForall P (T -> P)] [SForallNat P T] [Zero T] [Succ T] : P := 
   forall (f : T -> P) => 
-    f 0 -> 
+    f (0 : T) -> 
     (forallNat (n : T) => f n -> f (S n)) ->
     (forallNat (n : T) => f n)
 
@@ -115,7 +113,7 @@ def leIffAddNat
   {P : Sort u} (T : Type v) 
   [IsNat P T] [LE P T] [SEq P T] [Add T] 
   [LArr P] [SIff P] [SForallNat P T] [SExists P T] : P :=
-  forallNat (a b : T) => a <= b <-> exists c => nat c -> a + c = b
+  forallNat (a b : T) => (a <= b) <-> (exists c => nat c -> a + c = b)
 
 -- Axiom 2
 def strongNatInduction 
@@ -124,7 +122,7 @@ def strongNatInduction
   [SForallNat P T] [LE P T] [Zero T] [Succ T] : P := 
   forall (f : T -> P) => 
     f 0 -> 
-    (forallNat (n k : T) => (k <= n -> f n) -> f (S n)) ->
+    (forallNat (n k : T) => ((k <= n) -> f n) -> f (S n)) ->
     (forallNat (n : T) => f n)
 
 end Gaea.Peano.Props
