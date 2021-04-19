@@ -72,7 +72,7 @@ def succNatEqZeroFalse {P : Sort u} (T : Sort v)
 def natInduction {P : Sort u} (T : Sort v) 
   [LArr P] [SForall P (T -> P)] [SForallNat P T] [Zero T] [Succ T] : P := 
   forall (f : T -> P) => 
-    f (0 : T) -> 
+    f 0 -> 
     (forallNat (n : T) => f n -> f (S n)) ->
     (forallNat (n : T) => f n)
 
@@ -81,13 +81,13 @@ def natInduction {P : Sort u} (T : Sort v)
 --------------------------------------------------------------------------------
 
 -- Axiom 1
-def addNatZeroEqNat {P : Sort u} (T : Type v) 
-  [SEq P T] [Add T] [Zero T] [SForallNat P T] : P :=
+def addNatZeroEqNat {P : Sort u} (T : Sort v) 
+  [SEq P T] [SAdd T] [Zero T] [SForallNat P T] : P :=
   forallNat (a : T) => a + 0 = a
 
 -- Axiom 2
-def addNatSuccEqSucc {P : Sort u} (T : Type v) 
-  [SEq P T] [Add T] [Succ T] [SForallNat P T] : P := 
+def addNatSuccEqSucc {P : Sort u} (T : Sort v) 
+  [SEq P T] [SAdd T] [Succ T] [SForallNat P T] : P := 
   forallNat (a b : T) => a + S b = S (a + b)
 
 --------------------------------------------------------------------------------
@@ -95,13 +95,13 @@ def addNatSuccEqSucc {P : Sort u} (T : Type v)
 --------------------------------------------------------------------------------
 
 -- Axiom 1
-def mulNatZeroEqZero {P : Sort u} (T : Type v) 
-  [SEq P T] [Mul T] [Zero T] [SForallNat P T] : P :=
+def mulNatZeroEqZero {P : Sort u} (T : Sort v) 
+  [SEq P T] [SMul T] [Zero T] [SForallNat P T] : P :=
   forallNat (a : T) => a * 0 = 0
 
 -- Axiom 2
-def mulNatSuccEqAddMul {P : Sort u} (T : Type v) 
-  [SEq P T] [Add T] [Mul T] [Succ T] [SForallNat P T] : P := 
+def mulNatSuccEqAddMul {P : Sort u} (T : Sort v) 
+  [SEq P T] [SAdd T] [SMul T] [Succ T] [SForallNat P T] : P := 
   forallNat (a b : T) =>  a + S b = a + S (a * b)
 
 --------------------------------------------------------------------------------
@@ -110,16 +110,16 @@ def mulNatSuccEqAddMul {P : Sort u} (T : Type v)
 
 -- Axiom 1
 def leIffAddNat 
-  {P : Sort u} (T : Type v) 
-  [IsNat P T] [LE P T] [SEq P T] [Add T] 
+  {P : Sort u} (T : Sort v) 
+  [IsNat P T] [SLessEq P T] [SEq P T] [SAdd T] 
   [LArr P] [SIff P] [SForallNat P T] [SExists P T] : P :=
   forallNat (a b : T) => (a <= b) <-> (exists c => nat c -> a + c = b)
 
 -- Axiom 2
 def strongNatInduction 
-  {P : Sort u} (T : Type v) 
+  {P : Sort u} (T : Sort v) 
   [LArr P] [Conj P] [SForall P (T -> P)] 
-  [SForallNat P T] [LE P T] [Zero T] [Succ T] : P := 
+  [SForallNat P T] [SLessEq P T] [Zero T] [Succ T] : P := 
   forall (f : T -> P) => 
     f 0 -> 
     (forallNat (n k : T) => ((k <= n) -> f n) -> f (S n)) ->

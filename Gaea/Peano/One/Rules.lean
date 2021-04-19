@@ -11,24 +11,24 @@ open Gaea.Logic
 
 namespace Gaea.Peano
 
-class NatOne {P : Sort u} {T : Type v}
+class NatOne {P : Sort u} {T : Sort v}
   (L : Logic P) (N : IsNat P T) (O : One T) :=
   (natOne : L |- nat (1 : T))
 
-def natOne {P : Sort u} (L : Logic P) (T : Type v)  
+def natOne {P : Sort u} (L : Logic P) (T : Sort v)  
    [N : IsNat P T] [O : One T] [K : NatOne L N O] 
   := K.natOne
 
-def nat1 {P : Sort u} {T : Type v} 
+def nat1 {P : Sort u} {T : Sort v} 
   {L : Logic P} [N : IsNat P T] [O : One T] [K : NatOne L N O] 
   := K.natOne
 
-class OneEqSuccZero {P : Sort u} {T : Type v} 
-  (L : Logic P) (Q : SEq P T) (Z : Zero T) (O : One T) (Su : Succ T) :=
+class OneEqSuccZero {P : Sort u} {T : Sort v} 
+  (L : Logic P) (Q : SEq P T) (Z : Zero T) (O : One T) (S : Succ T) :=
   (oneEqSuccZero : L |- (1 : T) = S (0 : T))
 
-def oneEqSuccZero {P : Sort u} {T : Type v} 
-  {L : Logic P} [Q : SEq P T] [Z : Zero T] [O : One T] [Su : Succ T]
-  [K : OneEqSuccZero L Q Z O Su] := K.oneEqSuccZero
+def oneEqSuccZero {P : Sort u} {T : Sort v} 
+  {L : Logic P} [Q : SEq P T] [Z : Zero T] [O : One T] [S : Succ T]
+  [K : OneEqSuccZero L Q Z O S] := K.oneEqSuccZero
 
 end Gaea.Peano

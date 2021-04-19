@@ -35,7 +35,7 @@ def pred {P : Sort u} {T : Sort v} (N : PNat P T) := T -> P
 abbrev nat {P : Sort u} {T : Sort v} (N : PNat P T) := N.toIsNat.isNat
 abbrev isNat {P : Sort u} {T : Sort v} (N : PNat P T) := N.toIsNat.isNat
 abbrev zero {P : Sort u} {T : Sort v} (N : PNat P T) := N.toZero.zero
-abbrev succ {P : Sort u} {T : Sort v} (N : PNat P T) := N.toSucc.succ
+abbrev succ {P : Sort u} {T : Sort v} (N : PNat P T) := N.toSucc.toFun
 
 end PNat
 

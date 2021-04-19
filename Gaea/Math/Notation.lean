@@ -2,17 +2,28 @@ import Gaea.Math.Syntax
 
 universe u
 
-open Gaea.Math
-
--- Functions
-
-export Gaea.Math.Succ (S)
+namespace Gaea.Math
 
 -- Operators
 
-infix:50 " < "  => LT.lt
-infix:50 " <= " => LE.le
-infix:50 " ≤ "  => LE.le
+scoped infix:50 " < "  => SLess.toFun
+scoped infix:50 " <= " => SLessEq.toFun
+scoped infix:50 " ≤ "  => SLessEq.toFun
+
+scoped infixl:65 (priority := default + default) " + "  => SAdd.toFun
+scoped infixl:70 (priority := default + default) " * "  => SMul.toFun
+
+-- Functions
+
+@[scoped appUnexpander Gaea.Math.S] 
+def unexpandS : Lean.PrettyPrinter.Unexpander
+  | `(Math.S $n) => `($(Lean.mkIdent `S) $n)
+  | _  => throw ()
+
+@[scoped appUnexpander Gaea.Math.Succ.toFun] 
+def unexpandSucc : Lean.PrettyPrinter.Unexpander
+  | `(Math.Succ.toFun $n) => `($(Lean.mkIdent `S) $n)
+  | _  => throw ()
 
 -- Sort-polymorphic Natural Literals
 
@@ -33,8 +44,16 @@ instance (A : Sort u) [K : One A]
   : OfNatLit A (natLit! 1) := {ofNatLit := K.one}
 
 instance (A : Sort u) [K : Succ A] (n : Nat) [T : OfNatLit A n] 
-  : OfNatLit A (Nat.succ n) := {ofNatLit := K.succ T.ofNatLit}
+  : OfNatLit A (Nat.succ n) := {ofNatLit := K.toFun T.ofNatLit}
 
-syntax (name := sortNumLit) (priority := default + low) num : term
-macro_rules [sortNumLit]
-  | `( $n:numLit) => `(OfNatLit.ofNatLit (natLit! $n))
+@[scoped macro numLit] 
+def expandNumLit : Lean.Macro
+  | `($n:numLit) => `(OfNatLit.ofNatLit (natLit! $n))
+  | _            => Lean.Macro.throwUnsupported
+
+@[scoped appUnexpander Gaea.Math.OfNatLit.ofNatLit] 
+def unexpandNumLit : Lean.PrettyPrinter.Unexpander
+  | `(Math.OfNatLit.ofNatLit $n:numLit) => `($n)
+  | _  => throw ()
+
+end Gaea.Math

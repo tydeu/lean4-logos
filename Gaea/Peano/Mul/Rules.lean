@@ -18,25 +18,25 @@ namespace Gaea.Peano
 -- Axiom 1
 -- a * 0 = 0
 
-class MulNatZeroEqZero {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : Mul T) (Z : Zero T)  :=
+class MulNatZeroEqZero {P : Sort u} {T : Sort v} 
+  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : SMul T) (Z : Zero T)  :=
   (mulNatZeroEqZero : (a : T) -> (L |- nat a) -> (L |- a * 0 = 0))
 
-def mulNatZeroEqZero {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] [Z : Zero T] 
+def mulNatZeroEqZero {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T] [Z : Zero T] 
   [K : MulNatZeroEqZero L N Q M Z] {a : T} := K.mulNatZeroEqZero a
 
 -- Axiom 2
 -- a * S b = a + (a * b)
 
-class MulNatSuccEqAddMul {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : Mul T) (A : Add T) (Su : Succ T) := 
+class MulNatSuccEqAddMul {P : Sort u} {T : Sort v} 
+  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : SMul T) (A : SAdd T) (S : Succ T) := 
   (mulNatSuccEqAddMul : (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
     (L |- a * S b = a + (a * b)))
 
-def mulNatSuccEqAddMul {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] [A : Add T] [Su : Succ T]
-  [K : MulNatSuccEqAddMul L N Q M A Su] {a b : T} := K.mulNatSuccEqAddMul a b
+def mulNatSuccEqAddMul {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T] [S : Succ T]
+  [K : MulNatSuccEqAddMul L N Q M A S] {a b : T} := K.mulNatSuccEqAddMul a b
 
 --------------------------------------------------------------------------------
 -- Commmuted Axioms
@@ -45,25 +45,25 @@ def mulNatSuccEqAddMul {P : Sort u} {T : Type v}
 -- Axiom 1 Commuted
 -- 0 * a = 0
 
-class MulZeroNatEqZero {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : Mul T) (Z : Zero T)  :=
+class MulZeroNatEqZero {P : Sort u} {T : Sort v} 
+  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : SMul T) (Z : Zero T)  :=
   (mulZeroNatEqZero : (a : T) -> (L |- nat a) -> (L |- 0 * a = 0))
 
-def mulZeroNatEqZero {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] [Z : Zero T] 
+def mulZeroNatEqZero {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T] [Z : Zero T] 
   [K : MulZeroNatEqZero L N Q M Z] {a : T} := K.mulZeroNatEqZero a
 
 -- Axiom 2 Commuted
 -- S a * b = b + (a * b)
 
-class MulSuccNatEqAddMul {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : Mul T) (A : Add T) (Su : Succ T) := 
+class MulSuccNatEqAddMul {P : Sort u} {T : Sort v} 
+  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : SMul T) (A : SAdd T) (S : Succ T) := 
   (mulSuccNatEqAddMul : (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
     (L |- S a * b = b + (a * b)))
 
-def mulSuccNatEqAddMul {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] [A : Add T] [Su : Succ T]
-  [K : MulSuccNatEqAddMul L N Q M A Su] {a b : T} := K.mulSuccNatEqAddMul a b
+def mulSuccNatEqAddMul {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T] [S : Succ T]
+  [K : MulSuccNatEqAddMul L N Q M A S] {a b : T} := K.mulSuccNatEqAddMul a b
 
 --------------------------------------------------------------------------------
 -- Special Cases
@@ -71,32 +71,32 @@ def mulSuccNatEqAddMul {P : Sort u} {T : Type v}
 
 -- 0 * 0 = 0
 
-class MulZeroEqZero {P : Sort u} {T : Type v} 
-  (L : Logic P) (Q : SEq P T) (M : Mul T) (Z : Zero T) :=
+class MulZeroEqZero {P : Sort u} {T : Sort v} 
+  (L : Logic P) (Q : SEq P T) (M : SMul T) (Z : Zero T) :=
   (mulZeroEqZero : L |- 0 * 0 = (0 : T)) 
 
-def mulZeroEqZero {P : Sort u} {T : Type v} 
-  {L : Logic P} [Q : SEq P T] [M : Mul T] [Z : Zero T] 
+def mulZeroEqZero {P : Sort u} {T : Sort v} 
+  {L : Logic P} [Q : SEq P T] [M : SMul T] [Z : Zero T] 
   [K : MulZeroEqZero L Q M Z] := K.mulZeroEqZero
 
 -- a * 1 = a
 
-class MulNatOneEqNat {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : Mul T) (O : One T) :=
+class MulNatOneEqNat {P : Sort u} {T : Sort v} 
+  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : SMul T) (O : One T) :=
   (mulNatOneEqNat : (a : T) -> (L |- nat a) -> (L |- a * 1 = a))
 
-def mulNatOneEqNat {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] [O : One T]
+def mulNatOneEqNat {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T] [O : One T]
   [K : MulNatOneEqNat L N Q M O] {a : T} := K.mulNatOneEqNat a
 
 -- 1 * a = a
 
-class MulOneNatEqNat {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : Mul T) (O : One T) :=
+class MulOneNatEqNat {P : Sort u} {T : Sort v} 
+  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : SMul T) (O : One T) :=
   (mulOneNatEqNat : (a : T) -> (L |- nat a) -> (L |- 1 * a = a))
 
-def mulOneNatEqNat {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] [O : One T]
+def mulOneNatEqNat {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T] [O : One T]
   [K : MulOneNatEqNat L N Q M O] {a : T} := K.mulOneNatEqNat a
 
 --------------------------------------------------------------------------------
@@ -105,32 +105,32 @@ def mulOneNatEqNat {P : Sort u} {T : Type v}
 
 -- 0 * a = a * 0
 
-class MulNatZeroComm {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : Mul T) (Z : Zero T) :=
+class MulNatZeroComm {P : Sort u} {T : Sort v} 
+  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : SMul T) (Z : Zero T) :=
   (mulNatZeroComm : (a : T) -> (L |- nat a) -> (L |- a * 0 = 0 * a))
 
-def mulNatZeroComm {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] [Z : Zero T]
+def mulNatZeroComm {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T] [Z : Zero T]
   [K : MulNatZeroComm L N Q M Z] {a : T} := K.mulNatZeroComm a
 
 -- a * b = b * a
 
-class MulNatComm {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : Mul T) :=
+class MulNatComm {P : Sort u} {T : Sort v} 
+  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : SMul T) :=
   (mulNatComm : (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- a * b = b * a))
 
-instance iCommOverTOfMulNatCommOverT {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] 
-  [K : MulNatComm L N Q M] : CommOverT L Q.toFun N.isNat M.mul 
+instance iCommOverTOfMulNatCommOverT {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T] 
+  [K : MulNatComm L N Q M] : CommOverT L Q.toFun N.isNat M.toFun 
   := {commOverT := K.mulNatComm}
 
-instance iMulNatCommOverOfCommOverT {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] 
-  [K : CommOverT L Q.toFun N.isNat M.mul] : MulNatComm L N Q M
+instance iMulNatCommOverOfCommOverT {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T] 
+  [K : CommOverT L Q.toFun N.isNat M.toFun] : MulNatComm L N Q M
   := {mulNatComm := K.commOverT}
 
-def mulNatComm {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T]
+def mulNatComm {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T]
   [K : MulNatComm L N Q M] {a b : T} := K.mulNatComm a b
 
 --------------------------------------------------------------------------------
@@ -138,24 +138,24 @@ def mulNatComm {P : Sort u} {T : Type v}
 -- (a * b) * c = a * (b * c)
 --------------------------------------------------------------------------------
 
-class MulNatAssoc {P : Sort u} {T : Type v}
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : Mul T) :=
+class MulNatAssoc {P : Sort u} {T : Sort v}
+  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : SMul T) :=
   (mulNatAssoc :  (a b c : T) -> 
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
     (L |- (a * b) * c = a * (b * c)))
 
-instance iLtrAssocOverTOfMulNatAssoc {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] 
-  [K : MulNatAssoc L N Q M] : LtrAssocOverT L Q.toFun N.isNat M.mul 
+instance iLtrAssocOverTOfMulNatAssoc {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T] 
+  [K : MulNatAssoc L N Q M] : LtrAssocOverT L Q.toFun N.isNat M.toFun 
   := {ltrAssocOverT := K.mulNatAssoc}
 
-instance iMulNatAssocOfLtrAssocOverT {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] 
-  [K : LtrAssocOverT L Q.toFun N.isNat M.mul] : MulNatAssoc L N Q M 
+instance iMulNatAssocOfLtrAssocOverT {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T] 
+  [K : LtrAssocOverT L Q.toFun N.isNat M.toFun] : MulNatAssoc L N Q M 
   := {mulNatAssoc := K.ltrAssocOverT}
 
-def mulNatAssoc {P : Sort u} {T : Type v}
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T]
+def mulNatAssoc {P : Sort u} {T : Sort v}
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T]
   [K : MulNatAssoc L N Q M] {a b c : T} := K.mulNatAssoc a b c
 
 --------------------------------------------------------------------------------
@@ -165,27 +165,27 @@ def mulNatAssoc {P : Sort u} {T : Type v}
 -- Left Distributive Over Addition
 -- a * (b + c) = (a * b) + (a * c)
 
-class MulNatAddEqAddMul {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : Mul T) (A : Add T) := 
+class MulNatAddEqAddMul {P : Sort u} {T : Sort v} 
+  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : SMul T) (A : SAdd T) := 
   (mulNatAddEqAddMul : (a b c : T) -> 
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
     (L |- a * (b + c) = (a * b) + (a * c)))
 
-def mulNatAddEqAddMul {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] [A : Add T]
+def mulNatAddEqAddMul {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
   [K : MulNatAddEqAddMul L N Q M A] {a b c : T} := K.mulNatAddEqAddMul a b c
 
 -- Right Distributive Over Addition
 -- (b + c) * a = (b * a) + (c * a)
 
-class MulAddNatEqAddMul {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : Mul T) (A : Add T) := 
+class MulAddNatEqAddMul {P : Sort u} {T : Sort v} 
+  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : SMul T) (A : SAdd T) := 
   (mulAddNatEqAddMul : (a b c : T) -> 
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
     (L |- (b + c) * a = (b * a) + (c * a)))
 
-def mulAddNatEqAddMul {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] [A : Add T]
+def mulAddNatEqAddMul {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
   [K : MulAddNatEqAddMul L N Q M A] {a b c : T} := K.mulAddNatEqAddMul a b c
 
 --------------------------------------------------------------------------------
@@ -194,55 +194,55 @@ def mulAddNatEqAddMul {P : Sort u} {T : Type v}
 
 -- (a = b) -> (c * a = c * b)
 
-class EqNatMulNatLeft {P : Sort u} {T : Type v}
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : Mul T) :=
+class EqNatMulNatLeft {P : Sort u} {T : Sort v}
+  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : SMul T) :=
   (eqNatMulNatLeft : (a b c : T) -> 
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
     (L |- a = b) -> (L |- c * a = c * b))
 
-instance iLeftReflTOfEqNatMulNatLeft {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] 
-  [K : EqNatMulNatLeft L N Q M] : LeftReflT L Q.toFun N.isNat M.mul 
+instance iLeftReflTOfEqNatMulNatLeft {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T] 
+  [K : EqNatMulNatLeft L N Q M] : LeftReflT L Q.toFun N.isNat M.toFun 
   := {leftReflT := fun a b c Na Nb Nc => K.eqNatMulNatLeft b c a Nb Nc Na}
 
-instance iEqNatMulNatLeftTOfLeftReflT {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] 
-  [K : LeftReflT L Q.toFun N.isNat M.mul] : EqNatMulNatLeft L N Q M
+instance iEqNatMulNatLeftTOfLeftReflT {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T] 
+  [K : LeftReflT L Q.toFun N.isNat M.toFun] : EqNatMulNatLeft L N Q M
   := {eqNatMulNatLeft := fun a b c Na Nb Nc => K.leftReflT c a b Nc Na Nb}
 
-def eqNatMulNatLeft {P : Sort u} {T : Type v}
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T]
+def eqNatMulNatLeft {P : Sort u} {T : Sort v}
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T]
   [K : EqNatMulNatLeft L N Q M] {a b c : T} := K.eqNatMulNatLeft a b c
 
-def eqNatMulNatLeft' {P : Sort u} {T : Type v} {L : Logic P} 
-  [N : IsNat P T] [Q : SEq P T] [M : Mul T] [K : EqNatMulNatLeft L N Q M] 
+def eqNatMulNatLeft' {P : Sort u} {T : Sort v} {L : Logic P} 
+  [N : IsNat P T] [Q : SEq P T] [M : SMul T] [K : EqNatMulNatLeft L N Q M] 
   {c a b : T} (Nc : L |- nat c) (Na : L |- nat a) (Nb : L|- nat b) 
   := K.eqNatMulNatLeft a b c Na Nb Nc
 
 -- (a = b) -> (a * c = b * c)
 
-class EqNatMulNatRight {P : Sort u} {T : Type v}
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : Mul T) :=
+class EqNatMulNatRight {P : Sort u} {T : Sort v}
+  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (M : SMul T) :=
   (eqNatMulNatRight : (a b c : T) -> 
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
     (L |- a = b) -> (L |- a * c = b * c))
 
-instance iRightReflTOfEqNatMulNatRight {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] 
-  [K : EqNatMulNatRight L N Q M] : RightReflT L Q.toFun N.isNat M.mul 
+instance iRightReflTOfEqNatMulNatRight {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T] 
+  [K : EqNatMulNatRight L N Q M] : RightReflT L Q.toFun N.isNat M.toFun 
   := {rightReflT := fun a b c Na Nb Nc => K.eqNatMulNatRight b c a Nb Nc Na}
 
-instance iEqNatMulNatRightOfRightReflT {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T] 
-  [K : RightReflT L Q.toFun N.isNat M.mul] : EqNatMulNatRight L N Q M
+instance iEqNatMulNatRightOfRightReflT {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T] 
+  [K : RightReflT L Q.toFun N.isNat M.toFun] : EqNatMulNatRight L N Q M
   := {eqNatMulNatRight := fun a b c Na Nb Nc => K.rightReflT c a b Nc Na Nb}
 
-def eqNatMulNatRight {P : Sort u} {T : Type v}
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : Mul T]
+def eqNatMulNatRight {P : Sort u} {T : Sort v}
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T]
   [K : EqNatMulNatRight L N Q M] {a b c : T} := K.eqNatMulNatRight a b c
 
-def eqNatMulNatRight' {P : Sort u} {T : Type v} {L : Logic P} 
-  [N : IsNat P T] [Q : SEq P T] [M : Mul T] [K : EqNatMulNatRight L N Q M] 
+def eqNatMulNatRight' {P : Sort u} {T : Sort v} {L : Logic P} 
+  [N : IsNat P T] [Q : SEq P T] [M : SMul T] [K : EqNatMulNatRight L N Q M] 
   {c a b : T} (Nc : L |- nat c) (Na : L |- nat a) (Nb : L|- nat b) 
   := K.eqNatMulNatRight a b c Na Nb Nc
 
@@ -252,46 +252,46 @@ def eqNatMulNatRight' {P : Sort u} {T : Type v} {L : Logic P}
 
 -- nat (0 * 0)
 
-class NatMulZero {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (M : Mul T) (Z : Zero T) :=
+class NatMulZero {P : Sort u} {T : Sort v} 
+  (L : Logic P) (N : IsNat P T) (M : SMul T) (Z : Zero T) :=
   (natMulZero : L |- nat (0 * 0 : T))
 
-def natMulZero {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [M : Mul T] [Z : Zero T]
+def natMulZero {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [M : SMul T] [Z : Zero T]
   [K : NatMulZero L N M Z] := K.natMulZero
 
 -- nat (a * 0)
 
-class NatMulNatZero {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (M : Mul T) (Z : Zero T) :=
+class NatMulNatZero {P : Sort u} {T : Sort v} 
+  (L : Logic P) (N : IsNat P T) (M : SMul T) (Z : Zero T) :=
   (natMulNatZero : (a : T) -> (L |- nat a) -> (L |- nat (a * 0)))
 
-def natMulNatZero {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [M : Mul T] [Z : Zero T]
+def natMulNatZero {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [M : SMul T] [Z : Zero T]
   [K : NatMulNatZero L N M Z] {a : T} := K.natMulNatZero a
 
 -- nat (0 * a)
 
-class NatMulZeroNat {P : Sort u} {T : Type v} 
-  (L : Logic P) (N : IsNat P T) (M : Mul T) (Z : Zero T) :=
+class NatMulZeroNat {P : Sort u} {T : Sort v} 
+  (L : Logic P) (N : IsNat P T) (M : SMul T) (Z : Zero T) :=
   (natMulZeroNat : (a : T) -> (L |- nat a) -> (L |- nat (0 * a)))
 
-def natMulZeroNat {P : Sort u} {T : Type v} 
-  {L : Logic P} [N : IsNat P T] [M : Mul T] [Z : Zero T]
+def natMulZeroNat {P : Sort u} {T : Sort v} 
+  {L : Logic P} [N : IsNat P T] [M : SMul T] [Z : Zero T]
   [K : NatMulZeroNat L N M Z] {a : T} := K.natMulZeroNat a 
 
 -- nat (a * b)
 
-class NatMulNat {P : Sort u} {T : Type v}
-  (L : Logic P) (N : IsNat P T) (M : Mul T) :=
+class NatMulNat {P : Sort u} {T : Sort v}
+  (L : Logic P) (N : IsNat P T) (M : SMul T) :=
   (natMulNat : (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat (a * b)))
 
-def natMulNat {P : Sort u} {T : Type v}
-  {L : Logic P} [N : IsNat P T] [M : Mul T] [K : NatMulNat L N M]
+def natMulNat {P : Sort u} {T : Sort v}
+  {L : Logic P} [N : IsNat P T] [M : SMul T] [K : NatMulNat L N M]
   {a b : T} := K.natMulNat a b
 
-def natMul {P : Sort u} {T : Type v}
-  {L : Logic P} [N : IsNat P T] [M : Mul T] [K : NatMulNat L N M]
+def natMul {P : Sort u} {T : Sort v}
+  {L : Logic P} [N : IsNat P T] [M : SMul T] [K : NatMulNat L N M]
   {a b : T} := K.natMulNat a b
 
 end Gaea.Peano

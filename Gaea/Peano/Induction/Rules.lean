@@ -14,14 +14,14 @@ namespace Gaea.Peano
 --------------------------------------------------------------------------------
 
 -- Axiom N9
-class NatInduction {P : Sort u} {T : Type v} 
+class NatInduction {P : Sort u} {T : Sort v} 
   (L : Logic P) (N : PNat P T) := 
   (natInduction : 
     (f : T -> P) -> (L |- f 0) -> 
     ((n : T) -> (L |- nat n) -> (L |- f n) -> (L |- f (S n))) ->
     ((n : T) -> (L |- nat n) -> (L |- f n)))
 
-def natInduction {P : Sort u} {T : Type v} {L : Logic P} [N : PNat P T] 
+def natInduction {P : Sort u} {T : Sort v} {L : Logic P} [N : PNat P T] 
   [K : NatInduction L N] {f} := K.natInduction f
 
 --------------------------------------------------------------------------------
@@ -29,14 +29,14 @@ def natInduction {P : Sort u} {T : Type v} {L : Logic P} [N : PNat P T]
 --------------------------------------------------------------------------------
 
 -- Axiom N9 (Alt)
-class NatInduction' {P : Sort u} {T : Type v} 
+class NatInduction' {P : Sort u} {T : Sort v} 
   (L : Logic P) (N : PNat P T) := 
   (natInduction' : 
     (f : T -> Sort w) -> f 0 ->
     ((n : T) -> (L |- nat n) -> (f n -> f (S n))) ->
     ((n : T) -> (L |- nat n) -> f n))
 
-def natInduction' {P : Sort u} {T : Type v} (L : Logic P) [N : PNat P T] 
+def natInduction' {P : Sort u} {T : Sort v} (L : Logic P) [N : PNat P T] 
   [K : NatInduction' L N] {f} := K.natInduction' f
 
 --------------------------------------------------------------------------------
@@ -45,7 +45,7 @@ def natInduction' {P : Sort u} {T : Type v} (L : Logic P) [N : PNat P T]
 
 -- Left Induction
 
-class NatInductionLeft {P : Sort u} {T : Type v} 
+class NatInductionLeft {P : Sort u} {T : Sort v} 
   (L : Logic P) (N : PNat P T) := 
   (natInductionLeft : 
     (f : T -> T -> P) -> 
@@ -55,12 +55,12 @@ class NatInductionLeft {P : Sort u} {T : Type v}
       ((b : T) -> (L |- nat b) -> (L |- f (S a) b))) ->
     ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b)))
 
-def natInductionLeft {P : Sort u} {T : Type v} {L : Logic P} [N : PNat P T] 
+def natInductionLeft {P : Sort u} {T : Sort v} {L : Logic P} [N : PNat P T] 
   [K : NatInductionLeft L N] {f} := K.natInductionLeft f
 
 -- Right Induction
 
-class NatInductionRight {P : Sort u} {T : Type v} 
+class NatInductionRight {P : Sort u} {T : Sort v} 
   (L : Logic P) (N : PNat P T) := 
   (natInductionRight : 
     (f : T -> T -> P) -> 
@@ -70,7 +70,7 @@ class NatInductionRight {P : Sort u} {T : Type v}
       ((a : T) -> (L |- nat a) -> (L |- f a (S b)))) ->
     ((a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- f a b)))
 
-def natInductionRight {P : Sort u} {T : Type v} {L : Logic P} [N : PNat P T] 
+def natInductionRight {P : Sort u} {T : Sort v} {L : Logic P} [N : PNat P T] 
   [K : NatInductionRight L N] {f} := K.natInductionRight f
 
 --------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ def natInductionRight {P : Sort u} {T : Type v} {L : Logic P} [N : PNat P T]
 
 -- Left Induction
 
-class NatInductionLeft3 {P : Sort u} {T : Type v} 
+class NatInductionLeft3 {P : Sort u} {T : Sort v} 
   (L : Logic P) (N : PNat P T) := 
   (natInductionLeft3 : 
     (f : T -> T -> T -> P) -> 
@@ -91,12 +91,12 @@ class NatInductionLeft3 {P : Sort u} {T : Type v}
     ((a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
       (L |- f a b c)))
 
-def natInductionLeft3 {P : Sort u} {T : Type v} {L : Logic P} [N : PNat P T] 
+def natInductionLeft3 {P : Sort u} {T : Sort v} {L : Logic P} [N : PNat P T] 
   [K : NatInductionLeft3 L N] {f} := K.natInductionLeft3 f
 
 -- Middle Induction
 
-class NatInductionMiddle {P : Sort u} {T : Type v} 
+class NatInductionMiddle {P : Sort u} {T : Sort v} 
   (L : Logic P) (N : PNat P T) := 
   (natInductionMiddle : 
     (f : T -> T -> T -> P) -> 
@@ -108,12 +108,12 @@ class NatInductionMiddle {P : Sort u} {T : Type v}
     ((a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
       (L |- f a b c)))
 
-def natInductionMiddle {P : Sort u} {T : Type v} {L : Logic P} [N : PNat P T] 
+def natInductionMiddle {P : Sort u} {T : Sort v} {L : Logic P} [N : PNat P T] 
   [K : NatInductionMiddle L N] {f} := K.natInductionMiddle f
 
 -- Right Induction
 
-class NatInductionRight3 {P : Sort u} {T : Type v} 
+class NatInductionRight3 {P : Sort u} {T : Sort v} 
   (L : Logic P) (N : PNat P T) := 
   (natInductionRight3 : 
     (f : T -> T -> T -> P) -> 
@@ -125,10 +125,10 @@ class NatInductionRight3 {P : Sort u} {T : Type v}
     ((a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
       (L |- f a b c)))
 
-def natInductionRight3 {P : Sort u} {T : Type v} {L : Logic P} [N : PNat P T] 
+def natInductionRight3 {P : Sort u} {T : Sort v} {L : Logic P} [N : PNat P T] 
   [K : NatInductionRight3 L N] {f} := K.natInductionRight3 f
 
-class NatInductionRight3If {P : Sort u} {T : Type v} 
+class NatInductionRight3If {P : Sort u} {T : Sort v} 
   (L : Logic P) (N : PNat P T) := 
   (natInductionRight3If : 
     (C : T -> T -> P) -> (f : T -> T -> T -> P) ->
@@ -142,7 +142,7 @@ class NatInductionRight3If {P : Sort u} {T : Type v}
     ((a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
       (L |- C a b) -> (L |- f a b c)))
 
-def natInductionRight3If {P : Sort u} {T : Type v} {L : Logic P} [N : PNat P T] 
+def natInductionRight3If {P : Sort u} {T : Sort v} {L : Logic P} [N : PNat P T] 
   [K : NatInductionRight3If L N] {C f} := K.natInductionRight3If C f 
 
 end Gaea.Peano

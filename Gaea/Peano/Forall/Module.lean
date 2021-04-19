@@ -51,7 +51,7 @@ def MForallIfNat {L : Logic P}
     ForallNatElim := LForallIfNatElim N Fa.UnivInst ent.ModusPonens,
   }
 
-instance iMForallIfNat {P : Sort u} {T : Type v} {L : Logic P} 
+instance iMForallIfNat {P : Sort u} {T : Sort v} {L : Logic P} 
   [N : IsNat P T] [Fa : LForall L T] [ent : LEnt L] : LForallNat L N
   := MForallIfNat N Fa ent
 

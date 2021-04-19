@@ -15,7 +15,7 @@ namespace Gaea.Peano
 
 -- By Schema
 
-def natInductionBySchema {P : Sort u} {T : Type v} 
+def natInductionBySchema {P : Sort u} {T : Sort v} 
 {L : Gaea.Logic P} {N : PNat P T} (I : NatInduction' L N)
 : (f : T -> P) -> (L |- f 0) -> 
   ((a : T) -> (L |- nat a) -> (L |- f a) -> (L |- f (S a))) ->
@@ -26,14 +26,14 @@ def natInductionBySchema {P : Sort u} {T : Type v}
     (f := fun a => L |- f a)
 
 instance iNatInductionBySchema 
-{P : Sort u} {T : Type v} {L : Logic P} 
+{P : Sort u} {T : Sort v} {L : Logic P} 
 [N : PNat P T] [I : NatInduction' L N]
 : NatInduction L N
 := {natInduction := natInductionBySchema I}
 
 -- By Right Binary Induction
 
-def natInductionByRight {P : Sort u} {T : Type v} 
+def natInductionByRight {P : Sort u} {T : Sort v} 
 {L : Logic P} {N : PNat P T} (I : NatInductionRight L N)
 : (f : T -> P) -> (L |- f 0) -> 
   ((a : T) -> (L |- nat a) -> (L |- f a) -> (L |- f (S a))) ->
@@ -46,7 +46,7 @@ def natInductionByRight {P : Sort u} {T : Type v}
   case fS' => intro b Nb ih a Na; exact fS b Nb (ih a Na) 
 
 instance iNatInductionByRight
-{P : Sort u} {T : Type v} {L : Logic P}
+{P : Sort u} {T : Sort v} {L : Logic P}
 [N : PNat P T] [I : NatInductionRight L N]
 : NatInduction L N
 := {natInduction := natInductionByRight I}
@@ -58,7 +58,7 @@ instance iNatInductionByRight
 -- By Predicate Induction & SForallNat
 
 def natInductionLeftByForallNat_induct
-{P : Sort u} {T : Type v} {L : Logic P} 
+{P : Sort u} {T : Sort v} {L : Logic P} 
 {N : PNat P T} (I : NatInduction L N) (FaN : LForallNat L N.toIsNat)
 : (f : T -> T -> P) -> 
   (L |- forallNat b => f 0 b) -> 
@@ -71,7 +71,7 @@ def natInductionLeftByForallNat_induct
   exact natInduction p_f0 p_fS
 
 def natInductionLeftByForallNat 
-{P : Sort u} {T : Type v} {L : Logic P} 
+{P : Sort u} {T : Sort v} {L : Logic P} 
 {N : PNat P T} (I : NatInduction L N) (FaN : LForallNat L N.toIsNat)
 : (f : T -> T -> P) -> 
   ((b : T) -> (L |- nat b) -> (L |- f 0 b)) -> 
@@ -94,7 +94,7 @@ def natInductionLeftByForallNat
   exact FaN.elim h Nb
 
 instance iNatInductionLeftByForallNat
-{P : Sort u} {T : Type v} {L : Logic P}
+{P : Sort u} {T : Sort v} {L : Logic P}
 [N : PNat P T] [I : NatInduction L N] [FaN : LForallNat L N.toIsNat]
 : NatInductionLeft L N
 := {natInductionLeft := natInductionLeftByForallNat I FaN}
@@ -102,7 +102,7 @@ instance iNatInductionLeftByForallNat
 -- By Schema Induction
 
 def natInductionLeftBySchema 
-{P : Sort u} {T : Type v} {L : Logic P} 
+{P : Sort u} {T : Sort v} {L : Logic P} 
 {N : PNat P T} (I : NatInduction' L N)
 : (f : T -> T -> P) -> 
   ((b : T) -> (L |- nat b) -> (L |- f 0 b)) -> 
@@ -118,7 +118,7 @@ def natInductionLeftBySchema
   exact h a Na b Nb
 
 instance iNatInductionLeftBySchema
-{P : Sort u} {T : Type v} {L : Logic P}
+{P : Sort u} {T : Sort v} {L : Logic P}
 [N : PNat P T] [I : NatInduction' L N]
 : NatInductionLeft L N
 := {natInductionLeft := natInductionLeftBySchema I}
@@ -130,7 +130,7 @@ instance iNatInductionLeftBySchema
 -- By Predicate Induction & SForallNat
 
 def natInductionRightByForallNat_induct
-{P : Sort u} {T : Type v} {L : Logic P} 
+{P : Sort u} {T : Sort v} {L : Logic P} 
 {N : PNat P T} (I : NatInduction L N) (FaN : LForallNat L N.toIsNat)
 : (f : T -> T -> P) -> 
   (L |- forallNat a => f a 0) -> 
@@ -143,7 +143,7 @@ def natInductionRightByForallNat_induct
   exact natInduction p_f0 p_fS
 
 def natInductionRightByForallNat
-{P : Sort u} {T : Type v} {L : Logic P} 
+{P : Sort u} {T : Sort v} {L : Logic P} 
 {N : PNat P T} (I : NatInduction L N) (FaN : LForallNat L N.toIsNat)
 : (f : T -> T -> P) -> 
   ((a : T) -> (L |- nat a) -> (L |- f a 0)) -> 
@@ -166,7 +166,7 @@ def natInductionRightByForallNat
   exact FaN.elim h Na
 
 instance iNatInductionRightByForallNat
-{P : Sort u} {T : Type v} {L : Logic P}
+{P : Sort u} {T : Sort v} {L : Logic P}
 [N : PNat P T] [I : NatInduction L N] [FaN : LForallNat L N.toIsNat]
 : NatInductionRight L N
 := {natInductionRight := natInductionRightByForallNat I FaN}
@@ -174,7 +174,7 @@ instance iNatInductionRightByForallNat
 -- By Schema Induction
 
 def natInductionRightBySchema 
-{P : Sort u} {T : Type v} {L : Logic P} 
+{P : Sort u} {T : Sort v} {L : Logic P} 
 {N : PNat P T} (I : NatInduction' L N)
 : (f : T -> T -> P) -> 
   ((a : T) -> (L |- nat a) -> (L |- f a 0)) -> 
@@ -190,7 +190,7 @@ def natInductionRightBySchema
   exact h b Nb a Na
 
 instance iNatInductionRightBySchema
-{P : Sort u} {T : Type v} {L : Logic P}
+{P : Sort u} {T : Sort v} {L : Logic P}
 [N : PNat P T] [I : NatInduction' L N]
 : NatInductionRight L N
 := {natInductionRight := natInductionRightBySchema I}
@@ -198,7 +198,7 @@ instance iNatInductionRightBySchema
 -- By Right Ternary Induction
 
 def natInductionRightByRight3
-{P : Sort u} {T : Type v} {L : Logic P}
+{P : Sort u} {T : Sort v} {L : Logic P}
 {N : PNat P T} (I : NatInductionRight3 L N)
 : (f : T -> T -> P) -> 
   ((a : T) -> (L |- nat a) -> (L |- f a 0)) -> 
@@ -218,7 +218,7 @@ def natInductionRightByRight3
     exact fS c Nc (fun b Nb => ih a b Na Nb) b Nb
 
 instance iNatInductionRightByRight3
-{P : Sort u} {T : Type v} {L : Logic P}
+{P : Sort u} {T : Sort v} {L : Logic P}
 [N : PNat P T] [I : NatInductionRight3 L N]
 : NatInductionRight L N
 := {natInductionRight := natInductionRightByRight3 I}
@@ -230,7 +230,7 @@ instance iNatInductionRightByRight3
 -- By Predicate Induction & SForallNat
 
 def natInductionRight3ByForallNat_induct
-{P : Sort u} {T : Type v} {L : Logic P} 
+{P : Sort u} {T : Sort v} {L : Logic P} 
 {N : PNat P T} (I : NatInduction L N) (FaN : LForallNat L N.toIsNat)
 : (f : T -> T -> T -> P) -> 
   (L |- forallNat a b => f a b 0) -> 
@@ -243,7 +243,7 @@ def natInductionRight3ByForallNat_induct
   exact natInduction p_f0 p_fS
 
 def natInductionRight3ByForallNat
-{P : Sort u} {T : Type v} {L : Logic P} 
+{P : Sort u} {T : Sort v} {L : Logic P} 
 {N : PNat P T} (I : NatInduction L N) (FaN : LForallNat L N.toIsNat)
 : (f : T -> T -> T -> P) -> 
   ((a b : T) -> (L |- nat a) -> (L |- nat b) -> 
@@ -271,7 +271,7 @@ def natInductionRight3ByForallNat
   exact FaN.elim (FaN.elim h Na) Nb
 
 instance iNatInductionRight3ByForallNat
-{P : Sort u} {T : Type v} {L : Logic P}
+{P : Sort u} {T : Sort v} {L : Logic P}
 [N : PNat P T] [I : NatInduction L N] [FaN : LForallNat L N.toIsNat]
 : NatInductionRight3 L N
 := {natInductionRight3 := natInductionRight3ByForallNat I FaN}
@@ -279,7 +279,7 @@ instance iNatInductionRight3ByForallNat
 -- By Schema Induction
 
 def natInductionRight3BySchema
-{P : Sort u} {T : Type v} {L : Logic P} 
+{P : Sort u} {T : Sort v} {L : Logic P} 
 {N : PNat P T} (I : NatInduction' L N)
 : (f : T -> T -> T -> P) -> 
   ((a b : T) -> (L |- nat a) -> (L |- nat b) ->  
@@ -298,7 +298,7 @@ def natInductionRight3BySchema
   exact h c Nc a b Na Nb
 
 instance iNatInductionRight3BySchema
-{P : Sort u} {T : Type v} {L : Logic P}
+{P : Sort u} {T : Sort v} {L : Logic P}
 [N : PNat P T] [I : NatInduction' L N]
 : NatInductionRight3 L N
 := {natInductionRight3 := natInductionRight3BySchema I}
@@ -310,7 +310,7 @@ instance iNatInductionRight3BySchema
 -- By Predicate Induction & SForallNat & Ent
 
 def natInductionRight3IfByForallNatIf_induct
-{P : Sort u} {T : Type v} {L : Logic P} {N : PNat P T} 
+{P : Sort u} {T : Sort v} {L : Logic P} {N : PNat P T} 
 (I : NatInduction L N) (FaN : LForallNat L N.toIsNat) (ent : LEnt L)
 : (C : T -> T -> P) -> (f : T -> T -> T -> P) ->
   (L |- forallNat a b => C a b -> f a b 0) -> 
@@ -323,7 +323,7 @@ def natInductionRight3IfByForallNatIf_induct
   exact natInduction p_f0 p_fS
 
 def natInductionRight3IfByForallNatIf
-{P : Sort u} {T : Type v} {L : Logic P} {N : PNat P T} 
+{P : Sort u} {T : Sort v} {L : Logic P} {N : PNat P T} 
 (I : NatInduction L N) (FaN : LForallNat L N.toIsNat) (ent : LEnt L)
 : (C : T -> T -> P) -> (f : T -> T -> T -> P) ->
   ((a b : T) -> (L |- nat a) -> (L |- nat b) ->  
@@ -355,7 +355,7 @@ def natInductionRight3IfByForallNatIf
   exact ent.elim (FaN.elim (FaN.elim h Na) Nb)
 
 instance iNatInductionRight3IfByForallNatIf
-{P : Sort u} {T : Type v} {L : Logic P} [N : PNat P T] 
+{P : Sort u} {T : Sort v} {L : Logic P} [N : PNat P T] 
 [I : NatInduction L N] [FaN : LForallNat L N.toIsNat] [ent : LEnt L]
 : NatInductionRight3If L N
 := {natInductionRight3If := natInductionRight3IfByForallNatIf I FaN ent}
@@ -363,7 +363,7 @@ instance iNatInductionRight3IfByForallNatIf
 -- By Schema Induction
 
 def natInductionRight3IfBySchema
-{P : Sort u} {T : Type v} {L : Logic P} 
+{P : Sort u} {T : Sort v} {L : Logic P} 
 {N : PNat P T} (I : NatInduction' L N)
 : (C : T -> T -> P) -> (f : T -> T -> T -> P) ->
   ((a b : T) -> (L |- nat a) -> (L |- nat b) ->  
@@ -384,7 +384,7 @@ def natInductionRight3IfBySchema
   exact h c Nc a b Na Nb
 
 instance iNatInductionRight3IfBySchema
-{P : Sort u} {T : Type v} {L : Logic P}
+{P : Sort u} {T : Sort v} {L : Logic P}
 [N : PNat P T] [I : NatInduction' L N]
 : NatInductionRight3If L N
 := {natInductionRight3If := natInductionRight3IfBySchema I}

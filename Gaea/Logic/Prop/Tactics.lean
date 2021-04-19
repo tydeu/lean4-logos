@@ -2,7 +2,7 @@ import Gaea.Logic.Fun.Rules
 
 namespace Gaea.Logic
 
-syntax binderIdent := ident <|> "_"
+export Lean (binderIdent)
 
 -- Prop Binding
 
