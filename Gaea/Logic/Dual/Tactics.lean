@@ -48,6 +48,6 @@ scoped macro "rightMtp " pq:term:max nq:term:max : tactic =>
   `(tactic| exact rightMtp $pq $nq)
 
 scoped macro "dblNegElim" : tactic => 
-  `(tactic| apply dblNegElim (lneg := $(Lean.mkIdent `lneg)))
+  `(tactic| apply dblNegElim (f := $(Lean.mkIdent `lneg)))
 
 end Gaea.Logic

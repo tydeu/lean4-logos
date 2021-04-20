@@ -17,35 +17,39 @@ namespace Gaea.Logic
 -- ((|- ~q) -> (|- ~p)) -> (|- p -> q)
 
 def byContrapositionByDneImpContra 
-{L : Logic P} {larr : Binar P} {lneg : Unar P}
-(DnE : DblNegElim L lneg)
-(Cnd : Condition L larr)
-(ByC : ByContradiction L lneg)
-: (p q : P) -> ((L |- ~q) -> (L |- ~p)) -> (L |- p -> q)
+{L : Logic P} {F : Binar P} {f : Unar P}
+(DnE : DblNegElim L f)
+(Cnd : Condition L F)
+(ByC : ByContradiction L f)
+: (p q : P) -> ((L |- f q) -> (L |- f p)) -> (L |- F p q)
 := by
   intro p q 
   assume LNq_to_LNp
   condition Lp
-  dblNegElim
+  apply dblNegElim (f := f)
   byContradiction LNq
   have LNp := LNq_to_LNp LNq
   contradiction LNp Lp
 
 instance iByContrapositionByDneImpContra 
-{L : Logic P} {larr : Binar P} {lneg : Unar P}
-[DnE : DblNegElim L lneg]
-[Cnd : Condition L larr]
-[ByC : ByContradiction L lneg]
-: ByContraposition L larr lneg :=
+{L : Logic P} {F : Binar P} {f : Unar P}
+[DnE : DblNegElim L f]
+[Cnd : Condition L F]
+[ByC : ByContradiction L f]
+: ByContraposition L F f :=
 {byContraposition := byContrapositionByDneImpContra DnE Cnd ByC}
+
+--------------------------------------------------------------------------------
+-- Modus Tollens
+--------------------------------------------------------------------------------
 
 -- (|- p -> q) -> (|- ~q) -> (|- ~p) 
 
 def mtByMpContra
-{L : Logic P} {larr : Binar P} {lneg : Unar P}
-(Mp  : ModusPonens L larr) 
-(ByC : ByContradiction L lneg)
-: (p q : P) -> (L |- p -> q) -> (L |- ~q) -> (L |- ~p)
+{L : Logic P} {F : Binar P} {f : Unar P}
+(Mp  : ModusPonens L F) 
+(ByC : ByContradiction L f)
+: (p q : P) -> (L |- F p q) -> (L |- f q) -> (L |- f p)
 := by
   intro p q 
   assume LpTq LNq
@@ -54,10 +58,29 @@ def mtByMpContra
   contradiction LNq Lq
 
 instance iModusTollensByMpContra 
-{L : Logic P} {larr : Binar P} {lneg : Unar P}
-[Mp  : ModusPonens L larr]
-[ByC : ByContradiction L lneg]
-: ModusTollens L larr lneg :=
+{L : Logic P} {F : Binar P} {f : Unar P}
+[Mp  : ModusPonens L F]
+[ByC : ByContradiction L f]
+: ModusTollens L F f :=
 {mt := mtByMpContra Mp ByC}
+
+--------------------------------------------------------------------------------
+-- By Contradiction
+--------------------------------------------------------------------------------
+
+def byContraByAdFalsoNoncontra
+{L : Logic P} {f : Unar P}
+(AdF : AdFalso L f) 
+(Nc  : Noncontradiction L f)
+: (p : P) -> ((L |- p) -> Contradiction L f) -> (L |- f p)
+:= by
+  intro p LpC
+  adFalso Lp
+  have C := (LpC Lp).2
+  noncontradiction C.1 C.2
+
+instance iByContraByAdFalsoNoncontra {L : Logic P} {f}
+[AdF : AdFalso L f] [Nc : Noncontradiction L f] : ByContradiction L f := 
+{byContradiction := byContraByAdFalsoNoncontra AdF Nc}
 
 end Gaea.Logic
