@@ -4,7 +4,6 @@ import Gaea.Logic.Fun
 import Gaea.Logic.Prop
 import Gaea.Logic.Unit
 import Gaea.Logic.Dual
-import Gaea.Logic.Classic
 import Gaea.Logic.Quant
 import Gaea.Logic.Rel
 import Gaea.Logic.Eq
