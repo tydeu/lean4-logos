@@ -48,12 +48,11 @@ instance (A : Sort u) [K : Succ A] (n : Nat) [T : OfNatLit A n]
 
 @[scoped macro numLit] 
 def expandNumLit : Lean.Macro
-  | `($n:numLit) => `(OfNatLit.ofNatLit (natLit! $n))
-  | _            => Lean.Macro.throwUnsupported
+  | n => `(OfNatLit.ofNatLit (natLit! $n))
 
 @[scoped appUnexpander Gaea.Math.OfNatLit.ofNatLit] 
 def unexpandNumLit : Lean.PrettyPrinter.Unexpander
-  | `(Math.OfNatLit.ofNatLit $n:numLit) => `($n)
+  | `(Math.OfNatLit.ofNatLit $n:numLit) => n
   | _  => throw ()
 
 end Gaea.Math
