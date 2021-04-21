@@ -1,5 +1,4 @@
 import Gaea.Peano.Nat
-import Gaea.Logic.Judgment
 import Gaea.Logic.Prop.Syntax
 import Gaea.Logic.Prop.Notation
 import Gaea.Logic.Quant.Syntax
