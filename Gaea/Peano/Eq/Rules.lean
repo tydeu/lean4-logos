@@ -4,6 +4,7 @@ import Gaea.Logic.Eq.Notation
 import Gaea.Logic.Eq.Syntax
 
 universes u v w
+variable {P : Sort u} {T : Sort v}
 
 open Gaea.Logic
 
@@ -14,17 +15,14 @@ namespace Gaea.Peano
 --------------------------------------------------------------------------------
 
 -- Axiom N5
-class NatEqNat {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) :=
-  (natEqNat : (a b : T) -> (L |- nat b) -> (L |- a = b) -> (L |- nat a))
+class NatEqNat (L : Logic P) (N : IsNat P T) (Q : SEq P T) :=
+  natEqNat : (a b : T) -> (L |- nat b) -> (L |- a = b) -> (L |- nat a)
 
-def natEqNat {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [K : NatEqNat L N Q] 
-  {a b : T} := K.natEqNat a b
+abbrev natEqNat {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
+  [K : NatEqNat L N Q] {a b} := K.natEqNat a b
 
-def natEq {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [K : NatEqNat L N Q] 
-  {a b : T} := K.natEqNat a b
+abbrev natEq {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
+  [K : NatEqNat L N Q] {a b} := K.natEqNat a b
 
 --------------------------------------------------------------------------------
 -- Reflexivity
@@ -32,182 +30,148 @@ def natEq {P : Sort u} {T : Sort v}
 --------------------------------------------------------------------------------
 
 -- Axiom N2
-class EqNatRefl {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) :=
-  (eqNatRefl : (x : T) -> (L |- nat x) -> (L |- x = x))
+class EqNatRefl (L : Logic P) (N : IsNat P T) (Q : SEq P T) :=
+  eqNatRefl : (x : T) -> (L |- nat x) -> (L |- x = x)
 
-instance iReflTOfEqNatRefl {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T]
-  [K : EqNatRefl L N Q] : ReflT L Q.toFun N.isNat 
-  := {reflT := K.eqNatRefl}
+abbrev eqNatRefl {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
+  [K : EqNatRefl L N Q] {x} := K.eqNatRefl x
 
-instance iEqNatReflOfReflT {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T]
-  [K : ReflT L Q.toFun N.isNat] : EqNatRefl L N Q
-  := {eqNatRefl := K.reflT}
+instance iReflTOfEqNatRefl {L : Logic P} [N : IsNat P T] [Q : SEq P T]
+  [K : EqNatRefl L N Q] : ReflT L Q.toFun N.isNat := {reflT := K.eqNatRefl}
 
-def eqNatRefl {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [K : EqNatRefl L N Q]
-  {x : T} := K.eqNatRefl x
+instance iEqNatReflOfReflT {L : Logic P} [N : IsNat P T] [Q : SEq P T]
+  [K : ReflT L Q.toFun N.isNat] : EqNatRefl L N Q := {eqNatRefl := K.reflT}
 
 --------------------------------------------------------------------------------
 -- Symmetry
--- (x = y) -> (y = x)
+-- x = y |- y = x
 --------------------------------------------------------------------------------
 
 -- Axiom N3
-class EqNatSymm {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) :=
-  (eqNatSymm : (x y : T) -> (L |- nat x) -> (L |- nat y) ->
-    (L |- x = y) -> (L |- y = x))
+class EqNatSymm (L : Logic P) (N : IsNat P T) (Q : SEq P T) :=
+  eqNatSymm : (x y : T) -> (L |- nat x) -> (L |- nat y) ->
+    (L |- x = y) -> (L |- y = x)
 
-instance iSymmTOfEqNatSymm {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T]
-  [K : EqNatSymm L N Q] : SymmT L Q.toFun N.isNat 
-  := {symmT := K.eqNatSymm}
+abbrev eqNatSymm {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
+  [K : EqNatSymm L N Q] {x y} := K.eqNatSymm x y
 
-instance iEqNatSymmOfSymmT {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T]
-  [K : SymmT L Q.toFun N.isNat] : EqNatSymm L N Q
-  := {eqNatSymm := K.symmT}
+instance iSymmTOfEqNatSymm {L : Logic P} [N : IsNat P T] [Q : SEq P T]
+  [K : EqNatSymm L N Q] : SymmT L Q.toFun N.isNat := {symmT := K.eqNatSymm}
 
-def eqNatSymm {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [K : EqNatSymm L N Q]
-  {x y : T} := K.eqNatSymm x y
+instance iEqNatSymmOfSymmT  {L : Logic P} [N : IsNat P T] [Q : SEq P T]
+  [K : SymmT L Q.toFun N.isNat] : EqNatSymm L N Q := {eqNatSymm := K.symmT}
 
 --------------------------------------------------------------------------------
 -- Transitivity
--- (x = y) /\ (y = z) -> (x = z)
+-- x = y, y = z |- x = z
 --------------------------------------------------------------------------------
 
 -- Axiom N4
-class EqNatTrans {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) :=
-  (eqNatTrans : (x y z : T) -> (L |- nat x) -> (L |- nat y) -> (L |- nat z) -> 
-    (L |- x = y) -> (L |- y = z) -> (L |- x = z))
+class EqNatTrans  (L : Logic P) (N : IsNat P T) (Q : SEq P T) :=
+  eqNatTrans : (x y z : T) -> (L |- nat x) -> (L |- nat y) -> (L |- nat z) -> 
+    (L |- x = y) -> (L |- y = z) -> (L |- x = z)
 
-instance iTransTOfEqNatTrans {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T]
-  [K : EqNatTrans L N Q] : TransT L Q.toFun N.isNat 
-  := {transT := K.eqNatTrans}
+abbrev eqNatTrans {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
+  [K : EqNatTrans L N Q] {x y z} := K.eqNatTrans x y z
 
-instance iEqNatTransOfEqTransT {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T]
-  [K : TransT L Q.toFun N.isNat] : EqNatTrans L N Q
-  := {eqNatTrans := K.transT}
+abbrev eqNatTrans'  {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
+  [K : EqNatTrans L N Q] {y x z} (Ny Nx Nz) := K.eqNatTrans x y z Nx Ny Nz
 
-def eqNatTrans {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [K : EqNatTrans L N Q]
-  {x y z : T} := K.eqNatTrans x y z
+instance iTransTOfEqNatTrans  {L : Logic P} [N : IsNat P T] [Q : SEq P T]
+  [K : EqNatTrans L N Q] : TransT L Q.toFun N.isNat := {transT := K.eqNatTrans}
 
-def eqNatTrans' {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [K : EqNatTrans L N Q]
-  {y x z : T} (Ny : L |- nat y) (Nx : L |- nat x) (Nz : L |- nat z)  
-  := K.eqNatTrans x y z Nx Ny Nz
+instance iEqNatTransOfEqTransT  {L : Logic P} [N : IsNat P T] [Q : SEq P T]
+  [K : TransT L Q.toFun N.isNat] : EqNatTrans L N Q := {eqNatTrans := K.transT}
 
 -- w/ Implied Nats
-class EqTransNat {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) :=
-  (eqTransNat : (a b c : T) -> 
-    (L |- nat c) -> (L |- a = b) -> (L |- b = c) -> (L |- a = c))
+class EqTransNat (L : Logic P) (N : IsNat P T) (Q : SEq P T) :=
+  eqTransNat : (a b c : T) -> 
+    (L |- nat c) -> (L |- a = b) -> (L |- b = c) -> (L |- a = c)
 
-def eqTransNat {P : Sort u} {T : Sort v} 
-{L : Logic P} [N : IsNat P T] [Q : SEq P T] [K : EqTransNat L N Q]
-{a : T} (b : T) {c : T} := K.eqTransNat a b c
+abbrev eqTransNat {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
+  [K : EqTransNat L N Q] (b) {a c} := K.eqTransNat a b c
 
-def eqTransNat' {P : Sort u} {T : Sort v} 
-{L : Logic P} [N : IsNat P T] [Q : SEq P T] [K : EqTransNat L N Q]
-{a b c : T} := K.eqTransNat a b c
+abbrev eqTransNat'  {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
+  [K : EqTransNat L N Q] {a b c} := K.eqTransNat a b c
 
 --------------------------------------------------------------------------------
 -- Join
 --------------------------------------------------------------------------------
 
--- (x = a) /\ (y = b) /\ (a = b) -> (x = y)
+-- x = a, y = b, a = b |- x = y
 
-class EqNatJoin {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) :=
-  (eqNatJoin : (x y a b : T) -> 
+class EqNatJoin (L : Logic P) (N : IsNat P T) (Q : SEq P T) :=
+  eqNatJoin : (x y a b : T) -> 
     (L |- nat x) -> (L |- nat y) -> (L |- nat a) -> (L |- nat b) ->
-    (L |- x = a) -> (L |- y = b) -> (L |- a = b) -> (L |- x = y))
+    (L |- x = a) -> (L |- y = b) -> (L |- a = b) -> (L |- x = y)
 
-instance iRelJoinTOfEqNatJoin {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
-  [K : EqNatJoin L N Q] : RelJoinT L Q.toFun N.isNat 
-  := {relJoinT := K.eqNatJoin}
+abbrev eqNatJoin {L : Logic P} [N : IsNat P T] [Q : SEq P T]
+  [K : EqNatJoin L N Q] {x y a b} := K.eqNatJoin x y a b 
 
-instance iEqNatJoinOfRelJoinT {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
-  [K : RelJoinT L Q.toFun N.isNat] : EqNatJoin L N Q 
-  := {eqNatJoin := K.relJoinT}
+instance iRelJoinTOfEqNatJoin {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
+  [K : EqNatJoin L N Q] : RelJoinT L Q.toFun N.isNat := {relJoinT := K.eqNatJoin}
 
-def eqNatJoin {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T]
-  [K : EqNatJoin L N Q] {x y a b : T} := K.eqNatJoin x y a b 
+instance iEqNatJoinOfRelJoinT {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
+  [K : RelJoinT L Q.toFun N.isNat] : EqNatJoin L N Q := {eqNatJoin := K.relJoinT}
 
--- (a = b) /\ (x = a) /\ (y = b) -> (x = y)
+-- a = b, x = a, y = b |- x = y
 
-def eqNatJoin' {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T]
-  [K : EqNatJoin L N Q] {a b x y : T} 
-  : (L |- nat a) -> (L |- nat b) -> (L |- nat x) -> (L |- nat y) ->
-    (L |- a = b) -> (L |- x = a) -> (L |- y = b) ->  (L |- x = y)
-  := fun Na Nb Nx Ny Qab Qxa Qyb => K.eqNatJoin x y a b Nx Ny Na Nb Qxa Qyb Qab
+abbrev eqNatJoin' {L : Logic P} 
+  [N : IsNat P T] [Q : SEq P T] [K : EqNatJoin L N Q] {a b x y}
+  (Na Nb Nx Ny Qab Qxa Qyb) := K.eqNatJoin x y a b Nx Ny Na Nb Qxa Qyb Qab
 
 --------------------------------------------------------------------------------
 -- Euclideaness
 --------------------------------------------------------------------------------
 
 -- Left Euclidean
--- (b = a) /\ (c = a) -> (b = c)
+-- b = a, c = a |- b = c
 
-class EqNatLeftEuc {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) :=
-  (eqNatLeftEuc : (a b c : T) -> 
+class EqNatLeftEuc (L : Logic P) (N : IsNat P T) (Q : SEq P T) :=
+  eqNatLeftEuc : (a b c : T) -> 
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
-    (L |- b = a) -> (L |- c = a) -> (L |- b = c))
+    (L |- b = a) -> (L |- c = a) -> (L |- b = c)
 
-instance iLeftEucTOfEqNatLeftEuc {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [K : EqNatLeftEuc L N Q] 
-  : LeftEucT L Q.toFun N.isNat := {leftEucT := K.eqNatLeftEuc}
+abbrev eqNatLeftEuc {L : Logic P} [N : IsNat P T] [Q : SEq P T]
+  [K : EqNatLeftEuc L N Q] {a b c} := K.eqNatLeftEuc a b c 
 
-instance iEqNatLeftEucOfLeftEucT {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [K : LeftEucT L Q.toFun N.isNat] 
-  : EqNatLeftEuc L N Q := {eqNatLeftEuc := K.leftEucT}
+instance iLeftEucTOfEqNatLeftEuc 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
+  [K : EqNatLeftEuc L N Q] : LeftEucT L Q.toFun N.isNat := 
+  {leftEucT := K.eqNatLeftEuc}
 
-def eqNatLeftEuc {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T]
-  [K : EqNatLeftEuc L N Q] {a b c : T} := K.eqNatLeftEuc a b c 
+instance iEqNatLeftEucOfLeftEucT 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
+  [K : LeftEucT L Q.toFun N.isNat] : EqNatLeftEuc L N Q := 
+  {eqNatLeftEuc := K.leftEucT}
 
 -- w/ Implied Nats
-class EqLeftEucNat {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) :=
-  (eqLeftEucNat : (a b c : T) -> (L |- nat a) -> 
-    (L |- b = a) -> (L |- c = a) -> (L |- b = c))
+class EqLeftEucNat (L : Logic P) (N : IsNat P T) (Q : SEq P T) :=
+  eqLeftEucNat : (a b c : T) -> (L |- nat a) -> 
+    (L |- b = a) -> (L |- c = a) -> (L |- b = c)
 
-def eqLeftEucNat {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T]
-  [K : EqLeftEucNat L N Q] {a b c : T} := K.eqLeftEucNat a b c 
+abbrev eqLeftEucNat {L : Logic P} [N : IsNat P T] [Q : SEq P T]
+  [K : EqLeftEucNat L N Q] {a b c} := K.eqLeftEucNat a b c 
 
 -- Right Euclidean
--- (a = b) /\ (a = c) -> (b = c)
+-- a = b, a = c |- b = c
 
-class EqNatRightEuc {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) :=
-  (eqNatRightEuc : (a b c : T) -> 
+class EqNatRightEuc (L : Logic P) (N : IsNat P T) (Q : SEq P T) :=
+  eqNatRightEuc : (a b c : T) -> 
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
-    (L |- a = b) -> (L |- a = c) -> (L |- b = c))
+    (L |- a = b) -> (L |- a = c) -> (L |- b = c)
 
-instance iRightEucTOfEqNatRightEuc {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [K : EqNatRightEuc L N Q] 
-  : RightEucT L Q.toFun N.isNat := {rightEucT := K.eqNatRightEuc}
+abbrev eqNatRightEuc {L : Logic P} [N : IsNat P T] [Q : SEq P T]
+  [K : EqNatRightEuc L N Q] {a b c} := K.eqNatRightEuc a b c 
 
-instance iEqNatRightEucOfEqRightEucT {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [K : RightEucT L Q.toFun N.isNat] 
-  : EqNatRightEuc L N Q := {eqNatRightEuc := K.rightEucT}
+instance iRightEucTOfEqNatRightEuc 
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
+  [K : EqNatRightEuc L N Q] : RightEucT L Q.toFun N.isNat := 
+  {rightEucT := K.eqNatRightEuc}
 
-def eqNatRightEuc {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T]
-  [K : EqNatLeftEuc L N Q] {a b c : T} := K.eqNatLeftEuc a b c 
+instance iEqNatRightEucOfEqRightEucT  
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
+  [K : RightEucT L Q.toFun N.isNat] : EqNatRightEuc L N Q := 
+  {eqNatRightEuc := K.rightEucT}
 
 end Gaea.Peano

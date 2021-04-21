@@ -7,7 +7,8 @@ import Gaea.Logic.Eq.Notation
 import Gaea.Logic.Rel.Rules
 import Gaea.Peano.Nat
 
-universes u v w
+universes u v
+variable {P : Sort u} {T : Sort v}
 
 open Gaea.Math
 open Gaea.Logic
@@ -15,67 +16,56 @@ open Gaea.Logic
 namespace Gaea.Peano
 
 -- Axiom 1
-class NatZero {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (Z : Zero T) :=
-  (natZero : L |- nat (0 : T))
+class NatZero (L : Logic P) (N : IsNat P T) (Z : Zero T) :=
+  natZero : L |- nat (0 : T)
 
-def natZero {P : Sort u} (L : Logic P) (T : Sort v) 
-  [N : IsNat P T] [Z : Zero T] [K : NatZero L N Z] := K.natZero
+abbrev natZero (L : Logic P) (T : Sort v) [N : IsNat P T] [Z : Zero T] 
+  [K : NatZero L N Z] := K.natZero
 
-def nat0 {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Z : Zero T] [K : NatZero L N Z] := K.natZero
+abbrev nat0 {L : Logic P} [N : IsNat P T] [Z : Zero T] 
+  [K : NatZero L N Z] := K.natZero
 
 -- Axiom 6
-class NatSuccNat {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (S : Succ T) :=
-  (natSuccNat : (n : T) -> (L |- nat n) -> (L |- nat (S n)))
+class NatSuccNat (L : Logic P) (N : IsNat P T) (S : Succ T) :=
+  natSuccNat : (n : T) -> (L |- nat n) -> (L |- nat (S n))
 
-def natSuccNat {P : Sort u} {T : Sort v} 
-{L : Logic P} [N : IsNat P T] [S : Succ T] [K : NatSuccNat L N S] 
-{n : T} := K.natSuccNat n
+abbrev natSuccNat {L : Logic P} [N : IsNat P T] [S : Succ T] 
+  [K : NatSuccNat L N S] {n} := K.natSuccNat n
 
-def natS {P : Sort u} {T : Sort v} 
-{L : Logic P} [N : IsNat P T] [S : Succ T] [K : NatSuccNat L N S] 
-{n : T} := K.natSuccNat n
+abbrev natS {L : Logic P} [N : IsNat P T] [S : Succ T] 
+  [K : NatSuccNat L N S] {n} := K.natSuccNat n
 
 -- Axiom 7a
-class EqNatToEqSucc {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (S : Succ T) :=
-  (eqNatToEqSucc : (m n : T) -> (L |- nat m) -> (L |- nat n) -> 
-    (L |- m = n) -> (L |- S m = S n))
+class EqNatToEqSucc (L : Logic P) (N : IsNat P T) (Q : SEq P T) (S : Succ T) :=
+  eqNatToEqSucc : (m n : T) -> (L |- nat m) -> (L |- nat n) -> 
+    (L |- m = n) -> (L |- S m = S n)
 
-instance iEqNatToEqSuccOfFSubstT {P : Sort u} {T : Sort v} 
+instance iEqNatToEqSuccOfFSubstT
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [S : Succ T]
   [K : EqNatToEqSucc L N Q S] : FSubstT L Q.toFun N.isNat S.toFun 
   := {fSubstT := K.eqNatToEqSucc}
 
-instance iFSubstTOfEqNatToEqSucc {P : Sort u} {T : Sort v} 
+instance iFSubstTOfEqNatToEqSucc
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [S : Succ T]
   [K : FSubstT L Q.toFun N.isNat S.toFun] : EqNatToEqSucc L N Q S
   := {eqNatToEqSucc := K.fSubstT}
 
-def eqNatToEqSucc {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [S : Succ T]
-  [K : EqNatToEqSucc L N Q S] {m n : T} := K.eqNatToEqSucc m n
+abbrev eqNatToEqSucc {L : Logic P} [N : IsNat P T] [Q : SEq P T] [S : Succ T]
+  [K : EqNatToEqSucc L N Q S] {m n} := K.eqNatToEqSucc m n
 
 -- Axiom 7b
-class EqSuccToEqNat {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (S : Succ T) :=
-  (eqSuccToEqNat : (m n : T) -> (L |- nat m) -> (L |- nat n) -> 
-    (L |- S m = S n) -> (L |- m = n))
+class EqSuccToEqNat (L : Logic P) (N : IsNat P T) (Q : SEq P T) (S : Succ T) :=
+  eqSuccToEqNat : (m n : T) -> (L |- nat m) -> (L |- nat n) -> 
+    (L |- S m = S n) -> (L |- m = n)
 
-def eqSuccToEqNat {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [S : Succ T]
-  [K : EqSuccToEqNat L N Q S] {m n : T} := K.eqSuccToEqNat
+abbrev eqSuccToEqNat {L : Logic P} [N : IsNat P T] [Q : SEq P T] [S : Succ T]
+  [K : EqSuccToEqNat L N Q S] {m n} := K.eqSuccToEqNat m n
 
 -- Axiom 8
-class SuccNatEqZeroFalse {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : PNat P T) (Q : SEq P T) (F : LFalse P) :=
-  (succNatEqZeroFalse : (m n : T) -> (L |- nat m) -> (L |- nat n) -> 
-    (L |- S n = 0) -> (L |- false))
+class SuccNatEqZeroFalse (L : Logic P) (N : PNat P T) (Q : SEq P T) :=
+  succNatEqZeroFalse : (n : T) -> (L |- nat n) -> (L |- S n = 0) -> False
 
-def succNatEqZeroFalse {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : PNat P T] [Q : SEq P T] [F : LFalse P]
-  [K : SuccNatEqZeroFalse L N Q F] {m n : T} := K.succNatEqZeroFalse m n
+abbrev succNatEqZeroFalse {L : Logic P} [N : PNat P T] [Q : SEq P T]
+  [K : SuccNatEqZeroFalse L N Q] {n} := K.succNatEqZeroFalse n
 
 end Gaea.Peano
