@@ -6,7 +6,7 @@ namespace Gaea.Logic
 
 scoped syntax (name := conditionTactic) 
   "condition " (colGt binderPat)+ : tactic
-macro_rules [conditionTactic]
+macro_rules (kind := conditionTactic)
   | `(tactic| condition $x:binderPat) => 
     `(tactic| apply condition; assume $x)
   | `(tactic| condition $x $y $zs*) => 
@@ -14,7 +14,7 @@ macro_rules [conditionTactic]
 
 scoped syntax (name := leftCondTactic) 
   "leftCond " (colGt binderPat)+ : tactic
-macro_rules [leftCondTactic]
+macro_rules (kind := leftCondTactic)
   | `(tactic| leftCond $x:binderPat) => 
     `(tactic| apply leftCond; assume $x)
   | `(tactic| leftCond $x $y $zs*) => 
@@ -22,7 +22,7 @@ macro_rules [leftCondTactic]
 
 scoped syntax (name := rightCondTactic) 
   "rightCond " (colGt binderPat)+ : tactic
-macro_rules [rightCondTactic]
+macro_rules (kind := rightCondTactic)
   | `(tactic| rightCond $x:binderPat) => 
     `(tactic| apply rightCond; assume $x)
   | `(tactic| rightCond $x $y $zs*) => 

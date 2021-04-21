@@ -38,17 +38,17 @@ instance {A : Type u} {n : Nat} [K : OfNatLit A n] : OfNat A n
   := {ofNat := K.ofNatLit}
 
 instance (A : Sort u) [K : Zero A] 
-  : OfNatLit A (natLit! 0) := {ofNatLit := K.zero}
+  : OfNatLit A (nat_lit 0) := {ofNatLit := K.zero}
 
 instance (A : Sort u) [K : One A] 
-  : OfNatLit A (natLit! 1) := {ofNatLit := K.one}
+  : OfNatLit A (nat_lit 1) := {ofNatLit := K.one}
 
 instance (A : Sort u) [K : Succ A] (n : Nat) [T : OfNatLit A n] 
   : OfNatLit A (Nat.succ n) := {ofNatLit := K.toFun T.ofNatLit}
 
 @[scoped macro numLit] 
 def expandNumLit : Lean.Macro
-  | n => `(OfNatLit.ofNatLit (natLit! $n))
+  | n => `(OfNatLit.ofNatLit (nat_lit $n))
 
 @[scoped appUnexpander Gaea.Math.OfNatLit.ofNatLit] 
 def unexpandNumLit : Lean.PrettyPrinter.Unexpander

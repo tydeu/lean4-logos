@@ -12,7 +12,7 @@ syntax "(" binderPat,+ ")" : binderPat
 
 scoped syntax (name := assume) 
   "assume " (colGt binderPat)+ : tactic
-macro_rules [assume]
+macro_rules (kind := assume)
   | `(tactic| assume $x:binderIdent) => 
     `(tactic| intro $(x[0]))
   | `(tactic| assume ($x)) => 
@@ -24,7 +24,7 @@ macro_rules [assume]
 
 scoped syntax (name := uncurryTactic) 
   "uncurry " (colGt binderPat)* : tactic
-macro_rules [uncurryTactic]
+macro_rules (kind := uncurryTactic)
   | `(tactic| uncurry) => 
     `(tactic| apply uncurry)
   | `(tactic| uncurry $x) => 

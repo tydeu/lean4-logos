@@ -1,6 +1,6 @@
 # Gaea
 
-Gaea is a **work-in-progress** metalogic system for Lean 4 **(stable v4.0.0-m2)**.
+Gaea is a **work-in-progress** metalogic system for Lean 4 **(nightly)**.
 As a *metalogic* system, Gaea is able to formalize multiple different logics
 with varying axiomatic bases and different proof rules.
 
