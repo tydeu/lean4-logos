@@ -1,6 +1,5 @@
 import Gaea.Logic.Judgment
 import Gaea.Logic.Fun.Rules
-import Gaea.Logic.Rule
 
 universes u w
 variable {P : Sort u}
