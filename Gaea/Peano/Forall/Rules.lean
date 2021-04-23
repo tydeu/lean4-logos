@@ -1,11 +1,13 @@
 import Gaea.Logic.Unit.Rules
 import Gaea.Logic.Quant.Rules
-import Gaea.Peano.Forall.Notation
+import Gaea.Peano.Forall.Syntax
 
 universes u v
 variable {P : Sort u} {T : Sort v}
 
 open Gaea.Logic
+open Gaea.Logic.Notation
+open Gaea.Peano.Notation
 
 namespace Gaea.Peano
 

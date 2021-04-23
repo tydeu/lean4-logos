@@ -2,13 +2,13 @@ import Gaea.Peano.Nat
 import Gaea.Math.Notation
 import Gaea.Logic.Judgment
 import Gaea.Logic.Eq.Syntax
-import Gaea.Logic.Eq.Notation
 
 universes u v
 variable {P : Sort u} {T : Sort v}
 
 open Gaea.Math
 open Gaea.Logic
+open Gaea.Logic.Notation
 
 namespace Gaea.Peano
 

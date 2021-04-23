@@ -1,7 +1,5 @@
 import Gaea.Logic.Judgment
 import Gaea.Logic.Fun.Types
-import Gaea.Logic.Prop.Syntax
-import Gaea.Logic.Prop.Notation
 
 universes u w
 variable {P : Sort u}

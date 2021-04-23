@@ -9,6 +9,7 @@ universes u v w
 
 open Gaea.Math
 open Gaea.Logic
+open Gaea.Logic.Notation
 
 namespace Gaea.Peano
 

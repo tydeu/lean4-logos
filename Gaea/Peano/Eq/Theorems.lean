@@ -2,6 +2,7 @@ import Gaea.Peano.Eq.Rules
 import Gaea.Logic.Rel.Theorems
 
 open Gaea.Logic
+open Gaea.Logic.Notation
 
 namespace Gaea.Peano 
 

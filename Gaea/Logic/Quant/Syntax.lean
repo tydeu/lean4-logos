@@ -29,4 +29,37 @@ end SExists
 
 abbrev lExists [K : SExists P T] := K.toFun
 
-end Gaea.Logic
+namespace Notation
+
+open Lean
+
+macro "∀ " xs:explicitBinders " => " b:term : term => 
+  expandExplicitBinders `lForall xs b
+scoped macro "forall " xs:explicitBinders " => " b:term : term => 
+  expandExplicitBinders `lForall xs b
+
+scoped macro "∃ " xs:explicitBinders " => " b:term : term => 
+  expandExplicitBinders `lExists xs b
+scoped macro "exists " xs:explicitBinders " => " b:term : term => 
+  expandExplicitBinders `lExists xs b
+
+@[appUnexpander Gaea.Logic.lForall] 
+def unexpandLForall : Lean.PrettyPrinter.Unexpander
+  | `(Gaea.Logic.lForall fun $x:ident => ∀ $xs:binderIdent* => $b)
+    => `(∀ $x:ident $xs:binderIdent* => $b)
+  | `(Gaea.Logic.lForall fun $x:ident => $b)
+    => `(∀ $x:ident => $b)
+  | `(Gaea.Logic.lForall fun ($x:ident : $t) => $b)              
+    => `(∀ ($x:ident : $t) => $b)
+  | _  => throw ()
+
+@[appUnexpander Gaea.Logic.lExists] 
+def unexpandLExists : Lean.PrettyPrinter.Unexpander
+  | `(Gaea.Logic.lExists fun $x:ident => ∃ $xs:binderIdent* => $b)
+    => `(∃ $x:ident $xs:binderIdent* => $b)
+  | `(Gaea.Logic.lExists fun $x:ident => $b)          
+    => `(∃ $x:ident => $b)
+  | `(Gaea.Logic.lExists fun ($x:ident : $t) => $b)
+    => `(∃ ($x:ident : $t) => $b)
+  | _ => throw ()
+

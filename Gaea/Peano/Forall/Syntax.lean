@@ -1,12 +1,11 @@
 import Gaea.Peano.Nat
 import Gaea.Logic.Prop.Syntax
-import Gaea.Logic.Prop.Notation
 import Gaea.Logic.Quant.Syntax
-import Gaea.Logic.Quant.Notation
 
 universes u v
 
 open Gaea.Logic
+open Gaea.Logic.Notation
 
 namespace Gaea.Peano
 
@@ -25,4 +24,21 @@ def LForallIfNat {P : Sort u} {T : Sort v}
   (N : IsNat P T) (Fa : SForall P T) (larr : LArr P) : 
   SForallNat P T := {toFun := fun f => forall a => nat a -> f a}
 
-end Gaea.Peano
+namespace Notation
+
+open Lean
+
+scoped macro "∀ℕ " xs:explicitBinders " => " b:term : term => 
+  expandExplicitBinders `pForallNat xs b
+scoped macro "forallNat" xs:explicitBinders " => " b:term : term => 
+  expandExplicitBinders `pForallNat xs b
+
+@[appUnexpander Gaea.Peano.pForallNat] 
+def unexpandForallNat : Lean.PrettyPrinter.Unexpander
+  | `(pForallNat fun $x:ident => ∀ℕ $xs:binderIdent* => $b)
+    => `(∀ℕ $x:ident $xs:binderIdent* => $b)
+  | `(pForallNat fun $x:ident => $b)
+    => `(∀ℕ $x:ident => $b)
+  | `(pForallNat fun ($x:ident : $t) => $b)              
+    => `(∀ℕ ($x:ident : $t) => $b)
+  | _  => throw ()

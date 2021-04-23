@@ -1,15 +1,14 @@
 import Gaea.Math.Notation
 import Gaea.Logic.Prop.Syntax
-import Gaea.Logic.Prop.Notation
 import Gaea.Logic.Quant.Syntax
-import Gaea.Logic.Quant.Notation
 import Gaea.Logic.Eq.Syntax
-import Gaea.Logic.Eq.Notation
-import Gaea.Peano.Forall.Notation
+import Gaea.Peano.Forall.Syntax
 import Gaea.Peano.Nat
 
 open Gaea.Math
 open Gaea.Logic
+open Gaea.Logic.Notation
+open Gaea.Peano.Notation
 
 namespace Gaea.Peano.Props
 
@@ -19,7 +18,7 @@ variable
   [Iff : SIff P] [Arr : LArr P] [Cj : Conj P]
   [Fa : SForall P T] [Fa2 : SForall P (T -> P)] [FaN : SForallNat P T]
   [X : SExists P T]
-  [F : LFalse P]
+  [F : Falsum P]
   [Q : SEq P T] [Le : SLessEq P T]
   [N : IsNat P T] [Z : Zero T] [S : Succ T]
   [A : SAdd T] [M : SMul T]
@@ -66,7 +65,7 @@ def eqSuccToEqNat : P :=
 
 -- Axiom 8
 def succNatEqZeroFalse : P :=
-  forallNat (m n : T) => S n = 0 -> false
+  forallNat (m n : T) => S n = 0 -> falsum
 
 -- Axiom 9
 def natInduction : P := 
@@ -97,7 +96,7 @@ def mulNatZeroEqZero : P :=
 
 -- Axiom 2
 def mulNatSuccEqAddMul : P := 
-  forallNat (a b : T) =>  a + S b = a + S (a * b)
+  forallNat (a b : T) => a + S b = a + S (a * b)
 
 --------------------------------------------------------------------------------
 -- Inequality Axioms

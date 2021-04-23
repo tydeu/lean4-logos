@@ -1,9 +1,7 @@
 import Gaea.Math.Notation
 import Gaea.Logic.Judgment
 import Gaea.Logic.Prop.Syntax
-import Gaea.Logic.Prop.Notation
 import Gaea.Logic.Eq.Syntax
-import Gaea.Logic.Eq.Notation
 import Gaea.Logic.Rel.Rules
 import Gaea.Peano.Nat
 
@@ -12,6 +10,7 @@ variable {P : Sort u} {T : Sort v}
 
 open Gaea.Math
 open Gaea.Logic
+open Gaea.Logic.Notation
 
 namespace Gaea.Peano
 

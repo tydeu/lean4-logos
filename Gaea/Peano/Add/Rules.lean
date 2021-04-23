@@ -7,6 +7,7 @@ variable {P : Sort u} {T : Sort v}
 
 open Gaea.Math
 open Gaea.Logic
+open Gaea.Logic.Notation
 
 namespace Gaea.Peano
 
