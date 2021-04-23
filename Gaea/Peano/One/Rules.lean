@@ -6,10 +6,7 @@ import Gaea.Logic.Eq.Syntax
 universes u v
 variable {P : Sort u} {T : Sort v}
 
-open Gaea.Math
-open Gaea.Logic
-open Gaea.Logic.Notation
-
+open Gaea.Notation
 namespace Gaea.Peano
 
 class NatOne (L : Logic P) (N : IsNat P T) (O : One T) :=

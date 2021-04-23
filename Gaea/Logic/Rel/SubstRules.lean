@@ -5,7 +5,7 @@ import Gaea.Logic.Rel.Type
 universes u v
 variable {P : Sort u} {T : Sort v}
 
-namespace Gaea.Logic
+namespace Gaea
 
 --------------------------------------------------------------------------------
 -- Predicate Substitution

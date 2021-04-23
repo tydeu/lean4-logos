@@ -4,9 +4,7 @@ import Gaea.Logic.Quant.Syntax
 
 universes u v
 
-open Gaea.Logic
-open Gaea.Logic.Notation
-
+open Gaea.Notation
 namespace Gaea.Peano
 
 class SForallNat (P : Sort u) (T : Sort v) :=

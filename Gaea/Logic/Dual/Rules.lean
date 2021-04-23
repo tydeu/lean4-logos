@@ -4,7 +4,7 @@ import Gaea.Logic.Fun.Types
 universes u w
 variable {P : Sort u}
 
-namespace Gaea.Logic
+namespace Gaea
 
 --------------------------------------------------------------------------------
 -- Proof by Contraposition

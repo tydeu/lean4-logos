@@ -4,7 +4,7 @@ import Gaea.Logic.Rel.Theorems
 universes u v
 variable {P : Sort u} {T : Sort v}
 
-namespace Gaea.Logic
+namespace Gaea
 
 variable {L : Logic P}
 
@@ -23,9 +23,9 @@ instance iPEq {L : Logic P} [Q : SEq P T]
 namespace PEq
 
 instance [K : PEq L T] 
-  : Logic.Symm L K.toFun := K.Symm
+  : Gaea.Symm L K.toFun := K.Symm
 instance [K : PEq L T] 
-  : Logic.Trans L K.toFun := K.Trans
+  : Gaea.Trans L K.toFun := K.Trans
 
 -- Symm
 abbrev symm {L : Logic P} (K : PEq L T) 
@@ -63,7 +63,7 @@ instance iREq {L : Logic P} [Q : SEq P T]
 namespace REq
 
 instance [K : REq L T] 
-  : Logic.Refl L K.toFun := K.Refl
+  : Gaea.Refl L K.toFun := K.Refl
 
 -- Refl
 abbrev refl (K : REq L T) 
@@ -87,7 +87,7 @@ instance iLEq {L : Logic P} [Q : SEq P T]
 namespace LEq
 
 instance [K : LEq L T] 
-  : Logic.PredSubst L K.toFun := K.PredSubst
+  : Gaea.PredSubst L K.toFun := K.PredSubst
 
 -- PredSubst
 abbrev predSubst (K : LEq L T) 

@@ -4,9 +4,8 @@ import Gaea.Logic.Fun.Types
 universes u v
 variable {P : Sort u} {T : Sort v}
 
-open Gaea.Logic
 
-namespace Gaea.Math
+namespace Gaea
 
 -- Numerics
 

@@ -1,7 +1,7 @@
 import Gaea.Logic.Dual.Rules
 import Gaea.Logic.Prop.Tactics
 
-namespace Gaea.Logic
+namespace Gaea
 
 -- Proofs
 

@@ -5,10 +5,7 @@ import Gaea.Math.Notation
 universes u v
 variable {P : Sort u} {T : Sort v} 
 
-open Gaea.Math
-open Gaea.Logic
-open Gaea.Logic.Notation
-
+open Gaea.Notation
 namespace Gaea.Peano
 
 --------------------------------------------------------------------------------

@@ -3,11 +3,10 @@ import Gaea.Logic.Dual.Rules
 import Gaea.Logic.Dual.Theorems
 import Gaea.Logic.Unit.Modules
 
+namespace Gaea
+
 universe u
 variable {P : Sort u}
-
-namespace Gaea.Logic
-
 variable {L : Logic P}
 
 --------------------------------------------------------------------------------
@@ -32,9 +31,9 @@ abbrev funType (K : LImp L lneg) := Binar P
 instance : CoeFun (LImp L lneg) funType := {coe := fun K => K.toFun}
 
 instance [K : LImp L lneg] : 
-  Logic.ByContraposition L K.toFun lneg := K.ByContraposition
+  Gaea.ByContraposition L K.toFun lneg := K.ByContraposition
 instance [K : LImp L lneg] : 
-  Logic.ModusTollens L K.toFun lneg := K.ModusTollens
+  Gaea.ModusTollens L K.toFun lneg := K.ModusTollens
 
 -- Basic
 abbrev byContraposition (K : LImp L lneg) 
@@ -67,9 +66,9 @@ abbrev funType (K : MIff L lneg) := Binar P
 instance : CoeFun (MIff L lneg) funType := {coe := fun K => K.toFun}
 
 instance [K : MIff L lneg] :
-  Logic.LeftMt L K.toFun lneg := K.LeftMt
+  Gaea.LeftMt L K.toFun lneg := K.LeftMt
 instance [K : MIff L lneg] :
-  Logic.RightMt L K.toFun lneg := K.RightMt
+  Gaea.RightMt L K.toFun lneg := K.RightMt
 
 -- Basic
 abbrev leftMt (K : MIff L lneg) 
@@ -105,9 +104,9 @@ abbrev funType (K : LDisj L lneg) := Binar P
 instance : CoeFun (LDisj L lneg) funType := {coe := fun K => K.toFun}
 
 instance [K : LDisj L lneg] :
-  Logic.LeftMtp L K.toFun lneg := K.LeftMtp
+  Gaea.LeftMtp L K.toFun lneg := K.LeftMtp
 instance [K : LDisj L lneg] :
-  Logic.RightMtp L K.toFun lneg := K.RightMtp
+  Gaea.RightMtp L K.toFun lneg := K.RightMtp
 
 -- Basic
 abbrev leftMtp (K : LDisj L lneg)
@@ -139,9 +138,9 @@ abbrev funType (K : LNot L) := Unar P
 instance : CoeFun (LNot L) funType := {coe := fun K => K.toFun}
 
 instance [K : LNot L] : 
-  Logic.AdFalso L K.toFun := K.AdFalso
+  Gaea.AdFalso L K.toFun := K.AdFalso
 instance [K : LNot L] : 
-  Logic.Noncontradiction L K.toFun := K.Noncontradiction
+  Gaea.Noncontradiction L K.toFun := K.Noncontradiction
 
 -- Basic
 abbrev adFalso (K : LNot L) 

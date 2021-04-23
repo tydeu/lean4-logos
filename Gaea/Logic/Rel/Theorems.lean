@@ -2,7 +2,7 @@ import Gaea.Logic.Rel.Rules
 
 universes u v
 
-namespace Gaea.Logic
+namespace Gaea
 
 --------------------------------------------------------------------------------
 -- Function Substitution

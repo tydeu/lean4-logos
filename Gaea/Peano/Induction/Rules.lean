@@ -5,9 +5,6 @@ import Gaea.Peano.Nat
 universes u v w
 variable {P : Sort u} {T : Sort v} 
 
-open Gaea.Math
-open Gaea.Logic
-
 namespace Gaea.Peano
 
 --------------------------------------------------------------------------------

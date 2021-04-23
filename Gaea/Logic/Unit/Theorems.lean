@@ -6,7 +6,7 @@ import Gaea.Logic.Rel.Rules
 universe u
 variable {P : Sort u}
 
-namespace Gaea.Logic
+namespace Gaea
 
 --------------------------------------------------------------------------------
 -- Entailment

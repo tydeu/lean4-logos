@@ -2,7 +2,7 @@ import Gaea.Logic.Rel.Type
 
 universes u v
 
-namespace Gaea.Logic 
+namespace Gaea 
 
 class SEq (P : Sort u) (T : Sort v) :=
   toFun : Rel P T
@@ -17,4 +17,4 @@ instance : CoeFun (SEq P T) funType := {coe := fun K => K.toFun}
 end SEq
 
 namespace Notation
-scoped infix:50 " = " => Gaea.Logic.SEq.toFun
+scoped infix:50 " = " => SEq.toFun

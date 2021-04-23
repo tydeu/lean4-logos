@@ -3,7 +3,7 @@ import Gaea.Logic.Quant.Type
 universes u v
 variable {P : Sort u} {T : Sort v}
 
-namespace Gaea.Logic
+namespace Gaea
 
 -- Forall
 

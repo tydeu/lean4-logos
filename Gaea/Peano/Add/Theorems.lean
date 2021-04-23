@@ -7,10 +7,7 @@ import Gaea.Peano.Add.Rules
 
 universes u v w
 
-open Gaea.Math
-open Gaea.Logic
-open Gaea.Logic.Notation
-
+open Gaea.Notation
 namespace Gaea.Peano
 
 --------------------------------------------------------------------------------

@@ -2,11 +2,10 @@ import Gaea.Logic.Logic
 import Gaea.Logic.Quant.Rules
 import Gaea.Logic.Quant.Syntax
 
+namespace Gaea
+
 universes u v
 variable {P : Sort u} {T : Sort v}
-
-namespace Gaea.Logic
-
 variable {L : Logic P}
 
 --------------------------------------------------------------------------------
@@ -27,9 +26,9 @@ abbrev funType (K : LForall L T) := Quant P T
 instance : CoeFun (LForall L T) funType := {coe := fun K => K.toFun}
 
 instance iUnivGenOfMForall [K : LForall L T] :
-  Logic.UnivGen L K.toFun := K.UnivGen
+  Gaea.UnivGen L K.toFun := K.UnivGen
 instance iUnivInstOfMForall [K : LForall L T] :
-  Logic.UnivInst L K.toFun := K.UnivInst
+  Gaea.UnivInst L K.toFun := K.UnivInst
 
 abbrev gen (K : LForall L T) 
   {f} := K.UnivGen.toFun f
@@ -60,9 +59,9 @@ abbrev funType (K : LExists L T) := Quant P T
 instance : CoeFun (LExists L T) funType := {coe := fun K => K.toFun}
 
 instance [K : LExists L T] :
-  Logic.ExstGen L K.toFun := K.ExstGen
+  Gaea.ExstGen L K.toFun := K.ExstGen
 instance [K : LExists L T] :
-  Logic.ExstInst L K.toFun := K.ExstInst
+  Gaea.ExstInst L K.toFun := K.ExstInst
 
 abbrev gen {L : Logic P} (K : LExists L T) 
   {f} := K.ExstGen.toFun f

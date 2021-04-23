@@ -3,7 +3,7 @@ import Gaea.Logic.Dual.Rules
 universes u
 variable {P : Sort u}
 
-namespace Gaea.Logic
+namespace Gaea
 
 --------------------------------------------------------------------------------
 -- False

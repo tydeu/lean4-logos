@@ -2,7 +2,7 @@ import Gaea.Math.Syntax
 
 universe u
 
-namespace Gaea.Math
+namespace Gaea
 
 -- Operators
 

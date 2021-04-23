@@ -94,12 +94,16 @@ Thus, in Gaea, `Condition` is just an abbreviation for the real class `LeftCond`
 
 ## Organization
 
-The `Gaea.Logic` folder and namespace contain the basic definitions of the metalogic 
+Everything within the Gaea packages is scoped within t1e `Gaea` namespace.
+General notational additions are found within the `Gaea.Notation` namespace.
+Variants which bind to local identifiers are found in `Gaea.LocalNotation`.
+
+The `Logic` folder contains the basic definitions of the metalogic 
 along with formalizations of propositional and predicate logic.
 The `Unit` subfolder contains definitions for basic propositional logic without negation. 
 `Dual` adds negation, `Quant` adds quantifiers, and `Eq` adds equality.
 
-`Gaea.Peano` contains an example formalization in Gaea of the
+The `Peano` folder and namespace contain an example formalization in Gaea of the
 Peano axioms (as outlined on [Wikipedia](https://en.wikipedia.org/wiki/Peano_axioms))
 and some basic proofs about the system.
 Those proofs show that Peano addition and multiplication 

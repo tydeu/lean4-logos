@@ -4,8 +4,6 @@ import Gaea.Peano.Eq.Theorems
 
 universe v
 
-open Gaea.Math
-open Gaea.Logic
 
 namespace Gaea.Peano.Completeness
 

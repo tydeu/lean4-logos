@@ -2,8 +2,6 @@ import Gaea.Logic.Unit.Modules
 import Gaea.Logic.Quant.Modules
 import Gaea.Peano.Forall.Rules
 
-open Gaea.Logic
-
 universes u v
 variable {P : Sort u} {T : Sort v}
 

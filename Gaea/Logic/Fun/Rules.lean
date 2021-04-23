@@ -2,7 +2,7 @@ import Gaea.Logic.Judgment
 import Gaea.Logic.Fun.Types
 import Gaea.Logic.Rel.Rules
 
-namespace Gaea.Logic
+namespace Gaea
 
 universe u
 variable {P : Sort u} 

@@ -4,7 +4,7 @@ import Gaea.Logic.Fun.Rules
 universes u w
 variable {P : Sort u}
 
-namespace Gaea.Logic
+namespace Gaea
 
 --------------------------------------------------------------------------------
 -- Postulate

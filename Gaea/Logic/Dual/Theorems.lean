@@ -8,7 +8,7 @@ import Gaea.Logic.Dual.Tactics
 universe u
 variable {P : Sort u}
 
-namespace Gaea.Logic
+namespace Gaea
 
 --------------------------------------------------------------------------------
 -- Contraposition

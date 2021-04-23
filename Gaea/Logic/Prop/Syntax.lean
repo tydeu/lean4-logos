@@ -3,7 +3,7 @@ import Gaea.Logic.Fun.Types
 universe u
 variable {P : Sort u}
 
-namespace Gaea.Logic 
+namespace Gaea 
 
 --------------------------------------------------------------------------------
 -- Constants

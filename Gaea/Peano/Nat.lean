@@ -2,7 +2,7 @@ import Gaea.Math.Syntax
 
 universes u v
 
-open Gaea.Math (Zero Succ)
+open Gaea (Zero Succ)
 
 namespace Gaea.Peano
 

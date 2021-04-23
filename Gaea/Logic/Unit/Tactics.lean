@@ -1,7 +1,8 @@
 import Gaea.Logic.Unit.Rules
 import Gaea.Logic.Prop.Tactics
 
-namespace Gaea.Logic
+namespace Gaea
+
 -- Proofs
 
 scoped syntax (name := conditionTactic) 

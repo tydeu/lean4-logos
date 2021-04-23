@@ -6,7 +6,7 @@ import Gaea.Logic.Prop.Syntax
 universe u
 variable {P : Sort u}
 
-namespace Gaea.Logic
+namespace Gaea
 
 variable {L : Logic P}
 
@@ -28,9 +28,9 @@ abbrev funType (K : LEnt L) := Binar P
 instance : CoeFun (LEnt L) funType := {coe := fun K => K.toFun}
 
 instance [K : LEnt L] : 
-  Logic.Condition L K.toFun := K.Condition
+  Gaea.Condition L K.toFun := K.Condition
 instance [K : LEnt L] : 
-  Logic.ModusPonens L K.toFun := K.ModusPonens
+  Gaea.ModusPonens L K.toFun := K.ModusPonens
 
 -- Basic
 abbrev condition (K : LEnt L) 
@@ -84,11 +84,11 @@ abbrev funType (K : LIff L) := Binar P
 instance : CoeFun (LIff L) funType := {coe := fun K => K.toFun}
 
 instance [K : LIff L] :
-  Logic.Bicondition L K.toFun := K.Bicondition
+  Gaea.Bicondition L K.toFun := K.Bicondition
 instance [K : LIff L] :
-  Logic.LeftMp L K.toFun := K.LeftMp
+  Gaea.LeftMp L K.toFun := K.LeftMp
 instance [K : LIff L] :
-  Logic.RightMp L K.toFun := K.RightMp
+  Gaea.RightMp L K.toFun := K.RightMp
 
 -- Basic
 abbrev intro (K : LIff L) 
@@ -137,11 +137,11 @@ instance iLConjOfLeftRightSimp
 namespace LConj
 
 instance [K : LConj L] :
-  Logic.Conjoin L K.toFun := K.Conjoin
+  Gaea.Conjoin L K.toFun := K.Conjoin
 instance [K : LConj L] :
-  Logic.LeftSimp L K.toFun := K.LeftSimp
+  Gaea.LeftSimp L K.toFun := K.LeftSimp
 instance [K : LConj L] :
-  Logic.RightSimp L K.toFun := K.RightSimp
+  Gaea.RightSimp L K.toFun := K.RightSimp
 
 -- Basic
 abbrev intro (K : LConj L) 
@@ -190,11 +190,11 @@ abbrev funType (K : LAlt L) := Binar P
 instance : CoeFun (LAlt L) funType := {coe := fun K => K.toFun}
 
 instance [K : LAlt L] :
-  Logic.LeftTaut L K.toFun := K.LeftTaut
+  Gaea.LeftTaut L K.toFun := K.LeftTaut
 instance [K : LAlt L] :
-  Logic.RightTaut L K.toFun := K.RightTaut
+  Gaea.RightTaut L K.toFun := K.RightTaut
 instance [K : LAlt L] :
-  Logic.ByEither L K.toFun := K.ByEither
+  Gaea.ByEither L K.toFun := K.ByEither
 
 -- Basic
 abbrev leftTaut (K : LAlt L)

@@ -3,7 +3,7 @@ import Gaea.Logic.Unit.Rules
 universes u
 variable {P : Sort u}
 
-namespace Gaea.Logic
+namespace Gaea
 
 --------------------------------------------------------------------------------
 -- Prod/PProd/And
