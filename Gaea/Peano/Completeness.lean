@@ -2,7 +2,7 @@ import Gaea.Peano.Rules
 import Gaea.Peano.Eq.Rules
 import Gaea.Peano.Eq.Theorems
 
-universes u v
+universe v
 
 open Gaea.Math
 open Gaea.Logic
@@ -30,7 +30,6 @@ instance IsNatOfPProp {T : Sort v} : IsNat (PProp T) T
 instance PNatOfPPropNat : PNat (PProp Nat) Nat 
   := {toIsNat := IsNatOfPProp, toZero := ZeroOfNat, toSucc := SuccOfNat}
 
-
 -- Logic type
 def PLogic := Logic (PProp Nat)
 
@@ -45,8 +44,8 @@ theorem natNat {L : PLogic}
 := by
   intro n
   induction n with
-  | zero => exact NZ.natZero
-  | succ n Nn => exact NS.natSuccNat n Nn 
+  | zero => exact NZ.toFun
+  | succ n Nn => exact NS.toFun n Nn 
 
 --------------------------------------------------------------------------------
 -- Completeness
@@ -75,10 +74,10 @@ theorem complete (L : PLogic)
       induction m with
       | zero =>
         apply Or.inl
-        exact eqNatRefl NZ.natZero
+        exact eqNatRefl NZ.toFun
       | succ m ih =>
         apply Or.inr
-        refine QS0f.succNatEqZeroFalse m (natNat m)
+        refine QS0f.toFun m (natNat m)
     | succ n n_ih =>
       intro m
       have Nn : L |- nat n := natNat n
@@ -86,7 +85,7 @@ theorem complete (L : PLogic)
       | zero =>
         apply Or.inr
         intro Q0Sn
-        apply QS0f.succNatEqZeroFalse n Nn 
+        apply QS0f.toFun n Nn 
         apply eqNatSymm (natNat Nat.zero) (natS Nn)
         exact Q0Sn
       | succ m =>
@@ -94,12 +93,12 @@ theorem complete (L : PLogic)
         cases n_ih m with
         | inl Qmn =>
           apply Or.inl
-          exact QNtS.eqNatToEqSucc m n Nm Nn Qmn
+          exact QNtS.toFun m n Nm Nn Qmn
         | inr Qmnf =>
           apply Or.inr
           intro QSmSn
           apply Qmnf
-          exact QStN.eqSuccToEqNat m n Nm Nn QSmSn
+          exact QStN.toFun m n Nm Nn QSmSn
 
 --------------------------------------------------------------------------------
 -- Consistency
@@ -129,15 +128,15 @@ theorem consistent (L : PLogic)
       induction m with
       | zero =>
         apply C.2
-        exact eqNatRefl NZ.natZero
+        exact eqNatRefl NZ.toFun
       | succ m ih =>
-        exact QS0f.succNatEqZeroFalse m (natNat m) C.1
+        exact QS0f.toFun m (natNat m) C.1
     | succ n n_ih =>
       intro m C
       have Nn : L |- nat n := natNat n
       cases m with
       | zero =>
-        apply QS0f.succNatEqZeroFalse n Nn 
+        apply QS0f.toFun n Nn 
         apply eqNatSymm (natNat Nat.zero) (natS Nn)
         exact C.1
       | succ m =>
@@ -145,8 +144,8 @@ theorem consistent (L : PLogic)
         apply n_ih m
         apply And.intro ?Qmn ?Qmnf
         case Qmn =>
-          exact QStN.eqSuccToEqNat m n Nm Nn C.1
+          exact QStN.toFun m n Nm Nn C.1
         case Qmnf =>
           intro Qmn
           apply C.2
-          exact QNtS.eqNatToEqSucc m n Nm Nn Qmn
+          exact QNtS.toFun m n Nm Nn Qmn

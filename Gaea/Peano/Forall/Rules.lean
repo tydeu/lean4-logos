@@ -14,18 +14,18 @@ namespace Gaea.Peano
 --------------------------------------------------------------------------------
 
 class ForallNatIntro (L : Logic P) (N : IsNat P T) (FaN : SForallNat P T) :=
-  (forallNatIntro : (f : T -> P) -> ((a : T) -> (L |- nat a) -> (L |- f a)) -> 
+  (toFun : (f : T -> P) -> ((a : T) -> (L |- nat a) -> (L |- f a)) -> 
     (L |- forallNat a => f a))
 
 def forallNatIntro  {L : Logic P} [N : IsNat P T] [FaN : SForallNat P T] 
-  [K : ForallNatIntro L N FaN] {f} := K.forallNatIntro f
+  [K : ForallNatIntro L N FaN] {f} := K.toFun f
 
 class ForallNatElim (L : Logic P) (N : IsNat P T) (FaN : SForallNat P T) := 
-  (forallNatElim : (f : T -> P) -> (L |- forallNat a => f a) ->
+  (toFun : (f : T -> P) -> (L |- forallNat a => f a) ->
     ((a : T) -> (L |- nat a) -> (L |- f a)))
 
 def forallNatElim   {L : Logic P} [N : IsNat P T] [FaN : SForallNat P T] 
-  [K : ForallNatElim L N FaN] {f} (p) {a} := K.forallNatElim f p a
+  [K : ForallNatElim L N FaN] {f} (p) {a} := K.toFun f p a
 
 --------------------------------------------------------------------------------
 -- Forall/IF Implementation Rules
@@ -42,7 +42,7 @@ def LForallIfNatIntro {L : Logic P}
 (N : IsNat P T) [Fa : SForall P T] [larr : LArr P] 
 (Ug : UnivGen L Fa.toFun) (C : Condition L larr.toFun) 
 : ForallNatIntro L N (LForallIfNat N Fa larr)
-:= {forallNatIntro := fun _ F => forallIfNatIntro F}
+:= {toFun := fun _ F => forallIfNatIntro F}
 
 instance iForallIfNatIntro {L : Logic P} 
 [N : IsNat P T] [Fa : SForall P T] [larr : LArr P]
@@ -61,7 +61,7 @@ def LForallIfNatElim {L : Logic P}
 (N : IsNat P T) [Fa : SForall P T] [larr : LArr P]
 (Ui : UnivInst L Fa.toFun) (Mp : ModusPonens L larr.toFun) 
 : ForallNatElim L N (LForallIfNat N Fa larr)
-:= {forallNatElim := fun _ p a Na => forallIfNatElim p Na}
+:= {toFun := fun _ p a Na => forallIfNatElim p Na}
 
 instance iForallIfNatElim {L : Logic P} 
 [N : IsNat P T] [Fa : SForall P T] [larr : LArr P]

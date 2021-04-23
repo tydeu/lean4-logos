@@ -19,7 +19,7 @@ def funSubstByReflPredSubst {P : Sort u} {T : Sort v}
 
 instance iFunSubstByReflPredSubst {P : Sort u} {T : Sort v} 
 {L : Logic P} {R : Rel P T} [Rf : Refl L R] [PSb : PredSubst L R]
-: FunSubst L R := {funSubst := funSubstByReflPredSubst Rf PSb}
+: FunSubst L R := {toFun := funSubstByReflPredSubst Rf PSb}
 
 --------------------------------------------------------------------------------
 -- Symmetry
@@ -36,7 +36,7 @@ def symmByReflPredSubst {P : Sort u} {T : Sort v}
 
 instance iSymmByReflPredSubst {P : Sort u} {T : Sort v} 
 {L : Logic P} {R : Rel P T} [Rf : Refl L R] [PSb : PredSubst L R]
-: Symm L R := {symm := symmByReflPredSubst Rf PSb}
+: Symm L R := {toFun := symmByReflPredSubst Rf PSb}
 
 --------------------------------------------------------------------------------
 -- Transitivity
@@ -53,7 +53,7 @@ def transByPredSubst {P : Sort u} {T : Sort v}
 
 instance iTransByPredSubst {P : Sort u} {T : Sort v} 
 {L : Logic P} {R : Rel P T} [PSb : PredSubst L R]
-: Trans L R := {trans := transByPredSubst PSb}
+: Trans L R := {toFun := transByPredSubst PSb}
 
 --------------------------------------------------------------------------------
 -- Left Euclidean
@@ -76,7 +76,7 @@ def leftEucBySymmTrans
 instance iLeftEucBySymmTrans 
 {P : Sort u} {T : Sort v} {L : Logic P} {R : Rel P T} 
 [Sm : Symm L R] [Tr : Trans L R] : LeftEuc L R := 
-{leftEuc := leftEucBySymmTrans Sm Tr}
+{toFun := leftEucBySymmTrans Sm Tr}
 
 -- Constrained
 
@@ -94,7 +94,7 @@ def leftEucBySymmTransT
 instance iLeftEucBySymmTransT 
 {P : Sort u} {T : Sort v} {L : Logic P} {R : Rel P T} {C : T -> P}  
 [Sm : SymmT L R C] [Tr : TransT L R C] : LeftEucT L R C := 
-{leftEucT := leftEucBySymmTransT Sm Tr}
+{toFun := leftEucBySymmTransT Sm Tr}
 
 --------------------------------------------------------------------------------
 -- Right Euclidean
@@ -117,7 +117,7 @@ def rightEucBySymmTrans
 instance iRightEucBySymmTrans
 {P : Sort u} {T : Sort v} {L : Logic P} {R : Rel P T} 
 [Sm : Symm L R] [Tr : Trans L R] : RightEuc L R := 
-{rightEuc := rightEucBySymmTrans Sm Tr}
+{toFun := rightEucBySymmTrans Sm Tr}
 
 -- Constrained
 
@@ -135,7 +135,7 @@ def rightEucBySymmTransT
 instance iRightEucBySymmTransT 
 {P : Sort u} {T : Sort v} {L : Logic P} {R : Rel P T} {C : T -> P}  
 [Sm : SymmT L R C] [Tr : TransT L R C] : RightEucT L R C := 
-{rightEucT := rightEucBySymmTransT Sm Tr}
+{toFun := rightEucBySymmTransT Sm Tr}
 
 --------------------------------------------------------------------------------
 -- Join
@@ -157,7 +157,7 @@ def relJoinByTransLeftEucT
 instance iRelJoinByTransLeftEucT
 {P : Sort u} {T : Sort v} {L : Logic P} {R : Rel P T} {C : T -> P} 
 [Tr : TransT L R C] [LEu : LeftEucT L R C] : RelJoinT L R C := 
-{relJoinT := relJoinByTransLeftEucT Tr LEu}
+{toFun := relJoinByTransLeftEucT Tr LEu}
 
 -- By Symm/Trans
 
@@ -174,6 +174,6 @@ def relJoinBySymmTransT
 instance iRelJoinBySymmTransT 
 {P : Sort u} {T : Sort v} {L : Logic P} {R : Rel P T} {C : T -> P} 
 [Sm : SymmT L R C] [Tr : TransT L R C] : RelJoinT L R C 
-:= {relJoinT := relJoinBySymmTransT Sm Tr}
+:= {toFun := relJoinBySymmTransT Sm Tr}
 
 end Gaea.Logic

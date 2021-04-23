@@ -39,7 +39,7 @@ def eqTransNatByNatEq
 instance iEqTransNatByNatEq  
 {P : Sort u} {T : Sort v} {L : Logic P} 
 [N : IsNat P T] [Q : SEq P T] [QTr : EqNatTrans L N Q] [NQ : NatEqNat L N Q]
-: EqTransNat L N Q := {eqTransNat := eqTransNatByNatEq QTr NQ}
+: EqTransNat L N Q := {toFun := eqTransNatByNatEq QTr NQ}
 
 -- (b = a) /\ (c = a) -> (b = c)
 
@@ -57,6 +57,6 @@ def eqLeftEucNatByNatEq
 instance iEqLeftEucNatByNatEq 
 {P : Sort u} {T : Sort v} {L : Logic P} 
 [N : IsNat P T] [Q : SEq P T] [QTr : EqNatLeftEuc L N Q] [NQ : NatEqNat L N Q]
-: EqLeftEucNat L N Q := {eqLeftEucNat := eqLeftEucNatByNatEq QTr NQ }
+: EqLeftEucNat L N Q := {toFun := eqLeftEucNatByNatEq QTr NQ }
 
 end Gaea.Peano

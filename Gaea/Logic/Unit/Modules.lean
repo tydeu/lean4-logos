@@ -34,33 +34,33 @@ instance [K : LEnt L] :
 
 -- Basic
 abbrev condition (K : LEnt L) 
-  {p q} := K.Condition.condition p q
+  {p q} := K.Condition.toFun p q
 abbrev intro (K : LEnt L) 
-  {p q} := K.Condition.condition p q
+  {p q} := K.Condition.toFun p q
 abbrev elim (K : LEnt L) 
-  {p q} := K.ModusPonens.mp p q
+  {p q} := K.ModusPonens.toFun p q
 abbrev mp (K : LEnt L) 
-  {p q} := K.ModusPonens.mp p q
+  {p q} := K.ModusPonens.toFun p q
 
 -- Derived
 abbrev Refl (K : LEnt L) 
   : Refl L K.toFun := iReflOfLeftCond
 abbrev refl (K : LEnt L) 
-  := K.Refl.refl
+  := K.Refl.toFun
 abbrev rfl (K : LEnt L) 
-  {p} := K.Refl.refl p
+  {p} := K.Refl.toFun p
 abbrev Taut (K : LEnt L) 
   : Taut L K.toFun := iTautOfRefl
 abbrev taut (K : LEnt L) 
-  {p} := K.Taut.taut p
+  {p} := K.Taut.toFun p
 abbrev RightTaut (K : LEnt L) 
   : RightTaut L K.toFun := iRightTautOfLeftCond
 abbrev rightTaut (K : LEnt L) 
-  {p q} := K.RightTaut.rightTaut p q
+  {p q} := K.RightTaut.toFun p q
 abbrev Trans (K : LEnt L) 
   : Trans L K.toFun := iTransByCondMp
 abbrev trans (K : LEnt L) 
-  {p q r} := K.Trans.trans p q r
+  {p q r} := K.Trans.toFun p q r
 
 end LEnt
 
@@ -92,23 +92,23 @@ instance [K : LIff L] :
 
 -- Basic
 abbrev intro (K : LIff L) 
-  {p q} := K.Bicondition.bicondition p q
+  {p q} := K.Bicondition.toFun p q
 abbrev leftMp (K : LIff L) 
-  {p q} := K.LeftMp.mp p q
+  {p q} := K.LeftMp.toFun p q
 abbrev mp (K : LIff L) 
-  {p q} := K.LeftMp.mp p q
+  {p q} := K.LeftMp.toFun p q
 abbrev rightMp (K : LIff L) 
-  {p q} := K.RightMp.mp p q
+  {p q} := K.RightMp.toFun p q
 abbrev mpr (K : LIff L) 
-  {p q} := K.RightMp.mp p q
+  {p q} := K.RightMp.toFun p q
 
 -- Derived
 abbrev Refl (K : LIff L) 
   : Refl L K.toFun := iReflOfBicondition
 abbrev refl (K : LIff L) 
-  := K.Refl.refl
+  := K.Refl.toFun
 abbrev rfl (K : LIff L) 
-  {p} := K.Refl.refl p
+  {p} := K.Refl.toFun p
 
 end LIff
 
@@ -145,29 +145,29 @@ instance [K : LConj L] :
 
 -- Basic
 abbrev intro (K : LConj L) 
-  {p q} := K.Conjoin.conjoin p q
+  {p q} := K.Conjoin.toFun p q
 abbrev leftSimp (K : LConj L)
-  {p q} := K.LeftSimp.leftSimp p q
+  {p q} := K.LeftSimp.toFun p q
 abbrev left (K : LConj L)
-  {p q} := K.LeftSimp.leftSimp p q
+  {p q} := K.LeftSimp.toFun p q
 abbrev rightSimp (K : LConj L) 
-  {p q} := K.RightSimp.rightSimp p q
+  {p q} := K.RightSimp.toFun p q
 abbrev right (K : LConj L) 
-  {p q} := K.RightSimp.rightSimp p q
+  {p q} := K.RightSimp.toFun p q
 abbrev curry (K : LConj L) 
-  {p q} := K.Curry.curry p q
+  {p q} := K.Curry.toFun p q
 abbrev uncurry (K : LConj L) 
-  {p q} := K.Uncurry.uncurry p q
+  {p q} := K.Uncurry.toFun p q
 
 -- Derived
 abbrev Taut (K : LConj L)
   : Taut L K.toFun := iTautOfConjoin
 abbrev taut (K : LConj L)
-  {p} := K.Taut.taut p
+  {p} := K.Taut.toFun p
 abbrev Simp (K : LConj L)
   : Simp L K.toFun := iSimpOfLeft
 abbrev simp (K : LConj L) 
-  {p} := K.Simp.simp p
+  {p} := K.Simp.toFun p
 
 end LConj
 
@@ -198,27 +198,27 @@ instance [K : LAlt L] :
 
 -- Basic
 abbrev leftTaut (K : LAlt L)
-  {p q} := K.LeftTaut.leftTaut p q
+  {p q} := K.LeftTaut.toFun p q
 abbrev inl (K : LAlt L)
-  {p q} := K.LeftTaut.leftTaut p q
+  {p q} := K.LeftTaut.toFun p q
 abbrev rightTaut (K : LAlt L) 
-  {p q} := K.RightTaut.rightTaut p q
+  {p q} := K.RightTaut.toFun p q
 abbrev inr (K : LAlt L) 
-  {p q} := K.RightTaut.rightTaut p q
+  {p q} := K.RightTaut.toFun p q
 abbrev byEither (K : LAlt L) 
-  {a p q} := K.ByEither.byEither a p q
+  {a p q} := K.ByEither.toFun a p q
 abbrev elim (K : LAlt L) 
-  {a p q} := K.ByEither.byEither a p q
+  {a p q} := K.ByEither.toFun a p q
 
 -- Derived
 abbrev Taut (K : LAlt L)
   : Taut L K.toFun := iTautOfLeft
 abbrev taut (K : LAlt L)
-  {p} := K.Taut.taut p
+  {p} := K.Taut.toFun p
 abbrev Simp (K : LAlt L)
   : Simp L K.toFun := iSimpOfByEither
 abbrev simp (K : LAlt L) 
-  {p} := K.Simp.simp p
+  {p} := K.Simp.toFun p
 
 end LAlt
 

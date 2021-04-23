@@ -14,16 +14,16 @@ variable {P : Sort u}
 -- F p q <-> F q p
 
 class Comm (L : Logic P) (F : Binar P) :=
-  comm : (p q : P) -> (L |- F p q) -> (L |- F q p)
+  toFun : (p q : P) -> (L |- F p q) -> (L |- F q p)
 
 abbrev comm {L : Logic P} {F} 
-  [K : Comm L F] {p q} := K.comm p q
+  [K : Comm L F] {p q} := K.toFun p q
 
 instance iSymmOfComm {L : Logic P} {R : Rel P P}
-  [K : Comm L R] : Symm L R := {symm := K.comm}
+  [K : Comm L R] : Symm L R := {toFun := K.toFun}
 
 instance iCommOfSymm {L : Logic P} {R : Rel P P}
-  [K : Symm L R] : Comm L R := {comm := K.symm}
+  [K : Symm L R] : Comm L R := {toFun := K.toFun}
 
 --------------------------------------------------------------------------------
 -- Associativity
@@ -32,16 +32,16 @@ instance iCommOfSymm {L : Logic P} {R : Rel P P}
 -- F (F p q) r <-> F p (F q r)
 
 class LtrAssoc (L : Logic P) (F : Binar P) :=
-  ltrAssoc : (p q r : P) -> (L |- F (F p q) r) -> (L |- F p (F q r))
+  toFun : (p q r : P) -> (L |- F (F p q) r) -> (L |- F p (F q r))
 
 abbrev ltrAssoc {L : Logic P} {F} 
-  [K : LtrAssoc L F] {p q r} := K.ltrAssoc p q r
+  [K : LtrAssoc L F] {p q r} := K.toFun p q r
 
 class RtlAssoc (L : Logic P) (F : Binar P) :=
-  rtlAssoc : (p q r : P) -> (L |- F p (F q r)) -> (L |- F (F p q) r)
+  toFun : (p q r : P) -> (L |- F p (F q r)) -> (L |- F (F p q) r)
 
 abbrev rtlAssoc {L : Logic P} {F}
-  [K : RtlAssoc L F] {p q r} := K.rtlAssoc p q r
+  [K : RtlAssoc L F] {p q r} := K.toFun p q r
 
 --------------------------------------------------------------------------------
 -- Distributivity
@@ -50,18 +50,18 @@ abbrev rtlAssoc {L : Logic P} {F}
 -- F p (G q r) -> F (G p q) (G p r)
 
 class LeftDistrib (L : Logic P) (F : Binar P) (G : Binar P) :=
-  leftDistrib : (p q r : P) -> (L |- F p (G q r)) -> (L |- G (F p q) (F p r))
+  toFun : (p q r : P) -> (L |- F p (G q r)) -> (L |- G (F p q) (F p r))
 
 abbrev leftDistrib {L : Logic P} {F G}
-  [K : LeftDistrib L F G] {p q r} := K.leftDistrib p q r
+  [K : LeftDistrib L F G] {p q r} := K.toFun p q r
 
 -- F (G q r) p -> F (G q p) (G r p)
 
 class RightDistrib (L : Logic P) (F : Binar P) (G : Binar P) :=
-  rightDistrib : (p q r : P) -> (L |- F (G q r) p) -> (L |- G (F q p) (F r p))
+  toFun : (p q r : P) -> (L |- F (G q r) p) -> (L |- G (F q p) (F r p))
 
 abbrev rightDistrib {L : Logic P} {F G}
-  [K : RightDistrib L F G] {p q r} := K.rightDistrib p q r
+  [K : RightDistrib L F G] {p q r} := K.toFun p q r
 
 --------------------------------------------------------------------------------
 -- Tautology
@@ -70,37 +70,37 @@ abbrev rightDistrib {L : Logic P} {F G}
 -- p |- F p p
 
 class Taut (L : Logic P) (F : Binar P)  :=
-  taut : (p : P) -> (L |- p) -> (L |- F p p)
+  toFun : (p : P) -> (L |- p) -> (L |- F p p)
 
 abbrev taut {L : Logic P} {F} 
-  [K : Taut L F] {p} := K.taut p
+  [K : Taut L F] {p} := K.toFun p
 
 instance iTautOfRefl {L : Logic P} {R} 
-  [K : Refl L R] : Taut L R := {taut := fun p Lp => K.refl p}
+  [K : Refl L R] : Taut L R := {toFun := fun p Lp => K.toFun p}
 
 -- p |- F p q
 
 class LeftTaut (L : Logic P) (F : Binar P)  := 
-  leftTaut : (p q : P) -> (L |- p) -> (L |- F p q) 
+  toFun : (p q : P) -> (L |- p) -> (L |- F p q) 
 
 abbrev leftTaut {L : Logic P} {F} 
-  [K : LeftTaut L F] {p q} := K.leftTaut p q
+  [K : LeftTaut L F] {p q} := K.toFun p q
 
 instance iTautOfLeft {L : Logic P} {F}
   [K : LeftTaut L F] : Taut L F := 
-  {taut := fun p Lp => K.leftTaut p p Lp}
+  {toFun := fun p Lp => K.toFun p p Lp}
 
 -- q |- F p q
 
 class RightTaut (L : Logic P) (F : Binar P)  := 
-  rightTaut : (p q : P) -> (L |- q) -> (L |- F p q) 
+  toFun : (p q : P) -> (L |- q) -> (L |- F p q) 
 
 abbrev rightTaut {L : Logic P} {F} 
-  [K : RightTaut L F] {p q} := K.rightTaut p q
+  [K : RightTaut L F] {p q} := K.toFun p q
 
 instance iTautOfRight {L : Logic P} {F}
   [K : RightTaut L F] : Taut L F := 
-  {taut := fun p Lp => K.rightTaut p p Lp}
+  {toFun := fun p Lp => K.toFun p p Lp}
 
 --------------------------------------------------------------------------------
 -- Simplification
@@ -109,34 +109,34 @@ instance iTautOfRight {L : Logic P} {F}
 -- F p p |- p
 
 class Simp (L : Logic P) (F : Binar P)  :=
-  simp : (p : P) -> (L |- F p p) -> (L |- p)
+  toFun : (p : P) -> (L |- F p p) -> (L |- p)
 
 abbrev simp {L : Logic P} {F} 
-  [K : Simp L F] {p} := K.simp p
+  [K : Simp L F] {p} := K.toFun p
 
 -- F p q |- p
 
 class LeftSimp (L : Logic P) (F : Binar P) := 
-  leftSimp : (p q : P) -> (L |- F p q) -> (L |- p)
+  toFun : (p q : P) -> (L |- F p q) -> (L |- p)
 
 abbrev leftSimp {L : Logic P} {F} 
-  [K : LeftSimp L F] {p q} := K.leftSimp p q
+  [K : LeftSimp L F] {p q} := K.toFun p q
 
 instance iSimpOfLeft {L : Logic P} {F}
   [K : LeftSimp L F] : Simp L F := 
-  {simp := fun p LpCq => K.leftSimp p p LpCq}
+  {toFun := fun p LpCq => K.toFun p p LpCq}
 
 -- F p q |- q
 
 class RightSimp (L : Logic P) (F : Binar P) := 
-  rightSimp : (p q : P) -> (L |- F p q) -> (L |- q)
+  toFun : (p q : P) -> (L |- F p q) -> (L |- q)
 
 abbrev rightSimp {L : Logic P} {F} 
-  [K : RightSimp L F] {p q} := K.rightSimp p q
+  [K : RightSimp L F] {p q} := K.toFun p q
 
 instance iSimpOfRight {L : Logic P} {F}
   [K : RightSimp L F] : Simp L F := 
-  {simp := fun p LpCq => K.rightSimp p p LpCq}
+  {toFun := fun p LpCq => K.toFun p p LpCq}
 
 --------------------------------------------------------------------------------
 -- Currying
@@ -145,31 +145,31 @@ instance iSimpOfRight {L : Logic P} {F}
 -- (|- F p q) -> r -> ((|- p) -> (|- q) -> r)
 
 class Curry (L : Logic P) (F : Binar P) :=
-  curry : (r : Sort w) -> (p q : P) -> 
+  toFun : (r : Sort w) -> (p q : P) -> 
     ((L |- F p q) -> r) -> ((L |- p) -> (L |- q) -> r)
 
 abbrev curry {L : Logic P} {F} 
-  [K : Curry L F] {r p q} := K.curry r p q
+  [K : Curry L F] {r p q} := K.toFun r p q
 
 -- ((|- p) -> (|- q) -> r) -> ((|- F p q) -> r)
 
 class Uncurry (L : Logic P) (F : Binar P) :=
-  uncurry : (r : Sort w) -> (p q : P) -> 
+  toFun : (r : Sort w) -> (p q : P) -> 
     ((L |- p) -> (L |- q) -> r) -> ((L |- F p q) -> r)
 
 abbrev uncurry {L : Logic P} {F} 
-  [K : Uncurry L F] {r p q} := K.uncurry r p q
+  [K : Uncurry L F] {r p q} := K.toFun r p q
 
 instance iUncurryOfLeftRightSimp {L : Logic P} {F}
   [CjL : LeftSimp L F] [CjR : RightSimp L F] : Uncurry L F := 
-  {uncurry := fun a p q fpq LpCq => fpq (leftSimp LpCq) (rightSimp LpCq)}
+  {toFun := fun a p q fpq LpCq => fpq (leftSimp LpCq) (rightSimp LpCq)}
 
 instance iLeftSimpOfUncurry {L : Logic P} {F}
   [K : Uncurry L F] : LeftSimp L F := 
-  {leftSimp := fun p q => K.uncurry _ p q (fun Lp Lq => Lp)}
+  {toFun := fun p q => K.toFun _ p q (fun Lp Lq => Lp)}
 
 instance iRightSimpOfUncurry {L : Logic P} {F}
   [K : Uncurry L F] : RightSimp L F := 
-  {rightSimp := fun p q => K.uncurry _ p q (fun Lp Lq => Lq)}
+  {toFun := fun p q => K.toFun _ p q (fun Lp Lq => Lq)}
 
 end Gaea.Logic

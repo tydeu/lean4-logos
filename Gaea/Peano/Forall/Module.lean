@@ -33,9 +33,9 @@ instance [K : LForallNat L N]
   : Peano.ForallNatElim L N K.toSForallNat := K.ForallNatElim
 
 abbrev intro (K : LForallNat L N) 
-  {f} := K.ForallNatIntro.forallNatIntro f
+  {f} := K.ForallNatIntro.toFun f
 abbrev elim (K : LForallNat L N) 
-  {f} (p) {a} := K.ForallNatElim.forallNatElim f p a
+  {f} (p) {a} := K.ForallNatElim.toFun f p a
 
 end LForallNat
 

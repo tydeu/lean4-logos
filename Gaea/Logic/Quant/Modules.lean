@@ -32,13 +32,13 @@ instance iUnivInstOfMForall [K : LForall L T] :
   Logic.UnivInst L K.toFun := K.UnivInst
 
 abbrev gen (K : LForall L T) 
-  {f} := K.UnivGen.ug f
+  {f} := K.UnivGen.toFun f
 abbrev intro (K : LForall L T) 
-  {f} := K.UnivGen.ug f
+  {f} := K.UnivGen.toFun f
 abbrev inst {L : Logic P} (K : LForall L T) 
-  {f} := K.UnivInst.ui f
+  {f} := K.UnivInst.toFun f
 abbrev elim {L : Logic P} (K : LForall L T) 
-  {f} := K.UnivInst.ui f
+  {f} := K.UnivInst.toFun f
 
 end LForall
 
@@ -65,13 +65,13 @@ instance [K : LExists L T] :
   Logic.ExstInst L K.toFun := K.ExstInst
 
 abbrev gen {L : Logic P} (K : LExists L T) 
-  {f} := K.ExstGen.xg f
+  {f} := K.ExstGen.toFun f
 abbrev intro {L : Logic P} (K : LExists L T) 
-  {f} := K.ExstGen.xg f
+  {f} := K.ExstGen.toFun f
 abbrev inst {L : Logic P} (K : LExists L T) 
-  {f} := K.ExstInst.xi f
+  {f} := K.ExstInst.toFun f
 abbrev elim {L : Logic P} (K : LExists L T) 
-  {f} := K.ExstInst.xi f
+  {f} := K.ExstInst.toFun f
 
 end LExists
 

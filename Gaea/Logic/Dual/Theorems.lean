@@ -37,7 +37,7 @@ instance iByContrapositionByDneImpContra
 [Cnd : Condition L F]
 [ByC : ByContradiction L f]
 : ByContraposition L F f :=
-{byContraposition := byContrapositionByDneImpContra DnE Cnd ByC}
+{toFun := byContrapositionByDneImpContra DnE Cnd ByC}
 
 --------------------------------------------------------------------------------
 -- Modus Tollens
@@ -62,7 +62,7 @@ instance iModusTollensByMpContra
 [Mp  : ModusPonens L F]
 [ByC : ByContradiction L f]
 : ModusTollens L F f :=
-{mt := mtByMpContra Mp ByC}
+{toFun := mtByMpContra Mp ByC}
 
 --------------------------------------------------------------------------------
 -- By Contradiction
@@ -81,6 +81,6 @@ def byContraByAdFalsoNoncontra
 
 instance iByContraByAdFalsoNoncontra {L : Logic P} {f}
 [AdF : AdFalso L f] [Nc : Noncontradiction L f] : ByContradiction L f := 
-{byContradiction := byContraByAdFalsoNoncontra AdF Nc}
+{toFun := byContraByAdFalsoNoncontra AdF Nc}
 
 end Gaea.Logic

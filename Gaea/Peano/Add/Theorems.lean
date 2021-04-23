@@ -23,21 +23,21 @@ instance iNatAddZeroNyAddZero
 [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [Z : Zero T]  
 [N0 : NatZero L N Z] [NQ : NatEqNat L N Q] [A0 : AddZeroEqZero L Q A Z] 
 : NatAddZero L N A Z 
-:= {natAddZero := natEq nat0 addZeroEqZero}
+:= {toFun := natEq nat0 addZeroEqZero}
 
 instance iNatAddZeroByAddNatZero 
 {P : Sort u} {T : Sort v} {L : Logic P}
 [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [Z : Zero T]  
 [N0 : NatZero L N Z] [NQ : NatEqNat L N Q] [An0 : AddNatZeroEqNat L N Q A Z] 
 : NatAddZero L N A Z 
-:= {natAddZero := natEq nat0 (addNatZeroEqNat nat0)}
+:= {toFun := natEq nat0 (addNatZeroEqNat nat0)}
 
 instance iNatAddZeroByAddZeroNat 
 {P : Sort u} {T : Sort v} {L : Logic P}
 [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [Z : Zero T]  
 [N0 : NatZero L N Z] [NQ : NatEqNat L N Q] [A0n : AddZeroNatEqNat L N Q A Z] 
 : NatAddZero L N A Z 
-:= {natAddZero := natEq nat0 (addZeroNatEqNat nat0)}
+:= {toFun := natEq nat0 (addZeroNatEqNat nat0)}
 
 -- nat (a + 0)
 
@@ -70,18 +70,18 @@ instance iNatAddNatZeroByInduction
 [NA0 : NatAddZero L N.toIsNat A N.toZero]
 [ASn : AddSuccNatEqSucc L N.toIsNat Q A N.toSucc]
 : NatAddNatZero L N.toIsNat A N.toZero 
-:= {natAddNatZero := natAddNatZeroByInduction I N0 NS NQ NA0 ASn}
+:= {toFun := natAddNatZeroByInduction I N0 NS NQ NA0 ASn}
 
 instance iNatAddNatZeroByAddNatZero 
 {P : Sort u} {T : Sort v} {L : Logic P}
 [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [Z : Zero T]  
 [NQ : NatEqNat L N Q] [An0 : AddNatZeroEqNat L N Q A Z] : NatAddNatZero L N A Z 
-:= {natAddNatZero := fun _ Na => natEq Na (addNatZeroEqNat Na)}
+:= {toFun := fun _ Na => natEq Na (addNatZeroEqNat Na)}
 
 instance iNatAddNatZeroByNatAdd {P : Sort u} {T : Sort v}
 {L : Logic P} [N : IsNat P T] [A : SAdd T] [Z : Zero T] 
 [N0 : NatZero L N Z] [NA : NatAddNat L N A] : NatAddNatZero L N A Z 
-:= {natAddNatZero := fun _ Na => natAdd Na nat0}
+:= {toFun := fun _ Na => natAdd Na nat0}
 
 -- nat (0 + a)
 
@@ -114,19 +114,19 @@ instance iNatAddZeroNatByInduction
 [NA0 : NatAddZero L N.toIsNat A N.toZero]
 [An0 : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : NatAddZeroNat L N.toIsNat A N.toZero 
-:= {natAddZeroNat :=  natAddZeroNatByInduction I N0 NS NQ NA0 An0}
+:= {toFun :=  natAddZeroNatByInduction I N0 NS NQ NA0 An0}
 
 instance iNatAddZeroNatByAddZeroNat 
 {P : Sort u} {T : Sort v} {L : Logic P}
 [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [Z : Zero T]  
 [NQ : NatEqNat L N Q] [A0n : AddZeroNatEqNat L N Q A Z] : NatAddZeroNat L N A Z 
-:= {natAddZeroNat := fun _ Na => natEq Na (addZeroNatEqNat Na)}
+:= {toFun := fun _ Na => natEq Na (addZeroNatEqNat Na)}
 
 instance iNatAddZeroNatByNatAdd 
 {P : Sort u} {T : Sort v} {L : Logic P} 
 [N : IsNat P T] [A : SAdd T] [Z : Zero T] 
 [N0 : NatZero L N Z] [NA : NatAddNat L N A] : NatAddZeroNat L N A Z 
-:= {natAddZeroNat := fun _ Na => natAdd nat0 Na}
+:= {toFun := fun _ Na => natAdd nat0 Na}
 
 -- nat (a + b)
 
@@ -159,7 +159,7 @@ instance iNatAddNatByPeano
 [An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero] 
 [AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : NatAddNat L N.toIsNat A := 
-  {natAddNat := natAddNatByPeano iNatInductionRightByForallNat NQ NS An0 AnS}
+  {toFun := natAddNatByPeano iNatInductionRightByForallNat NQ NS An0 AnS}
 
 --------------------------------------------------------------------------------
 -- Basic Cases
@@ -172,14 +172,14 @@ instance iAddZeroEqZeroByAddNatZero
 [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [Z : Zero T] 
 [N0 : NatZero L N Z] [An0 : AddNatZeroEqNat L N Q A Z]
 : AddZeroEqZero L Q A Z
-:= {addZeroEqZero := addNatZeroEqNat nat0}
+:= {toFun := addNatZeroEqNat nat0}
 
 instance iAddZeroEqZeroByAddZeroNat
 {P : Sort u} {T : Sort v} {L : Logic P}
 [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [Z : Zero T] 
 [N0 : NatZero L N Z] [A0n : AddZeroNatEqNat L N Q A Z]
 : AddZeroEqZero L Q A Z
-:= {addZeroEqZero := addZeroNatEqNat nat0}
+:= {toFun := addZeroNatEqNat nat0}
 
 -- a + 0 = 0
 
@@ -219,7 +219,7 @@ instance iAddNatZeroEqNatByNatAdd
 [A0   : AddZeroEqZero L Q A N.toZero]
 [ASn  : AddSuccNatEqSucc L N.toIsNat Q A N.toSucc]
 : AddNatZeroEqNat L N.toIsNat Q A N.toZero
-:= {addNatZeroEqNat := addNatZeroEqNatByNatAdd I N0 NS NAn0 QTr QtS A0 ASn} 
+:= {toFun := addNatZeroEqNatByNatAdd I N0 NS NAn0 QTr QtS A0 ASn} 
 
 instance iAddNatZeroEqNatByNatEq 
 {P : Sort u} {T : Sort v} {L : Logic P} 
@@ -233,7 +233,7 @@ instance iAddNatZeroEqNatByNatEq
 [A0  : AddZeroEqZero L Q A N.toZero]
 [ASn : AddSuccNatEqSucc L N.toIsNat Q A N.toSucc]
 : AddNatZeroEqNat L N.toIsNat Q A N.toZero :=
-{addNatZeroEqNat := 
+{toFun := 
   addNatZeroEqNatByNatAdd I N0 NS iNatAddNatZeroByInduction QTr QtS A0 ASn} 
 
 -- 0 + a = 0
@@ -274,7 +274,7 @@ instance iAddZeroNatEqNatByNatAdd
 [A0   : AddZeroEqZero L Q A N.toZero]
 [AnS  : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : AddZeroNatEqNat L N.toIsNat Q A N.toZero
-:= {addZeroNatEqNat := addZeroNatEqNatByNatAdd I N0 NS NA0n QTr QtS A0 AnS} 
+:= {toFun := addZeroNatEqNatByNatAdd I N0 NS NA0n QTr QtS A0 AnS} 
 
 instance iAddZeroNatEqNatByNatEq 
 {P : Sort u} {T : Sort v} {L : Logic P} 
@@ -288,7 +288,7 @@ instance iAddZeroNatEqNatByNatEq
 [A0  : AddZeroEqZero L Q A N.toZero]
 [AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : AddZeroNatEqNat L N.toIsNat Q A N.toZero := 
-{addZeroNatEqNat := 
+{toFun := 
   addZeroNatEqNatByNatAdd I N0 NS iNatAddZeroNatByInduction QTr QtS A0 AnS} 
 
 instance iAddZeroNatEqNatByPeano 
@@ -303,7 +303,7 @@ instance iAddZeroNatEqNatByPeano
 [An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
 [AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : AddZeroNatEqNat L N.toIsNat Q A N.toZero := 
-{addZeroNatEqNat := 
+{toFun := 
   addZeroNatEqNatByNatAdd I N0 NS iNatAddZeroNatByNatAdd 
     QTr QtS iAddZeroEqZeroByAddNatZero AnS}
 
@@ -369,7 +369,7 @@ instance iAddNatSuccEqSuccByNatAdd
 [A0n : AddZeroNatEqNat L N.toIsNat Q A N.toZero]
 [ASn : AddSuccNatEqSucc L N.toIsNat Q A N.toSucc]
 : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc := 
-{addNatSuccEqSucc := addNatSuccEqSuccByNatAdd I NS NA0n NA QTr QEL QtS A0n ASn}
+{toFun := addNatSuccEqSuccByNatAdd I NS NA0n NA QTr QEL QtS A0n ASn}
 
 -- S a + b = S (a + b)
 
@@ -433,7 +433,7 @@ instance iAddSuccNatEqSuccByNatAdd
 [An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
 [AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : AddSuccNatEqSucc L N.toIsNat Q A N.toSucc := 
-{addSuccNatEqSucc := addSuccNatEqSuccByNatAdd I NS NAn0 NA QTr QEL QtS An0 AnS} 
+{toFun := addSuccNatEqSuccByNatAdd I NS NAn0 NA QTr QEL QtS An0 AnS} 
 
 instance iAddSuccNatEqSuccByPeano 
 {P : Sort u} {T : Sort v} {L : Logic P} 
@@ -448,7 +448,7 @@ instance iAddSuccNatEqSuccByPeano
 [An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
 [AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : AddSuccNatEqSucc L N.toIsNat Q A N.toSucc := 
-{addSuccNatEqSucc := 
+{toFun := 
   addSuccNatEqSuccByNatAdd iNatInductionRightByForallNat 
     NS iNatAddNatZeroByNatAdd iNatAddNatByPeano 
     QTr iEqNatLeftEucBySymmTransT QtS An0 AnS} 
@@ -482,7 +482,7 @@ instance iAddNatZeroCommByNatAddZero
 [An0  : AddNatZeroEqNat L N Q A Z] 
 [A0n  : AddZeroNatEqNat L N Q A Z]
 : AddNatZeroComm L N Q A Z 
-:= {addNatZeroComm := addNatZeroCommByNatAddZero QEL NAn0 NA0n An0 A0n}
+:= {toFun := addNatZeroCommByNatAddZero QEL NAn0 NA0n An0 A0n}
 
 instance iAddNatZeroCommByNatAdd
 {P : Sort u} {T : Sort v} {L : Logic P} 
@@ -493,7 +493,7 @@ instance iAddNatZeroCommByNatAdd
 [An0 : AddNatZeroEqNat L N Q A Z] 
 [A0n : AddZeroNatEqNat L N Q A Z]
 : AddNatZeroComm L N Q A Z := 
-{addNatZeroComm := addNatZeroCommByNatAddZero QEL 
+{toFun := addNatZeroCommByNatAddZero QEL 
   iNatAddNatZeroByNatAdd iNatAddZeroNatByNatAdd An0 A0n}
 
 instance iAddNatZeroCommByNatEq
@@ -505,7 +505,7 @@ instance iAddNatZeroCommByNatEq
 [An0 : AddNatZeroEqNat L N Q A Z] 
 [A0n : AddZeroNatEqNat L N Q A Z]
 : AddNatZeroComm L N Q A Z := 
-{addNatZeroComm := addNatZeroCommByNatAddZero iEqNatLeftEucBySymmTransT 
+{toFun := addNatZeroCommByNatAddZero iEqNatLeftEucBySymmTransT 
   iNatAddNatZeroByAddNatZero iNatAddZeroNatByAddZeroNat An0 A0n}
 
 def addNatZeroCommByLeftEucNat
@@ -526,7 +526,7 @@ instance iAddNatZeroCommByLeftEucNat
 [An0 : AddNatZeroEqNat L N Q A Z] 
 [A0n : AddZeroNatEqNat L N Q A Z]
 : AddNatZeroComm L N Q A Z 
-:= {addNatZeroComm := addNatZeroCommByLeftEucNat QEL An0 A0n}
+:= {toFun := addNatZeroCommByLeftEucNat QEL An0 A0n}
 
 instance iAddNatZeroCommByPeano
 {P : Sort u} {T : Sort v} {L : Logic P} 
@@ -541,7 +541,7 @@ instance iAddNatZeroCommByPeano
 [An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
 [AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : AddNatZeroComm L N.toIsNat Q A N.toZero := 
-{addNatZeroComm := addNatZeroCommByLeftEucNat iEqLeftEucNatByNatEq 
+{toFun := addNatZeroCommByLeftEucNat iEqLeftEucNatByNatEq 
   An0 iAddZeroNatEqNatByPeano}
 
 -- a + b = b + a
@@ -588,7 +588,7 @@ instance iAddNatComm
 [ASn : AddSuccNatEqSucc L N.toIsNat Q A N.toSucc]
 [AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : AddNatComm L N.toIsNat Q A 
-:= {addNatComm := addNatCommProof I NS NA QEL QtS A0C ASn AnS}
+:= {toFun := addNatCommProof I NS NA QEL QtS A0C ASn AnS}
 
 instance iAddNatCommByPeano 
 {P : Sort u} {T : Sort v} {L : Logic P} 
@@ -603,7 +603,7 @@ instance iAddNatCommByPeano
 [An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
 [AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : AddNatComm L N.toIsNat Q A := 
-{addNatComm := 
+{toFun := 
   addNatCommProof iNatInductionRightByForallNat 
     NS iNatAddNatByPeano iEqNatLeftEucBySymmTransT QtS 
     iAddNatZeroCommByPeano iAddSuccNatEqSuccByPeano AnS}
@@ -654,7 +654,7 @@ instance iEqNatAddNatLeft
 [A0n  : AddZeroNatEqNat L N.toIsNat Q A N.toZero]
 [ASn  : AddSuccNatEqSucc L N.toIsNat Q A N.toSucc]
 : EqNatAddNatLeft L N.toIsNat Q A
-:= {eqNatAddNatLeft := eqNatAddNatLeftProof I NS NA0n NA QJ QtS A0n ASn}
+:= {toFun := eqNatAddNatLeftProof I NS NA0n NA QJ QtS A0n ASn}
 
 instance iEqNatAddNatLeftByPeano
 {P : Sort u} {T : Sort v} {L : Logic P} 
@@ -670,7 +670,7 @@ instance iEqNatAddNatLeftByPeano
 [An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
 [AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : EqNatAddNatLeft L N.toIsNat Q A := 
-{eqNatAddNatLeft := 
+{toFun := 
   eqNatAddNatLeftProof iNatInductionRight3IfByForallNatIf 
     NS iNatAddZeroNatByNatAdd iNatAddNatByPeano iEqNatJoinBySymmTransT QtS 
     iAddZeroNatEqNatByPeano iAddSuccNatEqSuccByPeano}
@@ -717,7 +717,7 @@ instance iEqNatAddNatRight
 [An0  : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
 [AnS  : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : EqNatAddNatRight L N.toIsNat Q A
-:= {eqNatAddNatRight := eqNatAddNatRightProof I NS NAn0 NA QJ QtS An0 AnS}
+:= {toFun := eqNatAddNatRightProof I NS NAn0 NA QJ QtS An0 AnS}
 
 instance iEqNatAddNatRightByPeano
 {P : Sort u} {T : Sort v} {L : Logic P} 
@@ -733,7 +733,7 @@ instance iEqNatAddNatRightByPeano
 [An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
 [AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : EqNatAddNatRight L N.toIsNat Q A := 
-{eqNatAddNatRight := eqNatAddNatRightProof iNatInductionRight3IfByForallNatIf NS 
+{toFun := eqNatAddNatRightProof iNatInductionRight3IfByForallNatIf NS 
   iNatAddNatZeroByAddNatZero iNatAddNatByPeano iEqNatJoinBySymmTransT QtS An0 AnS} 
 
 --------------------------------------------------------------------------------
@@ -812,7 +812,7 @@ instance iAddNatAssocByAddNatX
 [An0  : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
 [AnS  : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : AddNatAssoc L N.toIsNat Q A := 
-{addNatAssoc := addNatAssocByAddNatX I NS NAn0 NA QTr QEL QtS QAL An0 AnS}
+{toFun := addNatAssocByAddNatX I NS NAn0 NA QTr QEL QtS QAL An0 AnS}
 
 instance iAddNatAssocByPeano
 {P : Sort u} {T : Sort v} {L : Logic P} 
@@ -828,7 +828,7 @@ instance iAddNatAssocByPeano
 [An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
 [AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : AddNatAssoc L N.toIsNat Q A :=
-{addNatAssoc := 
+{toFun := 
   addNatAssocByAddNatX iNatInductionRight3ByForallNat 
     NS iNatAddNatZeroByAddNatZero iNatAddNatByPeano 
     QTr iEqNatLeftEucBySymmTransT QtS iEqNatAddNatLeftByPeano An0 AnS}
@@ -905,7 +905,7 @@ instance iAddNatAssocRevByAddNatX
 [An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
 [AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : AddNatAssocRev L N.toIsNat Q A := 
-{addNatAssocRev := addNatAssocRevByAddNatX I NS NAn0 NA QTr QEL QtS QAL An0 AnS}
+{toFun := addNatAssocRevByAddNatX I NS NAn0 NA QTr QEL QtS QAL An0 AnS}
 
 instance iAddNatAssocRevByPeano 
 {P : Sort u} {T : Sort v} {L : Logic P} 
@@ -921,7 +921,7 @@ instance iAddNatAssocRevByPeano
 [An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
 [AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
 : AddNatAssocRev L N.toIsNat Q A := 
-{addNatAssocRev := 
+{toFun := 
   addNatAssocRevByAddNatX iNatInductionRight3ByForallNat 
     NS iNatAddNatZeroByAddNatZero iNatAddNatByPeano 
     QTr iEqNatLeftEucBySymmTransT QtS iEqNatAddNatLeftByPeano An0 AnS}
@@ -975,7 +975,7 @@ instance iAddNatOneEqSuccByNatAdd
 [An0 : AddNatZeroEqNat L N Q A Z]
 [AnS : AddNatSuccEqSucc L N Q A S] 
 : AddNatOneEqSucc L N Q A O S
-:= {addNatOneEqSucc := addNatOneEqSuccByNatAdd N0 N1 NS NA QTr QtS Q1S QAL An0 AnS}
+:= {toFun := addNatOneEqSuccByNatAdd N0 N1 NS NA QTr QtS Q1S QAL An0 AnS}
 
 def addNatOneEqSuccByNatEq
 {P : Sort u} {T : Sort v} {L : Logic P}
@@ -1016,7 +1016,7 @@ instance iAddNatOneEqSuccByNatEq
 [An0 : AddNatZeroEqNat L N Q A Z]
 [AnS : AddNatSuccEqSucc L N Q A S]
 : AddNatOneEqSucc L N Q A O S
-:= {addNatOneEqSucc := addNatOneEqSuccByNatEq N0 NS NQ QTr QtS Q1S QAL An0 AnS}
+:= {toFun := addNatOneEqSuccByNatEq N0 NS NQ QTr QtS Q1S QAL An0 AnS}
 
 -- 1 + a = S a
 
@@ -1064,7 +1064,7 @@ instance iAddOneNatEqSuccByNatAdd
 [A0n : AddZeroNatEqNat L N Q A Z]
 [ASn : AddSuccNatEqSucc L N Q A S]
 : AddOneNatEqSucc L N Q A O S := 
-  {addOneNatEqSucc := 
+  {toFun := 
     addOneNatEqSuccByNatAdd N0 N1 NS NA QTr QtS Q1S QAR A0n ASn}
 
 end Gaea.Peano

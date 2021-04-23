@@ -29,7 +29,7 @@ instance iNatInductionBySchema
 {P : Sort u} {T : Sort v} {L : Logic P} 
 [N : PNat P T] [I : NatInduction' L N]
 : NatInduction L N
-:= {natInduction := natInductionBySchema I}
+:= {toFun := natInductionBySchema I}
 
 -- By Right Binary Induction
 
@@ -49,7 +49,7 @@ instance iNatInductionByRight
 {P : Sort u} {T : Sort v} {L : Logic P}
 [N : PNat P T] [I : NatInductionRight L N]
 : NatInduction L N
-:= {natInduction := natInductionByRight I}
+:= {toFun := natInductionByRight I}
 
 --------------------------------------------------------------------------------
 -- Left Binary Induction
@@ -97,7 +97,7 @@ instance iNatInductionLeftByForallNat
 {P : Sort u} {T : Sort v} {L : Logic P}
 [N : PNat P T] [I : NatInduction L N] [FaN : LForallNat L N.toIsNat]
 : NatInductionLeft L N
-:= {natInductionLeft := natInductionLeftByForallNat I FaN}
+:= {toFun := natInductionLeftByForallNat I FaN}
 
 -- By Schema Induction
 
@@ -121,7 +121,7 @@ instance iNatInductionLeftBySchema
 {P : Sort u} {T : Sort v} {L : Logic P}
 [N : PNat P T] [I : NatInduction' L N]
 : NatInductionLeft L N
-:= {natInductionLeft := natInductionLeftBySchema I}
+:= {toFun := natInductionLeftBySchema I}
 
 --------------------------------------------------------------------------------
 -- Right Binary Induction
@@ -169,7 +169,7 @@ instance iNatInductionRightByForallNat
 {P : Sort u} {T : Sort v} {L : Logic P}
 [N : PNat P T] [I : NatInduction L N] [FaN : LForallNat L N.toIsNat]
 : NatInductionRight L N
-:= {natInductionRight := natInductionRightByForallNat I FaN}
+:= {toFun := natInductionRightByForallNat I FaN}
 
 -- By Schema Induction
 
@@ -193,7 +193,7 @@ instance iNatInductionRightBySchema
 {P : Sort u} {T : Sort v} {L : Logic P}
 [N : PNat P T] [I : NatInduction' L N]
 : NatInductionRight L N
-:= {natInductionRight := natInductionRightBySchema I}
+:= {toFun := natInductionRightBySchema I}
 
 -- By Right Ternary Induction
 
@@ -221,7 +221,7 @@ instance iNatInductionRightByRight3
 {P : Sort u} {T : Sort v} {L : Logic P}
 [N : PNat P T] [I : NatInductionRight3 L N]
 : NatInductionRight L N
-:= {natInductionRight := natInductionRightByRight3 I}
+:= {toFun := natInductionRightByRight3 I}
 
 --------------------------------------------------------------------------------
 -- Right Ternary Induction
@@ -274,7 +274,7 @@ instance iNatInductionRight3ByForallNat
 {P : Sort u} {T : Sort v} {L : Logic P}
 [N : PNat P T] [I : NatInduction L N] [FaN : LForallNat L N.toIsNat]
 : NatInductionRight3 L N
-:= {natInductionRight3 := natInductionRight3ByForallNat I FaN}
+:= {toFun := natInductionRight3ByForallNat I FaN}
 
 -- By Schema Induction
 
@@ -301,7 +301,7 @@ instance iNatInductionRight3BySchema
 {P : Sort u} {T : Sort v} {L : Logic P}
 [N : PNat P T] [I : NatInduction' L N]
 : NatInductionRight3 L N
-:= {natInductionRight3 := natInductionRight3BySchema I}
+:= {toFun := natInductionRight3BySchema I}
 
 --------------------------------------------------------------------------------
 -- Right Ternary Induction (Conditioned)
@@ -358,7 +358,7 @@ instance iNatInductionRight3IfByForallNatIf
 {P : Sort u} {T : Sort v} {L : Logic P} [N : PNat P T] 
 [I : NatInduction L N] [FaN : LForallNat L N.toIsNat] [ent : LEnt L]
 : NatInductionRight3If L N
-:= {natInductionRight3If := natInductionRight3IfByForallNatIf I FaN ent}
+:= {toFun := natInductionRight3IfByForallNatIf I FaN ent}
 
 -- By Schema Induction
 
@@ -387,6 +387,6 @@ instance iNatInductionRight3IfBySchema
 {P : Sort u} {T : Sort v} {L : Logic P}
 [N : PNat P T] [I : NatInduction' L N]
 : NatInductionRight3If L N
-:= {natInductionRight3If := natInductionRight3IfBySchema I}
+:= {toFun := natInductionRight3IfBySchema I}
 
 end Gaea.Peano

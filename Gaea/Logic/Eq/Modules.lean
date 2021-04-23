@@ -29,23 +29,23 @@ instance [K : PEq L T]
 
 -- Symm
 abbrev symm {L : Logic P} (K : PEq L T) 
-  {a b} := K.Symm.symm a b
+  {a b} := K.Symm.toFun a b
 
 -- Trans
 abbrev trans {L : Logic P} (K : PEq L T) 
-  {a b c} := K.Trans.trans a b c
+  {a b c} := K.Trans.toFun a b c
 
 -- LeftEuc
 abbrev LeftEuc {L : Logic P} (K : PEq L T) 
   : LeftEuc L K.toFun := iLeftEucBySymmTrans
 abbrev leftEuc {L : Logic P} (K : PEq L T) 
-  {a b c} := K.LeftEuc.leftEuc a b c
+  {a b c} := K.LeftEuc.toFun a b c
 
 -- RightEuc
 abbrev RightEuc {L : Logic P} (K : PEq L T) 
   : RightEuc L K.toFun := iRightEucBySymmTrans
 abbrev rightEuc {L : Logic P} (K : PEq L T) 
-  {a b c} := K.RightEuc.rightEuc a b c
+  {a b c} := K.RightEuc.toFun a b c
 
 end PEq 
 
@@ -67,7 +67,7 @@ instance [K : REq L T]
 
 -- Refl
 abbrev refl (K : REq L T) 
-  := K.Refl.refl
+  := K.Refl.toFun
 
 end REq
 
@@ -91,13 +91,13 @@ instance [K : LEq L T]
 
 -- PredSubst
 abbrev predSubst (K : LEq L T) 
-  {F a b} := K.PredSubst.predSubst F a b
+  {F a b} := K.PredSubst.toFun F a b
 
 -- FunSubst
 abbrev FunSubst (K : LEq L T) 
   : FunSubst L K.toFun := iFunSubstByReflPredSubst
 abbrev funSubst (K : LEq L T) 
-  {f a b} := K.FunSubst.funSubst f a b
+  {f a b} := K.FunSubst.toFun f a b
 
 end LEq
 

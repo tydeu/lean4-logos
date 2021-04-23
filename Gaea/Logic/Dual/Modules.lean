@@ -38,9 +38,9 @@ instance [K : LImp L lneg] :
 
 -- Basic
 abbrev byContraposition (K : LImp L lneg) 
-  {p q} := K.ByContraposition.byContraposition p q
+  {p q} := K.ByContraposition.toFun p q
 abbrev mt (K : LImp L lneg) 
-  {p q} := K.ModusTollens.mt p q
+  {p q} := K.ModusTollens.toFun p q
 
 end LImp
 
@@ -72,16 +72,14 @@ instance [K : MIff L lneg] :
   Logic.RightMt L K.toFun lneg := K.RightMt
 
 -- Basic
-abbrev intro (K : MIff L lneg) 
-  {p q} := K.Bicondition.bicondition p q
 abbrev leftMt (K : MIff L lneg) 
-  {p q} := K.LeftMt.mt p q
+  {p q} := K.LeftMt.toFun p q
 abbrev mt (K : MIff L lneg) 
-  {p q} := K.LeftMt.mt p q
+  {p q} := K.LeftMt.toFun p q
 abbrev rightMt (K : MIff L lneg) 
-  {p q} := K.RightMt.mt p q
+  {p q} := K.RightMt.toFun p q
 abbrev mtr (K : MIff L lneg) 
-  {p q} := K.RightMt.mt p q
+  {p q} := K.RightMt.toFun p q
 
 end MIff
 
@@ -113,13 +111,13 @@ instance [K : LDisj L lneg] :
 
 -- Basic
 abbrev leftMtp (K : LDisj L lneg)
-  {p q} := K.LeftMtp.mtp p q
+  {p q} := K.LeftMtp.toFun p q
 abbrev mtp (K : LDisj L lneg)
-  {p q} := K.LeftMtp.mtp p q
+  {p q} := K.LeftMtp.toFun p q
 abbrev rightMtp (K : LDisj L lneg)
-  {p q} := K.RightMtp.mtp p q
+  {p q} := K.RightMtp.toFun p q
 abbrev mtpr (K : LDisj L lneg)
-  {p q} := K.RightMtp.mtp p q
+  {p q} := K.RightMtp.toFun p q
 
 end LDisj
 
@@ -147,13 +145,13 @@ instance [K : LNot L] :
 
 -- Basic
 abbrev adFalso (K : LNot L) 
-  {p} := K.AdFalso.adFalso p
+  {p} := K.AdFalso.toFun p
 abbrev intro (K : LNot L) 
-  {p} := K.AdFalso.adFalso p
+  {p} := K.AdFalso.toFun p
 abbrev noncontradiction (K : LNot L) 
-  {p} := K.Noncontradiction.noncontradiction p
+  {p} := K.Noncontradiction.toFun p
 abbrev elim (K : LNot L) 
-  {p} := K.Noncontradiction.noncontradiction p
+  {p} := K.Noncontradiction.toFun p
 
 end LNot
 

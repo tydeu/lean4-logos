@@ -75,7 +75,7 @@ The definition of said class would thus be something like this:
 
 ```lean
 class Condition {P : Sort u} (L : Logic P) (f : Binar P) :=
-  condition : (p q : P) -> ((L ⊢ p) -> (L ⊢ q)) -> (L ⊢ f p q)
+  toFun : (p q : P) -> ((L ⊢ p) -> (L ⊢ q)) -> (L ⊢ f p q)
 ```
 
 Such generalizations are quite common in Gaea, 
@@ -86,7 +86,7 @@ it also makes sense to define the converse of the condition rule, `RightCond`:
 
 ```lean
 class RightCond {P : Sort u} (L : Logic P) (f : Binar P) :=
-  condition : (p q : P) -> ((L ⊢ q) -> (L ⊢ p)) -> (L ⊢ f p q)
+  toFun : (p q : P) -> ((L ⊢ q) -> (L ⊢ p)) -> (L ⊢ f p q)
 ```
 
 As such, the original `Condition` rule is just the left variant.

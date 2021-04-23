@@ -3,6 +3,7 @@ import Gaea.Peano.Nat
 import Gaea.Math.Notation
 
 universes u v
+variable {P : Sort u} {T : Sort v} 
 
 open Gaea.Math
 open Gaea.Logic
@@ -14,46 +15,46 @@ namespace Gaea.Peano
 --------------------------------------------------------------------------------
 
 -- Axiom 1
-class AddNatZeroEqNat {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (A : SAdd T) (Z : Zero T) :=
-  (addNatZeroEqNat : (a : T) -> (L |- nat a) -> (L |- a + 0 = a))
+class AddNatZeroEqNat (L : Logic P) 
+  (N : IsNat P T) (Q : SEq P T) (A : SAdd T) (Z : Zero T) :=
+  toFun : (a : T) -> (L |- nat a) -> (L |- a + 0 = a)
 
-def addNatZeroEqNat {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [Z : Zero T] 
-  [K : AddNatZeroEqNat L N Q A Z] {a : T} := K.addNatZeroEqNat a
+abbrev addNatZeroEqNat {L : Logic P} 
+  [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [Z : Zero T] 
+  [K : AddNatZeroEqNat L N Q A Z] {a} := K.toFun a
 
 -- Axiom 2
-class AddNatSuccEqSucc {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (A : SAdd T) (S : Succ T) := 
-  (addNatSuccEqSucc : (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
-    (L |- a + S b = S (a + b)))
+class AddNatSuccEqSucc (L : Logic P) 
+  (N : IsNat P T) (Q : SEq P T) (A : SAdd T) (S : Succ T) := 
+  toFun : (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
+    (L |- a + S b = S (a + b))
 
-def addNatSuccEqSucc {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [S : Succ T]
-  [K : AddNatSuccEqSucc L N Q A S] {a b : T} := K.addNatSuccEqSucc a b
+abbrev addNatSuccEqSucc {L : Logic P} 
+  [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [S : Succ T]
+  [K : AddNatSuccEqSucc L N Q A S] {a b} := K.toFun a b
 
 --------------------------------------------------------------------------------
 -- Commuted Axioms
 --------------------------------------------------------------------------------
 
 -- Axiom 1 Commuted
-class AddZeroNatEqNat {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (A : SAdd T) (Z : Zero T) :=
-  (addZeroNatEqNat : (a : T) -> (L |- nat a) -> (L |- 0 + a = a))
+class AddZeroNatEqNat (L : Logic P) 
+  (N : IsNat P T) (Q : SEq P T) (A : SAdd T) (Z : Zero T) :=
+  toFun : (a : T) -> (L |- nat a) -> (L |- 0 + a = a)
 
-def addZeroNatEqNat {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [Z : Zero T] 
-  [K : AddZeroNatEqNat L N Q A Z] {a : T} := K.addZeroNatEqNat a
+abbrev addZeroNatEqNat {L : Logic P} 
+  [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [Z : Zero T] 
+  [K : AddZeroNatEqNat L N Q A Z] {a} := K.toFun a
 
 -- Axiom 2 Commuted
-class AddSuccNatEqSucc {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (A : SAdd T) (S : Succ T) := 
-  (addSuccNatEqSucc : (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
-    (L |- S a + b = S (a + b)))
+class AddSuccNatEqSucc (L : Logic P) 
+  (N : IsNat P T) (Q : SEq P T) (A : SAdd T) (S : Succ T) := 
+  toFun : (a b : T) -> (L |- nat a) -> (L |- nat b) -> 
+    (L |- S a + b = S (a + b))
 
-def addSuccNatEqSucc {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [S : Succ T]
-  [K : AddSuccNatEqSucc L N Q A S] {a b : T} := K.addSuccNatEqSucc a b
+abbrev addSuccNatEqSucc {L : Logic P} 
+  [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [S : Succ T]
+  [K : AddSuccNatEqSucc L N Q A S] {a b} := K.toFun a b
 
 --------------------------------------------------------------------------------
 -- Special Cases
@@ -61,33 +62,33 @@ def addSuccNatEqSucc {P : Sort u} {T : Sort v}
 
 -- 0 + 0 = 0
 
-class AddZeroEqZero {P : Sort u} {T : Sort v} 
-  (L : Logic P) (Q : SEq P T) (A : SAdd T) (Z : Zero T) :=
-  (addZeroEqZero : L |- 0 + 0 = (0 : T)) 
+class AddZeroEqZero (L : Logic P) 
+  (Q : SEq P T) (A : SAdd T) (Z : Zero T) :=
+  toFun : L |- 0 + 0 = (0 : T)
 
-def addZeroEqZero {P : Sort u} {T : Sort v} 
-  {L : Logic P} [Q : SEq P T] [A : SAdd T] [Z : Zero T] 
-  [C : AddZeroEqZero L Q A Z] := C.addZeroEqZero
+abbrev addZeroEqZero {L : Logic P} 
+  [Q : SEq P T] [A : SAdd T] [Z : Zero T] 
+  [K : AddZeroEqZero L Q A Z] := K.toFun
 
 -- a + 1 = S a
 
-class AddNatOneEqSucc {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (A : SAdd T) (O : One T) (S : Succ T) :=
-  (addNatOneEqSucc : (a : T) -> (L |- nat a) -> (L |- a + 1 = S a))
+class AddNatOneEqSucc (L : Logic P) 
+  (N : IsNat P T) (Q : SEq P T) (A : SAdd T) (O : One T) (S : Succ T) :=
+  toFun : (a : T) -> (L |- nat a) -> (L |- a + 1 = S a)
 
-def addNatOneEqSucc {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [O : One T] [S : Succ T]
-  [C : AddNatOneEqSucc L N Q A O S] {a : T} := C.addNatOneEqSucc a
+abbrev addNatOneEqSucc {L : Logic P} 
+  [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [O : One T] [S : Succ T]
+  [K : AddNatOneEqSucc L N Q A O S] {a} := K.toFun a
 
 -- 1 + a = S a
 
-class AddOneNatEqSucc {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (A : SAdd T) (O : One T) (S : Succ T) :=
-  (addOneNatEqSucc : (a : T) -> (L |- nat a) -> (L |- 1 + a = S a))
+class AddOneNatEqSucc (L : Logic P) 
+  (N : IsNat P T) (Q : SEq P T) (A : SAdd T) (O : One T) (S : Succ T) :=
+  toFun : (a : T) -> (L |- nat a) -> (L |- 1 + a = S a)
 
-def addOneNatEqSucc {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [O : One T] [S : Succ T]
-  [C : AddOneNatEqSucc L N Q A O S] {a : T} := C.addOneNatEqSucc a
+abbrev addOneNatEqSucc {L : Logic P} 
+  [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [O : One T] [S : Succ T]
+  [K : AddOneNatEqSucc L N Q A O S] {a} := K.toFun a
 
 --------------------------------------------------------------------------------
 -- Commutativity
@@ -95,33 +96,33 @@ def addOneNatEqSucc {P : Sort u} {T : Sort v}
 
 -- 0 + a = a + 0
 
-class AddNatZeroComm {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (A : SAdd T) (Z : Zero T) :=
-  (addNatZeroComm : (a : T) -> (L |- nat a) -> (L |- a + 0 = 0 + a))
+class AddNatZeroComm (L : Logic P) 
+  (N : IsNat P T) (Q : SEq P T) (A : SAdd T) (Z : Zero T) :=
+  toFun : (a : T) -> (L |- nat a) -> (L |- a + 0 = 0 + a)
 
-def addNatZeroComm {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [Z : Zero T]
-  [C : AddNatZeroComm L N Q A Z] {a : T} := C.addNatZeroComm a
+abbrev addNatZeroComm {L : Logic P} 
+  [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [Z : Zero T]
+  [K : AddNatZeroComm L N Q A Z] {a} := K.toFun a
 
 -- a + b = b + a
 
-class AddNatComm {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (A : SAdd T) :=
-  (addNatComm : (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- a + b = b + a))
+class AddNatComm (L : Logic P) 
+  (N : IsNat P T) (Q : SEq P T) (A : SAdd T) :=
+  toFun : (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- a + b = b + a)
 
-instance iCommOverTOfAddNatComm {P : Sort u} {T : Sort v} 
+instance iCommOverTOfAddNatComm 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T] 
   [K : AddNatComm L N Q A] : CommOverT L Q.toFun N.isNat A.toFun 
-  := {commOverT := K.addNatComm}
+  := {toFun := K.toFun}
 
-instance iAddNatCommOverTOfComm {P : Sort u} {T : Sort v} 
+instance iAddNatCommOverTOfComm 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T] 
   [K : CommOverT L Q.toFun N.isNat A.toFun ] : AddNatComm L N Q A
-  := {addNatComm := K.commOverT}
+  := {toFun := K.toFun}
 
-def addNatComm {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T]
-  [C : AddNatComm L N Q A] {a b : T} := C.addNatComm a b
+abbrev addNatComm {L : Logic P} 
+  [N : IsNat P T] [Q : SEq P T] [A : SAdd T]
+  [K : AddNatComm L N Q A] {a b} := K.toFun a b
 
 --------------------------------------------------------------------------------
 -- Associativity
@@ -129,37 +130,36 @@ def addNatComm {P : Sort u} {T : Sort v}
 
 -- (a + b) + c = a + (b + c)
 
-class AddNatAssoc {P : Sort u} {T : Sort v}
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (A : SAdd T) :=
-  (addNatAssoc :  (a b c : T) -> 
+class AddNatAssoc (L : Logic P) 
+  (N : IsNat P T) (Q : SEq P T) (A : SAdd T) :=
+  toFun :  (a b c : T) -> 
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
-    (L |- (a + b) + c = a + (b + c)))
+    (L |- (a + b) + c = a + (b + c))
 
-instance iLtrAssocOverTOfAddNatAssoc {P : Sort u} {T : Sort v} 
+instance iLtrAssocOverTOfAddNatAssoc 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T] 
   [K : AddNatAssoc L N Q A] : LtrAssocOverT L Q.toFun N.isNat A.toFun 
-  := {ltrAssocOverT := K.addNatAssoc}
+  := {toFun := K.toFun}
 
-instance iAddNatAssocOfLtrAssocOverT {P : Sort u} {T : Sort v} 
+instance iAddNatAssocOfLtrAssocOverT 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T] 
   [K : LtrAssocOverT L Q.toFun N.isNat A.toFun] : AddNatAssoc L N Q A 
-  := {addNatAssoc := K.ltrAssocOverT}
+  := {toFun := K.toFun}
 
-def addNatAssoc {P : Sort u} {T : Sort v}
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T]
-  [C : AddNatAssoc L N Q A] {a b c : T} := C.addNatAssoc a b c
+abbrev addNatAssoc {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T]
+  [K : AddNatAssoc L N Q A] {a b c} := K.toFun a b c
 
 -- a + (b + c) = (a + b) + c 
 
-class AddNatAssocRev {P : Sort u} {T : Sort v}
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (A : SAdd T) :=
-  (addNatAssocRev :  (a b c : T) -> 
+class AddNatAssocRev (L : Logic P) 
+  (N : IsNat P T) (Q : SEq P T) (A : SAdd T) :=
+  toFun :  (a b c : T) -> 
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
-    (L |- a + (b + c) = (a + b) + c))
+    (L |- a + (b + c) = (a + b) + c)
 
-def addNatAssocRev {P : Sort u} {T : Sort v}
+abbrev addNatAssocRev {P : Sort u} {T : Sort v}
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T]
-  [C : AddNatAssocRev L N Q A] {a b c : T} := C.addNatAssocRev a b c
+  [K : AddNatAssocRev L N Q A] {a b c} := K.toFun a b c
 
 --------------------------------------------------------------------------------
 -- Substitutivity
@@ -167,57 +167,55 @@ def addNatAssocRev {P : Sort u} {T : Sort v}
 
 -- (a = b) -> (c + a = c + b)
 
-class EqNatAddNatLeft {P : Sort u} {T : Sort v}
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (A : SAdd T) :=
-  (eqNatAddNatLeft : (a b c : T) -> 
+class EqNatAddNatLeft (L : Logic P) 
+  (N : IsNat P T) (Q : SEq P T) (A : SAdd T) :=
+  toFun : (a b c : T) -> 
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
-    (L |- a = b) -> (L |- c + a = c + b))
+    (L |- a = b) -> (L |- c + a = c + b)
 
-instance iLeftReflTOfEqNatAddNatLeft {P : Sort u} {T : Sort v} 
+instance iLeftReflTOfEqNatAddNatLeft 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T] 
   [K : EqNatAddNatLeft L N Q A] : LeftReflT L Q.toFun N.isNat A.toFun 
-  := {leftReflT := fun a b c Na Nb Nc => K.eqNatAddNatLeft b c a Nb Nc Na}
+  := {toFun := fun a b c Na Nb Nc => K.toFun b c a Nb Nc Na}
 
-instance iEqNatAddNatLeftTOfLeftReflT {P : Sort u} {T : Sort v} 
+instance iEqNatAddNatLeftTOfLeftReflT 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T] 
   [K : LeftReflT L Q.toFun N.isNat A.toFun] : EqNatAddNatLeft L N Q A
-  := {eqNatAddNatLeft := fun a b c Na Nb Nc => K.leftReflT c a b Nc Na Nb}
+  := {toFun := fun a b c Na Nb Nc => K.toFun c a b Nc Na Nb}
 
-def eqNatAddNatLeft {P : Sort u} {T : Sort v}
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T]
-  [C : EqNatAddNatLeft L N Q A] {a b c : T} := C.eqNatAddNatLeft a b c
+abbrev eqNatAddNatLeft {L : Logic P} 
+  [N : IsNat P T] [Q : SEq P T] [A : SAdd T]
+  [K : EqNatAddNatLeft L N Q A] {a b c} := K.toFun a b c
 
-def eqNatAddNatLeft' {P : Sort u} {T : Sort v} {L : Logic P} 
-  [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [C : EqNatAddNatLeft L N Q A] 
-  {c a b : T} (Nc : L |- nat c) (Na : L |- nat a) (Nb : L|- nat b) 
-  := C.eqNatAddNatLeft a b c Na Nb Nc
+abbrev eqNatAddNatLeft' {L : Logic P} 
+  [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [K : EqNatAddNatLeft L N Q A] 
+  {c a b} (Nc Na Nb) := K.toFun a b c Na Nb Nc
 
 -- (a = b) -> (a + c = b + c)
 
-class EqNatAddNatRight {P : Sort u} {T : Sort v}
-  (L : Logic P) (N : IsNat P T) (Q : SEq P T) (A : SAdd T) :=
-  (eqNatAddNatRight : (a b c : T) -> 
+class EqNatAddNatRight (L : Logic P) 
+  (N : IsNat P T) (Q : SEq P T) (A : SAdd T) :=
+  toFun : (a b c : T) -> 
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
-    (L |- a = b) -> (L |- a + c = b + c))
+    (L |- a = b) -> (L |- a + c = b + c)
 
-instance iRightReflTOfEqNatAddNatRight {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T] 
+instance iRightReflTOfEqNatAddNatRight {L : Logic P} 
+  [N : IsNat P T] [Q : SEq P T] [A : SAdd T] 
   [K : EqNatAddNatRight L N Q A] : RightReflT L Q.toFun N.isNat A.toFun 
-  := {rightReflT := fun a b c Na Nb Nc => K.eqNatAddNatRight b c a Nb Nc Na}
+  := {toFun := fun a b c Na Nb Nc => K.toFun b c a Nb Nc Na}
 
-instance iEqNatAddNatRightOfRightReflT {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T] 
+instance iEqNatAddNatRightOfRightReflT {L : Logic P} 
+  [N : IsNat P T] [Q : SEq P T] [A : SAdd T] 
   [K : RightReflT L Q.toFun N.isNat A.toFun] : EqNatAddNatRight L N Q A
-  := {eqNatAddNatRight := fun a b c Na Nb Nc => K.rightReflT c a b Nc Na Nb}
+  := {toFun := fun a b c Na Nb Nc => K.toFun c a b Nc Na Nb}
 
-def eqNatAddNatRight {P : Sort u} {T : Sort v}
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T]
-  [C : EqNatAddNatRight L N Q A] {a b c : T} := C.eqNatAddNatRight a b c
+abbrev eqNatAddNatRight {L : Logic P}
+  [N : IsNat P T] [Q : SEq P T] [A : SAdd T]
+  [K : EqNatAddNatRight L N Q A] {a b c} := K.toFun a b c
 
-def eqNatAddNatRight' {P : Sort u} {T : Sort v} {L : Logic P} 
-  [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [C : EqNatAddNatRight L N Q A] 
-  {c a b : T} (Nc : L |- nat c) (Na : L |- nat a) (Nb : L|- nat b) 
-  := C.eqNatAddNatRight a b c Na Nb Nc
+abbrev eqNatAddNatRight' {L : Logic P} 
+  [N : IsNat P T] [Q : SEq P T] [A : SAdd T] [K : EqNatAddNatRight L N Q A] 
+  {c a b} (Nc Na Nb) := K.toFun a b c Na Nb Nc
 
 --------------------------------------------------------------------------------
 -- Closure
@@ -225,46 +223,37 @@ def eqNatAddNatRight' {P : Sort u} {T : Sort v} {L : Logic P}
 
 -- nat (0 + 0)
 
-class NatAddZero {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (A : SAdd T) (Z : Zero T) :=
-  (natAddZero : L |- nat (0 + 0 : T))
+class NatAddZero (L : Logic P) (N : IsNat P T) (A : SAdd T) (Z : Zero T) :=
+  toFun : L |- nat (0 + 0 : T)
 
-def natAddZero {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [A : SAdd T] [Z : Zero T]
-  [C : NatAddZero L N A Z] := C.natAddZero
+abbrev natAddZero {L : Logic P} [N : IsNat P T] [A : SAdd T] [Z : Zero T]
+  [K : NatAddZero L N A Z] := K.toFun
 
 -- nat (a + 0)
 
-class NatAddNatZero {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (A : SAdd T) (Z : Zero T) :=
-  (natAddNatZero : (a : T) -> (L |- nat a) -> (L |- nat (a + 0)))
+class NatAddNatZero (L : Logic P) (N : IsNat P T) (A : SAdd T) (Z : Zero T) :=
+  toFun : (a : T) -> (L |- nat a) -> (L |- nat (a + 0))
 
-def natAddNatZero {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [A : SAdd T] [Z : Zero T]
-  [C : NatAddNatZero L N A Z] {a : T} := C.natAddNatZero a
+abbrev natAddNatZero {L : Logic P} [N : IsNat P T] [A : SAdd T] [Z : Zero T]
+  [K : NatAddNatZero L N A Z] {a} := K.toFun a
 
 -- nat (0 + a)
 
-class NatAddZeroNat {P : Sort u} {T : Sort v} 
-  (L : Logic P) (N : IsNat P T) (A : SAdd T) (Z : Zero T) :=
-  (natAddZeroNat : (a : T) -> (L |- nat a) -> (L |- nat (0 + a)))
+class NatAddZeroNat (L : Logic P) (N : IsNat P T) (A : SAdd T) (Z : Zero T) :=
+  toFun : (a : T) -> (L |- nat a) -> (L |- nat (0 + a))
 
-def natAddZeroNat {P : Sort u} {T : Sort v} 
-  {L : Logic P} [N : IsNat P T] [A : SAdd T] [Z : Zero T]
-  [C : NatAddZeroNat L N A Z] {a : T} := C.natAddZeroNat a 
+abbrev natAddZeroNat {L : Logic P} [N : IsNat P T] [A : SAdd T] [Z : Zero T]
+  [K : NatAddZeroNat L N A Z] {a} := K.toFun a 
 
 -- nat (a + b)
 
-class NatAddNat {P : Sort u} {T : Sort v}
-  (L : Logic P) (N : IsNat P T) (A : SAdd T) :=
-  (natAddNat : (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat (a + b)))
+class NatAddNat (L : Logic P) (N : IsNat P T) (A : SAdd T) :=
+  toFun : (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat (a + b))
 
-def natAddNat {P : Sort u} {T : Sort v}
-  {L : Logic P} [N : IsNat P T] [A : SAdd T] [C : NatAddNat L N A]
-  {a b : T} := C.natAddNat a b
+abbrev natAddNat {L : Logic P} [N : IsNat P T] [A : SAdd T] 
+  [K : NatAddNat L N A] {a b} := K.toFun a b
 
-def natAdd {P : Sort u} {T : Sort v}
-  {L : Logic P} [N : IsNat P T] [A : SAdd T] [C : NatAddNat L N A]
-  {a b : T} := C.natAddNat a b
+abbrev natAdd {L : Logic P} [N : IsNat P T] [A : SAdd T] 
+  [K : NatAddNat L N A] {a b} := K.toFun a b
 
 end Gaea.Peano
