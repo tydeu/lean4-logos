@@ -28,5 +28,3 @@ class OneEqSuccZero (L : Logic P)
 abbrev oneEqSuccZero {L : Logic P} 
   [Q : SEq P T] [Z : Zero T] [O : One T] [S : Succ T]
   [K : OneEqSuccZero L Q Z O S] := K.toFun
-
-end Gaea.Peano

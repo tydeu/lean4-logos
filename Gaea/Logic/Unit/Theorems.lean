@@ -27,5 +27,3 @@ def transByCondMp {L : Logic P}
 instance iTransByCondMp {L : Logic P} 
 {F : Binar P} [C : Condition L F] [Mp : ModusPonens L F]
 : Trans L F := {toFun := transByCondMp C Mp}
-
-end Gaea.Logic

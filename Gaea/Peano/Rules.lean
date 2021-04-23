@@ -66,5 +66,3 @@ class SuccNatEqZeroFalse (L : Logic P) (N : PNat P T) (Q : SEq P T) :=
 
 abbrev succNatEqZeroFalse {L : Logic P} [N : PNat P T] [Q : SEq P T]
   [K : SuccNatEqZeroFalse L N Q] {n} := K.toFun n
-
-end Gaea.Peano

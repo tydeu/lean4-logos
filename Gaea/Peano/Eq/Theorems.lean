@@ -60,4 +60,3 @@ instance iEqLeftEucNatByNatEq
 [N : IsNat P T] [Q : SEq P T] [QTr : EqNatLeftEuc L N Q] [NQ : NatEqNat L N Q]
 : EqLeftEucNat L N Q := {toFun := eqLeftEucNatByNatEq QTr NQ }
 
-end Gaea.Peano

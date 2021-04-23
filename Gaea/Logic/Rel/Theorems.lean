@@ -175,5 +175,3 @@ instance iRelJoinBySymmTransT
 {P : Sort u} {T : Sort v} {L : Logic P} {R : Rel P T} {C : T -> P} 
 [Sm : SymmT L R C] [Tr : TransT L R C] : RelJoinT L R C 
 := {toFun := relJoinBySymmTransT Sm Tr}
-
-end Gaea.Logic

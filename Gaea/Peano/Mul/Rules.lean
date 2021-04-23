@@ -280,5 +280,3 @@ abbrev natMulNat {L : Logic P}[N : IsNat P T] [M : SMul T]
 
 abbrev natMul {L : Logic P} [N : IsNat P T] [M : SMul T] 
   [K : NatMulNat L N M]{a b} := K.toFun a b
-
-end Gaea.Peano

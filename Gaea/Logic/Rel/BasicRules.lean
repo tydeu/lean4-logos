@@ -163,5 +163,3 @@ def relJoinT {L : Logic P} {R : Rel P T} {C}
 
 def relJoinT' {L : Logic P} {R : Rel P T} {C} [K : RelJoinT L R C] {a b c d}
   (Ca Cb Cc Cd Rcd Rac Rbd) := K.toFun a b c d Ca Cb Cc Cd Rac Rbd Rcd
-
-end Gaea.Logic

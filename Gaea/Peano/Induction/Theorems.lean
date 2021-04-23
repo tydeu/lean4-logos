@@ -390,5 +390,3 @@ instance iNatInductionRight3IfBySchema
 [N : PNat P T] [I : NatInduction' L N]
 : NatInductionRight3If L N
 := {toFun := natInductionRight3IfBySchema I}
-
-end Gaea.Peano

@@ -151,5 +151,3 @@ class DblNegElim (L : Logic P) (f : Unar P) :=
 
 abbrev dblNegElim {L : Logic P} {f}
   [K : DblNegElim L f] {p} := K.toFun p
-
-end Gaea.Logic

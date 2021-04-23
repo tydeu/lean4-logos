@@ -99,5 +99,3 @@ class RightReflT (L : Logic P) (R : Rel P T) (C : T -> P) (f : Binar T) :=
 
 def rightReflT {L : Logic P} {R : Rel P T} {C f}
   [K : RightReflT L R C f] {a b c} := K.toFun a b c
-
-end Gaea.Logic

@@ -22,7 +22,6 @@ scoped macro "noncontradiction " np:term:max p:term:max : tactic =>
 
 -- Util
 
-
 scoped macro "mt " pq:term:max np:term:max : tactic => 
   `(tactic| exact mt $pq $np)
 
@@ -49,5 +48,3 @@ scoped macro "rightMtp " pq:term:max nq:term:max : tactic =>
 
 scoped macro "dblNegElim" : tactic => 
   `(tactic| apply dblNegElim (f := $(Lean.mkIdent `lneg)))
-
-end Gaea.Logic

@@ -1067,5 +1067,3 @@ instance iAddOneNatEqSuccByNatAdd
 : AddOneNatEqSucc L N Q A O S := 
   {toFun := 
     addOneNatEqSuccByNatAdd N0 N1 NS NA QTr QtS Q1S QAR A0n ASn}
-
-end Gaea.Peano

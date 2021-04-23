@@ -63,5 +63,3 @@ instance iExportNotOfNoncontradiction {L : Logic.{u,0} P} {lneg}
 
 instance iNoncontradictionOfExportNot {L : Logic.{u,0} P} {lneg} 
   [K : Noncontradiction L lneg] : ExportNot L lneg := {toFun := K.toFun}
-  
-end Gaea.Logic

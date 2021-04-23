@@ -171,5 +171,3 @@ instance iLeftSimpOfUncurry {L : Logic P} {F}
 instance iRightSimpOfUncurry {L : Logic P} {F}
   [K : Uncurry L F] : RightSimp L F := 
   {toFun := fun p q => K.toFun _ p q (fun Lp Lq => Lq)}
-
-end Gaea.Logic

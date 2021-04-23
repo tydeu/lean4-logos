@@ -129,5 +129,3 @@ class NatInductionRight3If (L : Logic P) (N : PNat P T) :=
 
 def natInductionRight3If {L : Logic P} [N : PNat P T] 
   [K : NatInductionRight3If L N] {C f} := K.toFun C f 
-
-end Gaea.Peano

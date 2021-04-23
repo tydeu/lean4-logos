@@ -61,5 +61,3 @@ namespace SLessEq
 abbrev funType (K : SLessEq P T) := Rel P T
 instance : CoeFun (SLessEq P T) funType := {coe := fun K => K.toFun}
 end SLessEq
-
-end Gaea.Math

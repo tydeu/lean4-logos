@@ -173,5 +173,3 @@ instance iEqNatRightEucOfEqRightEucT
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
   [K : RightEucT L Q.toFun N.isNat] : EqNatRightEuc L N Q := 
   {toFun := K.toFun}
-
-end Gaea.Peano

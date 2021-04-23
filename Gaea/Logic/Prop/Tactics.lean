@@ -31,5 +31,3 @@ macro_rules (kind := uncurryTactic)
     `(tactic| apply uncurry; assume $x)
   | `(tactic| uncurry $x $y $ys*) => 
     `(tactic| uncurry $x; uncurry $y $ys*)
-
-end Gaea.Logic

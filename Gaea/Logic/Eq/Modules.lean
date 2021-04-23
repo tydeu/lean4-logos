@@ -100,5 +100,3 @@ abbrev funSubst (K : LEq L T)
   {f a b} := K.FunSubst.toFun f a b
 
 end LEq
-
-end Gaea.Logic

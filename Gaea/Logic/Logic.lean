@@ -10,7 +10,3 @@ def prop.{u,v} {P : Sort u} (L : Logic.{u,v} P) : Sort u
 
 def proof.{u,v} {P : Sort u} (L : Logic.{u,v} P) : Type v 
   := Sort v
-
-end Logic
-
-end Gaea

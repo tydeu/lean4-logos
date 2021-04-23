@@ -1153,5 +1153,3 @@ instance iMulNatAssocByPeano
     N0 NS iNatAddNatByPeano iNatMulNatByPeano QTr iEqNatLeftEucBySymmTransT 
     iEqNatAddNatLeftByPeano iEqNatMulNatLeftByPeano Mn0 MnS 
     iMulNatAddEqAddMulByPeano}
-
-end Gaea.Peano

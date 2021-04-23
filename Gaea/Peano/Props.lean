@@ -112,5 +112,3 @@ def strongNatInduction : P :=
     f 0 -> 
     (forallNat (n k : T) => ((k <= n) -> f n) -> f (S n)) ->
     (forallNat (n : T) => f n)
-
-end Gaea.Peano.Props

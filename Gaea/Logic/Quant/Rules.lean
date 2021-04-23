@@ -50,5 +50,3 @@ def exstInst {L : Logic P} {X : Quant P T}
 
 def xi {L : Logic P} {X : Quant P T} 
   [K : ExstInst L X] {r f} := K.toFun r f
-
-end Gaea.Logic

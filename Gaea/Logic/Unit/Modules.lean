@@ -221,5 +221,3 @@ abbrev simp (K : LAlt L)
   {p} := K.Simp.toFun p
 
 end LAlt
-
-end Gaea.Logic

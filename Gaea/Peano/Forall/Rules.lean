@@ -70,5 +70,3 @@ instance iForallIfNatElim {L : Logic P}
 [Ui : UnivInst L Fa.toFun] [Mp : ModusPonens L larr.toFun]
 : ForallNatElim L N (LForallIfNat N Fa larr)
 := LForallIfNatElim N Ui Mp
-
-end Gaea.Peano

@@ -144,5 +144,3 @@ abbrev rightMp {L : Logic P} {F}
 
 abbrev mpr {L : Logic P} {F} 
   [K : RightMp L F] {p q} := K.toFun p q
-
-end Gaea.Logic

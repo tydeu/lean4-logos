@@ -154,5 +154,3 @@ abbrev elim (K : LNot L)
   {p} := K.Noncontradiction.toFun p
 
 end LNot
-
-end Gaea.Logic

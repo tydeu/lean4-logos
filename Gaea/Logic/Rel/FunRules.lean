@@ -69,6 +69,3 @@ class RtlAssocOverT (L : Logic P) (R : Rel P T) (C : T -> P) (f : Binar T) :=
 
 def rtlAssocOverT {L : Logic P} [R : Rel P T] {C f}
   [K : RtlAssocOverT L R C f] {a b c} := K.toFun a b c
-
-
-end Gaea.Logic

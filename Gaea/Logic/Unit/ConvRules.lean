@@ -243,4 +243,3 @@ instance iByEitherOfExportOr {L : Logic P} {F}
   {toFun := fun (a : Sort 0) p q LpDq fpa fqa => match K.toFun p q LpDq with
     | Or.inl Lp => fpa Lp | Or.inr Lq => fqa Lq}
 
-end Gaea.Logic

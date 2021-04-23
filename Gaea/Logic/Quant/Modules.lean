@@ -74,5 +74,3 @@ abbrev elim {L : Logic P} (K : LExists L T)
   {f} := K.ExstInst.toFun f
 
 end LExists
-
-end Gaea.Logic

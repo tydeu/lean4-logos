@@ -256,5 +256,3 @@ abbrev natAddNat {L : Logic P} [N : IsNat P T] [A : SAdd T]
 
 abbrev natAdd {L : Logic P} [N : IsNat P T] [A : SAdd T] 
   [K : NatAddNat L N A] {a b} := K.toFun a b
-
-end Gaea.Peano

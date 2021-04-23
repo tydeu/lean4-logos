@@ -54,5 +54,3 @@ def expandNumLit : Lean.Macro
 def unexpandNumLit : Lean.PrettyPrinter.Unexpander
   | `(Math.OfNatLit.ofNatLit $n:numLit) => n
   | _  => throw ()
-
-end Gaea.Math

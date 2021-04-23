@@ -82,5 +82,3 @@ def byContraByAdFalsoNoncontra
 instance iByContraByAdFalsoNoncontra {L : Logic P} {f}
 [AdF : AdFalso L f] [Nc : Noncontradiction L f] : ByContradiction L f := 
 {toFun := byContraByAdFalsoNoncontra AdF Nc}
-
-end Gaea.Logic

@@ -54,5 +54,3 @@ def MForallIfNat {L : Logic P}
 instance iMForallIfNat {P : Sort u} {T : Sort v} {L : Logic P} 
   [N : IsNat P T] [Fa : LForall L T] [ent : LEnt L] : LForallNat L N
   := MForallIfNat N Fa ent
-
-end Gaea.Peano

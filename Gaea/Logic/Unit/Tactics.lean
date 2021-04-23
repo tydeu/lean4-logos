@@ -44,5 +44,3 @@ scoped macro "leftMp " pq:term:max p:term:max : tactic =>
 
 scoped macro "rightMp " pq:term:max p:term:max : tactic => 
   `(tactic| exact rightMp $pq $p)
-
-end Gaea.Logic

@@ -38,5 +38,3 @@ abbrev zero {P : Sort u} {T : Sort v} (N : PNat P T) := N.toZero.zero
 abbrev succ {P : Sort u} {T : Sort v} (N : PNat P T) := N.toSucc.toFun
 
 end PNat
-
-end Gaea.Peano
