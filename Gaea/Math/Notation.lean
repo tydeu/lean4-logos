@@ -6,9 +6,9 @@ namespace Gaea
 
 -- Operators
 
-scoped infix:50 " < "  => SLess.toFun
-scoped infix:50 " <= " => SLessEq.toFun
-scoped infix:50 " ≤ "  => SLessEq.toFun
+scoped infix:50 " < "  => SLt.toFun
+scoped infix:50 " <= " => SLe.toFun
+scoped infix:50 " ≤ "  => SLe.toFun
 
 scoped infixl:65 (priority := default + default) " + "  => SAdd.toFun
 scoped infixl:70 (priority := default + default) " * "  => SMul.toFun

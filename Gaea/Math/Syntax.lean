@@ -45,18 +45,18 @@ end SMul
 
 -- Inequalities
 
-class SLess (P : Sort u) (T : Sort v) :=
+class SLt (P : Sort u) (T : Sort v) :=
   toFun : Rel P T
 
-namespace SLess
-abbrev funType (K : SLess P T) := Rel P T
-instance : CoeFun (SLess P T) funType := {coe := fun K => K.toFun}
-end SLess
+namespace SLt
+abbrev funType (K : SLt P T) := Rel P T
+instance : CoeFun (SLt P T) funType := {coe := fun K => K.toFun}
+end SLt
 
-class SLessEq (P : Sort u) (T : Sort v)  :=
+class SLe (P : Sort u) (T : Sort v)  :=
   toFun : Rel P T
 
-namespace SLessEq
-abbrev funType (K : SLessEq P T) := Rel P T
-instance : CoeFun (SLessEq P T) funType := {coe := fun K => K.toFun}
-end SLessEq
+namespace SLe
+abbrev funType (K : SLe P T) := Rel P T
+instance : CoeFun (SLe P T) funType := {coe := fun K => K.toFun}
+end SLe

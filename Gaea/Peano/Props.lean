@@ -17,7 +17,7 @@ variable
   [Fa : SForall P T] [Fa2 : SForall P (T -> P)] [FaN : SForallNat P T]
   [X : SExists P T]
   [F : Falsum P]
-  [Q : SEq P T] [Le : SLessEq P T]
+  [Q : SEq P T] [Le : SLe P T]
   [N : IsNat P T] [Z : Zero T] [S : Succ T]
   [A : SAdd T] [M : SMul T]
 
