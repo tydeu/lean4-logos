@@ -91,11 +91,11 @@ class LDisj (L : Logic P) (lneg : Unar P) extends LAlt L :=
   RightMtp : RightMtp L toFun lneg
 
 instance iLDisj {L : Logic P} [Dj: Disj P] {lneg}
-  [ByE : ByEither L Dj.toFun]  [SLess : LeftTaut L Dj.toFun] [RT : RightTaut L Dj.toFun] 
+  [ByE : ByEither L Dj.toFun]  [LT : LeftTaut L Dj.toFun] [RT : RightTaut L Dj.toFun] 
   [LMtp : LeftMtp L Dj.toFun lneg] [RMtp : RightMtp L Dj.toFun lneg] 
   : LDisj L lneg := 
   {toDisj := Dj, ByEither := ByE, 
-    LeftTaut := SLess, RightTaut := RT, LeftMtp := LMtp, RightMtp := RMtp}
+    LeftTaut := LT, RightTaut := RT, LeftMtp := LMtp, RightMtp := RMtp}
 
 namespace LDisj
 

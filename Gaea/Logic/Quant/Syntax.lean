@@ -33,7 +33,7 @@ namespace Notation
 
 open Lean
 
-macro "∀ " xs:explicitBinders " => " b:term : term => 
+scoped macro "∀ " xs:explicitBinders " => " b:term : term => 
   expandExplicitBinders `lForall xs b
 scoped macro "forall " xs:explicitBinders " => " b:term : term => 
   expandExplicitBinders `lForall xs b

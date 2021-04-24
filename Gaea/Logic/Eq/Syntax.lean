@@ -17,4 +17,5 @@ instance : CoeFun (SEq P T) funType := {coe := fun K => K.toFun}
 end SEq
 
 namespace Notation
-scoped infix:50 " = " => SEq.toFun
+scoped infix:50 (name := syntaxEq) " = " => SEq.toFun
+macro_rules (kind := syntaxEq)  | `($x = $y)  => `(binrel% eq $x $y)
