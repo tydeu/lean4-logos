@@ -1,4 +1,4 @@
-import Gaea.Logic.Fun.Types
+import Gaea.FunTypes
 
 universe u
 variable {P : Sort u}

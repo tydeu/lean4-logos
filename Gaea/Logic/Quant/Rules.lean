@@ -1,5 +1,5 @@
 import Gaea.Logic.Judgment
-import Gaea.Logic.Quant.Type
+import Gaea.FunTypes
 
 universes u v w
 variable {P : Sort u} {T : Sort v}

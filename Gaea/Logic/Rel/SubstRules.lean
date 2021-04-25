@@ -1,6 +1,6 @@
 import Gaea.Logic.Judgment
-import Gaea.Logic.Fun.Types
-import Gaea.Logic.Rel.Type
+import Gaea.FunTypes
+import Gaea.FunTypes
 
 universes u v
 variable {P : Sort u} {T : Sort v}
@@ -12,11 +12,11 @@ namespace Gaea
 -- (|- R a b) -> ((|- F a) -> (|- F b))
 --------------------------------------------------------------------------------
 
-class PSubst (L : Logic P) (R : Rel P T) (F : T -> P) :=
+class PSubst (L : Logic P) (R : Rel P T) (F : Pred P T) :=
   toFun : (a b : T) -> (L |- R a b) -> (L |- F a) -> (L |- F b)
 
 class PredSubst (L : Logic P) (R : Rel P T) :=
-  toFun : (F : T -> P) -> (a b : T) -> 
+  toFun : (F : Pred P T) -> (a b : T) -> 
     (L |- R a b) -> (L |- F a) -> (L |- F b)
 
 instance iPSubstOfPredSubst {L : Logic P} {R : Rel P T}

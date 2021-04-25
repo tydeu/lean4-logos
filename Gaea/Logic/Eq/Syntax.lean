@@ -1,4 +1,4 @@
-import Gaea.Logic.Rel.Type
+import Gaea.FunTypes
 
 universes u v
 

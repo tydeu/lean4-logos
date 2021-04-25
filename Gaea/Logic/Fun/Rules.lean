@@ -1,5 +1,5 @@
 import Gaea.Logic.Judgment
-import Gaea.Logic.Fun.Types
+import Gaea.FunTypes
 import Gaea.Logic.Rel.Rules
 
 namespace Gaea
