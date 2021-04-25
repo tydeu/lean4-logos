@@ -4,13 +4,7 @@ import Gaea.Peano.Eq.Theorems
 
 universe v
 
-
 namespace Gaea.Peano.Completeness
-
-instance ZeroOfNat : Zero Nat 
-  := {zero := Nat.zero}
-instance SuccOfNat : Succ Nat 
-  := {toFun := Nat.succ}
 
 --------------------------------------------------------------------------------
 -- Peano Prop

@@ -1,4 +1,4 @@
-import Gaea.Math.Notation
+import Gaea.Math.Syntax
 import Gaea.Logic.Prop.Syntax
 import Gaea.Logic.Quant.Syntax
 import Gaea.Logic.Eq.Syntax

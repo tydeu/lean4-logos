@@ -1,10 +1,11 @@
-import Gaea.Math.Notation
+import Gaea.Math.Syntax
 import Gaea.Logic.Judgment
 import Gaea.Peano.Nat
 
 universes u v w
 variable {P : Sort u} {T : Sort v} 
 
+open Gaea.Notation
 namespace Gaea.Peano
 
 --------------------------------------------------------------------------------

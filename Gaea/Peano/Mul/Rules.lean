@@ -1,6 +1,6 @@
 import Gaea.Peano.Eq
 import Gaea.Peano.Nat
-import Gaea.Math.Notation
+import Gaea.Math.Syntax
 
 universes u v
 variable {P : Sort u} {T : Sort v}

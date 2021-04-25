@@ -4,7 +4,6 @@ import Gaea.Logic.Quant.Syntax
 
 universes u v
 
-open Gaea.Notation
 namespace Gaea.Peano
 
 class SForallNat (P : Sort u) (T : Sort v) :=
@@ -19,8 +18,8 @@ end SForallNat
 abbrev pForallNat {P : Sort u} {T : Sort v} [K : SForallNat P T] := K.toFun
 
 def LForallIfNat {P : Sort u} {T : Sort v} 
-  (N : IsNat P T) (Fa : SForall P T) (larr : LArr P) : 
-  SForallNat P T := {toFun := fun f => forall a => nat a -> f a}
+  (N : IsNat P T) (Fa : SForall P T) (larr : LArr P) : SForallNat P T := 
+  {toFun := fun f => Fa fun (a : T) => larr (nat a) (f a)}
 
 namespace Notation
 
