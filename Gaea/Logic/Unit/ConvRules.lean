@@ -202,12 +202,12 @@ abbrev exportSum {L : Logic P} {F}
 
 instance iExportSumOfByEither {L : Logic P} {F} 
   [K : ByEither L F] : ExportSum L F := 
-  {toFun := fun p q LpDq => K.toFun _ p q LpDq Sum.inl Sum.inr}
+  {toFun := fun p q LpDq => K.toFun p q LpDq _ Sum.inl Sum.inr}
 
 instance iByEitherOfExportSum {L : Logic P} {F} 
   [K : ExportSum L F] : ByEither L F := 
-  {toFun := fun a p q LpDq fpa fqa => match K.toFun p q LpDq with
-    | Sum.inl Lp => fpa Lp | Sum.inr Lq => fqa Lq}
+  {toFun := fun p q LpDq r fpr fqr => match K.toFun p q LpDq with
+    | Sum.inl Lp => fpr Lp | Sum.inr Lq => fqr Lq}
 
 -- (|- p \/ q) -> PSum p q 
 
@@ -219,12 +219,12 @@ abbrev exportPSum {L : Logic P} {F}
 
 instance iExportPSumOfByEither {L : Logic P} {F} 
   [K : ByEither L F] : ExportPSum L F := 
-  {toFun := fun p q LpDq => K.toFun _ p q LpDq PSum.inl PSum.inr}
+  {toFun := fun p q LpDq => K.toFun p q LpDq _ PSum.inl PSum.inr}
 
 instance iByEitherOfExportPSum {L : Logic P} {F} 
   [K : ExportPSum L F] : ByEither L F := 
-  {toFun := fun a p q LpDq fpa fqa => match K.toFun p q LpDq with
-    | PSum.inl Lp => fpa Lp | PSum.inr Lq => fqa Lq}
+  {toFun := fun p q LpDq r fpr fqr => match K.toFun p q LpDq with
+    | PSum.inl Lp => fpr Lp | PSum.inr Lq => fqr Lq}
 
 -- (|- p \/ q) -> Or p q 
 
@@ -236,10 +236,10 @@ abbrev exportOr {L : Logic.{u,0} P} {F}
 
 instance iExportOrOfByEither {L : Logic P} {F} 
   [K : ByEither L F] : ExportOr L F := 
-  {toFun := fun p q LpDq => K.toFun _ p q LpDq Or.inl Or.inr}
+  {toFun := fun p q LpDq => K.toFun p q LpDq _ Or.inl Or.inr}
 
 instance iByEitherOfExportOr {L : Logic P} {F} 
   [K : ExportOr L F] : ByEither L F := 
-  {toFun := fun (a : Sort 0) p q LpDq fpa fqa => match K.toFun p q LpDq with
-    | Or.inl Lp => fpa Lp | Or.inr Lq => fqa Lq}
+  {toFun := fun p q LpDq (r : Sort 0) fpr fqr => match K.toFun p q LpDq with
+    | Or.inl Lp => fpr Lp | Or.inr Lq => fqr Lq}
 

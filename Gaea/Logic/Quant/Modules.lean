@@ -68,8 +68,8 @@ abbrev gen {L : Logic P} (K : LExists L T)
 abbrev intro {L : Logic P} (K : LExists L T) 
   {f} := K.ExstGen.toFun f
 abbrev inst {L : Logic P} (K : LExists L T) 
-  {f} := K.ExstInst.toFun f
+  {f} (Xf) {r} := K.ExstInst.toFun f Xf r
 abbrev elim {L : Logic P} (K : LExists L T) 
-  {f} := K.ExstInst.toFun f
+  {f} (Xf) {r} := K.ExstInst.toFun f Xf r
 
 end LExists

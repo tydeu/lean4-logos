@@ -46,15 +46,15 @@ instance iTautOfConjoin {L : Logic P} {F}
 --------------------------------------------------------------------------------
 
 class ByEither (L : Logic P) (F : Binar P) := 
-  toFun : (r : Sort w) -> (p q : P) -> 
-    (L |- F p q) -> ((L |- p) -> r) -> ((L |- q) -> r) -> r
+  toFun : (p q : P) -> (L |- F p q) -> 
+    (r : Sort w) -> ((L |- p) -> r) -> ((L |- q) -> r) -> r
 
 abbrev byEither {L : Logic P} {F}
-  [K : ByEither L F] {r p q} := K.toFun r p q
+  [K : ByEither L F] {p q} (Fpq) {r} := K.toFun p q Fpq r
 
 instance iSimpOfByEither {L : Logic P} {F}
   [K : ByEither L F] : Simp L F := 
-  {toFun := fun p LpDp => K.toFun _ p p LpDp id id}
+  {toFun := fun p LpDp => K.toFun p p LpDp _ id id}
 
 --------------------------------------------------------------------------------
 -- Conditional Proof

@@ -42,11 +42,11 @@ def xg {L : Logic P} {X : Quant P T}
   [K : ExstGen L X] {f} := K.toFun f
 
 class ExstInst (L : Logic P) (X : Quant P T) := 
-  toFun : (r : Sort w) -> (f : T -> P) ->  (L |- X f) -> 
-    ((a : T) -> (L |- f a) -> r) -> r
+  toFun : (f : T -> P) -> (L |- X f) -> 
+    (r : Sort w) -> ((a : T) -> (L |- f a) -> r) -> r
 
 def exstInst {L : Logic P} {X : Quant P T} 
-  [K : ExstInst L X] {r f} := K.toFun r f
+  [K : ExstInst L X] {f} (Xf) {r} := K.toFun f Xf r
 
 def xi {L : Logic P} {X : Quant P T} 
-  [K : ExstInst L X] {r f} := K.toFun r f
+  [K : ExstInst L X] {f} (Xf) {r} := K.toFun f Xf r

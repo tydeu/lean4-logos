@@ -15,15 +15,15 @@ namespace Gaea.Peano
 --------------------------------------------------------------------------------
 
 class ForallNatIntro (L : Logic P) (N : IsNat P T) (FaN : SForallNat P T) :=
-  (toFun : (f : T -> P) -> ((a : T) -> (L |- nat a) -> (L |- f a)) -> 
-    (L |- forallNat a => f a))
+  toFun : (f : T -> P) -> ((a : T) -> (L |- nat a) -> (L |- f a)) -> 
+    (L |- forallNat a => f a)
 
 def forallNatIntro  {L : Logic P} [N : IsNat P T] [FaN : SForallNat P T] 
   [K : ForallNatIntro L N FaN] {f} := K.toFun f
 
 class ForallNatElim (L : Logic P) (N : IsNat P T) (FaN : SForallNat P T) := 
-  (toFun : (f : T -> P) -> (L |- forallNat a => f a) ->
-    ((a : T) -> (L |- nat a) -> (L |- f a)))
+  toFun : (f : T -> P) -> (L |- forallNat a => f a) ->
+    ((a : T) -> (L |- nat a) -> (L |- f a))
 
 def forallNatElim   {L : Logic P} [N : IsNat P T] [FaN : SForallNat P T] 
   [K : ForallNatElim L N FaN] {f} (p) {a} := K.toFun f p a

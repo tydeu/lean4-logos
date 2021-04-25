@@ -206,9 +206,9 @@ abbrev rightTaut (K : LAlt L)
 abbrev inr (K : LAlt L) 
   {p q} := K.RightTaut.toFun p q
 abbrev byEither (K : LAlt L) 
-  {a p q} := K.ByEither.toFun a p q
+  {p q} (Fpq) {r} := K.ByEither.toFun p q Fpq r
 abbrev elim (K : LAlt L) 
-  {a p q} := K.ByEither.toFun a p q
+  {p q} (Fpq) {r} := K.ByEither.toFun p q Fpq r
 
 -- Derived
 abbrev Taut (K : LAlt L)
