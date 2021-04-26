@@ -73,9 +73,8 @@ instance (A : Sort u) [K : Succ A] (n : Nat) [T : OfNatLit A n]
 class SAdd (T : Sort v) :=
   toFun : Binar T
 
--- Currently causes Lean to panic, will be fixed in the April 26th nightly
--- instance iSAddOfAdd {T : Type v} 
---   [K : Add T] : SAdd T := {toFun := K.add} 
+instance iSAddOfAdd {T : Type v} 
+  [K : Add T] : SAdd T := {toFun := K.add} 
 
 instance iAddOfSAdd {T : Type v} 
   [K : SAdd T] : Add T := {add := K.toFun} 
@@ -88,9 +87,8 @@ end SAdd
 class SMul (T : Sort v) :=
   toFun : Binar T
 
--- Currently causes Lean to panic, will be fixed in the April 26th nightly
--- instance iSMulOfMul {T : Type v} 
---   [K : Mul T] : SMul T := {toFun := K.mul} 
+instance iSMulOfMul {T : Type v} 
+  [K : Mul T] : SMul T := {toFun := K.mul} 
 
 instance iMulOfSMul {T : Type v} 
   [K : SMul T] : Mul T := {mul := K.toFun} 
