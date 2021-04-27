@@ -26,16 +26,16 @@ namespace Notation
 open Lean
 
 scoped macro "∀ℕ " xs:explicitBinders " => " b:term : term => 
-  expandExplicitBinders `pForallNat xs b
+  expandExplicitBinders ``pForallNat xs b
 scoped macro "forallNat" xs:explicitBinders " => " b:term : term => 
-  expandExplicitBinders `pForallNat xs b
+  expandExplicitBinders ``pForallNat xs b
 
 @[appUnexpander Gaea.Peano.pForallNat] 
 def unexpandForallNat : Lean.PrettyPrinter.Unexpander
-  | `(pForallNat fun $x:ident => ∀ℕ $xs:binderIdent* => $b)
+  | `($_op:ident fun $x:ident => ∀ℕ $xs:binderIdent* => $b)
     => `(∀ℕ $x:ident $xs:binderIdent* => $b)
-  | `(pForallNat fun $x:ident => $b)
+  | `($_op:ident fun $x:ident => $b)
     => `(∀ℕ $x:ident => $b)
-  | `(pForallNat fun ($x:ident : $t) => $b)              
+  | `($_op:ident fun ($x:ident : $t) => $b)              
     => `(∀ℕ ($x:ident : $t) => $b)
   | _  => throw ()

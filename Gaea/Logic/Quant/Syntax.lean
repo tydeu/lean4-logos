@@ -34,32 +34,32 @@ namespace Notation
 open Lean
 
 scoped macro "∀ " xs:explicitBinders " => " b:term : term => 
-  expandExplicitBinders `lForall xs b
+  expandExplicitBinders ``lForall xs b
 scoped macro "forall " xs:explicitBinders " => " b:term : term => 
-  expandExplicitBinders `lForall xs b
+  expandExplicitBinders ``lForall xs b
 
 scoped macro "∃ " xs:explicitBinders " => " b:term : term => 
-  expandExplicitBinders `lExists xs b
+  expandExplicitBinders ``lExists xs b
 scoped macro "exists " xs:explicitBinders " => " b:term : term => 
-  expandExplicitBinders `lExists xs b
+  expandExplicitBinders ``lExists xs b
 
-@[appUnexpander Gaea.Logic.lForall] 
+@[appUnexpander Gaea.lForall] 
 def unexpandLForall : Lean.PrettyPrinter.Unexpander
-  | `(Gaea.Logic.lForall fun $x:ident => ∀ $xs:binderIdent* => $b)
+  | `($_op:ident fun $x:ident => ∀ $xs:binderIdent* => $b)
     => `(∀ $x:ident $xs:binderIdent* => $b)
-  | `(Gaea.Logic.lForall fun $x:ident => $b)
+  | `($_op:ident fun $x:ident => $b)
     => `(∀ $x:ident => $b)
-  | `(Gaea.Logic.lForall fun ($x:ident : $t) => $b)              
+  | `($_op:ident fun ($x:ident : $t) => $b)              
     => `(∀ ($x:ident : $t) => $b)
   | _  => throw ()
 
-@[appUnexpander Gaea.Logic.lExists] 
+@[appUnexpander Gaea.lExists] 
 def unexpandLExists : Lean.PrettyPrinter.Unexpander
-  | `(Gaea.Logic.lExists fun $x:ident => ∃ $xs:binderIdent* => $b)
+  | `($_op:ident fun $x:ident => ∃ $xs:binderIdent* => $b)
     => `(∃ $x:ident $xs:binderIdent* => $b)
-  | `(Gaea.Logic.lExists fun $x:ident => $b)          
+  | `($_op:ident fun $x:ident => $b)          
     => `(∃ $x:ident => $b)
-  | `(Gaea.Logic.lExists fun ($x:ident : $t) => $b)
+  | `($_op:ident fun ($x:ident : $t) => $b)
     => `(∃ ($x:ident : $t) => $b)
   | _ => throw ()
 

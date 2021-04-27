@@ -18,4 +18,4 @@ end SEq
 
 namespace Notation
 scoped infix:50 (name := syntaxEq) " = " => SEq.toFun
-macro_rules (kind := syntaxEq)  | `($x = $y)  => `(binrel% eq $x $y)
+macro_rules (kind := syntaxEq) | `($x = $y) => `(binrel% SEq.toFun $x $y)
