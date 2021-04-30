@@ -14,7 +14,7 @@ def funSubstByReflPredSubst {P : Sort u} {T : Sort v}
 : (f : T -> T) -> (a b : T) -> (L |- R a b) -> (L |- R (f a) (f b))
 := by 
   intro f a b Rab
-  apply predSubst (F := fun x => R (f a) (f x)) Rab 
+  apply psubst (F := fun x => R (f a) (f x)) Rab 
   exact refl (f a)
 
 instance iFunSubstByReflPredSubst {P : Sort u} {T : Sort v} 
@@ -31,7 +31,7 @@ def symmByReflPredSubst {P : Sort u} {T : Sort v}
 : (a b : T) -> (L |- R a b) -> (L |- R b a)
 := by 
   intro a b Rab 
-  apply predSubst (F := fun x => R x a) Rab 
+  apply psubst (F := fun x => R x a) Rab 
   exact refl a
 
 instance iSymmByReflPredSubst {P : Sort u} {T : Sort v} 
@@ -48,7 +48,7 @@ def transByPredSubst {P : Sort u} {T : Sort v}
 : (a b c : T) -> (L |- R a b) -> (L |- R b c) -> (L |- R a c) 
 := by 
   intro a b c Rab Rbc 
-  apply predSubst (F := fun x => R a x) Rbc
+  apply psubst (F := fun x => R a x) Rbc
   exact Rab
 
 instance iTransByPredSubst {P : Sort u} {T : Sort v} 
@@ -138,13 +138,13 @@ instance iRightEucBySymmTransT
 {toFun := rightEucBySymmTransT Sm Tr}
 
 --------------------------------------------------------------------------------
--- Join
--- (x = a) /\ (y = b) /\ (a = b) -> (x = y)
+-- Left Transitive Join
+-- R a c, R b d, R c d |- R a b
 --------------------------------------------------------------------------------
 
 -- By Trans/LeftEuc
 
-def relJoinByTransLeftEucT
+def leftTransJoinByTransLeftEucT
 {P : Sort u} {T : Sort v} {L : Logic P} {R : Rel P T} {C : T -> P}
 (Tr : TransT L R C) (LEu : LeftEucT L R C)
 : (a b c d : T) -> 
@@ -154,14 +154,14 @@ def relJoinByTransLeftEucT
   intro a b c d Ca Cb Cc Cd Rac Rbd Rcd
   exact leftEucT Cd Ca Cb (transT Ca Cc Cd Rac Rcd) Rbd
 
-instance iRelJoinByTransLeftEucT
+instance iLeftTransJoinByTransLeftEucT
 {P : Sort u} {T : Sort v} {L : Logic P} {R : Rel P T} {C : T -> P} 
-[Tr : TransT L R C] [LEu : LeftEucT L R C] : RelJoinT L R C := 
-{toFun := relJoinByTransLeftEucT Tr LEu}
+[Tr : TransT L R C] [LEu : LeftEucT L R C] : LeftTransJoinT L R R C := 
+{toFun := leftTransJoinByTransLeftEucT Tr LEu}
 
 -- By Symm/Trans
 
-def relJoinBySymmTransT
+def leftTransJoinBySymmTransT
 {P : Sort u} {T : Sort v} {L : Logic P} {R : Rel P T} {C : T -> P} 
 (Sm : SymmT L R C) (Tr : TransT L R C)
 : (a b c d : T) -> 
@@ -171,7 +171,7 @@ def relJoinBySymmTransT
   intro a b c d Ca Cb Cc Cd Rac Rbd Rcd
   exact transT Ca Cd Cb (transT Ca Cc Cd Rac Rcd) (symmT Cb Cd Rbd)
 
-instance iRelJoinBySymmTransT 
+instance iLeftTransJoinBySymmTransT 
 {P : Sort u} {T : Sort v} {L : Logic P} {R : Rel P T} {C : T -> P} 
-[Sm : SymmT L R C] [Tr : TransT L R C] : RelJoinT L R C 
-:= {toFun := relJoinBySymmTransT Sm Tr}
+[Sm : SymmT L R C] [Tr : TransT L R C] : LeftTransJoinT L R R C 
+:= {toFun := leftTransJoinBySymmTransT Sm Tr}

@@ -93,32 +93,6 @@ abbrev eqTransNat'  {L : Logic P} [N : IsNat P T] [Q : SEq P T]
   [K : EqTransNat L N Q] {a b c} := K.toFun a b c
 
 --------------------------------------------------------------------------------
--- Join
---------------------------------------------------------------------------------
-
--- x = a, y = b, a = b |- x = y
-
-class EqNatJoin (L : Logic P) (N : IsNat P T) (Q : SEq P T) :=
-  toFun : (x y a b : T) -> 
-    (L |- nat x) -> (L |- nat y) -> (L |- nat a) -> (L |- nat b) ->
-    (L |- x = a) -> (L |- y = b) -> (L |- a = b) -> (L |- x = y)
-
-abbrev eqNatJoin {L : Logic P} [N : IsNat P T] [Q : SEq P T]
-  [K : EqNatJoin L N Q] {x y a b} := K.toFun x y a b 
-
-instance iRelJoinTOfEqNatJoin {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
-  [K : EqNatJoin L N Q] : RelJoinT L Q.toFun N.isNat := {toFun := K.toFun}
-
-instance iEqNatJoinOfRelJoinT {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
-  [K : RelJoinT L Q.toFun N.isNat] : EqNatJoin L N Q := {toFun := K.toFun}
-
--- a = b, x = a, y = b |- x = y
-
-abbrev eqNatJoin' {L : Logic P} 
-  [N : IsNat P T] [Q : SEq P T] [K : EqNatJoin L N Q] {a b x y}
-  (Na Nb Nx Ny Qab Qxa Qyb) := K.toFun x y a b Nx Ny Na Nb Qxa Qyb Qab
-
---------------------------------------------------------------------------------
 -- Euclideaness
 --------------------------------------------------------------------------------
 
@@ -171,3 +145,29 @@ instance iEqNatRightEucOfEqRightEucT
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
   [K : RightEucT L Q.toFun N.isNat] : EqNatRightEuc L N Q := 
   {toFun := K.toFun}
+
+--------------------------------------------------------------------------------
+-- Left Transitive Join
+--------------------------------------------------------------------------------
+
+-- x = a, y = b, a = b |- x = y
+
+class EqNatJoin (L : Logic P) (N : IsNat P T) (Q : SEq P T) :=
+  toFun : (x y a b : T) -> 
+    (L |- nat x) -> (L |- nat y) -> (L |- nat a) -> (L |- nat b) ->
+    (L |- x = a) -> (L |- y = b) -> (L |- a = b) -> (L |- x = y)
+
+abbrev eqNatJoin {L : Logic P} [N : IsNat P T] [Q : SEq P T]
+  [K : EqNatJoin L N Q] {x y a b} := K.toFun x y a b 
+
+instance iLeftTransJoinTOfEqNatJoin {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
+  [K : EqNatJoin L N Q] : LeftTransJoinT L Q.toFun Q.toFun N.isNat := {toFun := K.toFun}
+
+instance iEqNatJoinOfLeftTransJoinT {L : Logic P} [N : IsNat P T] [Q : SEq P T] 
+  [K : LeftTransJoinT L Q.toFun Q.toFun N.isNat] : EqNatJoin L N Q := {toFun := K.toFun}
+
+-- a = b, x = a, y = b |- x = y
+
+abbrev eqNatJoin' {L : Logic P} 
+  [N : IsNat P T] [Q : SEq P T] [K : EqNatJoin L N Q] {a b x y}
+  (Na Nb Nx Ny Qab Qxa Qyb) := K.toFun x y a b Nx Ny Na Nb Qxa Qyb Qab

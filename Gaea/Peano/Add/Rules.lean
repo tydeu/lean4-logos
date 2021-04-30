@@ -171,14 +171,14 @@ class EqNatAddNatLeft (L : Logic P)
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
     (L |- a = b) -> (L |- c + a = c + b)
 
-instance iLeftReflTOfEqNatAddNatLeft 
+instance iLeftApplyTOfEqNatAddNatLeft 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T] 
-  [K : EqNatAddNatLeft L N Q A] : LeftReflT L Q.toFun N.isNat A.toFun 
+  [K : EqNatAddNatLeft L N Q A] : LeftApplyT L Q.toFun N.isNat A.toFun 
   := {toFun := fun a b c Na Nb Nc => K.toFun b c a Nb Nc Na}
 
-instance iEqNatAddNatLeftTOfLeftReflT 
+instance iEqNatAddNatLeftTOfLeftApplyT 
   {L : Logic P} [N : IsNat P T] [Q : SEq P T] [A : SAdd T] 
-  [K : LeftReflT L Q.toFun N.isNat A.toFun] : EqNatAddNatLeft L N Q A
+  [K : LeftApplyT L Q.toFun N.isNat A.toFun] : EqNatAddNatLeft L N Q A
   := {toFun := fun a b c Na Nb Nc => K.toFun c a b Nc Na Nb}
 
 abbrev eqNatAddNatLeft {L : Logic P} 
@@ -197,14 +197,14 @@ class EqNatAddNatRight (L : Logic P)
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
     (L |- a = b) -> (L |- a + c = b + c)
 
-instance iRightReflTOfEqNatAddNatRight {L : Logic P} 
+instance iRightApplyTOfEqNatAddNatRight {L : Logic P} 
   [N : IsNat P T] [Q : SEq P T] [A : SAdd T] 
-  [K : EqNatAddNatRight L N Q A] : RightReflT L Q.toFun N.isNat A.toFun 
+  [K : EqNatAddNatRight L N Q A] : RightApplyT L Q.toFun N.isNat A.toFun 
   := {toFun := fun a b c Na Nb Nc => K.toFun b c a Nb Nc Na}
 
-instance iEqNatAddNatRightOfRightReflT {L : Logic P} 
+instance iEqNatAddNatRightOfRightApplyT {L : Logic P} 
   [N : IsNat P T] [Q : SEq P T] [A : SAdd T] 
-  [K : RightReflT L Q.toFun N.isNat A.toFun] : EqNatAddNatRight L N Q A
+  [K : RightApplyT L Q.toFun N.isNat A.toFun] : EqNatAddNatRight L N Q A
   := {toFun := fun a b c Na Nb Nc => K.toFun c a b Nc Na Nb}
 
 abbrev eqNatAddNatRight {L : Logic P}

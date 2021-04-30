@@ -37,18 +37,18 @@ class EqNatToEqSucc (L : Logic P) (N : IsNat P T) (Q : SEq P T) (S : Succ T) :=
   toFun : (m n : T) -> (L |- nat m) -> (L |- nat n) -> 
     (L |- m = n) -> (L |- S m = S n)
 
-instance iEqNatToEqSuccOfFSubstT
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [S : Succ T]
-  [K : EqNatToEqSucc L N Q S] : FSubstT L Q.toFun N.isNat S.toFun 
-  := {toFun := K.toFun}
-
-instance iFSubstTOfEqNatToEqSucc
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [S : Succ T]
-  [K : FSubstT L Q.toFun N.isNat S.toFun] : EqNatToEqSucc L N Q S
-  := {toFun := K.toFun}
-
 abbrev eqNatToEqSucc {L : Logic P} [N : IsNat P T] [Q : SEq P T] [S : Succ T]
   [K : EqNatToEqSucc L N Q S] {m n} := K.toFun m n
+
+instance iEqNatToEqSuccOfFApplyT
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [S : Succ T]
+  [K : EqNatToEqSucc L N Q S] : FApplyT L Q.toFun N.isNat S.toFun 
+  := {toFun := K.toFun}
+
+instance iFApplyTOfEqNatToEqSucc
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [S : Succ T]
+  [K : FApplyT L Q.toFun N.isNat S.toFun] : EqNatToEqSucc L N Q S
+  := {toFun := K.toFun}
 
 -- Axiom 7b
 class EqSuccToEqNat (L : Logic P) (N : IsNat P T) (Q : SEq P T) (S : Succ T) :=
@@ -57,6 +57,16 @@ class EqSuccToEqNat (L : Logic P) (N : IsNat P T) (Q : SEq P T) (S : Succ T) :=
 
 abbrev eqSuccToEqNat {L : Logic P} [N : IsNat P T] [Q : SEq P T] [S : Succ T]
   [K : EqSuccToEqNat L N Q S] {m n} := K.toFun m n
+
+instance iEqSuccToEqNatOfFCancelT
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [S : Succ T]
+  [K : EqSuccToEqNat L N Q S] : FCancelT L Q.toFun N.isNat S.toFun 
+  := {toFun := K.toFun}
+
+instance iFApplyTOfEqSuccToEqNat
+  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [S : Succ T]
+  [K : FCancelT L Q.toFun N.isNat S.toFun] : EqSuccToEqNat L N Q S
+  := {toFun := K.toFun}
 
 -- Axiom 8
 class SuccNatEqZeroFalse (L : Logic P) (N : PNat P T) (Q : SEq P T) :=

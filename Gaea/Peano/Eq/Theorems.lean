@@ -16,7 +16,7 @@ instance iEqNatLeftEucBySymmTransT
 instance iEqNatJoinBySymmTransT
 {P : Sort u} {T : Sort v} {L : Logic P} [N : IsNat P T]
 [Q : SEq P T] [QSm : EqNatSymm L N Q] [QTr : EqNatTrans L N Q]
-: EqNatJoin L N Q := iEqNatJoinOfRelJoinT (K := iRelJoinBySymmTransT)
+: EqNatJoin L N Q := iEqNatJoinOfLeftTransJoinT (K := iLeftTransJoinBySymmTransT)
 
 --------------------------------------------------------------------------------
 -- NatEqNat Variations
