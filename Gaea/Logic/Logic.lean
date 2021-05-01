@@ -1,12 +1,16 @@
 namespace Gaea
 
-class Logic.{u,v} (P : Sort u) :=
-  judgment : P -> Sort v
+universes u v
+
+class Logic (P : Sort u) :=
+  judge : P -> Sort v
 
 namespace Logic
 
-def prop.{u,v} {P : Sort u} (L : Logic.{u,v} P) : Sort u 
+variable {P : Sort u}
+
+abbrev «Prop» (L : Logic.{u,v} P) : Sort u 
   := P
 
-def proof.{u,v} {P : Sort u} (L : Logic.{u,v} P) : Type v 
+abbrev Proof (L : Logic.{u,v} P) : Type v 
   := Sort v

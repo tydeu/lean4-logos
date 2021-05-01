@@ -81,11 +81,11 @@ abbrev mtpr {L : Logic P} {F} {f : Unar P}
 --------------------------------------------------------------------------------
 
 def Contradiction (L : Logic P) (f : Unar P) :=
-  PSigma fun (p : P) => PProd (L |- f p) (L |- p) 
+  PSigma fun (p : P) => L.Prod (f p) p 
 
 def contradiction {L : Logic P} {f}
   {p} (LNp : L |- f p) (Lp : L |- p) : Contradiction L f := 
-    PSigma.mk p (PProd.mk LNp Lp)
+    PSigma.mk p (L.prod LNp Lp)
 
 -- Proof by Contradiction
 -- ((|- p) -> Contradiction) -> (|- f p)
