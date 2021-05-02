@@ -10,6 +10,9 @@ variable {P : Sort u}
 
 namespace Gaea
 
+variable 
+  {L : Logic P} {F : Binar P} {f : Unar P}
+
 --------------------------------------------------------------------------------
 -- Contraposition
 --------------------------------------------------------------------------------
@@ -17,7 +20,6 @@ namespace Gaea
 -- ((|- ~q) -> (|- ~p)) -> (|- p -> q)
 
 def byContrapositionByDneImpContra 
-{L : Logic P} {F : Binar P} {f : Unar P}
 (DnE : DblNegElim L f)
 (Cnd : Condition L F)
 (ByC : ByContradiction L f)
@@ -32,12 +34,11 @@ def byContrapositionByDneImpContra
   contradiction LNp Lp
 
 instance iByContrapositionByDneImpContra 
-{L : Logic P} {F : Binar P} {f : Unar P}
 [DnE : DblNegElim L f]
 [Cnd : Condition L F]
 [ByC : ByContradiction L f]
-: ByContraposition L F f :=
-{toFun := byContrapositionByDneImpContra DnE Cnd ByC}
+: ByContraposition L F f := pack $ 
+  byContrapositionByDneImpContra DnE Cnd ByC
 
 --------------------------------------------------------------------------------
 -- Modus Tollens
@@ -46,7 +47,6 @@ instance iByContrapositionByDneImpContra
 -- (|- p -> q) -> (|- ~q) -> (|- ~p) 
 
 def mtByMpContra
-{L : Logic P} {F : Binar P} {f : Unar P}
 (Mp  : ModusPonens L F) 
 (ByC : ByContradiction L f)
 : (p q : P) -> (L |- F p q) -> (L |- f q) -> (L |- f p)
@@ -58,18 +58,14 @@ def mtByMpContra
   contradiction LNq Lq
 
 instance iModusTollensByMpContra 
-{L : Logic P} {F : Binar P} {f : Unar P}
-[Mp  : ModusPonens L F]
-[ByC : ByContradiction L f]
-: ModusTollens L F f :=
-{toFun := mtByMpContra Mp ByC}
+[Mp  : ModusPonens L F] [ByC : ByContradiction L f]
+: ModusTollens L F f := pack $ mtByMpContra Mp ByC
 
 --------------------------------------------------------------------------------
 -- By Contradiction
 --------------------------------------------------------------------------------
 
 def byContraByAdFalsoNoncontra
-{L : Logic P} {f : Unar P}
 (AdF : AdFalso L f) 
 (Nc  : Noncontradiction L f)
 : (p : P) -> ((L |- p) -> Contradiction L f) -> (L |- f p)
@@ -79,6 +75,6 @@ def byContraByAdFalsoNoncontra
   have C := (LpC Lp).2
   noncontradiction C.1 C.2
 
-instance iByContraByAdFalsoNoncontra {L : Logic P} {f}
-[AdF : AdFalso L f] [Nc : Noncontradiction L f] : ByContradiction L f := 
-{toFun := byContraByAdFalsoNoncontra AdF Nc}
+instance iByContraByAdFalsoNoncontra
+[AdF : AdFalso L f] [Nc : Noncontradiction L f] 
+: ByContradiction L f := pack $ byContraByAdFalsoNoncontra AdF Nc
