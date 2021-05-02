@@ -1,21 +1,26 @@
+import Gaea.Newtype
 import Gaea.FunTypes
 
 universes u v
+variable {P : Sort u} {T : Sort v}
 
 namespace Gaea 
 
-class SEq (P : Sort u) (T : Sort v) :=
-  toFun : Rel P T
+class funtype SEq (P : Sort u) (T : Sort v) : Rel P T
+class funtype SNe (P : Sort u) (T : Sort v) : Rel P T
 
-abbrev eq {P : Sort u} {T : Sort v} 
-  [K : SEq P T] := K.toFun
+@[defaultInstance low] instance {T : Sort v} : SEq Prop T := pack Eq
+@[defaultInstance low] instance {T : Sort v} : SNe Prop T := pack Ne
 
-namespace SEq
-variable {P : Sort u} {T : Sort v}
-abbrev funType (K : SEq P T) := Rel P T
-instance : CoeFun (SEq P T) funType := {coe := fun K => K.toFun}
-end SEq
+abbrev eq [K : SEq P T] := unpack K
+abbrev ne [K : SNe P T] := unpack K
 
 namespace Notation
-scoped infix:50 (name := syntaxEq) " = " => SEq.toFun
-macro_rules (kind := syntaxEq) | `($x = $y) => `(binrel% SEq.toFun $x $y)
+
+scoped infix:50 (name := syntaxEq)  (priority := default + default) " = "  => SEq.toFun
+scoped infix:50 (name := syntaxNe)  (priority := default + default) " /= " => SNe.toFun
+scoped infix:50 (name := syntaxNe') (priority := default + default) " ≠ "  => SNe.toFun
+
+macro_rules (kind := syntaxEq)  | `($x = $y)  => `(binrel% SEq.toFun $x $y)
+macro_rules (kind := syntaxNe)  | `($x /= $y) => `(binrel% SNe.toFun $x $y)
+macro_rules (kind := syntaxNe') | `($x ≠ $y)  => `(binrel% SNe.toFun $x $y)

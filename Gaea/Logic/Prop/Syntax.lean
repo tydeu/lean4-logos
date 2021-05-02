@@ -1,3 +1,4 @@
+import Gaea.Newtype
 import Gaea.FunTypes
 
 universe u
@@ -9,69 +10,27 @@ namespace Gaea
 -- Constants
 --------------------------------------------------------------------------------
 
-class Verum (P : Sort u) :=
-  toProp : P
+class newtype Verum (P : Sort u) : P
+class newtype Falsum (P : Sort u) : P
 
-abbrev verum [K : Verum P] := K.toProp
-
-class Falsum (P : Sort u) :=
-  toProp : P
-
-abbrev falsum [K : Falsum P] := K.toProp
+abbrev verum [K : Verum P] := unpack K
+abbrev falsum [K : Falsum P] := unpack K
 
 --------------------------------------------------------------------------------
 -- Connectives
 --------------------------------------------------------------------------------
 
-class LArr (P : Sort u) :=
-  toFun : Binar P
+class funtype LArr (P : Sort u) : Binar P
+class funtype SIff (P : Sort u) : Binar P
+class funtype Conj (P : Sort u) : Binar P
+class funtype Disj (P : Sort u) : Binar P
+class funtype LNeg (P : Sort u) : Unar P
 
-abbrev larr [K : LArr P] := K.toFun
-
-namespace LArr
-abbrev funType (K : LArr P) := Binar P
-instance : CoeFun (LArr P) funType := {coe := fun K => K.toFun}
-end LArr
-
-class SIff (P : Sort u) :=
-  toFun : Binar P
-
-abbrev iff [K : SIff P] := K.toFun
-
-namespace SIff
-abbrev funType (K : SIff P) := Binar P
-instance : CoeFun (SIff P) funType := {coe := fun K => K.toFun}
-end SIff
-
-class Conj (P : Sort u) :=
-  toFun : Binar P
-
-abbrev conj [K : Conj P] := K.toFun
-
-namespace Conj
-abbrev funType (K : Conj P) := Binar P
-instance : CoeFun (Conj P) funType := {coe := fun K => K.toFun}
-end Conj
-
-class Disj (P : Sort u) :=
-  toFun : Binar P
-
-abbrev disj [K : Disj P] := K.toFun
-
-namespace Disj
-abbrev funType (K : Disj P) := Binar P
-instance : CoeFun (Disj P) funType := {coe := fun K => K.toFun}
-end Disj
-
-class LNeg (P : Sort u) :=
-  toFun : Unar P
-
-abbrev lneg [K : LNeg P] := K.toFun
-
-namespace LNeg
-abbrev funType (K : LNeg P) := Unar P
-instance : CoeFun (LNeg P) funType := {coe := fun K => K.toFun}
-end LNeg
+abbrev larr [K : LArr P] := unpack K
+abbrev iff  [K : SIff P] := unpack K
+abbrev conj [K : Conj P] := unpack K
+abbrev disj [K : Disj P] := unpack K
+abbrev lneg [K : LNeg P] := unpack K
 
 --------------------------------------------------------------------------------
 -- Notation
@@ -79,8 +38,8 @@ end LNeg
 
 namespace Notation
 
-scoped notation "⊤" => Verum.toProp
-scoped notation "⊥" => Falsum.toProp
+scoped notation "⊤" => Verum.val
+scoped notation "⊥" => Falsum.val
 
 scoped infixr:25 " -> "  => LArr.toFun
 scoped infixr:25 " ⇒ "   => LArr.toFun

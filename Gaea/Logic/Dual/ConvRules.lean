@@ -15,7 +15,7 @@ class funtype ImportFalse (L : Logic P) (falsum : P) :
   False -> (L |- falsum) 
 
 abbrev importFalse {L : Logic P} {falsum}
-  [K : ImportFalse L falsum] := K.toFun
+  [K : ImportFalse L falsum] := unpack K
 
 instance iImportFalse {L : Logic P} {p} 
   : ImportFalse L p := pack False.elim
@@ -26,11 +26,11 @@ class funtype ExportFalse (L : Logic P) (falsum : P) :
   (L |- falsum) -> False
 
 abbrev exportFalse {L : Logic P} {falsum}
-  [K : ExportFalse L falsum] := K.toFun
+  [K : ExportFalse L falsum] := unpack K
 
 instance iExFalsumOfExportFalse {L : Logic P} {falsum}
   [K : ExportFalse L falsum] : ExFalsum L falsum 
-  := pack fun p Lf => False.elim (K.toFun Lf)
+  := pack fun p Lf => False.elim (unpack K Lf)
 
 --------------------------------------------------------------------------------
 -- Not
@@ -39,7 +39,7 @@ instance iExFalsumOfExportFalse {L : Logic P} {falsum}
 -- Not p -> (|- ~p)
 
 class funtype ImportNot (L : Logic.{u,0} P) (lneg : Unar P) :=
-  {p : P} : Not (L |- p) -> (L |- lneg p) 
+  {p : P} : Not (L |- p) -> (L |- lneg p)
 
 abbrev importNot {L : Logic.{u,0} P} {lneg}
   [K : ImportNot L lneg] {p} := K.toFun p

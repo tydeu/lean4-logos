@@ -24,9 +24,6 @@ instance iLEnt {L : Logic P} [larr : LArr P]
 
 namespace LEnt
 
-abbrev funType (K : LEnt L) := Binar P
-instance : CoeFun (LEnt L) funType := {coe := fun K => K.toFun}
-
 instance [K : LEnt L] : 
   Gaea.Condition L K.toFun := K.Condition
 instance [K : LEnt L] : 
@@ -79,9 +76,6 @@ instance iLIff {L : Logic P}
   {toSIff := iff, Bicondition := B, LeftMp := Mpl, RightMp := Mpr}
 
 namespace LIff
-
-abbrev funType (K : LIff L) := Binar P
-instance : CoeFun (LIff L) funType := {coe := fun K => K.toFun}
 
 instance [K : LIff L] :
   Gaea.Bicondition L K.toFun := K.Bicondition
@@ -185,9 +179,6 @@ instance iLAlt {L : Logic P} [Dj : Disj P]
   : LAlt L := {toDisj := Dj, ByEither := E, LeftTaut := IL, RightTaut := IR}
 
 namespace LAlt
-
-abbrev funType (K : LAlt L) := Binar P
-instance : CoeFun (LAlt L) funType := {coe := fun K => K.toFun}
 
 instance [K : LAlt L] :
   Gaea.LeftTaut L K.toFun := K.LeftTaut

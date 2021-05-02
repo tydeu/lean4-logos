@@ -1,3 +1,4 @@
+import Gaea.Newtype
 import Gaea.FunTypes
 
 universes u v
@@ -5,28 +6,10 @@ variable {P : Sort u} {T : Sort v}
 
 namespace Gaea
 
--- Forall
-
-class SForall (P : Sort u) (T : Sort v) :=
-  toFun : Quant P T
-
-namespace SForall
-abbrev funType (K : SForall P T) := Quant P T
-instance : CoeFun (SForall P T) funType := {coe := fun K => K.toFun}
-end SForall
+class funtype SForall (P : Sort u) (T : Sort v) : Quant P T
+class funtype SExists (P : Sort u) (T : Sort v) : Quant P T
 
 abbrev lForall [K : SForall P T] := K.toFun
-
--- Exists
-
-class SExists (P : Sort u) (T : Sort v) :=
-  toFun : Quant P T
-
-namespace SExists
-abbrev funType (K : SExists P T) := Quant P T
-instance : CoeFun (SExists P T) funType := {coe := fun K => K.toFun}
-end SExists
-
 abbrev lExists [K : SExists P T] := K.toFun
 
 namespace Notation

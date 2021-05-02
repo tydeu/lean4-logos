@@ -108,13 +108,13 @@ def mkFuntypeDecl
   let applyType <- mkDepArrows applyParams fnRet
   let (applyArgs, fnParams) <- paramsToApp applyParams
   let fnType <- mkDepArrows fnParams fnRet
-  let fieldId := fieldId?.getD (mkIdent `val)
+  let fieldId := fieldId?.getD (mkIdent `toFun)
   let decl <- mkNewtypeStructDecl isClass declId typeParams fieldId fnType
   let (typeArgs, vars) <- paramsToVars typeParams
   let ntype := mkApp name typeArgs
   let nvar := mkIdent `K
   let valId := mkIdent (`K ++ fieldId.getId)
-  let funId := mkIdent `toFun
+  let funId := mkIdent `toUnpackFun
   let applyId := mkIdent `apply
   let applyFunId := mkIdent `toApplyFun
   `(
@@ -140,4 +140,3 @@ def expandFuntypeDecl : Macro
 | `(class funtype $id:declId $ps:bracketedBinder* $[:= $[$f:ident]? $fps:bracketedBinder*]? : $t:term) =>
   mkFuntypeDecl true id ps (f.getD none) (fps.getD #[]) t
 | _ => Macro.throwUnsupported
-
