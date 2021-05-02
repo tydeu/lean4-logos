@@ -131,13 +131,13 @@ def mkFuntypeDecl
 
 scoped syntax (name := funtypeDecl)
   "class "? "funtype " declId bracketedBinder* 
-    (":=" ident)? (":" bracketedBinder*)? "=>" term : command
+    (":=" ident ? bracketedBinder*)? ":" term : command
 
 @[macro funtypeDecl]
 def expandFuntypeDecl : Macro
-| `(funtype $id:declId $ps:bracketedBinder* $[:= $f:ident]? $[: $fps:bracketedBinder*]? => $t:term) =>
-  mkFuntypeDecl false id ps f (fps.getD #[]) t
-| `(class funtype $id:declId $ps:bracketedBinder* $[:= $f:ident]? $[: $fps:bracketedBinder*]? => $t:term) =>
-  mkFuntypeDecl true id ps f (fps.getD #[]) t
+| `(funtype $id:declId $ps:bracketedBinder* $[:= $[$f:ident]? $fps:bracketedBinder*]? : $t:term) =>
+  mkFuntypeDecl false id ps (f.getD none) (fps.getD #[]) t
+| `(class funtype $id:declId $ps:bracketedBinder* $[:= $[$f:ident]? $fps:bracketedBinder*]? : $t:term) =>
+  mkFuntypeDecl true id ps (f.getD none) (fps.getD #[]) t
 | _ => Macro.throwUnsupported
 

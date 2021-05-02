@@ -12,8 +12,8 @@ namespace Gaea
 -- (~q |- ~p) -> (|- p -> q)
 --------------------------------------------------------------------------------
 
-class funtype ByContraposition (L : Logic P) (F : Binar P) (f : Unar P)
-  : {p q : P} => ((L |- f q) -> (L |- f p)) -> (L |- F p q) 
+class funtype ByContraposition (L : Logic P) (F : Binar P) (f : Unar P) := 
+  {p q : P} : ((L |- f q) -> (L |- f p)) -> (L |- F p q) 
 
 abbrev byContraposition {L : Logic P} {F f}
   [K : ByContraposition L F f] {p q} := K p q
@@ -24,8 +24,8 @@ abbrev byContraposition {L : Logic P} {F f}
 
 -- F p q, f p |- q 
 
-class funtype LeftMt (L : Logic P) (F : Binar P) (f : Unar P)
-  : {p q : P} => (L |- F p q) -> (L |- f p) -> (L |- f q) 
+class funtype LeftMt (L : Logic P) (F : Binar P) (f : Unar P) := 
+  {p q : P} : (L |- F p q) -> (L |- f p) -> (L |- f q) 
 
 abbrev leftMt {L : Logic P} {F f} 
   [K : LeftMt L F f] {p q} := K.toFun p q
@@ -35,8 +35,8 @@ abbrev mtr {L : Logic P} {F f}
 
 -- F p q, f q |- ~p 
 
-class funtype RightMt (L : Logic P) (F : Binar P) (f : Unar P)
-  : {p q : P} => (L |- F p q) -> (L |- f q) -> (L |- f p)
+class funtype RightMt (L : Logic P) (F : Binar P) (f : Unar P) := 
+  {p q : P} : (L |- F p q) -> (L |- f q) -> (L |- f p)
 
 abbrev rightMt {L : Logic P} {F f} 
   [K : RightMt L F f] {p q} := K.toFun p q
@@ -53,8 +53,8 @@ abbrev mt {L : Logic P} {F f}
 
 -- F p q, f p |- q
 
-class funtype LeftMtp (L : Logic P) (F : Binar P) (f : Unar P)
-  : {p q : P} => (L |- F p q) -> (L |- f p) -> (L |- q)
+class funtype LeftMtp (L : Logic P) (F : Binar P) (f : Unar P) := 
+  {p q : P} : (L |- F p q) -> (L |- f p) -> (L |- q)
 
 abbrev leftMtp {L : Logic P} {F} {f : Unar P} 
   [K : LeftMtp L F f] {p q} := K.toFun p q
@@ -67,8 +67,8 @@ abbrev mtp {L : Logic P} {F} {f : Unar P}
 
 -- F p q, f q |- p
 
-class funtype RightMtp (L : Logic P) (F : Binar P) (f : Unar P) 
-  : {p q : P} => (L |- F p q) -> (L |- f q) -> (L |- p)
+class funtype RightMtp (L : Logic P) (F : Binar P) (f : Unar P) := 
+  {p q : P} : (L |- F p q) -> (L |- f q) -> (L |- p)
 
 abbrev rightMtp {L : Logic P} {F} {f : Unar P} 
   [K : RightMtp L F f] {p q} := K.toFun p q
@@ -90,8 +90,8 @@ def contradiction {L : Logic P} {f}
 -- Proof by Contradiction
 -- ((|- p) -> Contradiction) -> (|- f p)
 
-class funtype ByContradiction (L : Logic P) (f : Unar P)
-  : {p : P} => ((L |- p) -> Contradiction L f) -> (L |- f p)
+class funtype ByContradiction (L : Logic P) (f : Unar P) := 
+  {p : P} : ((L |- p) -> Contradiction L f) -> (L |- f p)
 
 abbrev byContradiction {L : Logic P} {f}
   [K : ByContradiction L f] {p} := K.toFun p
@@ -102,24 +102,24 @@ abbrev byContradiction {L : Logic P} {f}
 
 -- Not |- p, ~p
 
-class funtype Noncontradiction (L : Logic P) (f : Unar P) 
-  : {p : P} => (L |- f p) -> (L |- p) -> False
+class funtype Noncontradiction (L : Logic P) (f : Unar P) := 
+  {p : P} : (L |- f p) -> (L |- p) -> False
 
 abbrev noncontradiction {L : Logic P} {f} 
   [K : Noncontradiction L f] {p} := K.toFun p
 
 -- ((|- p) -> False) -> (|- f p)
 
-class funtype AdFalso (L : Logic P) (f : Unar P)
-  : {p : P} => ((L |- p) -> False) -> (L |- f p) 
+class funtype AdFalso (L : Logic P) (f : Unar P) := 
+  {p : P} : ((L |- p) -> False) -> (L |- f p) 
 
 abbrev adFalso {L : Logic P} {f}
   [K : AdFalso L f] {p} := K.toFun p
 
 -- (p |- falsum) -> (|- f p)
 
-class funtype AdFalsum (L : Logic P) (falsum : P) (f : Unar P)
-  : (p : P) => ((L |- p) -> (L |- falsum)) -> (L |- f p)
+class funtype AdFalsum (L : Logic P) (falsum : P) (f : Unar P) := 
+  {p : P} : ((L |- p) -> (L |- falsum)) -> (L |- f p)
 
 abbrev adFalsum {L : Logic P} {falsum : P} {f : Unar P}
   [K : AdFalsum L falsum f] {p} := K.toFun p
@@ -128,7 +128,7 @@ abbrev adFalsum {L : Logic P} {falsum : P} {f : Unar P}
 -- (|- falsum) -> (|- p)
 
 class funtype ExFalsum (L : Logic P) (falsum : P)
-  : {p : P} => (L |- falsum) -> (L |- p)
+  := {p : P} : (L |- falsum) -> (L |- p)
 
 abbrev exFalsum {L : Logic P} {falsum}
   [K : ExFalsum L falsum] {p} := K.toFun p
@@ -139,16 +139,16 @@ abbrev exFalsum {L : Logic P} {falsum}
 
 -- p |- f (f p)
 
-class funtype DblNegIntro (L : Logic P) (f : Unar P)
-  : {p : P} => (L |- p) -> (L |- f (f p))
+class funtype DblNegIntro (L : Logic P) (f : Unar P) := 
+  {p : P} : (L |- p) -> (L |- f (f p))
 
 abbrev dblNegIntro {L : Logic P} {f}
   [K : DblNegIntro L f] {p} := K.toFun p
 
 -- f (f p) |- p
 
-class funtype DblNegElim (L : Logic P) (f : Unar P)
-  : {p : P} => (L |- f (f p)) -> (L |- p)
+class funtype DblNegElim (L : Logic P) (f : Unar P) := 
+  {p : P} : (L |- f (f p)) -> (L |- p)
 
 abbrev dblNegElim {L : Logic P} {f}
   [K : DblNegElim L f] {p} := K.toFun p
