@@ -8,6 +8,74 @@ variable {P : Sort u}
 namespace Gaea
 
 --------------------------------------------------------------------------------
+-- Contradiction
+--------------------------------------------------------------------------------
+
+def Contradiction (L : Logic P) (f : Unar P) :=
+  PSigma fun (p : P) => L.Prod (f p) p 
+
+def contradiction {L : Logic P} {f}
+  {p} (LNp : L |- f p) (Lp : L |- p) : Contradiction L f := 
+    PSigma.mk p (L.prod LNp Lp)
+
+-- Proof by Contradiction
+-- ((|- p) -> Contradiction) -> (|- f p)
+
+class funtype ByContradiction (L : Logic P) (f : Unar P) := 
+  {p : P} : ((L |- p) -> Contradiction L f) -> (L |- f p)
+
+abbrev byContradiction {L : Logic P} {f}
+  [K : ByContradiction L f] {p} := unpack K p
+
+--------------------------------------------------------------------------------
+-- Falsity
+--------------------------------------------------------------------------------
+
+-- Consistency
+-- Not (|- p, ~p)
+
+class funtype Noncontradiction (L : Logic P) (f : Unar P) := 
+  {p : P} : (L |- f p) -> (L |- p) -> False
+
+abbrev noncontradiction {L : Logic P} {f} 
+  [K : Noncontradiction L f] {p} := unpack K p
+
+-- Proof by Unprovability
+-- ((|- p) -> False) -> (|- f p)
+
+class funtype AdFalso (L : Logic P) (f : Unar P) := 
+  {p : P} : ((L |- p) -> False) -> (L |- f p) 
+
+abbrev adFalso {L : Logic P} {f}
+  [K : AdFalso L f] {p} := unpack K p
+
+instance iAdFalsoOfByContradicction 
+{L : Logic P} {f} [K : ByContradiction L f] : AdFalso L f 
+:= pack fun p Lpf => unpack K p (fun Lp => False.elim (Lpf Lp))
+
+-- Argument to Falsity
+-- (p |- falsum) -> (|- f p)
+
+class funtype AdFalsum (L : Logic P) (falsum : P) (f : Unar P) := 
+  {p : P} : ((L |- p) -> (L |- falsum)) -> (L |- f p)
+
+abbrev adFalsum {L : Logic P} {falsum : P} {f : Unar P}
+  [K : AdFalsum L falsum f] {p} := unpack K p
+
+instance iAdFalsoOfAdFalsum
+{L : Logic P} {falsum f} [K : AdFalsum L falsum f] : AdFalso L f 
+:= pack fun p Lpf => unpack K p (fun Lp => False.elim (Lpf Lp))
+
+-- Principle of Explosion
+-- (|- falsum) -> (|- p)
+
+class funtype ExFalsum (L : Logic P) (falsum : P) := 
+  {p : P} : (L |- falsum) -> (L |- p)
+
+abbrev exFalsum {L : Logic P} {falsum}
+  [K : ExFalsum L falsum] {p} := unpack K p
+
+--------------------------------------------------------------------------------
 -- Proof by Contraposition
 -- (~q |- ~p) -> (|- p -> q)
 --------------------------------------------------------------------------------
@@ -76,90 +144,3 @@ abbrev rightMtp {L : Logic P} {F} {f : Unar P}
 abbrev mtpr {L : Logic P} {F} {f : Unar P} 
   [K : RightMtp L F f] {p q} := unpack K p q
 
---------------------------------------------------------------------------------
--- Contradiction
---------------------------------------------------------------------------------
-
-def Contradiction (L : Logic P) (f : Unar P) :=
-  PSigma fun (p : P) => L.Prod (f p) p 
-
-def contradiction {L : Logic P} {f}
-  {p} (LNp : L |- f p) (Lp : L |- p) : Contradiction L f := 
-    PSigma.mk p (L.prod LNp Lp)
-
--- Proof by Contradiction
--- ((|- p) -> Contradiction) -> (|- f p)
-
-class funtype ByContradiction (L : Logic P) (f : Unar P) := 
-  {p : P} : ((L |- p) -> Contradiction L f) -> (L |- f p)
-
-abbrev byContradiction {L : Logic P} {f}
-  [K : ByContradiction L f] {p} := unpack K p
-
---------------------------------------------------------------------------------
--- Falsity
---------------------------------------------------------------------------------
-
--- Consistency
--- Not (|- p, ~p)
-
-class funtype Noncontradiction (L : Logic P) (f : Unar P) := 
-  {p : P} : (L |- f p) -> (L |- p) -> False
-
-abbrev noncontradiction {L : Logic P} {f} 
-  [K : Noncontradiction L f] {p} := unpack K p
-
--- Proof by Unprovability
--- ((|- p) -> False) -> (|- f p)
-
-class funtype AdFalso (L : Logic P) (f : Unar P) := 
-  {p : P} : ((L |- p) -> False) -> (L |- f p) 
-
-abbrev adFalso {L : Logic P} {f}
-  [K : AdFalso L f] {p} := unpack K p
-
-instance iAdFalsoOfByContradicction 
-{L : Logic P} {f} [K : ByContradiction L f] : AdFalso L f 
-:= pack fun p Lpf => unpack K p (fun Lp => False.elim (Lpf Lp))
-
--- Argument to Falsity
--- (p |- falsum) -> (|- f p)
-
-class funtype AdFalsum (L : Logic P) (falsum : P) (f : Unar P) := 
-  {p : P} : ((L |- p) -> (L |- falsum)) -> (L |- f p)
-
-abbrev adFalsum {L : Logic P} {falsum : P} {f : Unar P}
-  [K : AdFalsum L falsum f] {p} := unpack K p
-
-instance iAdFalsoOfAdFalsum
-{L : Logic P} {falsum f} [K : AdFalsum L falsum f] : AdFalso L f 
-:= pack fun p Lpf => unpack K p (fun Lp => False.elim (Lpf Lp))
-
--- Principle of Explosion
--- (|- falsum) -> (|- p)
-
-class funtype ExFalsum (L : Logic P) (falsum : P)
-  := {p : P} : (L |- falsum) -> (L |- p)
-
-abbrev exFalsum {L : Logic P} {falsum}
-  [K : ExFalsum L falsum] {p} := unpack K p
-
---------------------------------------------------------------------------------
--- Double Negation
---------------------------------------------------------------------------------
-
--- p |- f (f p)
-
-class funtype DblNegIntro (L : Logic P) (f : Unar P) := 
-  {p : P} : (L |- p) -> (L |- f (f p))
-
-abbrev dblNegIntro {L : Logic P} {f}
-  [K : DblNegIntro L f] {p} := unpack K p
-
--- f (f p) |- p
-
-class funtype DblNegElim (L : Logic P) (f : Unar P) := 
-  {p : P} : (L |- f (f p)) -> (L |- p)
-
-abbrev dblNegElim {L : Logic P} {f}
-  [K : DblNegElim L f] {p} := unpack K p

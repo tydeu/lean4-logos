@@ -1,3 +1,4 @@
+import Gaea.Newtype
 import Gaea.FunTypes
 import Gaea.Logic.Judgment
 import Gaea.Logic.Rel.BasicRules
@@ -8,10 +9,30 @@ universe u
 variable {P : Sort u} 
 
 --------------------------------------------------------------------------------
+-- Involution
+--------------------------------------------------------------------------------
+
+-- p |- f (f p)
+
+class funtype DoubleIntro (L : Logic P) (f : Unar P) := 
+  {p : P} : (L |- p) -> (L |- f (f p))
+
+abbrev doubleIntro {L : Logic P} {f}
+  [K : DoubleIntro L f] {p} := unpack K p
+
+-- f (f p) |- p
+
+class funtype DoubleElim (L : Logic P) (f : Unar P) := 
+  {p : P} : (L |- f (f p)) -> (L |- p)
+
+abbrev doubleElim {L : Logic P} {f}
+  [K : DoubleElim L f] {p} := unpack K p
+
+--------------------------------------------------------------------------------
 -- Commutativity
 --------------------------------------------------------------------------------
 
--- F p q <-> F q p
+-- F p q |- F q p
 
 class Comm (L : Logic P) (F : Binar P) :=
   toFun : (p q : P) -> (L |- F p q) -> (L |- F q p)
@@ -29,13 +50,15 @@ instance iCommOfSymm {L : Logic P} {R : Rel P P}
 -- Associativity
 --------------------------------------------------------------------------------
 
--- F (F p q) r <-> F p (F q r)
+-- F (F p q) r |- F p (F q r)
 
 class LtrAssoc (L : Logic P) (F : Binar P) :=
   toFun : (p q r : P) -> (L |- F (F p q) r) -> (L |- F p (F q r))
 
 abbrev ltrAssoc {L : Logic P} {F} 
   [K : LtrAssoc L F] {p q r} := K.toFun p q r
+
+-- F p (F q r) |- F (F p q) r 
 
 class RtlAssoc (L : Logic P) (F : Binar P) :=
   toFun : (p q r : P) -> (L |- F p (F q r)) -> (L |- F (F p q) r)
@@ -47,7 +70,7 @@ abbrev rtlAssoc {L : Logic P} {F}
 -- Distributivity
 --------------------------------------------------------------------------------
 
--- F p (G q r) -> F (G p q) (G p r)
+-- F p (G q r) |- F (G p q) (G p r)
 
 class LeftDistrib (L : Logic P) (F : Binar P) (G : Binar P) :=
   toFun : (p q r : P) -> (L |- F p (G q r)) -> (L |- G (F p q) (F p r))
@@ -55,7 +78,7 @@ class LeftDistrib (L : Logic P) (F : Binar P) (G : Binar P) :=
 abbrev leftDistrib {L : Logic P} {F G}
   [K : LeftDistrib L F G] {p q r} := K.toFun p q r
 
--- F (G q r) p -> F (G q p) (G r p)
+-- F (G q r) p |- F (G q p) (G r p)
 
 class RightDistrib (L : Logic P) (F : Binar P) (G : Binar P) :=
   toFun : (p q r : P) -> (L |- F (G q r) p) -> (L |- G (F q p) (F r p))

@@ -20,7 +20,7 @@ variable
 -- ((|- ~q) -> (|- ~p)) -> (|- p -> q)
 
 def byContrapositionByDneImpContra 
-(DnE : DblNegElim L f)
+(DnE : DoubleElim L f)
 (Cnd : Condition L F)
 (ByC : ByContradiction L f)
 : (p q : P) -> ((L |- f q) -> (L |- f p)) -> (L |- F p q)
@@ -28,13 +28,13 @@ def byContrapositionByDneImpContra
   intro p q 
   assume LNq_to_LNp
   condition Lp
-  apply dblNegElim (f := f)
+  apply doubleElim (f := f)
   byContradiction LNq
   have LNp := LNq_to_LNp LNq
   contradiction LNp Lp
 
 instance iByContrapositionByDneImpContra 
-[DnE : DblNegElim L f]
+[DnE : DoubleElim L f]
 [Cnd : Condition L F]
 [ByC : ByContradiction L f]
 : ByContraposition L F f := pack $ 
