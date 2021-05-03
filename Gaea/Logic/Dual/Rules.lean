@@ -100,7 +100,8 @@ abbrev byContradiction {L : Logic P} {f}
 -- Falsity
 --------------------------------------------------------------------------------
 
--- Not |- p, ~p
+-- Consistency
+-- Not (|- p, ~p)
 
 class funtype Noncontradiction (L : Logic P) (f : Unar P) := 
   {p : P} : (L |- f p) -> (L |- p) -> False
@@ -108,6 +109,7 @@ class funtype Noncontradiction (L : Logic P) (f : Unar P) :=
 abbrev noncontradiction {L : Logic P} {f} 
   [K : Noncontradiction L f] {p} := unpack K p
 
+-- Proof by Unprovability
 -- ((|- p) -> False) -> (|- f p)
 
 class funtype AdFalso (L : Logic P) (f : Unar P) := 
@@ -116,6 +118,11 @@ class funtype AdFalso (L : Logic P) (f : Unar P) :=
 abbrev adFalso {L : Logic P} {f}
   [K : AdFalso L f] {p} := unpack K p
 
+instance iAdFalsoOfByContradicction 
+{L : Logic P} {f} [K : ByContradiction L f] : AdFalso L f 
+:= pack fun p Lpf => unpack K p (fun Lp => False.elim (Lpf Lp))
+
+-- Argument to Falsity
 -- (p |- falsum) -> (|- f p)
 
 class funtype AdFalsum (L : Logic P) (falsum : P) (f : Unar P) := 
@@ -123,6 +130,10 @@ class funtype AdFalsum (L : Logic P) (falsum : P) (f : Unar P) :=
 
 abbrev adFalsum {L : Logic P} {falsum : P} {f : Unar P}
   [K : AdFalsum L falsum f] {p} := unpack K p
+
+instance iAdFalsoOfAdFalsum
+{L : Logic P} {falsum f} [K : AdFalsum L falsum f] : AdFalso L f 
+:= pack fun p Lpf => unpack K p (fun Lp => False.elim (Lpf Lp))
 
 -- Principle of Explosion
 -- (|- falsum) -> (|- p)
