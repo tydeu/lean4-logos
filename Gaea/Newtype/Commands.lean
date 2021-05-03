@@ -61,10 +61,10 @@ scoped syntax (name := newtypeDecl)
 
 @[macro newtypeDecl]
 def expandNewtypeDecl : Macro
-| `(newtype $id:declId $ps:bracketedBinder* $[:= $f:ident]? : $t:term) =>
-  mkNewtypeDecl false id ps f t
-| `(class newtype $id:declId $ps:bracketedBinder* $[:= $f:ident]? : $t:term) =>
-  mkNewtypeDecl true id ps f t
+| `(newtype $id $params* $[:= $fId]? : $t) =>
+  mkNewtypeDecl false id params fId t
+| `(class newtype $id $params* $[:= $fId]? : $t) =>
+  mkNewtypeDecl true id params fId t
 | _ => Macro.throwUnsupported
 
 --------------------------------------------------------------------------------
@@ -135,8 +135,8 @@ scoped syntax (name := funtypeDecl)
 
 @[macro funtypeDecl]
 def expandFuntypeDecl : Macro
-| `(funtype $id:declId $ps:bracketedBinder* $[:= $[$f:ident]? $fps:bracketedBinder*]? : $t:term) =>
-  mkFuntypeDecl false id ps (f.getD none) (fps.getD #[]) t
-| `(class funtype $id:declId $ps:bracketedBinder* $[:= $[$f:ident]? $fps:bracketedBinder*]? : $t:term) =>
-  mkFuntypeDecl true id ps (f.getD none) (fps.getD #[]) t
+| `(funtype $id $params* $[:= $[$fId]? $fparams*]? : $t) =>
+  mkFuntypeDecl false id params (fId.getD none) (fparams.getD #[]) t
+| `(class funtype $id $params* $[:= $[$fId]? $fparams*]? : $t) =>
+  mkFuntypeDecl true id params (fId.getD none) (fparams.getD #[]) t
 | _ => Macro.throwUnsupported
