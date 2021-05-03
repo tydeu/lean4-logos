@@ -1,6 +1,6 @@
 import Gaea.Logic.Fun.Rules
 
-namespace Gaea
+namespace Gaea.Tactics
 
 export Lean (binderIdent)
 

@@ -10,6 +10,8 @@ variable {P : Sort u}
 
 namespace Gaea
 
+open Tactics
+
 variable 
   {L : Logic P} {F : Binar P} {f : Unar P}
 
