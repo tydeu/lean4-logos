@@ -42,7 +42,7 @@ class funtype ImportNot (L : Logic.{u,0} P) (lneg : Unar P) :=
   {p : P} : Not (L |- p) -> (L |- lneg p)
 
 abbrev importNot {L : Logic.{u,0} P} {lneg}
-  [K : ImportNot L lneg] {p} := K.toFun p
+  [K : ImportNot L lneg] {p} := unpack K p
 
 instance iImportNotOfAdFalso {L : Logic.{u,0} P} {lneg} 
   [K : ImportNot L lneg] : AdFalso L lneg := repack K
@@ -56,7 +56,7 @@ class funtype ExportNot (L : Logic.{u,0} P) (lneg : Unar P) :=
   {p : P} : (L |- lneg p) -> Not (L |- p) 
 
 abbrev exportNot {L : Logic.{u,0} P} {lneg}
-  [K : ExportNot L lneg] {p} := K.toFun p
+  [K : ExportNot L lneg] {p} := unpack K p
 
 instance iExportNotOfNoncontradiction {L : Logic.{u,0} P} {lneg} 
   [K : ExportNot L lneg] : Noncontradiction L lneg := repack K

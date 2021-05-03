@@ -48,7 +48,7 @@ class LtrAssocOverT (L : Logic P) (R : Rel P T) (C : T -> P) (f : Binar T) :=
     (L |- C a) -> (L |- C b) -> (L |- C c) -> 
     (L |- R (f (f a b) c) (f a (f b c)))
 
-def ltrAssocOverT {L : Logic P} [R : Rel P T] {C f}
+def ltrAssocOverT {L : Logic P} {R : Rel P T} {C f}
   [K : LtrAssocOverT L R C f] {a b c} := K.toFun a b c
 
 -- Right-to-Left
@@ -67,5 +67,5 @@ class RtlAssocOverT (L : Logic P) (R : Rel P T) (C : T -> P) (f : Binar T) :=
     (L |- C a) -> (L |- C b) -> (L |- C c) -> 
     (L |- R (f a (f b c)) (f (f a b) c))
 
-def rtlAssocOverT {L : Logic P} [R : Rel P T] {C f}
+def rtlAssocOverT {L : Logic P} {R : Rel P T} {C f}
   [K : RtlAssocOverT L R C f] {a b c} := K.toFun a b c
