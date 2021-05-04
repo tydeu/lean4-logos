@@ -40,6 +40,7 @@ def mkNewtypeDecl
   (params : Array Syntax) (fieldId? : Option Syntax) (type : Syntax) 
 : MacroM Syntax := do
   let name := declId[0]
+  let uvars := declId[1][1].getArgs.getEvenElems
   let fieldId := fieldId?.getD (mkIdent `val) 
   let decl <- mkNewtypeStructDecl isClass declId params fieldId type
   let (args, vars) <- paramsToVars params
@@ -49,6 +50,7 @@ def mkNewtypeDecl
   `(
   $decl:command
   namespace $name:ident
+  universes $uvars:ident*
   variable $vars:bracketedBinder* 
   instance $(mkIdent `isNewtype):ident : Newtype $ntype $type := 
     {pack := $(mkIdent `mk), unpack := fun $nvar => $valId:ident} 
@@ -71,9 +73,11 @@ def expandNewtypeDecl : Macro
 -- Funtype
 --------------------------------------------------------------------------------
 
+def mkDepArrow (binder : Syntax) (term : Syntax) : MacroM Syntax :=
+  `( $binder:bracketedBinder -> $term:term )
+
 def mkDepArrows (binders : Array Syntax) (term : Syntax) : MacroM Syntax :=
-  binders.foldrM (fun binder tail => 
-      `( $binder:bracketedBinder -> $tail:term)) term
+  binders.foldrM mkDepArrow term
 
 def paramsToApp (params : Array Syntax)
 : MacroM (Prod (Array Syntax) (Array Syntax)) := do
@@ -105,6 +109,7 @@ def mkFuntypeDecl
   (applyParams : Array Syntax) (fnRet : Syntax) 
 : MacroM Syntax := do
   let name := declId[0]
+  let uvars := declId[1][1].getArgs.getEvenElems
   let applyType <- mkDepArrows applyParams fnRet
   let (applyArgs, fnParams) <- paramsToApp applyParams
   let fnType <- mkDepArrows fnParams fnRet
@@ -120,6 +125,7 @@ def mkFuntypeDecl
   `(
   $decl:command
   namespace $name:ident
+  universes $uvars:ident*
   variable $vars:bracketedBinder* 
   abbrev $funId ($nvar : $ntype) := $valId
   abbrev $applyId [$nvar : $ntype] $applyParams* := $valId $applyArgs*
