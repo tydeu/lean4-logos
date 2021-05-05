@@ -21,7 +21,7 @@ instance IsNatOfPProp {T : Sort v} : IsNat (PProp T) T
   := {isNat := PProp.nat}
 
 instance PNatOfPPropNat : PNat (PProp Nat) Nat 
-  := {toIsNat := IsNatOfPProp, toZero := ZeroOfNat, toSucc := SuccOfNat}
+  := {toIsNat := IsNatOfPProp, toZero := inferInstance, toSucc := inferInstance}
 
 -- Logic type
 def PLogic := Logic (PProp Nat)
@@ -31,8 +31,8 @@ def PLogic := Logic (PProp Nat)
 --------------------------------------------------------------------------------
 
 theorem natNat {L : PLogic}
-[NZ : NatZero L IsNatOfPProp ZeroOfNat]
-[NS : NatSuccNat L IsNatOfPProp SuccOfNat]
+[NZ : NatZero L IsNatOfPProp Zero.ofNat]
+[NS : NatSuccNat L IsNatOfPProp Succ.ofNat]
 : (n : Nat) -> (L |- nat n)
 := by
   intro n
@@ -45,12 +45,12 @@ theorem natNat {L : PLogic}
 --------------------------------------------------------------------------------
 
 theorem complete (L : PLogic)
-[NZ   : NatZero L IsNatOfPProp ZeroOfNat]
-[NS   : NatSuccNat L IsNatOfPProp SuccOfNat]
+[NZ   : NatZero L IsNatOfPProp Zero.ofNat]
+[NS   : NatSuccNat L IsNatOfPProp Succ.ofNat]
 [QRf  : EqNatRefl L IsNatOfPProp SEqOfPProp]
 [QSm  : EqNatSymm L IsNatOfPProp SEqOfPProp]
-[QNtS : EqNatToEqSucc L IsNatOfPProp SEqOfPProp SuccOfNat]
-[QStN : EqSuccToEqNat L IsNatOfPProp SEqOfPProp SuccOfNat]
+[QNtS : EqNatToEqSucc L IsNatOfPProp SEqOfPProp Succ.ofNat]
+[QStN : EqSuccToEqNat L IsNatOfPProp SEqOfPProp Succ.ofNat]
 [QS0f : SuccNatEqZeroFalse L PNatOfPPropNat SEqOfPProp]
 : (p : PProp Nat) -> (L |- p) \/ ((L |- p) -> False)
 := by
@@ -98,12 +98,12 @@ theorem complete (L : PLogic)
 --------------------------------------------------------------------------------
 
 theorem consistent (L : PLogic)
-[NZ   : NatZero L IsNatOfPProp ZeroOfNat]
-[NS   : NatSuccNat L IsNatOfPProp SuccOfNat]
+[NZ   : NatZero L IsNatOfPProp Zero.ofNat]
+[NS   : NatSuccNat L IsNatOfPProp Succ.ofNat]
 [QRf  : EqNatRefl L IsNatOfPProp SEqOfPProp]
 [QSm  : EqNatSymm L IsNatOfPProp SEqOfPProp]
-[QNtS : EqNatToEqSucc L IsNatOfPProp SEqOfPProp SuccOfNat]
-[QStN : EqSuccToEqNat L IsNatOfPProp SEqOfPProp SuccOfNat]
+[QNtS : EqNatToEqSucc L IsNatOfPProp SEqOfPProp Succ.ofNat]
+[QStN : EqSuccToEqNat L IsNatOfPProp SEqOfPProp Succ.ofNat]
 [QS0f : SuccNatEqZeroFalse L PNatOfPPropNat SEqOfPProp]
 : (p : PProp Nat) -> ((L |- p) /\ ((L |- p) -> False)) -> False
 := by

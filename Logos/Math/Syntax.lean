@@ -1,4 +1,4 @@
-import Logos.Prelude.FunTypes
+import Logos.Prelude.NatLit
 
 universes u v
 variable {P : Sort u} {T : Sort v}
@@ -6,109 +6,37 @@ variable {P : Sort u} {T : Sort v}
 namespace Logos
 
 --------------------------------------------------------------------------------
--- Numerals
---------------------------------------------------------------------------------
-
--- Sort-polymorphic Natural Literals
----------------------------------------
-
-class OfNatLit (A : Sort u) (n : Nat) :=
-  ofNatLit : A
-
-@[defaultInstance low]
-instance iNatOfNatLit {n : Nat} : OfNatLit Nat n
-  := {ofNatLit := n}
-
-@[defaultInstance low + low]
-instance iOfNatLitOfNat {A : Type u} {n : Nat} 
-  [K : OfNat A n] : OfNatLit A n
-  := {ofNatLit := K.ofNat}
-
-instance iOfMatOfNatLit {A : Type u} {n : Nat} 
-  [K : OfNatLit A n] : OfNat A n
-  := {ofNat := K.ofNatLit}
-
--- Specializations
----------------------------------------
-
--- 0
-
-class abbrev Zero (T : Sort u) 
-  := OfNatLit T (nat_lit 0)
-
-namespace Zero
-abbrev zero [K : Zero T] := K.ofNatLit
-end Zero
-
-instance ZeroOfNat : Zero Nat 
-  := {ofNatLit := Nat.zero}
-
--- 1
-
-class abbrev One (T : Sort u) 
-  := OfNatLit T (nat_lit 1)
-
-namespace One
-abbrev one [K : Zero T] := K.ofNatLit
-end One
-
-instance OneOfNat : One Nat 
-  := {ofNatLit := Nat.succ Nat.zero}
-
--- Successor
-
-class Succ (T : Sort u) :=
-  toFun : Unar T
-
-abbrev S [K : Succ T] := K.toFun
-
-namespace Succ
-abbrev funType (K : Succ T) := Unar T
-instance : CoeFun (Succ T) funType := {coe := fun K => K.toFun}
-end Succ
-
-instance SuccOfNat : Succ Nat 
-  := {toFun := Nat.succ}
-
-instance (A : Sort u) [K : Succ A] (n : Nat) [T : OfNatLit A n] 
-  : OfNatLit A (Nat.succ n) := {ofNatLit := K.toFun T.ofNatLit}
-
---------------------------------------------------------------------------------
 -- Operations
 --------------------------------------------------------------------------------
 
--- Addition
+-- +
 
-class SAdd (T : Sort v) :=
-  toFun : Binar T
+class funtype SAdd (T : Sort v) : Binar T
 
-namespace SAdd
-abbrev funType (K : SAdd T) := Binar T
-instance : CoeFun (SAdd T) funType := {coe := fun K => K.toFun}
-end SAdd
+instance iSAddOfAdd {T : Type v} [K : Add T]  : SAdd T := pack K.add 
+instance iAddOfSAdd {T : Type v} [K : SAdd T] : Add T  := {add := unpack K}
 
-instance iSAddOfAdd {T : Type v} 
-  [K : Add T] : SAdd T := {toFun := K.add} 
+-- -
 
-instance iAddOfSAdd {T : Type v} 
-  [K : SAdd T] : Add T := {add := K.toFun}
+class funtype SSub (T : Sort v) : Binar T
 
--- Multiplication
+instance iSSubOfSub {T : Type v} [K : Sub T]  : SSub T := pack K.sub 
+instance iSubOfSSub {T : Type v} [K : SSub T] : Sub T  := {sub := unpack K}
 
-class SMul (T : Sort v) :=
-  toFun : Binar T
 
-namespace SMul
-abbrev funType (K : SMul T) := Binar T
-instance : CoeFun (SMul T) funType := {coe := fun K => K.toFun}
-end SMul
+-- *
 
-instance iSMulOfMul {T : Type v} 
-  [K : Mul T] : SMul T := {toFun := K.mul} 
+class funtype SMul (T : Sort v) : Binar T
 
-instance iMulOfSMul {T : Type v} 
-  [K : SMul T] : Mul T := {mul := K.toFun} 
+instance iSMulOfMul {T : Type v} [K : Mul T] : SMul T := pack K.mul 
+instance iMulOfSMul {T : Type v} [K : SMul T] : Mul T := {mul := unpack K} 
 
+-- *
+
+class funtype SDiv (T : Sort v) : Binar T
+
+instance iSDivOfDiv {T : Type v} [K : Div T] : SDiv T := pack K.div 
+instance iDivOfSDiv {T : Type v} [K : SDiv T] : Div T := {div := unpack K} 
 
 --------------------------------------------------------------------------------
 -- Inequalities
@@ -116,63 +44,33 @@ instance iMulOfSMul {T : Type v}
 
 -- <
 
-class SLt (P : Sort u) (T : Sort v) :=
-  toFun : Rel P T
+class funtype SLt (P : Sort u) (T : Sort v) : Rel P T
 
-instance iSLtOfLT {T : Type v} 
-  [K : LT T] : SLt Prop T := {toFun := K.lt} 
-
-instance iLTOfSLt {T : Type v} 
-  [K : SLt Prop T] : LT T := {lt := K.toFun} 
-
-namespace SLt
-abbrev funType (K : SLt P T) := Rel P T
-instance : CoeFun (SLt P T) funType := {coe := fun K => K.toFun}
-end SLt
+instance iSLtOfLT {T : Type v} [K : LT T] : SLt Prop T := pack K.lt 
+instance iLTOfSLt {T : Type v} [K : SLt Prop T] : LT T := {lt := unpack K} 
 
 --- <=
 
-class SLe (P : Sort u) (T : Sort v)  :=
-  toFun : Rel P T
+class funtype SLe (P : Sort u) (T : Sort v) : Rel P T
 
-instance iSLeOfLE {T : Type v} 
-  [K : LE T] : SLe Prop T := {toFun := K.le} 
-
-instance iLEOfSLt {T : Type v} 
-  [K : SLe Prop T] : LE T := {le := K.toFun} 
-
-namespace SLe
-abbrev funType (K : SLe P T) := Rel P T
-instance : CoeFun (SLe P T) funType := {coe := fun K => K.toFun}
-end SLe
+instance iSLeOfLE {T : Type v} [K : LE T] : SLe Prop T := pack K.le 
+instance iLEOfSLt {T : Type v} [K : SLe Prop T] : LE T := {le := unpack K}
 
 -- >
 
-class SGt (P : Sort u) (T : Sort v) :=
-  toFun : Rel P T
-
-namespace SGt
-abbrev funType (K : SGt P T) := Rel P T
-instance : CoeFun (SGt P T) funType := {coe := fun K => K.toFun}
-end SGt
+class funtype SGt (P : Sort u) (T : Sort v) : Rel P T
 
 @[defaultInstance low]
-instance iSGtOfSLt [K : SLt P T] : SGt P T := {toFun := K.toFun} 
-instance iSLtOfSGt [K : SGt P T] : SLt P T := {toFun := K.toFun} 
+instance iSGtOfSLt [K : SLt P T] : SGt P T := repack K 
+instance iSLtOfSGt [K : SGt P T] : SLt P T := repack K
 
 -- >=
 
-class SGe (P : Sort u) (T : Sort v)  :=
-  toFun : Rel P T
-
-namespace SGe
-abbrev funType (K : SGe P T) := Rel P T
-instance : CoeFun (SGe P T) funType := {coe := fun K => K.toFun}
-end SGe
+class funtype SGe (P : Sort u) (T : Sort v) : Rel P T
 
 @[defaultInstance low]
-instance iSGeOfSLe [K : SLe P T] : SGe P T := {toFun := K.toFun} 
-instance iSLeOfSGe [K : SGe P T] : SLe P T := {toFun := K.toFun} 
+instance iSGeOfSLe [K : SLe P T] : SGe P T := repack K
+instance iSLeOfSGe [K : SGe P T] : SLe P T := repack K 
 
 --------------------------------------------------------------------------------
 -- Notation
@@ -182,8 +80,10 @@ namespace Notation
 
 -- Operators
 
-scoped infixl:65 (name := syntaxAdd) (priority := default + default) " + " => SAdd.toFun
-scoped infixl:70 (name := syntaxMul) (priority := default + default) " * " => SMul.toFun
+scoped infix:65 (name := syntaxAdd) (priority := default + default) " + " => SAdd.toFun
+scoped infix:65 (name := syntaxSub) (priority := default + default) " - " => SSub.toFun
+scoped infix:70 (name := syntaxMul) (priority := default + default) " * " => SMul.toFun
+scoped infix:70 (name := syntaxDiv) (priority := default + default) " / " => SDiv.toFun
 
 -- Inequalities
 
@@ -203,23 +103,14 @@ macro_rules (kind := syntaxGe') | `($x ≥ $y)  => `(binrel% SGe.toFun $x $y)
 
 -- Functions
 
+open Lean
+
 @[scoped appUnexpander Logos.S] 
-def unexpandS : Lean.PrettyPrinter.Unexpander
-  | `($_f:ident $n) => `($(Lean.mkIdent `S) $n)
+def unexpandS : PrettyPrinter.Unexpander
+  | `($_f:ident $n) => `($(mkIdent `S) $n)
   | _  => throw ()
 
 @[scoped appUnexpander Logos.Succ.toFun] 
-def unexpandSucc : Lean.PrettyPrinter.Unexpander
-  | `($_f:ident $n) => `($(Lean.mkIdent `S) $n)
-  | _  => throw ()
-
--- Numerals
-
-@[scoped macro numLit] 
-def expandNumLit : Lean.Macro
-  | n => `(OfNatLit.ofNatLit (nat_lit $n))
-
-@[scoped appUnexpander Logos.OfNatLit.ofNatLit] 
-def unexpandNumLit : Lean.PrettyPrinter.Unexpander
-  | `($_f:ident $n:numLit) => n
+def unexpandSucc : PrettyPrinter.Unexpander
+  | `($_f:ident $n) => `($(mkIdent `S) $n)
   | _  => throw ()

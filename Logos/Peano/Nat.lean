@@ -2,8 +2,6 @@ import Logos.Math.Syntax
 
 universes u v
 
-open Logos (Zero Succ)
-
 namespace Logos.Peano
 
 class IsNat (prop : Sort u) (form : Sort v) := 
@@ -34,7 +32,7 @@ def pred {P : Sort u} {T : Sort v} (N : PNat P T) := T -> P
 
 abbrev nat {P : Sort u} {T : Sort v} (N : PNat P T) := N.toIsNat.isNat
 abbrev isNat {P : Sort u} {T : Sort v} (N : PNat P T) := N.toIsNat.isNat
-abbrev zero {P : Sort u} {T : Sort v} (N : PNat P T) := N.toZero.zero
-abbrev succ {P : Sort u} {T : Sort v} (N : PNat P T) := N.toSucc.toFun
+abbrev zero {P : Sort u} {T : Sort v} (N : PNat P T) := unpack N.toZero
+abbrev succ {P : Sort u} {T : Sort v} (N : PNat P T) := unpack N.toSucc
 
 end PNat
