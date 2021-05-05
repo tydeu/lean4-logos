@@ -1,5 +1,5 @@
-import Gaea.Newtype
-import Gaea.FunTypes
+import Gaea.Prelude.Newtype
+import Gaea.Prelude.FunTypes
 
 universes u v
 variable {P : Sort u} {T : Sort v}

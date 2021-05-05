@@ -1,5 +1,5 @@
-import Gaea.Newtype
-import Gaea.FunTypes
+import Gaea.Prelude.Newtype
+import Gaea.Prelude.FunTypes
 import Gaea.Logic.Judgment
 import Gaea.Logic.Rel.BasicRules
 

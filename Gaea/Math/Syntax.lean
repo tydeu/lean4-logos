@@ -1,4 +1,4 @@
-import Gaea.FunTypes
+import Gaea.Prelude.FunTypes
 
 universes u v
 variable {P : Sort u} {T : Sort v}

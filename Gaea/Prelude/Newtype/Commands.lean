@@ -1,4 +1,4 @@
-import Gaea.Newtype.Basic
+import Gaea.Prelude.Newtype.Basic
 
 open Lean Syntax
 
