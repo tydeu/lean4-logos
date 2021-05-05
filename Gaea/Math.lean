@@ -1,1 +1,0 @@
-import Gaea.Math.Syntax
