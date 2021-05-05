@@ -128,6 +128,7 @@ def mkFuntypeDecl
   universes $uvars:ident*
   variable $vars:bracketedBinder* 
   abbrev $funId ($nvar : $ntype) := $valId
+  set_option checkBinderAnnotations false in
   abbrev $applyId [$nvar : $ntype] $applyParams* := $valId $applyArgs*
   abbrev $applyFunId ($nvar : $ntype) $applyParams* := $valId $applyArgs*
   instance $(mkIdent `isFuntype):ident : Funtype $ntype $fnType $applyType := 
