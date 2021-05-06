@@ -1,6 +1,6 @@
-import Logos.Peano.Rules
-import Logos.Peano.Eq.Rules
-import Logos.Peano.Eq.Theorems
+import Logos.Peano.Eq
+import Logos.Peano.Num
+import Logos.Peano.Succ
 
 universe v
 

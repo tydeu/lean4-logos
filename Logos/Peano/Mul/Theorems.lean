@@ -1,8 +1,4 @@
-import Logos.Peano.Eq
 import Logos.Peano.Add
-import Logos.Peano.Rules
-import Logos.Peano.Forall
-import Logos.Peano.Induction
 import Logos.Peano.Mul.Rules
 
 universes u v

@@ -1,6 +1,5 @@
-import Logos.Math.Syntax
+import Logos.Prelude.NatLit
 import Logos.Logic.Judgment
-import Logos.Logic.Prop.Syntax
 import Logos.Logic.Eq.Syntax
 import Logos.Logic.Rel.Rules
 import Logos.Peano.Nat
@@ -12,15 +11,9 @@ open Logos.Notation
 
 namespace Logos.Peano
 
--- Axiom 1
-class NatZero (L : Logic P) (N : SNat P T) (Z : Zero T) :=
-  toFun : L |- nat (0 : T)
-
-abbrev natZero (L : Logic P) (T : Sort v) [N : SNat P T] [Z : Zero T] 
-  [K : NatZero L N Z] := K.toFun
-
-abbrev nat0 {L : Logic P} [N : SNat P T] [Z : Zero T] 
-  [K : NatZero L N Z] := K.toFun
+--------------------------------------------------------------------------------
+-- Axioms
+--------------------------------------------------------------------------------
 
 -- Axiom 6
 class NatSuccNat (L : Logic P) (N : SNat P T) (S : Succ T) :=
@@ -63,7 +56,7 @@ instance iEqSuccToEqNatOfFCancelT
   [K : EqSuccToEqNat L N Q S] : FCancelT L Q.toFun N.mem S.toFun 
   := {toFun := K.toFun}
 
-instance iFApplyTOfEqSuccToEqNat
+instance iFCancelTOfEqSuccToEqNat
   {L : Logic P} [N : SNat P T] [Q : SEq P T] [S : Succ T]
   [K : FCancelT L Q.toFun N.mem S.toFun] : EqSuccToEqNat L N Q S
   := {toFun := K.toFun}
@@ -74,5 +67,17 @@ class SuccNatEqZeroFalse (L : Logic P)
   toFun : (n : T) -> (L |- nat n) -> (L |- S n = 0) -> False
 
 abbrev succNatEqZeroFalse {L : Logic P} 
+  [N : SNat P T] [Q : SEq P T] [Z : Zero T] [S : Succ T]
+  [K : SuccNatEqZeroFalse L N Q Z S] {n} := K.toFun n
+
+--------------------------------------------------------------------------------
+-- Derived Rules
+--------------------------------------------------------------------------------
+
+class SuccNatEqSelfFalse (L : Logic P) 
+  (N : SNat P T) (Q : SEq P T) (Z : Zero T) (S : Succ T) :=
+  toFun : (n : T) -> (L |- nat n) -> (L |- S n = n) -> False
+
+abbrev succNatEqSelfFalse {L : Logic P} 
   [N : SNat P T] [Q : SEq P T] [Z : Zero T] [S : Succ T]
   [K : SuccNatEqZeroFalse L N Q Z S] {n} := K.toFun n

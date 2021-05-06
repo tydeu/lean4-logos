@@ -1,6 +1,6 @@
-import Logos.Peano.Rules
 import Logos.Peano.Eq.Rules
-import Logos.Peano.One.Rules
+import Logos.Peano.Num.Rules
+import Logos.Peano.Succ.Rules
 
 universes u v
 

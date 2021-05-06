@@ -1,6 +1,6 @@
 import Logos.Peano.Eq
-import Logos.Peano.One
-import Logos.Peano.Rules
+import Logos.Peano.Num
+import Logos.Peano.Succ
 import Logos.Peano.Forall
 import Logos.Peano.Induction
 import Logos.Peano.Add.Rules
