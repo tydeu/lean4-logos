@@ -13,7 +13,7 @@ namespace Logos.Peano
 
 variable 
   {L : Logic P}
-  [N : PNat P T] [Z : Zero T] [O : One T] [S : Succ T]
+  [N : SNat P T] [Z : Zero T] [O : One T] [S : Succ T]
   [A : SAdd T]
   [Q : SEq P T]
 
@@ -105,12 +105,12 @@ instance iNatAddZeroNatByInduction
 := {toFun :=  natAddZeroNatByInduction I N0 NS NQ NA0 An0}
 
 instance iNatAddZeroNatByAddZeroNat 
-[N : PNat P T] [Q : SEq P T] [A : SAdd T] [Z : Zero T]  
+[N : SNat P T] [Q : SEq P T] [A : SAdd T] [Z : Zero T]  
 [NQ : NatEqNat L N Q] [A0n : AddZeroNatEqNat L N Q A Z] : NatAddZeroNat L N A Z 
 := {toFun := fun _ Na => natEq Na (addZeroNatEqNat Na)}
 
 instance iNatAddZeroNatByNatAdd 
-[N : PNat P T] [A : SAdd T] [Z : Zero T] 
+[N : SNat P T] [A : SAdd T] [Z : Zero T] 
 [N0 : NatZero L N Z] [NA : NatAddNat L N A] : NatAddZeroNat L N A Z 
 := {toFun := fun _ Na => natAdd nat0 Na}
 

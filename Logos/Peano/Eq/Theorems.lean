@@ -9,12 +9,12 @@ namespace Logos.Peano
 --------------------------------------------------------------------------------
 
 instance iEqNatLeftEucBySymmTransT
-{P : Sort u} {T : Sort v} {L : Logic P} [N : PNat P T]
+{P : Sort u} {T : Sort v} {L : Logic P} [N : SNat P T]
 [Q : SEq P T] [QSm : EqNatSymm L N Q] [QTr : EqNatTrans L N Q]
 : EqNatLeftEuc L N Q := iEqNatLeftEucOfLeftEucT (K := iLeftEucBySymmTransT)
 
 instance iEqNatJoinBySymmTransT
-{P : Sort u} {T : Sort v} {L : Logic P} [N : PNat P T]
+{P : Sort u} {T : Sort v} {L : Logic P} [N : SNat P T]
 [Q : SEq P T] [QSm : EqNatSymm L N Q] [QTr : EqNatTrans L N Q]
 : EqNatJoin L N Q := iEqNatJoinOfLeftTransJoinT (K := iLeftTransJoinBySymmTransT)
 
@@ -26,7 +26,7 @@ instance iEqNatJoinBySymmTransT
 
 def eqTransNatByNatEq 
 {P : Sort u} {T : Sort v} 
-{L : Logic P} {N : PNat P T} {Q : SEq P T} 
+{L : Logic P} {N : SNat P T} {Q : SEq P T} 
 (QTr : EqNatTrans L N Q) (NQ : NatEqNat L N Q)
 : (a b c : T) -> (L |- nat c) -> (L |- a = b) -> (L |- b = c) -> (L |- a = c)
 := by
@@ -37,14 +37,14 @@ def eqTransNatByNatEq
 
 instance iEqTransNatByNatEq  
 {P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [QTr : EqNatTrans L N Q] [NQ : NatEqNat L N Q]
+[N : SNat P T] [Q : SEq P T] [QTr : EqNatTrans L N Q] [NQ : NatEqNat L N Q]
 : EqTransNat L N Q := {toFun := eqTransNatByNatEq QTr NQ}
 
 -- (b = a) /\ (c = a) -> (b = c)
 
 def eqLeftEucNatByNatEq 
 {P : Sort u} {T : Sort v} 
-{L : Logic P} {N : PNat P T} {Q : SEq P T} 
+{L : Logic P} {N : SNat P T} {Q : SEq P T} 
 (QEL : EqNatLeftEuc L N Q) (NQ : NatEqNat L N Q)
 : (a b c : T) -> (L |- nat a) -> (L |- b = a) -> (L |- c = a) -> (L |- b = c)
 := by
@@ -55,6 +55,6 @@ def eqLeftEucNatByNatEq
 
 instance iEqLeftEucNatByNatEq 
 {P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [QTr : EqNatLeftEuc L N Q] [NQ : NatEqNat L N Q]
+[N : SNat P T] [Q : SEq P T] [QTr : EqNatLeftEuc L N Q] [NQ : NatEqNat L N Q]
 : EqLeftEucNat L N Q := {toFun := eqLeftEucNatByNatEq QTr NQ }
 

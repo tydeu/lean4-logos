@@ -11,7 +11,7 @@ variable {P : Sort u} {T : Sort v}
 namespace Logos.Peano
 
 variable {L : Logic P} 
-variable [N : PNat P T] [Z : Zero T] [S : Succ T]
+variable [N : SNat P T] [Z : Zero T] [S : Succ T]
 
 --------------------------------------------------------------------------------
 -- Predicate Induction

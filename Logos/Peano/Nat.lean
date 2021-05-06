@@ -5,13 +5,13 @@ variable {P : Sort u} {T : Sort v}
 
 namespace Logos.Peano
 
-class funtype PNat (P : Sort u) (T : Sort v) := 
+class funtype SNat (P : Sort u) (T : Sort v) := 
   mem : T -> P
 
-abbrev nat [N : PNat P T] := N.mem
+abbrev nat [N : SNat P T] := N.mem
 
-namespace PNat
+namespace SNat
 
-def «Prop» (N : PNat P T) := P
-def Term (N : PNat P T) := T
-def Pred (N : PNat P T) := T -> P
+def «Prop» (N : SNat P T) := P
+def Term (N : SNat P T) := T
+def Pred (N : SNat P T) := T -> P

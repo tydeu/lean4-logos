@@ -18,7 +18,7 @@ end SForallNat
 abbrev pForallNat {P : Sort u} {T : Sort v} [K : SForallNat P T] := K.toFun
 
 def LForallIfNat {P : Sort u} {T : Sort v} 
-  (N : PNat P T) (Fa : SForall P T) (larr : LArr P) : SForallNat P T := 
+  (N : SNat P T) (Fa : SForall P T) (larr : LArr P) : SForallNat P T := 
   {toFun := fun f => Fa fun (a : T) => larr (nat a) (f a)}
 
 namespace Notation

@@ -17,7 +17,7 @@ inductive PProp (T : Sort v)
 
 instance SEqOfPProp {T : Sort v} : SEq (PProp T) T 
   := pack PProp.eq
-instance PNatOfPProp {T : Sort v} : PNat (PProp T) T 
+instance SNatOfPProp {T : Sort v} : SNat (PProp T) T 
   := pack PProp.nat
 
 -- Logic type
@@ -28,8 +28,8 @@ def PLogic := Logic (PProp Nat)
 --------------------------------------------------------------------------------
 
 theorem natNat {L : PLogic}
-[NZ : NatZero L PNatOfPProp Zero.ofNat]
-[NS : NatSuccNat L PNatOfPProp Succ.ofNat]
+[NZ : NatZero L SNatOfPProp Zero.ofNat]
+[NS : NatSuccNat L SNatOfPProp Succ.ofNat]
 : (n : Nat) -> (L |- nat n)
 := by
   intro n
@@ -42,13 +42,13 @@ theorem natNat {L : PLogic}
 --------------------------------------------------------------------------------
 
 theorem metaComplete (L : PLogic)
-[NZ   : NatZero L PNatOfPProp Zero.ofNat]
-[NS   : NatSuccNat L PNatOfPProp Succ.ofNat]
-[QRf  : EqNatRefl L PNatOfPProp SEqOfPProp]
-[QSm  : EqNatSymm L PNatOfPProp SEqOfPProp]
-[QNtS : EqNatToEqSucc L PNatOfPProp SEqOfPProp Succ.ofNat]
-[QStN : EqSuccToEqNat L PNatOfPProp SEqOfPProp Succ.ofNat]
-[QS0f : SuccNatEqZeroFalse L PNatOfPProp SEqOfPProp Zero.ofNat Succ.ofNat]
+[NZ   : NatZero L SNatOfPProp Zero.ofNat]
+[NS   : NatSuccNat L SNatOfPProp Succ.ofNat]
+[QRf  : EqNatRefl L SNatOfPProp SEqOfPProp]
+[QSm  : EqNatSymm L SNatOfPProp SEqOfPProp]
+[QNtS : EqNatToEqSucc L SNatOfPProp SEqOfPProp Succ.ofNat]
+[QStN : EqSuccToEqNat L SNatOfPProp SEqOfPProp Succ.ofNat]
+[QS0f : SuccNatEqZeroFalse L SNatOfPProp SEqOfPProp Zero.ofNat Succ.ofNat]
 : (p : PProp Nat) -> PSum (L |- p) (L !|- p)
 := by
   intro p
@@ -95,13 +95,13 @@ theorem metaComplete (L : PLogic)
 --------------------------------------------------------------------------------
 
 theorem metaConsistent (L : PLogic)
-[NZ   : NatZero L PNatOfPProp Zero.ofNat]
-[NS   : NatSuccNat L PNatOfPProp Succ.ofNat]
-[QRf  : EqNatRefl L PNatOfPProp SEqOfPProp]
-[QSm  : EqNatSymm L PNatOfPProp SEqOfPProp]
-[QNtS : EqNatToEqSucc L PNatOfPProp SEqOfPProp Succ.ofNat]
-[QStN : EqSuccToEqNat L PNatOfPProp SEqOfPProp Succ.ofNat]
-[QS0f : SuccNatEqZeroFalse L PNatOfPProp SEqOfPProp Zero.ofNat Succ.ofNat]
+[NZ   : NatZero L SNatOfPProp Zero.ofNat]
+[NS   : NatSuccNat L SNatOfPProp Succ.ofNat]
+[QRf  : EqNatRefl L SNatOfPProp SEqOfPProp]
+[QSm  : EqNatSymm L SNatOfPProp SEqOfPProp]
+[QNtS : EqNatToEqSucc L SNatOfPProp SEqOfPProp Succ.ofNat]
+[QStN : EqSuccToEqNat L SNatOfPProp SEqOfPProp Succ.ofNat]
+[QS0f : SuccNatEqZeroFalse L SNatOfPProp SEqOfPProp Zero.ofNat Succ.ofNat]
 : (p : PProp Nat) -> PProd (L |- p) (L !|- p) -> False
 := by
   intro p
