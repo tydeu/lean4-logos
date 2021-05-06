@@ -20,9 +20,6 @@ instance SEqOfPProp {T : Sort v} : SEq (PProp T) T
 instance IsNatOfPProp {T : Sort v} : IsNat (PProp T) T 
   := {isNat := PProp.nat}
 
-instance PNatOfPPropNat : PNat (PProp Nat) Nat 
-  := {toIsNat := IsNatOfPProp, toZero := inferInstance, toSucc := inferInstance}
-
 -- Logic type
 def PLogic := Logic (PProp Nat)
 
@@ -51,7 +48,7 @@ theorem complete (L : PLogic)
 [QSm  : EqNatSymm L IsNatOfPProp SEqOfPProp]
 [QNtS : EqNatToEqSucc L IsNatOfPProp SEqOfPProp Succ.ofNat]
 [QStN : EqSuccToEqNat L IsNatOfPProp SEqOfPProp Succ.ofNat]
-[QS0f : SuccNatEqZeroFalse L PNatOfPPropNat SEqOfPProp]
+[QS0f : SuccNatEqZeroFalse L IsNatOfPProp SEqOfPProp Zero.ofNat Succ.ofNat]
 : (p : PProp Nat) -> (L |- p) \/ ((L |- p) -> False)
 := by
   intro p
@@ -104,7 +101,7 @@ theorem consistent (L : PLogic)
 [QSm  : EqNatSymm L IsNatOfPProp SEqOfPProp]
 [QNtS : EqNatToEqSucc L IsNatOfPProp SEqOfPProp Succ.ofNat]
 [QStN : EqSuccToEqNat L IsNatOfPProp SEqOfPProp Succ.ofNat]
-[QS0f : SuccNatEqZeroFalse L PNatOfPPropNat SEqOfPProp]
+[QS0f : SuccNatEqZeroFalse L IsNatOfPProp SEqOfPProp Zero.ofNat Succ.ofNat]
 : (p : PProp Nat) -> ((L |- p) /\ ((L |- p) -> False)) -> False
 := by
   intro p

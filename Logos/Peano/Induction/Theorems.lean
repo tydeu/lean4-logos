@@ -2,12 +2,16 @@ import Logos.Peano.Nat
 import Logos.Peano.Forall
 import Logos.Peano.Induction.Rules
 
-universes u v
-
 open Logos.Notation
 open Logos.Peano.Notation
 
+universes u v
+variable {P : Sort u} {T : Sort v}
+
 namespace Logos.Peano
+
+variable {L : Logic P} 
+variable [N : IsNat P T] [Z : Zero T] [S : Succ T]
 
 --------------------------------------------------------------------------------
 -- Predicate Induction
@@ -15,8 +19,8 @@ namespace Logos.Peano
 
 -- By Meta
 
-def natInductionByMeta {P : Sort u} {T : Sort v} 
-{L : Logic P} {N : PNat P T} (I : MetaNatInduction L N)
+def natInductionByMeta 
+(I : MetaNatInduction L N Z S)
 : (f : T -> P) -> (L |- f 0) -> 
   ((a : T) -> (L |- nat a) -> (L |- f a) -> (L |- f (S a))) ->
   ((a : T) -> (L |- nat a) -> (L |- f a))
@@ -25,16 +29,14 @@ def natInductionByMeta {P : Sort u} {T : Sort v}
   exact metaNatInduction L f0 fS 
     (f := fun a => L |- f a)
 
-instance iNatInductionByMeta 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [I : MetaNatInduction L N]
-: NatInduction L N
+instance iNatInductionByMeta
+[I : MetaNatInduction L N Z S] : NatInduction L N Z S
 := {toFun := natInductionByMeta I}
 
 -- By Right Binary Induction
 
-def natInductionByRight {P : Sort u} {T : Sort v} 
-{L : Logic P} {N : PNat P T} (I : NatInductionRight L N)
+def natInductionByRight 
+(I : NatInductionRight L N Z S)
 : (f : T -> P) -> (L |- f 0) -> 
   ((a : T) -> (L |- nat a) -> (L |- f a) -> (L |- f (S a))) ->
   ((a : T) -> (L |- nat a) -> (L |- f a))
@@ -46,9 +48,7 @@ def natInductionByRight {P : Sort u} {T : Sort v}
   case fS' => intro b Nb ih a Na; exact fS b Nb (ih a Na) 
 
 instance iNatInductionByRight
-{P : Sort u} {T : Sort v} {L : Logic P}
-[N : PNat P T] [I : NatInductionRight L N]
-: NatInduction L N
+[I : NatInductionRight L N Z S] : NatInduction L N Z S
 := {toFun := natInductionByRight I}
 
 --------------------------------------------------------------------------------
@@ -58,8 +58,7 @@ instance iNatInductionByRight
 -- By Predicate Induction & SForallNat
 
 def natInductionLeftByForallNat_induct
-{P : Sort u} {T : Sort v} {L : Logic P} 
-{N : PNat P T} (I : NatInduction L N) (FaN : LForallNat L N.toIsNat)
+(I : NatInduction L N Z S) (FaN : LForallNat L N)
 : (R : T -> T -> P) -> 
   (L |- forallNat b => R 0 b) -> 
   ((a : T) -> (L |- nat a) -> 
@@ -71,8 +70,7 @@ def natInductionLeftByForallNat_induct
   exact natInduction p_f0 p_fS
 
 def natInductionLeftByForallNat 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-{N : PNat P T} (I : NatInduction L N) (FaN : LForallNat L N.toIsNat)
+(I : NatInduction L N Z S) (FaN : LForallNat L N)
 : (R : Rel P T) -> 
   ((b : T) -> (L |- nat b) -> (L |- R 0 b)) -> 
   ((a : T) -> (L |- nat a) ->
@@ -94,16 +92,13 @@ def natInductionLeftByForallNat
   exact FaN.elim h Nb
 
 instance iNatInductionLeftByForallNat
-{P : Sort u} {T : Sort v} {L : Logic P}
-[N : PNat P T] [I : NatInduction L N] [FaN : LForallNat L N.toIsNat]
-: NatInductionLeft L N
+[I : NatInduction L N Z S] [FaN : LForallNat L N] : NatInductionLeft L N Z S
 := {toFun := natInductionLeftByForallNat I FaN}
 
 -- By Meta Induction
 
 def natInductionLeftByMeta 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-{N : PNat P T} (I : MetaNatInduction L N)
+(I : MetaNatInduction L N Z S)
 : (R : T -> T -> P) -> 
   ((b : T) -> (L |- nat b) -> (L |- R 0 b)) -> 
   ((a : T) -> (L |- nat a) ->
@@ -118,9 +113,7 @@ def natInductionLeftByMeta
   exact h a Na b Nb
 
 instance iNatInductionLeftByMeta
-{P : Sort u} {T : Sort v} {L : Logic P}
-[N : PNat P T] [I : MetaNatInduction L N]
-: NatInductionLeft L N
+[I : MetaNatInduction L N Z S] : NatInductionLeft L N Z S
 := {toFun := natInductionLeftByMeta I}
 
 --------------------------------------------------------------------------------
@@ -130,8 +123,7 @@ instance iNatInductionLeftByMeta
 -- By Predicate Induction & SForallNat
 
 def natInductionRightByForallNat_induct
-{P : Sort u} {T : Sort v} {L : Logic P} 
-{N : PNat P T} (I : NatInduction L N) (FaN : LForallNat L N.toIsNat)
+(I : NatInduction L N Z S) (FaN : LForallNat L N)
 : (R : T -> T -> P) -> 
   (L |- forallNat a => R a 0) -> 
   ((b : T) -> (L |- nat b) -> 
@@ -143,8 +135,7 @@ def natInductionRightByForallNat_induct
   exact natInduction p_f0 p_fS
 
 def natInductionRightByForallNat
-{P : Sort u} {T : Sort v} {L : Logic P} 
-{N : PNat P T} (I : NatInduction L N) (FaN : LForallNat L N.toIsNat)
+(I : NatInduction L N Z S) (FaN : LForallNat L N)
 : (R : T -> T -> P) -> 
   ((a : T) -> (L |- nat a) -> (L |- R a 0)) -> 
   ((b : T) -> (L |- nat b) -> 
@@ -166,16 +157,13 @@ def natInductionRightByForallNat
   exact FaN.elim h Na
 
 instance iNatInductionRightByForallNat
-{P : Sort u} {T : Sort v} {L : Logic P}
-[N : PNat P T] [I : NatInduction L N] [FaN : LForallNat L N.toIsNat]
-: NatInductionRight L N
+[I : NatInduction L N Z S] [FaN : LForallNat L N] : NatInductionRight L N Z S
 := {toFun := natInductionRightByForallNat I FaN}
 
 -- By Meta Induction
 
 def natInductionRightByMeta 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-{N : PNat P T} (I : MetaNatInduction L N)
+(I : MetaNatInduction L N Z S)
 : (R : T -> T -> P) -> 
   ((a : T) -> (L |- nat a) -> (L |- R a 0)) -> 
   ((b : T) -> (L |- nat b) -> 
@@ -190,16 +178,13 @@ def natInductionRightByMeta
   exact h b Nb a Na
 
 instance iNatInductionRightByMeta
-{P : Sort u} {T : Sort v} {L : Logic P}
-[N : PNat P T] [I : MetaNatInduction L N]
-: NatInductionRight L N
+[I : MetaNatInduction L N Z S] : NatInductionRight L N Z S
 := {toFun := natInductionRightByMeta I}
 
 -- By Right Ternary Induction
 
 def natInductionRightByRight3
-{P : Sort u} {T : Sort v} {L : Logic P}
-{N : PNat P T} (I : NatInductionRight3 L N)
+(I : NatInductionRight3 L N Z S)
 : (R : T -> T -> P) -> 
   ((a : T) -> (L |- nat a) -> (L |- R a 0)) -> 
   ((b : T) -> (L |- nat b) -> 
@@ -218,9 +203,7 @@ def natInductionRightByRight3
     exact fS c Nc (fun b Nb => ih a b Na Nb) b Nb
 
 instance iNatInductionRightByRight3
-{P : Sort u} {T : Sort v} {L : Logic P}
-[N : PNat P T] [I : NatInductionRight3 L N]
-: NatInductionRight L N
+[I : NatInductionRight3 L N Z S] : NatInductionRight L N Z S
 := {toFun := natInductionRightByRight3 I}
 
 --------------------------------------------------------------------------------
@@ -230,8 +213,7 @@ instance iNatInductionRightByRight3
 -- By Predicate Induction & SForallNat
 
 def natInductionRight3ByForallNat_induct
-{P : Sort u} {T : Sort v} {L : Logic P} 
-{N : PNat P T} (I : NatInduction L N) (FaN : LForallNat L N.toIsNat)
+(I : NatInduction L N Z S) (FaN : LForallNat L N)
 : (R : T -> T -> T -> P) -> 
   (L |- forallNat a b => R a b 0) -> 
   ((c : T) -> (L |- nat c) -> 
@@ -243,8 +225,7 @@ def natInductionRight3ByForallNat_induct
   exact natInduction p_f0 p_fS
 
 def natInductionRight3ByForallNat
-{P : Sort u} {T : Sort v} {L : Logic P} 
-{N : PNat P T} (I : NatInduction L N) (FaN : LForallNat L N.toIsNat)
+(I : NatInduction L N Z S) (FaN : LForallNat L N)
 : (R : T -> T -> T -> P) -> 
   ((a b : T) -> (L |- nat a) -> (L |- nat b) -> 
     (L |- R a b 0)) -> 
@@ -271,16 +252,13 @@ def natInductionRight3ByForallNat
   exact FaN.elim (FaN.elim h Na) Nb
 
 instance iNatInductionRight3ByForallNat
-{P : Sort u} {T : Sort v} {L : Logic P}
-[N : PNat P T] [I : NatInduction L N] [FaN : LForallNat L N.toIsNat]
-: NatInductionRight3 L N
+[I : NatInduction L N Z S] [FaN : LForallNat L N] : NatInductionRight3 L N Z S
 := {toFun := natInductionRight3ByForallNat I FaN}
 
 -- By Meta Induction
 
 def natInductionRight3ByMeta
-{P : Sort u} {T : Sort v} {L : Logic P} 
-{N : PNat P T} (I : MetaNatInduction L N)
+(I : MetaNatInduction L N Z S)
 : (R : T -> T -> T -> P) -> 
   ((a b : T) -> (L |- nat a) -> (L |- nat b) ->  
     (L |- R a b 0)) -> 
@@ -298,9 +276,7 @@ def natInductionRight3ByMeta
   exact h c Nc a b Na Nb
 
 instance iNatInductionRight3ByMeta
-{P : Sort u} {T : Sort v} {L : Logic P}
-[N : PNat P T] [I : MetaNatInduction L N]
-: NatInductionRight3 L N
+[I : MetaNatInduction L N Z S] : NatInductionRight3 L N Z S
 := {toFun := natInductionRight3ByMeta I}
 
 --------------------------------------------------------------------------------
@@ -310,8 +286,7 @@ instance iNatInductionRight3ByMeta
 -- By Predicate Induction & SForallNat & Ent
 
 def natInductionRight3IfByForallNatIf_induct
-{P : Sort u} {T : Sort v} {L : Logic P} {N : PNat P T} 
-(I : NatInduction L N) (FaN : LForallNat L N.toIsNat) (ent : LEnt L)
+(I : NatInduction L N Z S) (FaN : LForallNat L N) (ent : LEnt L)
 : (C : T -> T -> P) -> (R : T -> T -> T -> P) ->
   (L |- forallNat a b => C a b -> R a b 0) -> 
   ((c : T) -> (L |- nat c) -> 
@@ -323,8 +298,7 @@ def natInductionRight3IfByForallNatIf_induct
   exact natInduction p_f0 p_fS
 
 def natInductionRight3IfByForallNatIf
-{P : Sort u} {T : Sort v} {L : Logic P} {N : PNat P T} 
-(I : NatInduction L N) (FaN : LForallNat L N.toIsNat) (ent : LEnt L)
+(I : NatInduction L N Z S) (FaN : LForallNat L N) (ent : LEnt L)
 : (C : T -> T -> P) -> (R : T -> T -> T -> P) ->
   ((a b : T) -> (L |- nat a) -> (L |- nat b) ->  
     (L |- C a b) -> (L |- R a b 0)) -> 
@@ -355,16 +329,14 @@ def natInductionRight3IfByForallNatIf
   exact ent.elim (FaN.elim (FaN.elim h Na) Nb)
 
 instance iNatInductionRight3IfByForallNatIf
-{P : Sort u} {T : Sort v} {L : Logic P} [N : PNat P T] 
-[I : NatInduction L N] [FaN : LForallNat L N.toIsNat] [ent : LEnt L]
-: NatInductionRight3If L N
+[I : NatInduction L N Z S] [FaN : LForallNat L N] [ent : LEnt L]
+: NatInductionRight3If L N Z S
 := {toFun := natInductionRight3IfByForallNatIf I FaN ent}
 
 -- By Meta Induction
 
 def natInductionRight3IfByMeta
-{P : Sort u} {T : Sort v} {L : Logic P} 
-{N : PNat P T} (I : MetaNatInduction L N)
+(I : MetaNatInduction L N Z S)
 : (C : T -> T -> P) -> (R : T -> T -> T -> P) ->
   ((a b : T) -> (L |- nat a) -> (L |- nat b) ->  
     (L |- C a b) -> (L |- R a b 0)) -> 
@@ -384,7 +356,5 @@ def natInductionRight3IfByMeta
   exact h c Nc a b Na Nb
 
 instance iNatInductionRight3IfByMeta
-{P : Sort u} {T : Sort v} {L : Logic P}
-[N : PNat P T] [I : MetaNatInduction L N]
-: NatInductionRight3If L N
+[I : MetaNatInduction L N Z S] : NatInductionRight3If L N Z S
 := {toFun := natInductionRight3IfByMeta I}

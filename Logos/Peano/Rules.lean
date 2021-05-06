@@ -69,8 +69,10 @@ instance iFApplyTOfEqSuccToEqNat
   := {toFun := K.toFun}
 
 -- Axiom 8
-class SuccNatEqZeroFalse (L : Logic P) (N : PNat P T) (Q : SEq P T) :=
+class SuccNatEqZeroFalse (L : Logic P) 
+  (N : IsNat P T) (Q : SEq P T) (Z : Zero T) (S : Succ T) :=
   toFun : (n : T) -> (L |- nat n) -> (L |- S n = 0) -> False
 
-abbrev succNatEqZeroFalse {L : Logic P} [N : PNat P T] [Q : SEq P T]
-  [K : SuccNatEqZeroFalse L N Q] {n} := K.toFun n
+abbrev succNatEqZeroFalse {L : Logic P} 
+  [N : IsNat P T] [Q : SEq P T] [Z : Zero T] [S : Succ T]
+  [K : SuccNatEqZeroFalse L N Q Z S] {n} := K.toFun n

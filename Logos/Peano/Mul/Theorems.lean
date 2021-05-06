@@ -5,10 +5,17 @@ import Logos.Peano.Forall
 import Logos.Peano.Induction
 import Logos.Peano.Mul.Rules
 
-universes u v w
+universes u v
+variable {P : Sort u} {T : Sort v} 
 
 open Logos.Notation
 namespace Logos.Peano
+
+variable 
+  {L : Logic P}
+  [N : IsNat P T] [Z : Zero T] [O : One T] [S : Succ T]
+  [A : SAdd T] [M : SMul T]
+  [Q : SEq P T]
 
 --------------------------------------------------------------------------------
 -- Closure
@@ -17,22 +24,16 @@ namespace Logos.Peano
 -- nat (0 * 0)
 
 instance iNatMulZeroNyMulZero 
-{P : Sort u} {T : Sort v} {L : Logic P}
-[N : IsNat P T] [Q : SEq P T] [M : SMul T] [Z : Zero T]  
 [N0 : NatZero L N Z] [NQ : NatEqNat L N Q] [M0 : MulZeroEqZero L Q M Z] 
 : NatMulZero L N M Z 
 := {toFun := natEq nat0 mulZeroEqZero}
 
 instance iNatMulZeroByMulNatZero 
-{P : Sort u} {T : Sort v} {L : Logic P}
-[N : IsNat P T] [Q : SEq P T] [M : SMul T] [Z : Zero T]  
 [N0 : NatZero L N Z] [NQ : NatEqNat L N Q] [Mn0 : MulNatZeroEqZero L N Q M Z] 
 : NatMulZero L N M Z 
 := {toFun := natEq nat0 (mulNatZeroEqZero nat0)}
 
 instance iNatMulZeroByMulZeroNat 
-{P : Sort u} {T : Sort v} {L : Logic P}
-[N : IsNat P T] [Q : SEq P T] [M : SMul T] [Z : Zero T]  
 [N0 : NatZero L N Z] [NQ : NatEqNat L N Q] [M0n : MulZeroNatEqZero L N Q M Z] 
 : NatMulZero L N M Z 
 := {toFun := natEq nat0 (mulZeroNatEqZero nat0)}
@@ -40,15 +41,13 @@ instance iNatMulZeroByMulZeroNat
 -- nat (a * 0)
 
 def natMulNatZeroByInduction
-{P : Sort u} {T : Sort v} {L : Logic P}
-{N : PNat P T} {Q : SEq P T} {M : SMul T} {A : SAdd T}
-(I    : NatInduction L N)
-(N0   : NatZero L N.toIsNat N.toZero)
-(NS   : NatSuccNat L N.toIsNat N.toSucc)
-(NQ   : NatEqNat L N.toIsNat Q)
-(NA0n : NatAddZeroNat L N.toIsNat A N.toZero)
-(NM0  : NatMulZero L N.toIsNat M N.toZero)
-(MSn  : MulSuccNatEqAddMul L N.toIsNat Q M A N.toSucc)
+(I    : NatInduction L N Z S)
+(N0   : NatZero L N Z)
+(NS   : NatSuccNat L N S)
+(NQ   : NatEqNat L N Q)
+(NA0n : NatAddZeroNat L N A Z)
+(NM0  : NatMulZero L N M Z)
+(MSn  : MulSuccNatEqAddMul L N Q M A S)
 : (a : T) -> (L |- nat a) -> (L |- nat (a * 0))
 := by
   refine natInduction ?f0 ?fS
@@ -60,43 +59,35 @@ def natMulNatZeroByInduction
     exact mulSuccNatEqAddMul Na nat0 
 
 instance iNatMulNatZeroByInduction
-{P : Sort u} {T : Sort v} {L : Logic P}
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
-[I    : NatInduction L N]
-[N0   : NatZero L N.toIsNat N.toZero]
-[NS   : NatSuccNat L N.toIsNat N.toSucc]
-[NQ   : NatEqNat L N.toIsNat Q]
-[NA0n : NatAddZeroNat L N.toIsNat A N.toZero]
-[NM0  : NatMulZero L N.toIsNat M N.toZero]
-[MSn  : MulSuccNatEqAddMul L N.toIsNat Q M A N.toSucc]
-: NatMulNatZero L N.toIsNat M N.toZero 
+[I    : NatInduction L N Z S]
+[N0   : NatZero L N Z]
+[NS   : NatSuccNat L N S]
+[NQ   : NatEqNat L N Q]
+[NA0n : NatAddZeroNat L N A Z]
+[NM0  : NatMulZero L N M Z]
+[MSn  : MulSuccNatEqAddMul L N Q M A S]
+: NatMulNatZero L N M Z 
 := {toFun := natMulNatZeroByInduction I N0 NS NQ NA0n NM0 MSn}
 
 instance iNatMulNatZeroByMulNatZero 
-{P : Sort u} {T : Sort v} {L : Logic P}
-[N : IsNat P T] [Q : SEq P T] [M : SMul T] [Z : Zero T]  
 [N0 : NatZero L N Z] [NQ : NatEqNat L N Q] [Mn0 : MulNatZeroEqZero L N Q M Z]
 : NatMulNatZero L N M Z 
 := {toFun := fun _ Na => natEq nat0 (mulNatZeroEqZero Na)}
 
 instance iNatMulNatZeroByNatMul
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : IsNat P T] [M : SMul T] [Z : Zero T] 
 [N0 : NatZero L N Z] [NM : NatMulNat L N M] : NatMulNatZero L N M Z 
 := {toFun := fun _ Na => natMulNat Na nat0}
 
 -- nat (0 * a)
 
 def natMulZeroNatByInduction
-{P : Sort u} {T : Sort v} {L : Logic P}
-{N : PNat P T} {Q : SEq P T} {M : SMul T} {A : SAdd T}
-(I    : NatInduction L N)
-(N0   : NatZero L N.toIsNat N.toZero)
-(NS   : NatSuccNat L N.toIsNat N.toSucc)
-(NQ   : NatEqNat L N.toIsNat Q)
-(NA0n : NatAddZeroNat L N.toIsNat A N.toZero)
-(NM0  : NatMulZero L N.toIsNat M N.toZero)
-(MnS  : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc)
+(I    : NatInduction L N Z S)
+(N0   : NatZero L N Z)
+(NS   : NatSuccNat L N S)
+(NQ   : NatEqNat L N Q)
+(NA0n : NatAddZeroNat L N A Z)
+(NM0  : NatMulZero L N M Z)
+(MnS  : MulNatSuccEqAddMul L N Q M A S)
 : (a : T) -> (L |- nat a) -> (L |- nat (0 * a))
 := by
   refine natInduction ?f0 ?fS
@@ -108,42 +99,34 @@ def natMulZeroNatByInduction
     exact mulNatSuccEqAddMul nat0 Na 
 
 instance iNatMulZeroNatByInduction
-{P : Sort u} {T : Sort v} {L : Logic P}
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
-[I    : NatInduction L N]
-[N0   : NatZero L N.toIsNat N.toZero]
-[NS   : NatSuccNat L N.toIsNat N.toSucc]
-[NQ   : NatEqNat L N.toIsNat Q]
-[NA0n : NatAddZeroNat L N.toIsNat A N.toZero]
-[NM0  : NatMulZero L N.toIsNat M N.toZero]
-[MnS  : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: NatMulZeroNat L N.toIsNat M N.toZero 
+[I    : NatInduction L N Z S]
+[N0   : NatZero L N Z]
+[NS   : NatSuccNat L N S]
+[NQ   : NatEqNat L N Q]
+[NA0n : NatAddZeroNat L N A Z]
+[NM0  : NatMulZero L N M Z]
+[MnS  : MulNatSuccEqAddMul L N Q M A S]
+: NatMulZeroNat L N M Z 
 := {toFun := natMulZeroNatByInduction I N0 NS NQ NA0n NM0 MnS}
 
 instance iNatMulZeroNatByMulZeroNat
-{P : Sort u} {T : Sort v} {L : Logic P}
-[N : IsNat P T] [Q : SEq P T] [M : SMul T] [Z : Zero T]  
 [N0 : NatZero L N Z] [NQ : NatEqNat L N Q] [M0n : MulZeroNatEqZero L N Q M Z]
 : NatMulZeroNat L N M Z 
 := {toFun := fun _ Na => natEq nat0 (mulZeroNatEqZero Na)}
 
 instance iNatMulZeroNatByNatMul
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : IsNat P T] [M : SMul T] [Z : Zero T] 
 [N0 : NatZero L N Z] [NM : NatMulNat L N M] : NatMulZeroNat L N M Z 
 := {toFun := fun _ Na => natMul nat0 Na}
 
 -- nat (a * b)
 
 def natMulNatProof
-{P : Sort u} {T : Sort v} {L : Logic P}
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
-(I    : NatInductionRight L N)
-(NQ   : NatEqNat L N.toIsNat Q)
-(NA   : NatAddNat L N.toIsNat A)
-(NMn0 : NatMulNatZero L N.toIsNat M N.toZero)
-(Mn0  : MulNatZeroEqZero L N.toIsNat Q M N.toZero)
-(MnS  : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc)
+(I    : NatInductionRight L N Z S)
+(NQ   : NatEqNat L N Q)
+(NA   : NatAddNat L N A)
+(NMn0 : NatMulNatZero L N M Z)
+(Mn0  : MulNatZeroEqZero L N Q M Z)
+(MnS  : MulNatSuccEqAddMul L N Q M A S)
 : (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat (a * b))
 := by
   refine natInductionRight ?f0 ?fS
@@ -157,30 +140,26 @@ def natMulNatProof
     exact mulNatSuccEqAddMul Na Nb 
 
 instance iNatMulNat 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
-[I   : NatInductionRight L N] 
-[NQ  : NatEqNat L N.toIsNat Q]
-[NA  : NatAddNat L N.toIsNat A]
-[NMn0 : NatMulNatZero L N.toIsNat M N.toZero]
-[Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero]
-[MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: NatMulNat L N.toIsNat M 
+[I   : NatInductionRight L N Z S] 
+[NQ  : NatEqNat L N Q]
+[NA  : NatAddNat L N A]
+[NMn0 : NatMulNatZero L N M Z]
+[Mn0 : MulNatZeroEqZero L N Q M Z]
+[MnS : MulNatSuccEqAddMul L N Q M A S]
+: NatMulNat L N M 
 := {toFun := natMulNatProof I NQ NA NMn0 Mn0 MnS}
 
 instance iNatMulNatByPeano 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T] 
-[FaN : LForallNat L N.toIsNat]
-[I   : NatInduction L N]
-[N0  : NatZero L N.toIsNat N.toZero]
-[NS  : NatSuccNat L N.toIsNat N.toSucc]
-[NQ  : NatEqNat L N.toIsNat Q]
-[An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
-[AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
-[Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero]
-[MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: NatMulNat L N.toIsNat M := 
+[FaN : LForallNat L N]
+[I   : NatInduction L N Z S]
+[N0  : NatZero L N Z]
+[NS  : NatSuccNat L N S]
+[NQ  : NatEqNat L N Q]
+[An0 : AddNatZeroEqNat L N Q A Z]
+[AnS : AddNatSuccEqSucc L N Q A S]
+[Mn0 : MulNatZeroEqZero L N Q M Z]
+[MnS : MulNatSuccEqAddMul L N Q M A S]
+: NatMulNat L N M := 
 {toFun := 
   natMulNatProof iNatInductionRightByForallNat 
     NQ iNatAddNatByPeano iNatMulNatZeroByMulNatZero Mn0 MnS}
@@ -192,14 +171,12 @@ instance iNatMulNatByPeano
 -- 0 * 0 = 0
 
 instance iMulZeroEqZeroByMulNatZero
-{P : Sort u} {T : Sort v} {L : Logic P}
 [N : IsNat P T] [Q : SEq P T] [M : SMul T] [Z : Zero T] 
 [N0 : NatZero L N Z] [Mn0 : MulNatZeroEqZero L N Q M Z]
 : MulZeroEqZero L Q M Z
 := {toFun := mulNatZeroEqZero nat0}
 
 instance iMulZeroEqZeroByMulZeroNat
-{P : Sort u} {T : Sort v} {L : Logic P}
 [N : IsNat P T] [Q : SEq P T] [M : SMul T] [Z : Zero T] 
 [N0 : NatZero L N Z] [M0n : MulZeroNatEqZero L N Q M Z]
 : MulZeroEqZero L Q M Z
@@ -208,17 +185,15 @@ instance iMulZeroEqZeroByMulZeroNat
 -- a * 0 = 0
 
 def mulNatZeroEqZeroProof 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-{N : PNat P T} {Q : SEq P T} {M : SMul T} {A : SAdd T}
-(I    : NatInduction L N)
-(N0   : NatZero L N.toIsNat N.toZero)
-(NS   : NatSuccNat L N.toIsNat N.toSucc)
-(NA0n : NatAddZeroNat L N.toIsNat A N.toZero)
-(NMn0 : NatMulNatZero L N.toIsNat M N.toZero)
-(QTr  : EqNatTrans L N.toIsNat Q)
-(M0   : MulZeroEqZero L Q M N.toZero)
-(A0n  : AddZeroNatEqNat L N.toIsNat Q A N.toZero)
-(MSn  : MulSuccNatEqAddMul L N.toIsNat Q M A N.toSucc)
+(I    : NatInduction L N Z S)
+(N0   : NatZero L N Z)
+(NS   : NatSuccNat L N S)
+(NA0n : NatAddZeroNat L N A Z)
+(NMn0 : NatMulNatZero L N M Z)
+(QTr  : EqNatTrans L N Q)
+(M0   : MulZeroEqZero L Q M Z)
+(A0n  : AddZeroNatEqNat L N Q A Z)
+(MSn  : MulSuccNatEqAddMul L N Q M A S)
 : (a : T) -> (L |- nat a) -> (L |- a * 0 = 0) 
 := by
   refine natInduction ?f0 ?fS
@@ -236,34 +211,30 @@ def mulNatZeroEqZeroProof
     exact Ma0_eq_0
 
 instance iMulNatZeroEqZero 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
-[I    : NatInduction L N]
-[N0   : NatZero L N.toIsNat N.toZero]
-[NS   : NatSuccNat L N.toIsNat N.toSucc]
-[NA0n : NatAddZeroNat L N.toIsNat A N.toZero]
-[NMn0 : NatMulNatZero L N.toIsNat M N.toZero]
-[QTr  : EqNatTrans L N.toIsNat Q]
-[M0   : MulZeroEqZero L Q M N.toZero]
-[A0n  : AddZeroNatEqNat L N.toIsNat Q A N.toZero]
-[MSn  : MulSuccNatEqAddMul L N.toIsNat Q M A N.toSucc]
-: MulNatZeroEqZero L N.toIsNat Q M N.toZero
+[I    : NatInduction L N Z S]
+[N0   : NatZero L N Z]
+[NS   : NatSuccNat L N S]
+[NA0n : NatAddZeroNat L N A Z]
+[NMn0 : NatMulNatZero L N M Z]
+[QTr  : EqNatTrans L N Q]
+[M0   : MulZeroEqZero L Q M Z]
+[A0n  : AddZeroNatEqNat L N Q A Z]
+[MSn  : MulSuccNatEqAddMul L N Q M A S]
+: MulNatZeroEqZero L N Q M Z
 := {toFun := mulNatZeroEqZeroProof I N0 NS NA0n NMn0 QTr M0 A0n MSn}
 
 instance iMulNatZeroEqZeroByNatEq 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
-[I   : NatInduction L N]
-[N0  : NatZero L N.toIsNat N.toZero]
-[NS  : NatSuccNat L N.toIsNat N.toSucc]
-[NQ  : NatEqNat L N.toIsNat Q]
-[QTr : EqNatTrans L N.toIsNat Q]
-[QtS : EqNatToEqSucc L N.toIsNat Q N.toSucc]  
-[M0  : MulZeroEqZero L Q M N.toZero]
-[A0  : AddZeroEqZero L Q A N.toZero]
-[AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
-[MSn : MulSuccNatEqAddMul L N.toIsNat Q M A N.toSucc]
-: MulNatZeroEqZero L N.toIsNat Q M N.toZero := 
+[I   : NatInduction L N Z S]
+[N0  : NatZero L N Z]
+[NS  : NatSuccNat L N S]
+[NQ  : NatEqNat L N Q]
+[QTr : EqNatTrans L N Q]
+[QtS : EqNatToEqSucc L N Q S]  
+[M0  : MulZeroEqZero L Q M Z]
+[A0  : AddZeroEqZero L Q A Z]
+[AnS : AddNatSuccEqSucc L N Q A S]
+[MSn : MulSuccNatEqAddMul L N Q M A S]
+: MulNatZeroEqZero L N Q M Z := 
 {toFun := 
   mulNatZeroEqZeroProof I 
     N0 NS iNatAddZeroNatByInduction iNatMulNatZeroByInduction 
@@ -272,17 +243,15 @@ instance iMulNatZeroEqZeroByNatEq
 -- 0 * a = 0
 
 def mulZeroNatEqZeroProof 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-{N : PNat P T} {Q : SEq P T} {M : SMul T} {A : SAdd T}
-(I    : NatInduction L N)
-(N0   : NatZero L N.toIsNat N.toZero)
-(NS   : NatSuccNat L N.toIsNat N.toSucc)
-(NA0n : NatAddZeroNat L N.toIsNat A N.toZero)
-(NM0n : NatMulZeroNat L N.toIsNat M N.toZero)
-(QTr  : EqNatTrans L N.toIsNat Q)
-(M0   : MulZeroEqZero L Q M N.toZero)
-(A0n  : AddZeroNatEqNat L N.toIsNat Q A N.toZero)
-(MnS  : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc)
+(I    : NatInduction L N Z S)
+(N0   : NatZero L N Z)
+(NS   : NatSuccNat L N S)
+(NA0n : NatAddZeroNat L N A Z)
+(NM0n : NatMulZeroNat L N M Z)
+(QTr  : EqNatTrans L N Q)
+(M0   : MulZeroEqZero L Q M Z)
+(A0n  : AddZeroNatEqNat L N Q A Z)
+(MnS  : MulNatSuccEqAddMul L N Q M A S)
 : (a : T) -> (L |- nat a) -> (L |- 0 * a = 0) 
 := by
   refine natInduction ?f0 ?fS
@@ -300,54 +269,48 @@ def mulZeroNatEqZeroProof
     exact M0a_eq_0
 
 instance iMulZeroNatEqZero 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
-[I    : NatInduction L N]
-[N0   : NatZero L N.toIsNat N.toZero]
-[NS   : NatSuccNat L N.toIsNat N.toSucc]
-[NA0n : NatAddZeroNat L N.toIsNat A N.toZero]
-[NM0n : NatMulZeroNat L N.toIsNat M N.toZero]
-[QTr  : EqNatTrans L N.toIsNat Q]
-[M0   : MulZeroEqZero L Q M N.toZero]
-[A0n  : AddZeroNatEqNat L N.toIsNat Q A N.toZero]
-[MnS  : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: MulZeroNatEqZero L N.toIsNat Q M N.toZero
+[I    : NatInduction L N Z S]
+[N0   : NatZero L N Z]
+[NS   : NatSuccNat L N S]
+[NA0n : NatAddZeroNat L N A Z]
+[NM0n : NatMulZeroNat L N M Z]
+[QTr  : EqNatTrans L N Q]
+[M0   : MulZeroEqZero L Q M Z]
+[A0n  : AddZeroNatEqNat L N Q A Z]
+[MnS  : MulNatSuccEqAddMul L N Q M A S]
+: MulZeroNatEqZero L N Q M Z
 := {toFun := mulZeroNatEqZeroProof I N0 NS NA0n NM0n QTr M0 A0n MnS}
 
 instance iMulZeroNatEqZeroByNatEq 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
-[I   : NatInduction L N]
-[N0  : NatZero L N.toIsNat N.toZero]
-[NS  : NatSuccNat L N.toIsNat N.toSucc]
-[NQ  : NatEqNat L N.toIsNat Q]
-[QTr : EqNatTrans L N.toIsNat Q]
-[QtS : EqNatToEqSucc L N.toIsNat Q N.toSucc]  
-[M0  : MulZeroEqZero L Q M N.toZero]
-[A0  : AddZeroEqZero L Q A N.toZero]
-[AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
-[MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: MulZeroNatEqZero L N.toIsNat Q M N.toZero := 
+[I   : NatInduction L N Z S]
+[N0  : NatZero L N Z]
+[NS  : NatSuccNat L N S]
+[NQ  : NatEqNat L N Q]
+[QTr : EqNatTrans L N Q]
+[QtS : EqNatToEqSucc L N Q S]  
+[M0  : MulZeroEqZero L Q M Z]
+[A0  : AddZeroEqZero L Q A Z]
+[AnS : AddNatSuccEqSucc L N Q A S]
+[MnS : MulNatSuccEqAddMul L N Q M A S]
+: MulZeroNatEqZero L N Q M Z := 
 {toFun := 
   mulZeroNatEqZeroProof I 
     N0 NS iNatAddZeroNatByInduction iNatMulZeroNatByInduction 
     QTr M0 iAddZeroNatEqNatByNatEq MnS}
 
 instance iMulZeroNatEqZeroByPeano 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T] 
-[FaN : LForallNat L N.toIsNat]
-[I   : NatInduction L N]
-[N0  : NatZero L N.toIsNat N.toZero]
-[NS  : NatSuccNat L N.toIsNat N.toSucc]
-[NQ  : NatEqNat L N.toIsNat Q]
-[QTr : EqNatTrans L N.toIsNat Q]
-[QtS : EqNatToEqSucc L N.toIsNat Q N.toSucc]
-[An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
-[AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
-[Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero]
-[MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: MulZeroNatEqZero L N.toIsNat Q M N.toZero := 
+[FaN : LForallNat L N]
+[I   : NatInduction L N Z S]
+[N0  : NatZero L N Z]
+[NS  : NatSuccNat L N S]
+[NQ  : NatEqNat L N Q]
+[QTr : EqNatTrans L N Q]
+[QtS : EqNatToEqSucc L N Q S]
+[An0 : AddNatZeroEqNat L N Q A Z]
+[AnS : AddNatSuccEqSucc L N Q A S]
+[Mn0 : MulNatZeroEqZero L N Q M Z]
+[MnS : MulNatSuccEqAddMul L N Q M A S]
+: MulZeroNatEqZero L N Q M Z := 
 {toFun := 
   mulZeroNatEqZeroProof I N0 NS iNatAddZeroNatByNatAdd iNatMulZeroNatByNatMul
     QTr iMulZeroEqZeroByMulNatZero iAddZeroNatEqNatByPeano MnS}
@@ -355,25 +318,23 @@ instance iMulZeroNatEqZeroByPeano
 -- S a + b = b + (a * b)
 
 def mulSuccNatEqAddMulProof 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-{N : PNat P T} {Q : SEq P T} {M : SMul T} {A : SAdd T} 
-(I   : NatInductionRight L N)
-(N0  : NatZero L N.toIsNat N.toZero)
-(NS  : NatSuccNat L N.toIsNat N.toSucc)
-(NA  : NatAddNat L N.toIsNat A)  
-(NM  : NatMulNat L N.toIsNat M)
-(QTr : EqNatTrans L N.toIsNat Q)
-(QEL : EqNatLeftEuc L N.toIsNat Q)
-(QtS : EqNatToEqSucc L N.toIsNat Q N.toSucc)
-(QAL : EqNatAddNatLeft L N.toIsNat Q A)
-(QAR : EqNatAddNatRight L N.toIsNat Q A)
-(ACm : AddNatComm L N.toIsNat Q A)
-(AAs : AddNatAssoc L N.toIsNat Q A)
-(AAr : AddNatAssocRev L N.toIsNat Q A)
-(A0n : AddZeroNatEqNat L N.toIsNat Q A N.toZero)
-(ASn : AddSuccNatEqSucc L N.toIsNat Q A N.toSucc)
-(Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero)
-(MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc)
+(I   : NatInductionRight L N Z S)
+(N0  : NatZero L N Z)
+(NS  : NatSuccNat L N S)
+(NA  : NatAddNat L N A)  
+(NM  : NatMulNat L N M)
+(QTr : EqNatTrans L N Q)
+(QEL : EqNatLeftEuc L N Q)
+(QtS : EqNatToEqSucc L N Q S)
+(QAL : EqNatAddNatLeft L N Q A)
+(QAR : EqNatAddNatRight L N Q A)
+(ACm : AddNatComm L N Q A)
+(AAs : AddNatAssoc L N Q A)
+(AAr : AddNatAssocRev L N Q A)
+(A0n : AddZeroNatEqNat L N Q A Z)
+(ASn : AddSuccNatEqSucc L N Q A S)
+(Mn0 : MulNatZeroEqZero L N Q M Z)
+(MnS : MulNatSuccEqAddMul L N Q M A S)
 : (a b : T) -> (L |- nat a) -> (L |- nat b) ->  (L |- S a * b = b + (a * b))
 := by
   refine natInductionRight ?f0 ?fS
@@ -440,46 +401,42 @@ def mulSuccNatEqAddMulProof
       exact addNatAssoc Na Nb NMab
 
 instance iMulSuccNatEqAddMul 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
-[I   : NatInductionRight L N]
-[N0  : NatZero L N.toIsNat N.toZero]
-[NS  : NatSuccNat L N.toIsNat N.toSucc]
-[NA  : NatAddNat L N.toIsNat A]  
-[NM  : NatMulNat L N.toIsNat M]
-[QTr : EqNatTrans L N.toIsNat Q]
-[QEL : EqNatLeftEuc L N.toIsNat Q]
-[QtS : EqNatToEqSucc L N.toIsNat Q N.toSucc]
-[QAL : EqNatAddNatLeft L N.toIsNat Q A]
-[QAR : EqNatAddNatRight L N.toIsNat Q A]
-[ACm : AddNatComm L N.toIsNat Q A]
-[AAs : AddNatAssoc L N.toIsNat Q A]
-[AAr : AddNatAssocRev L N.toIsNat Q A]
-[A0n : AddZeroNatEqNat L N.toIsNat Q A N.toZero]
-[ASn : AddSuccNatEqSucc L N.toIsNat Q A N.toSucc]
-[Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero]
-[MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: MulSuccNatEqAddMul L N.toIsNat Q M A N.toSucc := 
+[I   : NatInductionRight L N Z S]
+[N0  : NatZero L N Z]
+[NS  : NatSuccNat L N S]
+[NA  : NatAddNat L N A]  
+[NM  : NatMulNat L N M]
+[QTr : EqNatTrans L N Q]
+[QEL : EqNatLeftEuc L N Q]
+[QtS : EqNatToEqSucc L N Q S]
+[QAL : EqNatAddNatLeft L N Q A]
+[QAR : EqNatAddNatRight L N Q A]
+[ACm : AddNatComm L N Q A]
+[AAs : AddNatAssoc L N Q A]
+[AAr : AddNatAssocRev L N Q A]
+[A0n : AddZeroNatEqNat L N Q A Z]
+[ASn : AddSuccNatEqSucc L N Q A S]
+[Mn0 : MulNatZeroEqZero L N Q M Z]
+[MnS : MulNatSuccEqAddMul L N Q M A S]
+: MulSuccNatEqAddMul L N Q M A S := 
 {toFun := 
   mulSuccNatEqAddMulProof I N0 NS NA NM QTr QEL QtS QAL QAR 
     ACm AAs AAr A0n ASn Mn0 MnS}
 
 instance iMulSuccNatEqAddMulByPeano 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
-[FaN : LForallNat L N.toIsNat] [ent : LEnt L]
-[I   : NatInduction L N]
-[N0  : NatZero L N.toIsNat N.toZero]
-[NS  : NatSuccNat L N.toIsNat N.toSucc]
-[NQ  : NatEqNat L N.toIsNat Q]
-[QSm : EqNatSymm L N.toIsNat Q]
-[QTr : EqNatTrans L N.toIsNat Q]
-[QtS : EqNatToEqSucc L N.toIsNat Q N.toSucc]
-[An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
-[AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
-[Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero]
-[MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: MulSuccNatEqAddMul L N.toIsNat Q M A N.toSucc := 
+[FaN : LForallNat L N] [ent : LEnt L]
+[I   : NatInduction L N Z S]
+[N0  : NatZero L N Z]
+[NS  : NatSuccNat L N S]
+[NQ  : NatEqNat L N Q]
+[QSm : EqNatSymm L N Q]
+[QTr : EqNatTrans L N Q]
+[QtS : EqNatToEqSucc L N Q S]
+[An0 : AddNatZeroEqNat L N Q A Z]
+[AnS : AddNatSuccEqSucc L N Q A S]
+[Mn0 : MulNatZeroEqZero L N Q M Z]
+[MnS : MulNatSuccEqAddMul L N Q M A S]
+: MulSuccNatEqAddMul L N Q M A S := 
 {toFun := 
   mulSuccNatEqAddMulProof 
     iNatInductionRightByForallNat 
@@ -496,8 +453,6 @@ instance iMulSuccNatEqAddMulByPeano
 -- a * 0 = 0 * a
 
 def mulNatZeroCommByNatMulZero
-{P : Sort u} {T : Sort v} {L : Logic P} 
-{N : IsNat P T} {Q : SEq P T} {M : SMul T} {Z : Zero T}
 (QEL  : EqNatLeftEuc L N Q)
 (N0   : NatZero L N Z)
 (NMn0 : NatMulNatZero L N M Z)
@@ -512,8 +467,6 @@ def mulNatZeroCommByNatMulZero
   exact mulNatZeroEqZero Na; exact mulZeroNatEqZero Na
 
 instance iMulNatZeroCommByNatMulZero 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : IsNat P T] [Q : SEq P T] [M : SMul T] [Z : Zero T]
 [QEL  : EqNatLeftEuc L N Q]
 [N0   : NatZero L N Z]
 [NMn0 : NatMulNatZero L N M Z]
@@ -526,18 +479,16 @@ instance iMulNatZeroCommByNatMulZero
 -- a * b = b * a
 
 def mulNatCommProof 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-{N : PNat P T} {Q : SEq P T} {M : SMul T} {A : SAdd T}
-(I   : NatInductionRight L N)
-(NA  : NatAddNat L N.toIsNat A)  
-(NM  : NatMulNat L N.toIsNat M)
-(NS  : NatSuccNat L N.toIsNat N.toSucc)
-(QTr : EqNatTrans L N.toIsNat Q)
-(QEL : EqNatLeftEuc L N.toIsNat Q)
-(QAL : EqNatAddNatLeft L N.toIsNat Q A)
-(M0C : MulNatZeroComm L N.toIsNat Q M N.toZero)
-(MSn : MulSuccNatEqAddMul L N.toIsNat Q M A N.toSucc)
-(MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc)
+(I   : NatInductionRight L N Z S)
+(NA  : NatAddNat L N A)  
+(NM  : NatMulNat L N M)
+(NS  : NatSuccNat L N S)
+(QTr : EqNatTrans L N Q)
+(QEL : EqNatLeftEuc L N Q)
+(QAL : EqNatAddNatLeft L N Q A)
+(M0C : MulNatZeroComm L N Q M Z)
+(MSn : MulSuccNatEqAddMul L N Q M A S)
+(MnS : MulNatSuccEqAddMul L N Q M A S)
 : (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- a * b = b * a) 
 := by
   refine natInductionRight ?f0 ?fS
@@ -565,37 +516,33 @@ def mulNatCommProof
       exact mulSuccNatEqAddMul Nb Na
 
 instance iMulNatComm 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T] 
-[I   : NatInductionRight L N]
-[NA  : NatAddNat L N.toIsNat A]  
-[NM  : NatMulNat L N.toIsNat M]
-[NS  : NatSuccNat L N.toIsNat N.toSucc]
-[QTr : EqNatTrans L N.toIsNat Q]
-[QEL : EqNatLeftEuc L N.toIsNat Q]
-[QAL : EqNatAddNatLeft L N.toIsNat Q A]
-[M0C : MulNatZeroComm L N.toIsNat Q M N.toZero]
-[MSn : MulSuccNatEqAddMul L N.toIsNat Q M A N.toSucc]
-[MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: MulNatComm L N.toIsNat Q M 
+[I   : NatInductionRight L N Z S]
+[NA  : NatAddNat L N A]  
+[NM  : NatMulNat L N M]
+[NS  : NatSuccNat L N S]
+[QTr : EqNatTrans L N Q]
+[QEL : EqNatLeftEuc L N Q]
+[QAL : EqNatAddNatLeft L N Q A]
+[M0C : MulNatZeroComm L N Q M Z]
+[MSn : MulSuccNatEqAddMul L N Q M A S]
+[MnS : MulNatSuccEqAddMul L N Q M A S]
+: MulNatComm L N Q M 
 := {toFun := mulNatCommProof I NA NM NS QTr QEL QAL M0C MSn MnS}
 
 instance iMulNatCommByPeano 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T] 
-[FaN : LForallNat L N.toIsNat] [ent : LEnt L]
-[I   : NatInduction L N]
-[N0  : NatZero L N.toIsNat N.toZero]
-[NS  : NatSuccNat L N.toIsNat N.toSucc]
-[NQ  : NatEqNat L N.toIsNat Q]
-[QSm : EqNatSymm L N.toIsNat Q]
-[QTr : EqNatTrans L N.toIsNat Q]
-[QtS : EqNatToEqSucc L N.toIsNat Q N.toSucc]
-[An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
-[AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
-[Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero]
-[MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: MulNatComm L N.toIsNat Q M := 
+[FaN : LForallNat L N] [ent : LEnt L]
+[I   : NatInduction L N Z S]
+[N0  : NatZero L N Z]
+[NS  : NatSuccNat L N S]
+[NQ  : NatEqNat L N Q]
+[QSm : EqNatSymm L N Q]
+[QTr : EqNatTrans L N Q]
+[QtS : EqNatToEqSucc L N Q S]
+[An0 : AddNatZeroEqNat L N Q A Z]
+[AnS : AddNatSuccEqSucc L N Q A S]
+[Mn0 : MulNatZeroEqZero L N Q M Z]
+[MnS : MulNatSuccEqAddMul L N Q M A S]
+: MulNatComm L N Q M := 
 {toFun := 
   mulNatCommProof iNatInductionRightByForallNat 
     iNatAddNatByPeano iNatMulNatByPeano NS 
@@ -610,19 +557,17 @@ instance iMulNatCommByPeano
 -- (a = b) -> (c * a = c * b)
 
 def eqNatMulNatLeftProof
-{P : Sort u} {T : Sort v} {L : Logic P} 
-{N : PNat P T} {Q : SEq P T} {M : SMul T} {A : SAdd T}
-(I   : NatInductionRight3If L N)
-(N0  : NatZero L N.toIsNat N.toZero)
-(NS  : NatSuccNat L N.toIsNat N.toSucc)
-(NA  : NatAddNat L N.toIsNat A)
-(NM  : NatMulNat L N.toIsNat M)
-(QTr : EqNatTrans L N.toIsNat Q)
-(QEL : EqNatLeftEuc L N.toIsNat Q)
-(QAL : EqNatAddNatLeft L N.toIsNat Q A)
-(QAR : EqNatAddNatRight L N.toIsNat Q A)
-(M0n : MulZeroNatEqZero L N.toIsNat Q M N.toZero)
-(MSn : MulSuccNatEqAddMul L N.toIsNat Q M A N.toSucc)
+(I   : NatInductionRight3If L N Z S)
+(N0  : NatZero L N Z)
+(NS  : NatSuccNat L N S)
+(NA  : NatAddNat L N A)
+(NM  : NatMulNat L N M)
+(QTr : EqNatTrans L N Q)
+(QEL : EqNatLeftEuc L N Q)
+(QAL : EqNatAddNatLeft L N Q A)
+(QAR : EqNatAddNatRight L N Q A)
+(M0n : MulZeroNatEqZero L N Q M Z)
+(MSn : MulSuccNatEqAddMul L N Q M A S)
 : (a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
   ((L |- a = b) -> (L |- c * a = c * b)) 
 := by
@@ -656,39 +601,35 @@ def eqNatMulNatLeftProof
       exact mulSuccNatEqAddMul Nc Nb
 
 instance iEqNatMulNatLeft
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
-[I   : NatInductionRight3If L N]
-[N0  : NatZero L N.toIsNat N.toZero]
-[NS  : NatSuccNat L N.toIsNat N.toSucc]
-[NA  : NatAddNat L N.toIsNat A]
-[NM  : NatMulNat L N.toIsNat M]
-[QTr : EqNatTrans L N.toIsNat Q]
-[QEL : EqNatLeftEuc L N.toIsNat Q]
-[QAL : EqNatAddNatLeft L N.toIsNat Q A]
-[QAR : EqNatAddNatRight L N.toIsNat Q A]
-[M0n : MulZeroNatEqZero L N.toIsNat Q M N.toZero]
-[MSn : MulSuccNatEqAddMul L N.toIsNat Q M A N.toSucc]
-: EqNatMulNatLeft L N.toIsNat Q M := 
+[I   : NatInductionRight3If L N Z S]
+[N0  : NatZero L N Z]
+[NS  : NatSuccNat L N S]
+[NA  : NatAddNat L N A]
+[NM  : NatMulNat L N M]
+[QTr : EqNatTrans L N Q]
+[QEL : EqNatLeftEuc L N Q]
+[QAL : EqNatAddNatLeft L N Q A]
+[QAR : EqNatAddNatRight L N Q A]
+[M0n : MulZeroNatEqZero L N Q M Z]
+[MSn : MulSuccNatEqAddMul L N Q M A S]
+: EqNatMulNatLeft L N Q M := 
 {toFun := 
   eqNatMulNatLeftProof I N0 NS NA NM QTr QEL QAL QAR M0n MSn}
 
 instance iEqNatMulNatLeftByPeano
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
-[FaN : LForallNat L N.toIsNat] [ent : LEnt L]
-[I   : NatInduction L N]
-[N0  : NatZero L N.toIsNat N.toZero]
-[NS  : NatSuccNat L N.toIsNat N.toSucc]
-[NQ  : NatEqNat L N.toIsNat Q]
-[QSm : EqNatSymm L N.toIsNat Q]
-[QTr : EqNatTrans L N.toIsNat Q]
-[QtS : EqNatToEqSucc L N.toIsNat Q N.toSucc]
-[An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
-[AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
-[Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero]
-[MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: EqNatMulNatLeft L N.toIsNat Q M := 
+[FaN : LForallNat L N] [ent : LEnt L]
+[I   : NatInduction L N Z S]
+[N0  : NatZero L N Z]
+[NS  : NatSuccNat L N S]
+[NQ  : NatEqNat L N Q]
+[QSm : EqNatSymm L N Q]
+[QTr : EqNatTrans L N Q]
+[QtS : EqNatToEqSucc L N Q S]
+[An0 : AddNatZeroEqNat L N Q A Z]
+[AnS : AddNatSuccEqSucc L N Q A S]
+[Mn0 : MulNatZeroEqZero L N Q M Z]
+[MnS : MulNatSuccEqAddMul L N Q M A S]
+: EqNatMulNatLeft L N Q M := 
 {toFun := 
   eqNatMulNatLeftProof iNatInductionRight3IfByForallNatIf 
     N0 NS iNatAddNatByPeano iNatMulNatByPeano 
@@ -700,19 +641,17 @@ instance iEqNatMulNatLeftByPeano
 -- (a = b) -> (a * c = b * c)
 
 def eqNatMulNatRightProof
-{P : Sort u} {T : Sort v} {L : Logic P} 
-{N : PNat P T} {Q : SEq P T} {M : SMul T} {A : SAdd T}
-(I   : NatInductionRight3If L N)
-(N0  : NatZero L N.toIsNat N.toZero)
-(NS  : NatSuccNat L N.toIsNat N.toSucc)
-(NA  : NatAddNat L N.toIsNat A)
-(NM  : NatMulNat L N.toIsNat M)
-(QTr : EqNatTrans L N.toIsNat Q)
-(QEL : EqNatLeftEuc L N.toIsNat Q)
-(QAL : EqNatAddNatLeft L N.toIsNat Q A)
-(QAR : EqNatAddNatRight L N.toIsNat Q A)
-(Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero)
-(MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc)
+(I   : NatInductionRight3If L N Z S)
+(N0  : NatZero L N Z)
+(NS  : NatSuccNat L N S)
+(NA  : NatAddNat L N A)
+(NM  : NatMulNat L N M)
+(QTr : EqNatTrans L N Q)
+(QEL : EqNatLeftEuc L N Q)
+(QAL : EqNatAddNatLeft L N Q A)
+(QAR : EqNatAddNatRight L N Q A)
+(Mn0 : MulNatZeroEqZero L N Q M Z)
+(MnS : MulNatSuccEqAddMul L N Q M A S)
 : (a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
   ((L |- a = b) -> (L |- a * c = b * c)) 
 := by
@@ -746,39 +685,35 @@ def eqNatMulNatRightProof
       exact mulNatSuccEqAddMul Nb Nc
 
 instance iEqNatMulNatRight
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
-[I   : NatInductionRight3If L N]
-[N0  : NatZero L N.toIsNat N.toZero]
-[NS  : NatSuccNat L N.toIsNat N.toSucc]
-[NA  : NatAddNat L N.toIsNat A]
-[NM  : NatMulNat L N.toIsNat M]
-[QTr : EqNatTrans L N.toIsNat Q]
-[QEL : EqNatLeftEuc L N.toIsNat Q]
-[QAL : EqNatAddNatLeft L N.toIsNat Q A]
-[QAR : EqNatAddNatRight L N.toIsNat Q A]
-[Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero]
-[MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: EqNatMulNatRight L N.toIsNat Q M := 
+[I   : NatInductionRight3If L N Z S]
+[N0  : NatZero L N Z]
+[NS  : NatSuccNat L N S]
+[NA  : NatAddNat L N A]
+[NM  : NatMulNat L N M]
+[QTr : EqNatTrans L N Q]
+[QEL : EqNatLeftEuc L N Q]
+[QAL : EqNatAddNatLeft L N Q A]
+[QAR : EqNatAddNatRight L N Q A]
+[Mn0 : MulNatZeroEqZero L N Q M Z]
+[MnS : MulNatSuccEqAddMul L N Q M A S]
+: EqNatMulNatRight L N Q M := 
 {toFun := 
   eqNatMulNatRightProof I N0 NS NA NM QTr QEL QAL QAR Mn0 MnS}
 
 instance iEqNatMulNatRightByPeano
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
-[FaN : LForallNat L N.toIsNat] [ent : LEnt L]
-[I   : NatInduction L N]
-[N0  : NatZero L N.toIsNat N.toZero]
-[NS  : NatSuccNat L N.toIsNat N.toSucc]
-[NQ  : NatEqNat L N.toIsNat Q]
-[QSm : EqNatSymm L N.toIsNat Q]
-[QTr : EqNatTrans L N.toIsNat Q]
-[QtS : EqNatToEqSucc L N.toIsNat Q N.toSucc]
-[An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
-[AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
-[Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero]
-[MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: EqNatMulNatRight L N.toIsNat Q M := 
+[FaN : LForallNat L N] [ent : LEnt L]
+[I   : NatInduction L N Z S]
+[N0  : NatZero L N Z]
+[NS  : NatSuccNat L N S]
+[NQ  : NatEqNat L N Q]
+[QSm : EqNatSymm L N Q]
+[QTr : EqNatTrans L N Q]
+[QtS : EqNatToEqSucc L N Q S]
+[An0 : AddNatZeroEqNat L N Q A Z]
+[AnS : AddNatSuccEqSucc L N Q A S]
+[Mn0 : MulNatZeroEqZero L N Q M Z]
+[MnS : MulNatSuccEqAddMul L N Q M A S]
+: EqNatMulNatRight L N Q M := 
 {toFun := 
   eqNatMulNatRightProof iNatInductionRight3IfByForallNatIf 
     N0 NS iNatAddNatByPeano iNatMulNatByPeano QTr iEqNatLeftEucBySymmTransT 
@@ -792,23 +727,21 @@ instance iEqNatMulNatRightByPeano
 -- a * (b + c) = (a * b) + (a * c)
 
 def mulNatAddEqAddMulProof 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-{N : PNat P T} {Q : SEq P T} {M : SMul T} {A : SAdd T}
-(I   : NatInductionRight3 L N)
-(N0  : NatZero L N.toIsNat N.toZero)
-(NS  : NatSuccNat L N.toIsNat N.toSucc)
-(NA  : NatAddNat L N.toIsNat A)
-(NM  : NatMulNat L N.toIsNat M)
-(QTr : EqNatTrans L N.toIsNat Q)
-(QEL : EqNatLeftEuc L N.toIsNat Q)
-(QAL : EqNatAddNatLeft L N.toIsNat Q A)
-(QML : EqNatMulNatLeft L N.toIsNat Q M)
-(ACm : AddNatComm L N.toIsNat Q A)
-(AAs : AddNatAssoc L N.toIsNat Q A)
-(An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero)
-(AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc)
-(Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero)
-(MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc)
+(I   : NatInductionRight3 L N Z S)
+(N0  : NatZero L N Z)
+(NS  : NatSuccNat L N S)
+(NA  : NatAddNat L N A)
+(NM  : NatMulNat L N M)
+(QTr : EqNatTrans L N Q)
+(QEL : EqNatLeftEuc L N Q)
+(QAL : EqNatAddNatLeft L N Q A)
+(QML : EqNatMulNatLeft L N Q M)
+(ACm : AddNatComm L N Q A)
+(AAs : AddNatAssoc L N Q A)
+(An0 : AddNatZeroEqNat L N Q A Z)
+(AnS : AddNatSuccEqSucc L N Q A S)
+(Mn0 : MulNatZeroEqZero L N Q M Z)
+(MnS : MulNatSuccEqAddMul L N Q M A S)
 : (a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
   (L |- a * (b + c) = (a * b) + (a * c)) 
 := by
@@ -872,43 +805,39 @@ def mulNatAddEqAddMulProof
       exact addNatComm Na NMac
 
 instance iMulNatAddEqAddMul
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
-[I   : NatInductionRight3 L N]
-[N0  : NatZero L N.toIsNat N.toZero]
-[NS  : NatSuccNat L N.toIsNat N.toSucc]
-[NA  : NatAddNat L N.toIsNat A]
-[NM  : NatMulNat L N.toIsNat M]
-[QTr : EqNatTrans L N.toIsNat Q]
-[QEL : EqNatLeftEuc L N.toIsNat Q]
-[QAL : EqNatAddNatLeft L N.toIsNat Q A]
-[QML : EqNatMulNatLeft L N.toIsNat Q M]
-[ACm : AddNatComm L N.toIsNat Q A]
-[AAs : AddNatAssoc L N.toIsNat Q A]
-[An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
-[AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
-[Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero]
-[MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: MulNatAddEqAddMul L N.toIsNat Q M A := 
+[I   : NatInductionRight3 L N Z S]
+[N0  : NatZero L N Z]
+[NS  : NatSuccNat L N S]
+[NA  : NatAddNat L N A]
+[NM  : NatMulNat L N M]
+[QTr : EqNatTrans L N Q]
+[QEL : EqNatLeftEuc L N Q]
+[QAL : EqNatAddNatLeft L N Q A]
+[QML : EqNatMulNatLeft L N Q M]
+[ACm : AddNatComm L N Q A]
+[AAs : AddNatAssoc L N Q A]
+[An0 : AddNatZeroEqNat L N Q A Z]
+[AnS : AddNatSuccEqSucc L N Q A S]
+[Mn0 : MulNatZeroEqZero L N Q M Z]
+[MnS : MulNatSuccEqAddMul L N Q M A S]
+: MulNatAddEqAddMul L N Q M A := 
 {toFun := 
   mulNatAddEqAddMulProof I N0 NS NA NM QTr QEL QAL QML ACm AAs An0 AnS Mn0 MnS}
 
 instance iMulNatAddEqAddMulByPeano
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
-[FaN : LForallNat L N.toIsNat] [ent : LEnt L]
-[I   : NatInduction L N]
-[N0  : NatZero L N.toIsNat N.toZero]
-[NS  : NatSuccNat L N.toIsNat N.toSucc]
-[NQ  : NatEqNat L N.toIsNat Q]
-[QSm : EqNatSymm L N.toIsNat Q]
-[QTr : EqNatTrans L N.toIsNat Q]
-[QtS : EqNatToEqSucc L N.toIsNat Q N.toSucc]
-[An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
-[AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
-[Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero]
-[MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: MulNatAddEqAddMul L N.toIsNat Q M A := 
+[FaN : LForallNat L N] [ent : LEnt L]
+[I   : NatInduction L N Z S]
+[N0  : NatZero L N Z]
+[NS  : NatSuccNat L N S]
+[NQ  : NatEqNat L N Q]
+[QSm : EqNatSymm L N Q]
+[QTr : EqNatTrans L N Q]
+[QtS : EqNatToEqSucc L N Q S]
+[An0 : AddNatZeroEqNat L N Q A Z]
+[AnS : AddNatSuccEqSucc L N Q A S]
+[Mn0 : MulNatZeroEqZero L N Q M Z]
+[MnS : MulNatSuccEqAddMul L N Q M A S]
+: MulNatAddEqAddMul L N Q M A := 
 {toFun := 
   mulNatAddEqAddMulProof iNatInductionRight3ByForallNat 
     N0 NS iNatAddNatByPeano iNatMulNatByPeano QTr iEqNatLeftEucBySymmTransT 
@@ -919,23 +848,21 @@ instance iMulNatAddEqAddMulByPeano
 -- (b + c) * a = (b * a) + (c * a)
 
 def mulAddNatEqAddMulProof 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-{N : PNat P T} {Q : SEq P T} {M : SMul T} {A : SAdd T}
-(I   : NatInductionRight3 L N)
-(N0  : NatZero L N.toIsNat N.toZero)
-(NS  : NatSuccNat L N.toIsNat N.toSucc)
-(NA  : NatAddNat L N.toIsNat A)
-(NM  : NatMulNat L N.toIsNat M)
-(QTr : EqNatTrans L N.toIsNat Q)
-(QEL : EqNatLeftEuc L N.toIsNat Q)
-(QAL : EqNatAddNatLeft L N.toIsNat Q A)
-(QMR : EqNatMulNatRight L N.toIsNat Q M)
-(ACm : AddNatComm L N.toIsNat Q A)
-(AAs : AddNatAssoc L N.toIsNat Q A)
-(An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero)
-(AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc)
-(M0n : MulZeroNatEqZero L N.toIsNat Q M N.toZero)
-(MSn : MulSuccNatEqAddMul L N.toIsNat Q M A N.toSucc)
+(I   : NatInductionRight3 L N Z S)
+(N0  : NatZero L N Z)
+(NS  : NatSuccNat L N S)
+(NA  : NatAddNat L N A)
+(NM  : NatMulNat L N M)
+(QTr : EqNatTrans L N Q)
+(QEL : EqNatLeftEuc L N Q)
+(QAL : EqNatAddNatLeft L N Q A)
+(QMR : EqNatMulNatRight L N Q M)
+(ACm : AddNatComm L N Q A)
+(AAs : AddNatAssoc L N Q A)
+(An0 : AddNatZeroEqNat L N Q A Z)
+(AnS : AddNatSuccEqSucc L N Q A S)
+(M0n : MulZeroNatEqZero L N Q M Z)
+(MSn : MulSuccNatEqAddMul L N Q M A S)
 : (a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
   (L |- (b + c) * a = (b * a) + (c * a)) 
 := by
@@ -999,43 +926,39 @@ def mulAddNatEqAddMulProof
       exact addNatComm Na NMca
 
 instance iMulAddNatEqAddMul
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
-[I   : NatInductionRight3 L N]
-[N0  : NatZero L N.toIsNat N.toZero]
-[NS  : NatSuccNat L N.toIsNat N.toSucc]
-[NA  : NatAddNat L N.toIsNat A]
-[NM  : NatMulNat L N.toIsNat M]
-[QTr : EqNatTrans L N.toIsNat Q]
-[QEL : EqNatLeftEuc L N.toIsNat Q]
-[QAL : EqNatAddNatLeft L N.toIsNat Q A]
-[QMR : EqNatMulNatRight L N.toIsNat Q M]
-[ACm : AddNatComm L N.toIsNat Q A]
-[AAs : AddNatAssoc L N.toIsNat Q A]
-[An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
-[AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
-[M0n : MulZeroNatEqZero L N.toIsNat Q M N.toZero]
-[MSn : MulSuccNatEqAddMul L N.toIsNat Q M A N.toSucc]
-: MulAddNatEqAddMul L N.toIsNat Q M A := 
+[I   : NatInductionRight3 L N Z S]
+[N0  : NatZero L N Z]
+[NS  : NatSuccNat L N S]
+[NA  : NatAddNat L N A]
+[NM  : NatMulNat L N M]
+[QTr : EqNatTrans L N Q]
+[QEL : EqNatLeftEuc L N Q]
+[QAL : EqNatAddNatLeft L N Q A]
+[QMR : EqNatMulNatRight L N Q M]
+[ACm : AddNatComm L N Q A]
+[AAs : AddNatAssoc L N Q A]
+[An0 : AddNatZeroEqNat L N Q A Z]
+[AnS : AddNatSuccEqSucc L N Q A S]
+[M0n : MulZeroNatEqZero L N Q M Z]
+[MSn : MulSuccNatEqAddMul L N Q M A S]
+: MulAddNatEqAddMul L N Q M A := 
 {toFun := 
   mulAddNatEqAddMulProof I N0 NS NA NM QTr QEL QAL QMR ACm AAs An0 AnS M0n MSn}
 
 instance iMulAddNatEqAddMulByPeano
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
-[FaN : LForallNat L N.toIsNat] [ent : LEnt L]
-[I   : NatInduction L N]
-[N0  : NatZero L N.toIsNat N.toZero]
-[NS  : NatSuccNat L N.toIsNat N.toSucc]
-[NQ  : NatEqNat L N.toIsNat Q]
-[QSm : EqNatSymm L N.toIsNat Q]
-[QTr : EqNatTrans L N.toIsNat Q]
-[QtS : EqNatToEqSucc L N.toIsNat Q N.toSucc]
-[An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
-[AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
-[Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero]
-[MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: MulAddNatEqAddMul L N.toIsNat Q M A := 
+[FaN : LForallNat L N] [ent : LEnt L]
+[I   : NatInduction L N Z S]
+[N0  : NatZero L N Z]
+[NS  : NatSuccNat L N S]
+[NQ  : NatEqNat L N Q]
+[QSm : EqNatSymm L N Q]
+[QTr : EqNatTrans L N Q]
+[QtS : EqNatToEqSucc L N Q S]
+[An0 : AddNatZeroEqNat L N Q A Z]
+[AnS : AddNatSuccEqSucc L N Q A S]
+[Mn0 : MulNatZeroEqZero L N Q M Z]
+[MnS : MulNatSuccEqAddMul L N Q M A S]
+: MulAddNatEqAddMul L N Q M A := 
 {toFun := 
   mulAddNatEqAddMulProof iNatInductionRight3ByForallNat 
     N0 NS iNatAddNatByPeano iNatMulNatByPeano 
@@ -1051,20 +974,18 @@ instance iMulAddNatEqAddMulByPeano
 -- (a * b) * c = a * (b * c)
 
 def mulNatAssocProof 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-{N : PNat P T} {Q : SEq P T} {M : SMul T} {A : SAdd T}
-(I   : NatInductionRight3 L N)
-(N0  : NatZero L N.toIsNat N.toZero)
-(NS  : NatSuccNat L N.toIsNat N.toSucc)
-(NA  : NatAddNat L N.toIsNat A)  
-(NM  : NatMulNat L N.toIsNat M)
-(QTr : EqNatTrans L N.toIsNat Q)
-(QEL : EqNatLeftEuc L N.toIsNat Q)
-(QAL : EqNatAddNatLeft L N.toIsNat Q A)
-(QML : EqNatMulNatLeft L N.toIsNat Q M)
-(Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero)
-(MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc)
-(MnA : MulNatAddEqAddMul L N.toIsNat Q M A)
+(I   : NatInductionRight3 L N Z S)
+(N0  : NatZero L N Z)
+(NS  : NatSuccNat L N S)
+(NA  : NatAddNat L N A)  
+(NM  : NatMulNat L N M)
+(QTr : EqNatTrans L N Q)
+(QEL : EqNatLeftEuc L N Q)
+(QAL : EqNatAddNatLeft L N Q A)
+(QML : EqNatMulNatLeft L N Q M)
+(Mn0 : MulNatZeroEqZero L N Q M Z)
+(MnS : MulNatSuccEqAddMul L N Q M A S)
+(MnA : MulNatAddEqAddMul L N Q M A)
 : (a b c : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat c) -> 
   (L |- (a * b) * c = a * (b * c)) 
 := by
@@ -1112,39 +1033,35 @@ def mulNatAssocProof
       exact mulNatAddEqAddMul Na Nb NMbc
 
 instance iMulNatAssoc 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
-[I   : NatInductionRight3 L N]
-[N0  : NatZero L N.toIsNat N.toZero]
-[NS  : NatSuccNat L N.toIsNat N.toSucc]
-[NA  : NatAddNat L N.toIsNat A]  
-[NM  : NatMulNat L N.toIsNat M]
-[QTr : EqNatTrans L N.toIsNat Q]
-[QEL : EqNatLeftEuc L N.toIsNat Q]
-[QAL : EqNatAddNatLeft L N.toIsNat Q A]
-[QML : EqNatMulNatLeft L N.toIsNat Q M]
-[Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero]
-[MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-[MnA : MulNatAddEqAddMul L N.toIsNat Q M A]
-: MulNatAssoc L N.toIsNat Q M 
+[I   : NatInductionRight3 L N Z S]
+[N0  : NatZero L N Z]
+[NS  : NatSuccNat L N S]
+[NA  : NatAddNat L N A]  
+[NM  : NatMulNat L N M]
+[QTr : EqNatTrans L N Q]
+[QEL : EqNatLeftEuc L N Q]
+[QAL : EqNatAddNatLeft L N Q A]
+[QML : EqNatMulNatLeft L N Q M]
+[Mn0 : MulNatZeroEqZero L N Q M Z]
+[MnS : MulNatSuccEqAddMul L N Q M A S]
+[MnA : MulNatAddEqAddMul L N Q M A]
+: MulNatAssoc L N Q M 
 := {toFun := mulNatAssocProof I N0 NS NA NM QTr QEL QAL QML Mn0 MnS MnA}
 
 instance iMulNatAssocByPeano 
-{P : Sort u} {T : Sort v} {L : Logic P} 
-[N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
-[FaN : LForallNat L N.toIsNat] [ent : LEnt L]
-[I   : NatInduction L N]
-[N0  : NatZero L N.toIsNat N.toZero]
-[NS  : NatSuccNat L N.toIsNat N.toSucc]
-[NQ  : NatEqNat L N.toIsNat Q]
-[QSm : EqNatSymm L N.toIsNat Q]
-[QTr : EqNatTrans L N.toIsNat Q]
-[QtS : EqNatToEqSucc L N.toIsNat Q N.toSucc]
-[An0 : AddNatZeroEqNat L N.toIsNat Q A N.toZero]
-[AnS : AddNatSuccEqSucc L N.toIsNat Q A N.toSucc]
-[Mn0 : MulNatZeroEqZero L N.toIsNat Q M N.toZero]
-[MnS : MulNatSuccEqAddMul L N.toIsNat Q M A N.toSucc]
-: MulNatAssoc L N.toIsNat Q M := 
+[FaN : LForallNat L N] [ent : LEnt L]
+[I   : NatInduction L N Z S]
+[N0  : NatZero L N Z]
+[NS  : NatSuccNat L N S]
+[NQ  : NatEqNat L N Q]
+[QSm : EqNatSymm L N Q]
+[QTr : EqNatTrans L N Q]
+[QtS : EqNatToEqSucc L N Q S]
+[An0 : AddNatZeroEqNat L N Q A Z]
+[AnS : AddNatSuccEqSucc L N Q A S]
+[Mn0 : MulNatZeroEqZero L N Q M Z]
+[MnS : MulNatSuccEqAddMul L N Q M A S]
+: MulNatAssoc L N Q M := 
 {toFun := 
   mulNatAssocProof iNatInductionRight3ByForallNat 
     N0 NS iNatAddNatByPeano iNatMulNatByPeano QTr iEqNatLeftEucBySymmTransT 
