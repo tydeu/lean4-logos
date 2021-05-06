@@ -11,17 +11,17 @@ namespace Logos.Peano
 -- Abstract Module
 --------------------------------------------------------------------------------
 
-class LForallNat (L : Logic P) (N : IsNat P T) extends SForallNat P T :=
+class LForallNat (L : Logic P) (N : PNat P T) extends SForallNat P T :=
   ForallNatIntro : ForallNatIntro L N toSForallNat
   ForallNatElim : ForallNatElim L N toSForallNat
 
-instance iLForallNat {L : Logic P} [N : IsNat P T]
+instance iLForallNat {L : Logic P} [N : PNat P T]
   [FaN : SForallNat P T] [I : ForallNatIntro L N FaN] [E : ForallNatElim L N FaN] 
   : LForallNat L N := {toSForallNat := FaN, ForallNatIntro := I, ForallNatElim := E}
 
 namespace LForallNat
 
-variable {L : Logic P} [N : IsNat P T]
+variable {L : Logic P} [N : PNat P T]
 abbrev funType (K : LForallNat L N) := Quant P T
 instance : CoeFun (LForallNat L N) funType := {coe := fun K => K.toFun}
 
@@ -42,7 +42,7 @@ end LForallNat
 --------------------------------------------------------------------------------
 
 def MForallIfNat {L : Logic P} 
-  (N : IsNat P T) (Fa : LForall L T) (ent : LEnt L) 
+  (N : PNat P T) (Fa : LForall L T) (ent : LEnt L) 
   : LForallNat L N := {
     toSForallNat := LForallIfNat N Fa.toSForall ent.toLArr, 
     ForallNatIntro := LForallIfNatIntro N Fa.UnivGen ent.Condition,
@@ -50,5 +50,5 @@ def MForallIfNat {L : Logic P}
   }
 
 instance iMForallIfNat {P : Sort u} {T : Sort v} {L : Logic P} 
-  [N : IsNat P T] [Fa : LForall L T] [ent : LEnt L] : LForallNat L N
+  [N : PNat P T] [Fa : LForall L T] [ent : LEnt L] : LForallNat L N
   := MForallIfNat N Fa ent

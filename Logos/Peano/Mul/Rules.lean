@@ -16,22 +16,22 @@ namespace Logos.Peano
 -- a * 0 = 0
 
 class MulNatZeroEqZero (L : Logic P) 
-  (N : IsNat P T) (Q : SEq P T) (M : SMul T) (Z : Zero T)  :=
+  (N : PNat P T) (Q : SEq P T) (M : SMul T) (Z : Zero T)  :=
   toFun : (a : T) -> (L |- nat a) -> (L |- a * 0 = 0)
 
 abbrev mulNatZeroEqZero {L : Logic P} 
-  [N : IsNat P T] [Q : SEq P T] [M : SMul T] [Z : Zero T] 
+  [N : PNat P T] [Q : SEq P T] [M : SMul T] [Z : Zero T] 
   [K : MulNatZeroEqZero L N Q M Z] {a} := K.toFun a
 
 -- Axiom 2
 -- a * S b = a + (a * b)
 
 class MulNatSuccEqAddMul (L : Logic P) 
-  (N : IsNat P T) (Q : SEq P T) (M : SMul T) (A : SAdd T) (S : Succ T) := 
+  (N : PNat P T) (Q : SEq P T) (M : SMul T) (A : SAdd T) (S : Succ T) := 
   toFun : (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- a * S b = a + (a * b))
 
 abbrev mulNatSuccEqAddMul {L : Logic P}
-  [N : IsNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T] [S : Succ T]
+  [N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T] [S : Succ T]
   [K : MulNatSuccEqAddMul L N Q M A S] {a b} := K.toFun a b
 
 --------------------------------------------------------------------------------
@@ -42,22 +42,22 @@ abbrev mulNatSuccEqAddMul {L : Logic P}
 -- 0 * a = 0
 
 class MulZeroNatEqZero (L : Logic P)
-  (N : IsNat P T) (Q : SEq P T) (M : SMul T) (Z : Zero T)  :=
+  (N : PNat P T) (Q : SEq P T) (M : SMul T) (Z : Zero T)  :=
   toFun : (a : T) -> (L |- nat a) -> (L |- 0 * a = 0)
 
 abbrev mulZeroNatEqZero {L : Logic P}
-  [N : IsNat P T] [Q : SEq P T] [M : SMul T] [Z : Zero T] 
+  [N : PNat P T] [Q : SEq P T] [M : SMul T] [Z : Zero T] 
   [K : MulZeroNatEqZero L N Q M Z] {a} := K.toFun a
 
 -- Axiom 2 Commuted
 -- S a * b = b + (a * b)
 
 class MulSuccNatEqAddMul (L : Logic P)
-  (N : IsNat P T) (Q : SEq P T) (M : SMul T) (A : SAdd T) (S : Succ T) := 
+  (N : PNat P T) (Q : SEq P T) (M : SMul T) (A : SAdd T) (S : Succ T) := 
   toFun : (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- S a * b = b + (a * b))
 
 abbrev mulSuccNatEqAddMul {L : Logic P}
-  [N : IsNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T] [S : Succ T]
+  [N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T] [S : Succ T]
   [K : MulSuccNatEqAddMul L N Q M A S] {a b} := K.toFun a b
 
 --------------------------------------------------------------------------------
@@ -77,21 +77,21 @@ abbrev mulZeroEqZero {L : Logic P}
 -- a * 1 = a
 
 class MulNatOneEqNat (L : Logic P)
-  (N : IsNat P T) (Q : SEq P T) (M : SMul T) (O : One T) :=
+  (N : PNat P T) (Q : SEq P T) (M : SMul T) (O : One T) :=
   toFun : (a : T) -> (L |- nat a) -> (L |- a * 1 = a)
 
 abbrev mulNatOneEqNat {L : Logic P}
-  [N : IsNat P T] [Q : SEq P T] [M : SMul T] [O : One T]
+  [N : PNat P T] [Q : SEq P T] [M : SMul T] [O : One T]
   [K : MulNatOneEqNat L N Q M O] {a} := K.toFun a
 
 -- 1 * a = a
 
 class MulOneNatEqNat (L : Logic P)
-  (N : IsNat P T) (Q : SEq P T) (M : SMul T) (O : One T) :=
+  (N : PNat P T) (Q : SEq P T) (M : SMul T) (O : One T) :=
   toFun : (a : T) -> (L |- nat a) -> (L |- 1 * a = a)
 
 abbrev mulOneNatEqNat {L : Logic P}
-  [N : IsNat P T] [Q : SEq P T] [M : SMul T] [O : One T]
+  [N : PNat P T] [Q : SEq P T] [M : SMul T] [O : One T]
   [K : MulOneNatEqNat L N Q M O] {a} := K.toFun a
 
 --------------------------------------------------------------------------------
@@ -101,31 +101,31 @@ abbrev mulOneNatEqNat {L : Logic P}
 -- 0 * a = a * 0
 
 class MulNatZeroComm (L : Logic P)
-  (N : IsNat P T) (Q : SEq P T) (M : SMul T) (Z : Zero T) :=
+  (N : PNat P T) (Q : SEq P T) (M : SMul T) (Z : Zero T) :=
   toFun : (a : T) -> (L |- nat a) -> (L |- a * 0 = 0 * a)
 
 abbrev mulNatZeroComm {L : Logic P}
-  [N : IsNat P T] [Q : SEq P T] [M : SMul T] [Z : Zero T]
+  [N : PNat P T] [Q : SEq P T] [M : SMul T] [Z : Zero T]
   [K : MulNatZeroComm L N Q M Z] {a} := K.toFun a
 
 -- a * b = b * a
 
 class MulNatComm (L : Logic P)
-  (N : IsNat P T) (Q : SEq P T) (M : SMul T) :=
+  (N : PNat P T) (Q : SEq P T) (M : SMul T) :=
   toFun : (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- a * b = b * a)
 
 instance iCommOverTOfMulNatCommOverT 
-  {L : Logic P}[N : IsNat P T] [Q : SEq P T] [M : SMul T] 
-  [K : MulNatComm L N Q M] : CommOverT L Q.toFun N.isNat M.toFun 
+  {L : Logic P}[N : PNat P T] [Q : SEq P T] [M : SMul T] 
+  [K : MulNatComm L N Q M] : CommOverT L Q.toFun N.mem M.toFun 
   := {toFun := K.toFun}
 
 instance iMulNatCommOverOfCommOverT 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T] 
-  [K : CommOverT L Q.toFun N.isNat M.toFun] : MulNatComm L N Q M
+  {L : Logic P} [N : PNat P T] [Q : SEq P T] [M : SMul T] 
+  [K : CommOverT L Q.toFun N.mem M.toFun] : MulNatComm L N Q M
   := {toFun := K.toFun}
 
 abbrev mulNatComm {L : Logic P}
-  [N : IsNat P T] [Q : SEq P T] [M : SMul T]
+  [N : PNat P T] [Q : SEq P T] [M : SMul T]
   [K : MulNatComm L N Q M] {a b} := K.toFun a b
 
 --------------------------------------------------------------------------------
@@ -134,23 +134,23 @@ abbrev mulNatComm {L : Logic P}
 --------------------------------------------------------------------------------
 
 class MulNatAssoc (L : Logic P)
-  (N : IsNat P T) (Q : SEq P T) (M : SMul T) :=
+  (N : PNat P T) (Q : SEq P T) (M : SMul T) :=
   toFun :  (a b c : T) -> 
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
     (L |- (a * b) * c = a * (b * c))
 
 instance iLtrAssocOverTOfMulNatAssoc 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T] 
-  [K : MulNatAssoc L N Q M] : LtrAssocOverT L Q.toFun N.isNat M.toFun 
+  {L : Logic P} [N : PNat P T] [Q : SEq P T] [M : SMul T] 
+  [K : MulNatAssoc L N Q M] : LtrAssocOverT L Q.toFun N.mem M.toFun 
   := {toFun := K.toFun}
 
 instance iMulNatAssocOfLtrAssocOverT 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T] 
-  [K : LtrAssocOverT L Q.toFun N.isNat M.toFun] : MulNatAssoc L N Q M 
+  {L : Logic P} [N : PNat P T] [Q : SEq P T] [M : SMul T] 
+  [K : LtrAssocOverT L Q.toFun N.mem M.toFun] : MulNatAssoc L N Q M 
   := {toFun := K.toFun}
 
 abbrev mulNatAssoc {L : Logic P}
-  [N : IsNat P T] [Q : SEq P T] [M : SMul T]
+  [N : PNat P T] [Q : SEq P T] [M : SMul T]
   [K : MulNatAssoc L N Q M] {a b c} := K.toFun a b c
 
 --------------------------------------------------------------------------------
@@ -161,26 +161,26 @@ abbrev mulNatAssoc {L : Logic P}
 -- a * (b + c) = (a * b) + (a * c)
 
 class MulNatAddEqAddMul (L : Logic P)
-  (N : IsNat P T) (Q : SEq P T) (M : SMul T) (A : SAdd T) := 
+  (N : PNat P T) (Q : SEq P T) (M : SMul T) (A : SAdd T) := 
   toFun : (a b c : T) -> 
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
     (L |- a * (b + c) = (a * b) + (a * c))
 
 abbrev mulNatAddEqAddMul {L : Logic P}
-  [N : IsNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
+  [N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
   [K : MulNatAddEqAddMul L N Q M A] {a b c} := K.toFun a b c
 
 -- Right Distributive Over Addition
 -- (b + c) * a = (b * a) + (c * a)
 
 class MulAddNatEqAddMul (L : Logic P)
-  (N : IsNat P T) (Q : SEq P T) (M : SMul T) (A : SAdd T) := 
+  (N : PNat P T) (Q : SEq P T) (M : SMul T) (A : SAdd T) := 
   toFun : (a b c : T) -> 
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
     (L |- (b + c) * a = (b * a) + (c * a))
 
 abbrev mulAddNatEqAddMul {L : Logic P}
-  [N : IsNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
+  [N : PNat P T] [Q : SEq P T] [M : SMul T] [A : SAdd T]
   [K : MulAddNatEqAddMul L N Q M A] {a b c} := K.toFun a b c
 
 --------------------------------------------------------------------------------
@@ -190,53 +190,53 @@ abbrev mulAddNatEqAddMul {L : Logic P}
 -- (a = b) -> (c * a = c * b)
 
 class EqNatMulNatLeft (L : Logic P)
-  (N : IsNat P T) (Q : SEq P T) (M : SMul T) :=
+  (N : PNat P T) (Q : SEq P T) (M : SMul T) :=
   toFun : (a b c : T) -> 
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
     (L |- a = b) -> (L |- c * a = c * b)
 
 instance iLeftApplyTOfEqNatMulNatLeft {L : Logic P}
-  [N : IsNat P T] [Q : SEq P T] [M : SMul T] 
-  [K : EqNatMulNatLeft L N Q M] : LeftApplyT L Q.toFun N.isNat M.toFun 
+  [N : PNat P T] [Q : SEq P T] [M : SMul T] 
+  [K : EqNatMulNatLeft L N Q M] : LeftApplyT L Q.toFun N.mem M.toFun 
   := {toFun := fun a b c Na Nb Nc => K.toFun b c a Nb Nc Na}
 
 instance iEqNatMulNatLeftTOfLeftApplyT {L : Logic P}
-  [N : IsNat P T] [Q : SEq P T] [M : SMul T] 
-  [K : LeftApplyT L Q.toFun N.isNat M.toFun] : EqNatMulNatLeft L N Q M
+  [N : PNat P T] [Q : SEq P T] [M : SMul T] 
+  [K : LeftApplyT L Q.toFun N.mem M.toFun] : EqNatMulNatLeft L N Q M
   := {toFun := fun a b c Na Nb Nc => K.toFun c a b Nc Na Nb}
 
 abbrev eqNatMulNatLeft {L : Logic P}
-  [N : IsNat P T] [Q : SEq P T] [M : SMul T]
+  [N : PNat P T] [Q : SEq P T] [M : SMul T]
   [K : EqNatMulNatLeft L N Q M] {a b c} := K.toFun a b c
 
 abbrev eqNatMulNatLeft' {L : Logic P} 
-  [N : IsNat P T] [Q : SEq P T] [M : SMul T] [K : EqNatMulNatLeft L N Q M] 
+  [N : PNat P T] [Q : SEq P T] [M : SMul T] [K : EqNatMulNatLeft L N Q M] 
   {c a b} (Nc Na Nb) := K.toFun a b c Na Nb Nc
 
 -- (a = b) -> (a * c = b * c)
 
 class EqNatMulNatRight (L : Logic P)
-  (N : IsNat P T) (Q : SEq P T) (M : SMul T) :=
+  (N : PNat P T) (Q : SEq P T) (M : SMul T) :=
   toFun : (a b c : T) -> 
     (L |- nat a) -> (L |- nat b) -> (L |- nat c) ->
     (L |- a = b) -> (L |- a * c = b * c)
 
 instance iRightApplyTOfEqNatMulNatRight 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T] 
-  [K : EqNatMulNatRight L N Q M] : RightApplyT L Q.toFun N.isNat M.toFun 
+  {L : Logic P} [N : PNat P T] [Q : SEq P T] [M : SMul T] 
+  [K : EqNatMulNatRight L N Q M] : RightApplyT L Q.toFun N.mem M.toFun 
   := {toFun := fun a b c Na Nb Nc => K.toFun b c a Nb Nc Na}
 
 instance iEqNatMulNatRightOfRightApplyT 
-  {L : Logic P} [N : IsNat P T] [Q : SEq P T] [M : SMul T] 
-  [K : RightApplyT L Q.toFun N.isNat M.toFun] : EqNatMulNatRight L N Q M
+  {L : Logic P} [N : PNat P T] [Q : SEq P T] [M : SMul T] 
+  [K : RightApplyT L Q.toFun N.mem M.toFun] : EqNatMulNatRight L N Q M
   := {toFun := fun a b c Na Nb Nc => K.toFun c a b Nc Na Nb}
 
 abbrev eqNatMulNatRight {L : Logic P}
-  [N : IsNat P T] [Q : SEq P T] [M : SMul T]
+  [N : PNat P T] [Q : SEq P T] [M : SMul T]
   [K : EqNatMulNatRight L N Q M] {a b c} := K.toFun a b c
 
 abbrev eqNatMulNatRight' {L : Logic P} 
-  [N : IsNat P T] [Q : SEq P T] [M : SMul T] [K : EqNatMulNatRight L N Q M] 
+  [N : PNat P T] [Q : SEq P T] [M : SMul T] [K : EqNatMulNatRight L N Q M] 
   {c a b} (Nc Na Nb) := K.toFun a b c Na Nb Nc
 
 --------------------------------------------------------------------------------
@@ -245,35 +245,35 @@ abbrev eqNatMulNatRight' {L : Logic P}
 
 -- nat (0 * 0)
 
-class NatMulZero (L : Logic P) (N : IsNat P T) (M : SMul T) (Z : Zero T) :=
+class NatMulZero (L : Logic P) (N : PNat P T) (M : SMul T) (Z : Zero T) :=
   toFun : L |- nat (0 * 0 : T)
 
-abbrev natMulZero {L : Logic P} [N : IsNat P T] [M : SMul T] [Z : Zero T]
+abbrev natMulZero {L : Logic P} [N : PNat P T] [M : SMul T] [Z : Zero T]
   [K : NatMulZero L N M Z] := K.toFun
 
 -- nat (a * 0)
 
-class NatMulNatZero (L : Logic P) (N : IsNat P T) (M : SMul T) (Z : Zero T) :=
+class NatMulNatZero (L : Logic P) (N : PNat P T) (M : SMul T) (Z : Zero T) :=
   toFun : (a : T) -> (L |- nat a) -> (L |- nat (a * 0))
 
-abbrev natMulNatZero {L : Logic P} [N : IsNat P T] [M : SMul T] [Z : Zero T]
+abbrev natMulNatZero {L : Logic P} [N : PNat P T] [M : SMul T] [Z : Zero T]
   [K : NatMulNatZero L N M Z] {a} := K.toFun a
 
 -- nat (0 * a)
 
-class NatMulZeroNat (L : Logic P) (N : IsNat P T) (M : SMul T) (Z : Zero T) :=
+class NatMulZeroNat (L : Logic P) (N : PNat P T) (M : SMul T) (Z : Zero T) :=
   toFun : (a : T) -> (L |- nat a) -> (L |- nat (0 * a))
 
-abbrev natMulZeroNat {L : Logic P} [N : IsNat P T] [M : SMul T] [Z : Zero T]
+abbrev natMulZeroNat {L : Logic P} [N : PNat P T] [M : SMul T] [Z : Zero T]
   [K : NatMulZeroNat L N M Z] {a} := K.toFun a 
 
 -- nat (a * b)
 
-class NatMulNat (L : Logic P) (N : IsNat P T) (M : SMul T) :=
+class NatMulNat (L : Logic P) (N : PNat P T) (M : SMul T) :=
   toFun : (a b : T) -> (L |- nat a) -> (L |- nat b) -> (L |- nat (a * b))
 
-abbrev natMulNat {L : Logic P}[N : IsNat P T] [M : SMul T] 
+abbrev natMulNat {L : Logic P}[N : PNat P T] [M : SMul T] 
   [K : NatMulNat L N M] {a b} := K.toFun a b
 
-abbrev natMul {L : Logic P} [N : IsNat P T] [M : SMul T] 
+abbrev natMul {L : Logic P} [N : PNat P T] [M : SMul T] 
   [K : NatMulNat L N M]{a b} := K.toFun a b

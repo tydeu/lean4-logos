@@ -9,13 +9,13 @@ variable {P : Sort u} {T : Sort v}
 open Logos.Notation
 namespace Logos.Peano
 
-class NatOne (L : Logic P) (N : IsNat P T) (O : One T) :=
+class NatOne (L : Logic P) (N : PNat P T) (O : One T) :=
   toFun : L |- nat (1 : T)
 
-abbrev natOne (L : Logic P) (T : Sort v) [N : IsNat P T] [O : One T] 
+abbrev natOne (L : Logic P) (T : Sort v) [N : PNat P T] [O : One T] 
   [K : NatOne L N O] := K.toFun
 
-abbrev nat1 {L : Logic P} {T : Sort v} [N : IsNat P T] [O : One T] 
+abbrev nat1 {L : Logic P} {T : Sort v} [N : PNat P T] [O : One T] 
   [K : NatOne L N O]  := K.toFun
 
 class OneEqSuccZero (L : Logic P) 

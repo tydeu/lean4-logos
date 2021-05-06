@@ -18,7 +18,7 @@ variable
   [X : SExists P T]
   [F : Falsum P]
   [Q : SEq P T] [Le : SLe P T]
-  [N : IsNat P T] [Z : Zero T] [S : Succ T]
+  [N : PNat P T] [Z : Zero T] [S : Succ T]
   [A : SAdd T] [M : SMul T]
 
 --------------------------------------------------------------------------------

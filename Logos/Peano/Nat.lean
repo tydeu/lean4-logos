@@ -1,20 +1,17 @@
-import Logos.Math.Syntax
+import Logos.Prelude.Newtype
 
 universes u v
+variable {P : Sort u} {T : Sort v} 
 
 namespace Logos.Peano
 
-class IsNat (prop : Sort u) (form : Sort v) := 
-  (isNat : form -> prop)
+class funtype PNat (P : Sort u) (T : Sort v) := 
+  mem : T -> P
 
-namespace IsNat
+abbrev nat [N : PNat P T] := N.mem
 
-abbrev nat {P : Sort u} {T : Sort v} [C : IsNat P T] := C.isNat
+namespace PNat
 
-def prop {P : Sort u} {T : Sort v} (N : IsNat P T) := P
-def form {P : Sort u} {T : Sort v} (N : IsNat P T) := T
-def pred {P : Sort u} {T : Sort v} (N : IsNat P T) := T -> P
-
-end IsNat
-
-export IsNat (nat)
+def «Prop» (N : PNat P T) := P
+def Term (N : PNat P T) := T
+def Pred (N : PNat P T) := T -> P

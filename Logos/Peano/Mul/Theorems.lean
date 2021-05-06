@@ -13,7 +13,7 @@ namespace Logos.Peano
 
 variable 
   {L : Logic P}
-  [N : IsNat P T] [Z : Zero T] [O : One T] [S : Succ T]
+  [N : PNat P T] [Z : Zero T] [O : One T] [S : Succ T]
   [A : SAdd T] [M : SMul T]
   [Q : SEq P T]
 
@@ -171,13 +171,13 @@ instance iNatMulNatByPeano
 -- 0 * 0 = 0
 
 instance iMulZeroEqZeroByMulNatZero
-[N : IsNat P T] [Q : SEq P T] [M : SMul T] [Z : Zero T] 
+[N : PNat P T] [Q : SEq P T] [M : SMul T] [Z : Zero T] 
 [N0 : NatZero L N Z] [Mn0 : MulNatZeroEqZero L N Q M Z]
 : MulZeroEqZero L Q M Z
 := {toFun := mulNatZeroEqZero nat0}
 
 instance iMulZeroEqZeroByMulZeroNat
-[N : IsNat P T] [Q : SEq P T] [M : SMul T] [Z : Zero T] 
+[N : PNat P T] [Q : SEq P T] [M : SMul T] [Z : Zero T] 
 [N0 : NatZero L N Z] [M0n : MulZeroNatEqZero L N Q M Z]
 : MulZeroEqZero L Q M Z
 := {toFun := mulZeroNatEqZero nat0}
