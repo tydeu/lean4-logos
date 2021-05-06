@@ -38,10 +38,10 @@ theorem natNat {L : PLogic}
   | succ n Nn => exact NS.toFun n Nn 
 
 --------------------------------------------------------------------------------
--- Completeness
+-- Meta Completeness
 --------------------------------------------------------------------------------
 
-theorem complete (L : PLogic)
+theorem metaComplete (L : PLogic)
 [NZ   : NatZero L PNatOfPProp Zero.ofNat]
 [NS   : NatSuccNat L PNatOfPProp Succ.ofNat]
 [QRf  : EqNatRefl L PNatOfPProp SEqOfPProp]
@@ -49,12 +49,12 @@ theorem complete (L : PLogic)
 [QNtS : EqNatToEqSucc L PNatOfPProp SEqOfPProp Succ.ofNat]
 [QStN : EqSuccToEqNat L PNatOfPProp SEqOfPProp Succ.ofNat]
 [QS0f : SuccNatEqZeroFalse L PNatOfPProp SEqOfPProp Zero.ofNat Succ.ofNat]
-: (p : PProp Nat) -> (L |- p) \/ ((L |- p) -> False)
+: (p : PProp Nat) -> PSum (L |- p) (L !|- p)
 := by
   intro p
   cases p with
   | nat n =>
-    apply Or.inl
+    apply PSum.inl
     exact natNat n
   | eq m n =>
     revert m
@@ -63,17 +63,17 @@ theorem complete (L : PLogic)
       intro m
       induction m with
       | zero =>
-        apply Or.inl
+        apply PSum.inl
         exact eqNatRefl NZ.toFun
       | succ m ih =>
-        apply Or.inr
+        apply PSum.inr
         refine QS0f.toFun m (natNat m)
     | succ n n_ih =>
       intro m
       have Nn : L |- nat n := natNat n
       cases m with
       | zero =>
-        apply Or.inr
+        apply PSum.inr
         intro Q0Sn
         apply QS0f.toFun n Nn 
         apply eqNatSymm (natNat Nat.zero) (natS Nn)
@@ -82,19 +82,19 @@ theorem complete (L : PLogic)
         have Nm : L |- nat m := natNat m
         cases n_ih m with
         | inl Qmn =>
-          apply Or.inl
+          apply PSum.inl
           exact QNtS.toFun m n Nm Nn Qmn
         | inr Qmnf =>
-          apply Or.inr
+          apply PSum.inr
           intro QSmSn
           apply Qmnf
           exact QStN.toFun m n Nm Nn QSmSn
 
 --------------------------------------------------------------------------------
--- Consistency
+-- Meta Consistency
 --------------------------------------------------------------------------------
 
-theorem consistent (L : PLogic)
+theorem metaConsistent (L : PLogic)
 [NZ   : NatZero L PNatOfPProp Zero.ofNat]
 [NS   : NatSuccNat L PNatOfPProp Succ.ofNat]
 [QRf  : EqNatRefl L PNatOfPProp SEqOfPProp]
@@ -102,7 +102,7 @@ theorem consistent (L : PLogic)
 [QNtS : EqNatToEqSucc L PNatOfPProp SEqOfPProp Succ.ofNat]
 [QStN : EqSuccToEqNat L PNatOfPProp SEqOfPProp Succ.ofNat]
 [QS0f : SuccNatEqZeroFalse L PNatOfPProp SEqOfPProp Zero.ofNat Succ.ofNat]
-: (p : PProp Nat) -> ((L |- p) /\ ((L |- p) -> False)) -> False
+: (p : PProp Nat) -> PProd (L |- p) (L !|- p) -> False
 := by
   intro p
   cases p with
@@ -132,7 +132,7 @@ theorem consistent (L : PLogic)
       | succ m =>
         have Nm : L |- nat m := natNat m
         apply n_ih m
-        apply And.intro ?Qmn ?Qmnf
+        apply PProd.mk ?Qmn ?Qmnf
         case Qmn =>
           exact QStN.toFun m n Nm Nn C.1
         case Qmnf =>

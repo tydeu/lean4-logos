@@ -8,8 +8,14 @@ namespace Logos
 def Judgment (L : Logic.{u,v} P) (prop : P) : Sort v :=
   L.judge prop
 
-scoped infix:10 " |- " => Judgment
-scoped infix:10 " ⊢ " => Judgment
+def NoJudgment (L : Logic.{u,v} P) (prop : P) :=
+  L.judge prop -> False
+
+scoped infix:15 " |- " => Judgment
+scoped infix:15 " ⊢ " => Judgment
+
+scoped infix:15 " !|- " => NoJudgment
+scoped infix:15 " ⊬ " => NoJudgment
 
 namespace Logic
 
