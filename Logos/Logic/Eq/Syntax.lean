@@ -9,8 +9,8 @@ namespace Logos
 class funtype SEq (P : Sort u) (T : Sort v) : Rel P T
 class funtype SNe (P : Sort u) (T : Sort v) : Rel P T
 
-@[defaultInstance low] instance {T : Sort v} : SEq Prop T := pack Eq
-@[defaultInstance low] instance {T : Sort v} : SNe Prop T := pack Ne
+@[defaultInstance low] instance iPropEq : SEq Prop T := pack Eq
+@[defaultInstance low] instance iPropNe : SNe Prop T := pack Ne
 
 abbrev eq [K : SEq P T] := unpack K
 abbrev ne [K : SNe P T] := unpack K
