@@ -24,9 +24,9 @@ under logics with different axioms.
 The statement `L ⊢ p` (or ASCII `L |- p`) 
 means that proposition `p` holds in logic `L`.
 Such a statement is termed a *judgment*.
-Implementation-wise, a judgment is a type (a Lean `Sort`) 
-and proofs of said judgment are the inhabitants of said type.
-Thus, constructing an inhabitant of `L ⊢ p` proves `p` in `L`.
+Implementation-wise, a judgment is a type class.
+and proofs of said judgment are the instances of said class.
+Thus, constructing an instance of `L ⊢ p` proves `p` in `L`.
 
 Inference rules (which map between judgments) are then functions between judgments.
 For example, the ***modus ponens*** inference rule can be defined as follows:

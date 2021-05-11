@@ -1,36 +1,41 @@
 import Logos.Logic.Logic
+import Logos.Prelude.Newtype
 
-universes u v
+universe u
 variable {P : Sort u}
 
 namespace Logos
 
-def Judgment (L : Logic.{u,v} P) (prop : P) : Sort v :=
-  L.judge prop
-
-def NoJudgment (L : Logic.{u,v} P) (prop : P) :=
-  L.judge prop -> False
+class newtype Judgment (L : Logic P) (p : P) :=
+  proof : L.judge p
 
 scoped infix:15 " |- " => Judgment
 scoped infix:15 " ⊢ " => Judgment
 
+class funtype NoJudgment (L : Logic P) (p : P) :=
+  proof : (L |- p) -> False
+
 scoped infix:15 " !|- " => NoJudgment
 scoped infix:15 " ⊬ " => NoJudgment
 
+abbrev noJudgment {L : Logic P} {p : P} 
+  : ((L |- p) -> False) -> (L !|- p) 
+  := NoJudgment.mk
+
 namespace Logic
 
-abbrev Prod (L : Logic.{u,v} P) (p q : P) : Sort (max 1 v)
-  := PProd (L |- p) (L |- q) 
+abbrev Prod (L : Logic P) (p q : P)
+  := _root_.Prod (L |- p) (L |- q) 
 
-abbrev prod (L : Logic.{u,v} P) {p q : P} 
+abbrev prod (L : Logic P) {p q : P} 
   (Lp : L |- p) (Lq : L |- q) : L.Prod p q
-  := PProd.mk Lp Lq 
+  := Prod.mk Lp Lq 
 
-abbrev Sum (L : Logic.{u,v} P) (p q : P)  : Sort (max 1 v)
-  := PSum (L |- p) (L |- q)
+abbrev Sum (L : Logic P) (p q : P)
+  := _root_.Sum (L |- p) (L |- q)
 
-abbrev suml (L : Logic.{u,v} P) {p q : P} (Lp : L |- p) : L.Sum p q
-  := PSum.inl Lp 
+abbrev suml (L : Logic P) {p q : P} (Lp : L |- p) : L.Sum p q
+  := Sum.inl Lp 
 
-abbrev sumr (L : Logic.{u,v} P) {p q : P} (Lq : L |- q) : L.Sum p q
-  := PSum.inr Lq 
+abbrev sumr (L : Logic P) {p q : P} (Lq : L |- q) : L.Sum p q
+  := Sum.inr Lq 

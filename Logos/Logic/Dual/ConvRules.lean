@@ -31,35 +31,3 @@ abbrev exportFalse {L : Logic P} {falsum}
 instance iExFalsumOfExportFalse {L : Logic P} {falsum}
   [K : ExportFalse L falsum] : ExFalsum L falsum 
   := pack fun p Lf => False.elim (unpack K Lf)
-
---------------------------------------------------------------------------------
--- Not
---------------------------------------------------------------------------------
-
--- Not p -> (|- ~p)
-
-class funtype ImportNot (L : Logic.{u,0} P) (lneg : Unar P) :=
-  {p : P} : Not (L |- p) -> (L |- lneg p)
-
-abbrev importNot {L : Logic.{u,0} P} {lneg}
-  [K : ImportNot L lneg] {p} := unpack K p
-
-instance iImportNotOfAdFalso {L : Logic.{u,0} P} {lneg} 
-  [K : ImportNot L lneg] : AdFalso L lneg := repack K
-
-instance iAdFalsoOfImportNot {L : Logic.{u,0} P} {lneg} 
-  [K : AdFalso L lneg] : ImportNot L lneg := repack K
-
--- (|- ~p) -> Not p
-
-class funtype ExportNot (L : Logic.{u,0} P) (lneg : Unar P) :=
-  {p : P} : (L |- lneg p) -> Not (L |- p) 
-
-abbrev exportNot {L : Logic.{u,0} P} {lneg}
-  [K : ExportNot L lneg] {p} := unpack K p
-
-instance iExportNotOfNoncontradiction {L : Logic.{u,0} P} {lneg} 
-  [K : ExportNot L lneg] : Noncontradiction L lneg := repack K
-
-instance iNoncontradictionOfExportNot {L : Logic.{u,0} P} {lneg} 
-  [K : Noncontradiction L lneg] : ExportNot L lneg := repack K

@@ -49,12 +49,12 @@ theorem metaComplete (L : PLogic)
 [QNtS : EqNatToEqSucc L SNatOfPProp SEqOfPProp Succ.ofNat]
 [QStN : EqSuccToEqNat L SNatOfPProp SEqOfPProp Succ.ofNat]
 [QS0f : SuccNatEqZeroFalse L SNatOfPProp SEqOfPProp Zero.ofNat Succ.ofNat]
-: (p : PProp Nat) -> PSum (L |- p) (L !|- p)
+: (p : PProp Nat) -> Sum (L |- p) (L !|- p)
 := by
   intro p
   cases p with
   | nat n =>
-    apply PSum.inl
+    apply Sum.inl
     exact natNat n
   | eq m n =>
     revert m
@@ -63,17 +63,19 @@ theorem metaComplete (L : PLogic)
       intro m
       induction m with
       | zero =>
-        apply PSum.inl
+        apply Sum.inl
         exact eqNatRefl NZ.toFun
       | succ m ih =>
-        apply PSum.inr
-        refine QS0f.toFun m (natNat m)
+        apply Sum.inr
+        apply noJudgment 
+        exact QS0f.toFun m (natNat m)
     | succ n n_ih =>
       intro m
       have Nn : L |- nat n := natNat n
       cases m with
       | zero =>
-        apply PSum.inr
+        apply Sum.inr
+        apply noJudgment
         intro Q0Sn
         apply QS0f.toFun n Nn 
         apply eqNatSymm (natNat Nat.zero) (natS Nn)
@@ -82,60 +84,11 @@ theorem metaComplete (L : PLogic)
         have Nm : L |- nat m := natNat m
         cases n_ih m with
         | inl Qmn =>
-          apply PSum.inl
+          apply Sum.inl
           exact QNtS.toFun m n Nm Nn Qmn
         | inr Qmnf =>
-          apply PSum.inr
+          apply Sum.inr
+          apply noJudgment
           intro QSmSn
-          apply Qmnf
+          apply Qmnf.proof
           exact QStN.toFun m n Nm Nn QSmSn
-
---------------------------------------------------------------------------------
--- Meta Consistency
---------------------------------------------------------------------------------
-
-theorem metaConsistent (L : PLogic)
-[NZ   : NatZero L SNatOfPProp Zero.ofNat]
-[NS   : NatSuccNat L SNatOfPProp Succ.ofNat]
-[QRf  : EqNatRefl L SNatOfPProp SEqOfPProp]
-[QSm  : EqNatSymm L SNatOfPProp SEqOfPProp]
-[QNtS : EqNatToEqSucc L SNatOfPProp SEqOfPProp Succ.ofNat]
-[QStN : EqSuccToEqNat L SNatOfPProp SEqOfPProp Succ.ofNat]
-[QS0f : SuccNatEqZeroFalse L SNatOfPProp SEqOfPProp Zero.ofNat Succ.ofNat]
-: (p : PProp Nat) -> PProd (L |- p) (L !|- p) -> False
-:= by
-  intro p
-  cases p with
-  | nat n =>
-    intro C
-    apply C.2
-    exact natNat n
-  | eq m n =>
-    revert m
-    induction n with
-    | zero =>
-      intro m C
-      induction m with
-      | zero =>
-        apply C.2
-        exact eqNatRefl NZ.toFun
-      | succ m ih =>
-        exact QS0f.toFun m (natNat m) C.1
-    | succ n n_ih =>
-      intro m C
-      have Nn : L |- nat n := natNat n
-      cases m with
-      | zero =>
-        apply QS0f.toFun n Nn 
-        apply eqNatSymm (natNat Nat.zero) (natS Nn)
-        exact C.1
-      | succ m =>
-        have Nm : L |- nat m := natNat m
-        apply n_ih m
-        apply PProd.mk ?Qmn ?Qmnf
-        case Qmn =>
-          exact QStN.toFun m n Nm Nn C.1
-        case Qmnf =>
-          intro Qmn
-          apply C.2
-          exact QNtS.toFun m n Nm Nn Qmn

@@ -6,7 +6,7 @@ variable {P : Sort u}
 namespace Logos
 
 --------------------------------------------------------------------------------
--- Prod/PProd/And
+-- Prod/PProd
 --------------------------------------------------------------------------------
 
 -- Prod p q -> (|- F p q)
@@ -44,22 +44,6 @@ instance iImportPProdOfConjoin {L : Logic P} {F}
 instance iImportProdOfImportPProd {L : Logic P} {F} 
   [K : ImportPProd L F] : ImportProd L F := 
   {toFun := fun p q Ppq => K.toFun p q (PProd.mk (Ppq.fst) (Ppq.snd))}
-
--- And p q -> (|- p /\ q)
-
-class ImportAnd (L : Logic.{u,0} P) (F : Binar P) := 
-  toFun : (p q : P) -> ((L |- p) /\ (L |- q)) -> (L |- F p q)
-
-abbrev importAnd {L : Logic.{u,0} P} {F} 
-  [K : ImportAnd L F] {p q} := K.toFun p q
-
-instance iConjoinOfAnd {L : Logic P} {F} 
-  [K : ImportAnd L F] : Conjoin L F := 
-  {toFun := fun p q Lp Lq => K.toFun p q (And.intro Lp Lq)}
-
-instance iImportAndOfConjoin {L : Logic P} {F} 
-  [K : Conjoin L F] : ImportAnd L F := 
-  {toFun := fun p q Apq => K.toFun p q Apq.left Apq.right}
 
 -- (|- p /\ q) -> Prod p q
 
@@ -105,28 +89,8 @@ instance iExportProdOfPProd {L : Logic P} {F}
   [K : ExportPProd L F] : ExportProd L F := 
   {toFun := fun p q LpCq => Prod.mk (leftSimp LpCq) (rightSimp LpCq)}
 
--- (|- p /\ q) -> And p q
-
-class ExportAnd (L : Logic.{u,0} P) (F : Binar P) := 
-  toFun : (p q : P) -> (L |- F p q) -> And (L |- p) (L |- q)
-
-abbrev exportAnd {L : Logic.{u,0} P} {F} 
-  [K : ExportAnd L F] {p q} := K.toFun p q
-
-instance iExportAndOfLeftRight {L : Logic P} {F}
-  [CjL : LeftSimp L F] [CjR : RightSimp L F] : ExportAnd L F := 
-  {toFun := fun p q LpCq => And.intro (leftSimp LpCq) (rightSimp LpCq)}
-
-instance iLeftSimpOfExportAnd {L : Logic P} {F}
-  [K : ExportAnd L F] : LeftSimp L F := 
-  {toFun := fun p q LpCq => And.left (K.toFun p q LpCq)}
-
-instance iRightSimpOfExportAnd {L : Logic P} {F}
-  [K : ExportAnd L F] : RightSimp L F := 
-  {toFun := fun p q LpCq => And.right (K.toFun p q LpCq)}
-
 --------------------------------------------------------------------------------
--- Sum/PSum/Or
+-- Sum/PSum
 --------------------------------------------------------------------------------
 
 -- Sum p q -> (|- p \/ q)
@@ -171,27 +135,6 @@ instance iRightTautOfImportPSum {L : Logic P} {F}
   [K : ImportPSum L F] : RightTaut L F := 
   {toFun := fun p q Lq => K.toFun p q (PSum.inr Lq)}
 
--- Or p q -> (|- p \/ q) 
-
-class ImportOr (L : Logic.{u,0} P) (F : Binar P) := 
-  toFun : (p q : P) -> ((L |- p) \/ (L |- q)) -> (L |- F p q)
-
-abbrev importOr {L : Logic.{u,0} P} {F} 
-  [K : ImportOr L F] {p q} := K.toFun p q
-
-instance iImportOrOfLeftRightTaut {L : Logic P} {F} 
-  [DiL : LeftTaut L F] [DiR : RightTaut L F] : ImportOr L F := 
-  {toFun := fun p q Spq => match Spq with 
-    | Or.inl Lp => leftTaut Lp | Or.inr Lq => rightTaut Lq}
-
-instance iLeftTautOfImportOr {L : Logic P} {F} 
-  [K : ImportOr L F] : LeftTaut L F := 
-  {toFun := fun p q Lp => K.toFun p q (Or.inl Lp)}
-
-instance iRightTautOfImportOr {L : Logic P} {F} 
-  [K : ImportOr L F] : RightTaut L F := 
-  {toFun := fun p q Lq => K.toFun p q (Or.inr Lq)}
-
 -- (|- p \/ q) -> Sum p q 
 
 class ExportSum (L : Logic P) (F : Binar P) := 
@@ -225,21 +168,3 @@ instance iByEitherOfExportPSum {L : Logic P} {F}
   [K : ExportPSum L F] : ByEither L F := 
   {toFun := fun p q LpDq r fpr fqr => match K.toFun p q LpDq with
     | PSum.inl Lp => fpr Lp | PSum.inr Lq => fqr Lq}
-
--- (|- p \/ q) -> Or p q 
-
-class ExportOr (L : Logic.{u,0} P) (F : Binar P) := 
-  toFun : (p q : P) -> (L |- F p q) -> Or (L |- p) (L |- q)
-
-abbrev exportOr {L : Logic.{u,0} P} {F} 
-  [K : ExportOr L F] {p q} := K.toFun p q
-
-instance iExportOrOfByEither {L : Logic P} {F} 
-  [K : ByEither L F] : ExportOr L F := 
-  {toFun := fun p q LpDq => K.toFun p q LpDq _ Or.inl Or.inr}
-
-instance iByEitherOfExportOr {L : Logic P} {F} 
-  [K : ExportOr L F] : ByEither L F := 
-  {toFun := fun p q LpDq (r : Sort 0) fpr fqr => match K.toFun p q LpDq with
-    | Or.inl Lp => fpr Lp | Or.inr Lq => fqr Lq}
-
