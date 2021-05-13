@@ -13,8 +13,8 @@ variable {L : Logic P}
 --------------------------------------------------------------------------------
 
 class PEq (L : Logic P) (T : Sort v) extends SEq P T :=
-  Symm : Symm L toFun
-  Trans : Trans L toFun
+  Symm : Symm L eq
+  Trans : Trans L eq
 
 instance iPEq {L : Logic P} [Q : SEq P T] 
   [Sm : Symm L Q.toFun] [Tr : Trans L Q.toFun] : PEq L T := 
@@ -54,7 +54,7 @@ end PEq
 --------------------------------------------------------------------------------
 
 class REq (L : Logic P) (T : Sort v) extends PEq L T :=
-  Refl : Refl L toFun
+  Refl : Refl L eq
 
 instance iREq {L : Logic P} [Q : SEq P T] 
   [R : Refl L Q.toFun] [Sm : Symm L Q.toFun] [Tr : Trans L Q.toFun] : REq L T := 
@@ -76,7 +76,7 @@ end REq
 --------------------------------------------------------------------------------
 
 class LEq (L : Logic P) (T : Sort v) extends REq L T :=
-  PredSubst : PredSubst L toFun
+  PredSubst : PredSubst L eq
   Symm := iSymmByReflPredSubst
   Trans := iTransByPredSubst
 

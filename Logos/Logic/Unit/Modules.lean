@@ -15,8 +15,8 @@ variable {L : Logic P}
 --------------------------------------------------------------------------------
 
 class LEnt (L : Logic P) extends LArr P :=
-  Condition : Condition L toFun
-  ModusPonens : ModusPonens L toFun
+  Condition : Condition L larr
+  ModusPonens : ModusPonens L larr
 
 instance iLEnt {L : Logic P} [larr : LArr P] 
   [C : Condition L larr.toFun] [Mp : ModusPonens L larr.toFun] : LEnt L := 
@@ -66,13 +66,13 @@ end LEnt
 --------------------------------------------------------------------------------
 
 class LIff (L : Logic P) extends SIff P :=
-  Bicondition : Bicondition L toFun
-  LeftMp : LeftMp L toFun
-  RightMp : RightMp L toFun
+  Bicondition : Bicondition L iff
+  LeftMp : LeftMp L iff
+  RightMp : RightMp L iff
 
 instance iLIff {L : Logic P} 
-  [iff : SIff P] [B : Bicondition L iff.toFun] 
-  [Mpl : LeftMp L iff.toFun] [Mpr : RightMp L iff.toFun] : LIff L := 
+  [iff : SIff P] [B : Bicondition L iff.1] 
+  [Mpl : LeftMp L iff.1] [Mpr : RightMp L iff.1] : LIff L := 
   {toSIff := iff, Bicondition := B, LeftMp := Mpl, RightMp := Mpr}
 
 namespace LIff
@@ -111,11 +111,11 @@ end LIff
 --------------------------------------------------------------------------------
 
 class LConj (L : Logic P) extends Conj P :=
-  Conjoin : Conjoin L toFun
-  LeftSimp : LeftSimp L toFun
-  RightSimp : RightSimp L toFun
-  Curry : Curry L toFun
-  Uncurry : Uncurry L toFun
+  Conjoin : Conjoin L conj
+  LeftSimp : LeftSimp L conj
+  RightSimp : RightSimp L conj
+  Curry : Curry L conj
+  Uncurry : Uncurry L conj
 
 instance iLConjOfCurryUncurry {L : Logic P} [Cj : Conj P] 
   [CjC : Curry L Cj.toFun] [CjU : Uncurry L Cj.toFun] : LConj L := 
@@ -170,9 +170,9 @@ end LConj
 --------------------------------------------------------------------------------
 
 class LAlt (L : Logic P) extends Disj P :=
-  ByEither : ByEither L toFun
-  LeftTaut : LeftTaut L toFun
-  RightTaut : RightTaut L toFun
+  ByEither : ByEither L disj
+  LeftTaut : LeftTaut L disj
+  RightTaut : RightTaut L disj
 
 instance iLAlt {L : Logic P} [Dj : Disj P] 
   [E : ByEither L Dj.toFun] [IL : LeftTaut L Dj.toFun] [IR : RightTaut L Dj.toFun]  

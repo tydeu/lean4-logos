@@ -6,30 +6,30 @@ variable {P : Sort u} {T : Sort v}
 
 namespace Logos
 
-class funtype SForall (P : Sort u) (T : Sort v) : Quant P T
-class funtype SExists (P : Sort u) (T : Sort v) : Quant P T
+class funtype SForall (P : Sort u) (T : Sort v) := export Forall : Quant P T
+class funtype SExists (P : Sort u) (T : Sort v) := export Exists : Quant P T
 
-instance iPropForall : SForall Prop T := pack fun f => forall x, f x
-instance iPropExists : SExists Prop T := pack Exists
+@[defaultInstance low] 
+instance iForallOfProp : SForall Prop T := pack fun f => forall x, f x
 
-abbrev lForall [K : SForall P T] := K.toFun
-abbrev lExists [K : SExists P T] := K.toFun
+@[defaultInstance low] 
+instance iExistsOfProp : SExists Prop T := pack _root_.Exists
 
 namespace Notation
 
 open Lean
 
 scoped macro "∀ " xs:explicitBinders " => " b:term : term => 
-  expandExplicitBinders ``SForall.toFun xs b
+  expandExplicitBinders ``Forall xs b
 scoped macro "forall " xs:explicitBinders " => " b:term : term => 
-  expandExplicitBinders ``SForall.toFun xs b
+  expandExplicitBinders ``Forall xs b
 
 scoped macro "∃ " xs:explicitBinders " => " b:term : term => 
-  expandExplicitBinders ``SExists.toFun xs b
+  expandExplicitBinders ``Exists xs b
 scoped macro "exists " xs:explicitBinders " => " b:term : term => 
-  expandExplicitBinders ``SExists.toFun xs b
+  expandExplicitBinders ``Exists xs b
 
-@[appUnexpander Logos.SForall.toFun] 
+@[appUnexpander Logos.SForall.Forall] 
 def unexpandSForall : Lean.PrettyPrinter.Unexpander
   | `($_f:ident fun $x:ident => ∀ $xs:binderIdent* => $b)
     => `(∀ $x:ident $xs:binderIdent* => $b)
@@ -39,7 +39,7 @@ def unexpandSForall : Lean.PrettyPrinter.Unexpander
     => `(∀ ($x:ident : $t) => $b)
   | _  => throw ()
 
-@[appUnexpander Logos.SExists.toFun] 
+@[appUnexpander Logos.SExists.Exists] 
 def unexpandSExists : Lean.PrettyPrinter.Unexpander
   | `($_f:ident fun $x:ident => ∃ $xs:binderIdent* => $b)
     => `(∃ $x:ident $xs:binderIdent* => $b)
@@ -48,4 +48,3 @@ def unexpandSExists : Lean.PrettyPrinter.Unexpander
   | `($_f:ident fun ($x:ident : $t) => $b)
     => `(∃ ($x:ident : $t) => $b)
   | _ => throw ()
-

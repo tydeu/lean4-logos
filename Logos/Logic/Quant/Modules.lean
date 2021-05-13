@@ -13,8 +13,8 @@ variable {L : Logic P}
 --------------------------------------------------------------------------------
 
 class LForall (L : Logic P) (T : Sort v) extends SForall P T :=
-  UnivGen : UnivGen L toFun
-  UnivInst : UnivInst L toFun
+  UnivGen : UnivGen L Forall
+  UnivInst : UnivInst L Forall
 
 instance iLForall [Fa : SForall P T] 
   [G : UnivGen L Fa.toFun] [I : UnivInst L Fa.toFun] :
@@ -46,8 +46,8 @@ end LForall
 --------------------------------------------------------------------------------
 
 class LExists (L : Logic P) (T : Sort v) extends SExists P T :=
-  ExstGen : ExstGen L toFun
-  ExstInst : ExstInst L toFun
+  ExstGen : ExstGen L Exists
+  ExstInst : ExstInst L Exists
 
 instance iLExists [X : SExists P T] 
   [G : ExstGen L X.toFun] [I : ExstInst L X.toFun] :

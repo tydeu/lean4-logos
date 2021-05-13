@@ -14,8 +14,8 @@ variable {L : Logic P}
 --------------------------------------------------------------------------------
 
 class LImp (L : Logic P) (lneg : Unar P) extends LEnt L :=
-  ByContraposition : ByContraposition L toFun lneg
-  ModusTollens : ModusTollens L toFun lneg
+  ByContraposition : ByContraposition L larr lneg
+  ModusTollens : ModusTollens L larr lneg
 
 instance iLImp {L : Logic P} [larr : LArr P] {lneg : Unar P} 
   [C : Condition L larr.toFun] [Mp : ModusPonens L larr.toFun] 
@@ -37,9 +37,9 @@ instance [K : LImp L lneg] :
 
 -- Basic
 abbrev byContraposition (K : LImp L lneg) 
-  {p q} := K.ByContraposition.toFun p q
+  {p q} := unpack K.ByContraposition p q
 abbrev mt (K : LImp L lneg) 
-  {p q} := K.ModusTollens.toFun p q
+  {p q} := unpack K.ModusTollens p q
 
 end LImp
 
@@ -48,8 +48,8 @@ end LImp
 --------------------------------------------------------------------------------
 
 class MIff (L : Logic P) (lneg : Unar P) extends LIff L :=
-  LeftMt : LeftMt L toFun lneg
-  RightMt : RightMt L toFun lneg
+  LeftMt : LeftMt L iff lneg
+  RightMt : RightMt L iff lneg
 
 instance iMIff {L : Logic P} {lneg : Unar P}
   [iff : SIff P] [B : Bicondition L iff.toFun] 
@@ -72,13 +72,13 @@ instance [K : MIff L lneg] :
 
 -- Basic
 abbrev leftMt (K : MIff L lneg) 
-  {p q} := K.LeftMt.toFun p q
+  {p q} := unpack K.LeftMt p q
 abbrev mt (K : MIff L lneg) 
-  {p q} := K.LeftMt.toFun p q
+  {p q} := unpack K.LeftMt p q
 abbrev rightMt (K : MIff L lneg) 
-  {p q} := K.RightMt.toFun p q
+  {p q} := unpack K.RightMt p q
 abbrev mtr (K : MIff L lneg) 
-  {p q} := K.RightMt.toFun p q
+  {p q} := unpack K.RightMt p q
 
 end MIff
 
@@ -87,8 +87,8 @@ end MIff
 --------------------------------------------------------------------------------
 
 class LDisj (L : Logic P) (lneg : Unar P) extends LAlt L :=
-  LeftMtp : LeftMtp L toFun lneg
-  RightMtp : RightMtp L toFun lneg
+  LeftMtp : LeftMtp L disj lneg
+  RightMtp : RightMtp L disj lneg
 
 instance iLDisj {L : Logic P} [Dj: Disj P] {lneg}
   [ByE : ByEither L Dj.toFun]  [LT : LeftTaut L Dj.toFun] [RT : RightTaut L Dj.toFun] 
@@ -110,13 +110,13 @@ instance [K : LDisj L lneg] :
 
 -- Basic
 abbrev leftMtp (K : LDisj L lneg)
-  {p q} := K.LeftMtp.toFun p q
+  {p q} := unpack K.LeftMtp p q
 abbrev mtp (K : LDisj L lneg)
-  {p q} := K.LeftMtp.toFun p q
+  {p q} := unpack K.LeftMtp p q
 abbrev rightMtp (K : LDisj L lneg)
-  {p q} := K.RightMtp.toFun p q
+  {p q} := unpack K.RightMtp p q
 abbrev mtpr (K : LDisj L lneg)
-  {p q} := K.RightMtp.toFun p q
+  {p q} := unpack K.RightMtp p q
 
 end LDisj
 
@@ -125,8 +125,8 @@ end LDisj
 --------------------------------------------------------------------------------
 
 class LNot (L : Logic P) extends LNeg P :=
-  AdFalso : AdFalso L toFun
-  Noncontradiction : Noncontradiction L toFun
+  AdFalso : AdFalso L lneg
+  Noncontradiction : Noncontradiction L lneg
 
 instance iLNot {L : Logic P} [Nt : LNeg P] 
   [Af : AdFalso L Nt.toFun] [Nc : Noncontradiction L Nt.toFun] : LNot L := 
@@ -144,12 +144,12 @@ instance [K : LNot L] :
 
 -- Basic
 abbrev adFalso (K : LNot L) 
-  {p} := K.AdFalso.toFun p
+  {p} := unpack K.AdFalso p
 abbrev intro (K : LNot L) 
-  {p} := K.AdFalso.toFun p
+  {p} := unpack K.AdFalso p
 abbrev noncontradiction (K : LNot L) 
-  {p} := K.Noncontradiction.toFun p
+  {p} := unpack K.Noncontradiction p
 abbrev elim (K : LNot L) 
-  {p} := K.Noncontradiction.toFun p
+  {p} := unpack K.Noncontradiction p
 
 end LNot

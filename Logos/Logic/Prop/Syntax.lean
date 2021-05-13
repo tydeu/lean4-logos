@@ -10,27 +10,27 @@ namespace Logos
 -- Constants
 --------------------------------------------------------------------------------
 
-class newtype Verum (P : Sort u) : P
-class newtype Falsum (P : Sort u) : P
+class newtype Verum (P : Sort u) := export verum : P
+class newtype Falsum (P : Sort u) := export falsum : P
 
-abbrev verum [K : Verum P] := unpack K
-abbrev falsum [K : Falsum P] := unpack K
+@[defaultInstance low] instance iVerumOfProp : Verum Prop := pack True
+@[defaultInstance low] instance iFalsumOfProp : Falsum Prop := pack False
 
 --------------------------------------------------------------------------------
 -- Connectives
 --------------------------------------------------------------------------------
 
-class funtype LArr (P : Sort u) : Binar P
-class funtype SIff (P : Sort u) : Binar P
-class funtype Conj (P : Sort u) : Binar P
-class funtype Disj (P : Sort u) : Binar P
-class funtype LNeg (P : Sort u) : Unar P
+class funtype LArr (P : Sort u) := export larr : Binar P
+class funtype SIff (P : Sort u) := export iff  : Binar P
+class funtype Conj (P : Sort u) := export conj : Binar P
+class funtype Disj (P : Sort u) := export disj : Binar P
+class funtype LNeg (P : Sort u) := export lneg : Unar P
 
-abbrev larr [K : LArr P] := unpack K
-abbrev iff  [K : SIff P] := unpack K
-abbrev conj [K : Conj P] := unpack K
-abbrev disj [K : Disj P] := unpack K
-abbrev lneg [K : LNeg P] := unpack K
+instance iLArrOfProp : LArr Prop := pack fun p q => p -> q
+@[defaultInstance low] instance iSIffOfProp : SIff Prop := pack Iff
+@[defaultInstance low] instance iConjOfProp : Conj Prop := pack And
+@[defaultInstance low] instance iDisjOfProp : Disj Prop := pack Or
+@[defaultInstance low] instance iLNegOfProp : LNeg Prop := pack Not
 
 --------------------------------------------------------------------------------
 -- Notation
@@ -38,19 +38,19 @@ abbrev lneg [K : LNeg P] := unpack K
 
 namespace Notation
 
-scoped notation "⊤" => Verum.val
-scoped notation "⊥" => Falsum.val
+scoped notation "⊤" => verum
+scoped notation "⊥" => falsum
 
-scoped infixr:25 " -> "  => LArr.toFun
-scoped infixr:25 " ⇒ "   => LArr.toFun
+scoped infixr:25 " -> " => larr
+scoped infixr:25 (priority := default + default) " ⇒ " => larr
 
-scoped infix:20 " <-> "  => SIff.toFun
-scoped infix:20 " ⇔ "   => SIff.toFun
+scoped infix:20 " <-> " => iff
+scoped infix:20 (priority := default + default) " ⇔ " => iff
 
-scoped infixr:35 " /\\ " => Conj.toFun
-scoped infixr:35 " ∧ "   => Conj.toFun
-scoped infixr:30 " \\/ " => Disj.toFun
-scoped infixr:30 " ∨ "   => Disj.toFun
+scoped infixr:35 (priority := default + default) " /\\ " => conj
+scoped infixr:35 (priority := default + default) " ∧ "   => conj
+scoped infixr:30 (priority := default + default) " \\/ " => disj
+scoped infixr:30 (priority := default + default) " ∨ "   => disj
 
-scoped prefix:max "~"    => LNeg.toFun
-scoped prefix:max "¬"    => LNeg.toFun
+scoped prefix:max (priority := default + default) "~" => lneg
+scoped prefix:max (priority := default + default) "¬" => lneg
