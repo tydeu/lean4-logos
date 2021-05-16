@@ -49,9 +49,7 @@ instance One.ofNat : One Nat :=
 
 -- S
 
-class funtype Succ (T : Sort u) : Unar T
-
-abbrev S [K : Succ T] := K.toFun
+class funtype Succ (T : Sort u) := export S : Unar T
 
 instance Succ.ofNat : Succ Nat := pack Nat.succ
 instance Succ.ofNatLit {A : Sort u} [K : Succ A] (n : Nat) [T : OfNatLit A n] 
@@ -61,6 +59,8 @@ namespace Notation
 
 open Lean
 
+-- Numerals
+
 scoped syntax:max (name := sortNumLit) (priority := default + default) 
   num : term
 
@@ -69,7 +69,16 @@ def expandSortNumLit : Macro
   | `( $n:numLit ) => `(OfNatLit.ofNatLit (nat_lit $n))
   | _ => Macro.throwUnsupported
 
-@[scoped appUnexpander Logos.OfNatLit.ofNatLit] 
+@[appUnexpander Logos.OfNatLit.ofNatLit] 
 def unexpandOfNatLit : PrettyPrinter.Unexpander
-  | `($_f:ident $n:numLit) => n
+  | `($_f:ident $n) => n
+  | _  => throw ()
+
+-- Functions
+
+open Lean
+
+@[appUnexpander Logos.Succ.S] 
+def unexpandSucc : PrettyPrinter.Unexpander
+  | `($_f:ident $n) => `($(mkIdent `S) $n)
   | _  => throw ()

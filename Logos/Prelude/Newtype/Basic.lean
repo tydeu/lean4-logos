@@ -41,16 +41,21 @@ instance toCoeFun [K : Funtype N O T]
   : CoeFun N (fun _ => T) := {coe := apply}
 end Funtype
 
+@[appUnexpander Logos.Funtype.apply] 
+def unexpandFuntypeApply : Lean.PrettyPrinter.Unexpander
+| `($_f:ident $f $args*) => `($f $args*)
+| _  => throw ()
+
 namespace Pack
 abbrev toFun (K : Pack N O) := K.apply
-abbrev toApplyFun (K : Pack N O) := K.apply
+abbrev applyFn (K : Pack N O) := K.apply
 instance isFuntype : Funtype (Pack N O) (O -> N) (O -> N) 
   := {pack := mk, unpack := toFun, apply := toFun}
 end Pack
 
 namespace Unpack
 abbrev toFun (K : Unpack N O) := K.apply
-abbrev toApplyFun (K : Pack N O) := K.apply
+abbrev applyFn (K : Pack N O) := K.apply
 instance isFuntype : Funtype (Unpack N O) (N -> O) (N -> O)
   := {pack := mk, unpack := toFun, apply := toFun}
 end Unpack
