@@ -9,7 +9,7 @@ namespace Logos
 /--
   Sort-polymorphic Natural Literals
 -/
-class OfNatLit (A : Sort u) (n : Nat) :=
+class newtype OfNatLit (A : Sort u) (n : Nat) :=
   ofNatLit : A
 
 @[defaultInstance low]

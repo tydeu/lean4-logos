@@ -45,7 +45,7 @@ def paramsToApp (params : Array Syntax)
         (← `(bracketedBinder| ( $id:ident : $type:term ) ))
     | `(bracketedBinder| [ $type:term ] ) =>
       Macro.throwErrorAt binder 
-        "`class fun` does not support unnamed instance binders in function params"
+        "unnamed instance binders are unsupported here"
     | _ => 
       Macro.throwErrorAt binder "unknown binder"
   return (args, explicitParams)
@@ -67,21 +67,23 @@ def expandDeclId (id : Syntax) : Syntax × Array Syntax :=
 --------------------------------------------------------------------------------
 
 def mkNewtypeStructDecl 
-  (isClass : Bool) (declId : Syntax) 
+  (mods : Syntax) (id : Syntax) 
   (params : Array Syntax) (fieldId : Syntax) (type : Syntax) 
+  (isClass := false)
 : MacroM Syntax :=
   if isClass then 
-    `(class $declId:declId $params* := $fieldId:ident : $type:term)
+    `($mods:declModifiers class $id $params* where $fieldId:ident : $type)
   else
-    `(structure $declId:declId $params* := $fieldId:ident : $type:term)
+    `($mods:declModifiers structure $id $params* where $fieldId:ident : $type)
 
 def mkNewtypeDecl 
-  (isClass : Bool) (declId : Syntax) (params : Array Syntax) 
-  (exportField : Bool) (fieldId? : Option Syntax) (type : Syntax) 
+  (mods : Syntax) (id : Syntax) (params : Array Syntax) 
+  (exportField : Bool) (fieldId? : Option Syntax) (type : Syntax)
+  (isClass := false) 
 : MacroM Syntax := do
-  let (name, uvars) := expandDeclId declId
+  let (name, uvars) := expandDeclId id
   let fieldId := fieldId?.getD (mkIdent `val) 
-  let decl <- mkNewtypeStructDecl isClass declId params fieldId type
+  let decl <- mkNewtypeStructDecl mods id params fieldId type isClass
   let exprt := ite exportField (<- `(export $name ($fieldId))) mkNullNode
   let (args, vars) <- paramsToVars params
   let ntype := mkApp name args
@@ -98,21 +100,21 @@ def mkNewtypeDecl
   end $name:ident
   )
 
-scoped syntax (name := newtypeDecl)
+syntax classTk := "class "
+syntax newtypeTk := "newtype "
+syntax whereTk := " := " <|> " where "
+syntax exportTk := "export "
 
-  "class "? "newtype " declId bracketedBinder* 
-    (":=" "export "? ident)? ":" term : command
+scoped syntax (name := newtypeDecl)
+  declModifiers (classTk)? newtypeTk declId bracketedBinder* 
+    (whereTk (exportTk)? ident)? ":" term : command
 
 @[macro newtypeDecl]
 def expandNewtypeDecl : Macro
-| `(newtype $id $params* $[:= $fId:ident]? : $t) =>
-  mkNewtypeDecl false id params false fId t
-| `(newtype $id $params* $[:= export $fId:ident]? : $t) =>
-  mkNewtypeDecl false id params true fId t
-| `(class newtype $id $params* $[:= $fId:ident]? : $t) =>
-  mkNewtypeDecl true id params false fId t
-| `(class newtype $id $params* $[:= export $fId:ident]? : $t) =>
-  mkNewtypeDecl true id params true fId t
+| `($mods:declModifiers $[$clsTk?:classTk]? newtype $id $params* 
+      $[$_w:whereTk $[$expTk??:exportTk]? $fId?:ident]? : $t) =>
+  mkNewtypeDecl (isClass := clsTk?.isSome) 
+    mods id params (expTk??.getD none).isSome fId? t
 | _ => Macro.throwUnsupported
 
 --------------------------------------------------------------------------------
@@ -120,17 +122,18 @@ def expandNewtypeDecl : Macro
 --------------------------------------------------------------------------------
 
 def mkFuntypeDecl 
-  (isClass : Bool) (declId : Syntax) (typeParams : Array Syntax) 
+  (mods : Syntax) (id : Syntax) (typeParams : Array Syntax) 
   (exportField : Bool) (fieldId? : Option Syntax) 
   (applyParams : Array Syntax) (fnRet : Syntax) 
+  (isClass := false)
 : MacroM Syntax := do
-  let (name, uvars) := expandDeclId declId
+  let (name, uvars) := expandDeclId id
   let applyType <- mkDepArrows applyParams fnRet
   let (applyArgs, fnParams) <- paramsToApp applyParams
   let fnType <- mkDepArrows fnParams fnRet
   let fnId := mkIdent `toFun
   let fieldId := fieldId?.getD fnId
-  let decl <- mkNewtypeStructDecl isClass declId typeParams fieldId fnType
+  let decl <- mkNewtypeStructDecl mods id typeParams fieldId fnType isClass
   let exprt := ite exportField (<- `(export $name ($fieldId))) mkNullNode
   let (typeArgs, vars) <- paramsToVars typeParams
   let ntype := mkApp name typeArgs
@@ -155,20 +158,16 @@ def mkFuntypeDecl
   end $name:ident
   )
 
+syntax funtypeTk := "funtype "
 scoped syntax (name := funtypeDecl)
-  "class "? "funtype " declId bracketedBinder* 
-    (":=" ("export "? ident)? bracketedBinder*)? ":" term : command
+  declModifiers (classTk)? funtypeTk declId bracketedBinder* 
+    (whereTk ((exportTk)? ident)? bracketedBinder*)? ":" term : command
 
 @[macro funtypeDecl]
 def expandFuntypeDecl : Macro
-| `(funtype $id $params* $[:= $[$fId:ident]? $fparams*]? : $t) =>
-  mkFuntypeDecl false id params false (fId.getD none) (fparams.getD #[]) t
-| `(funtype $id $params* $[:= $[export $fId:ident]? $fparams*]? : $t) =>
-  let fId := fId.getD none
-  mkFuntypeDecl false id params fId.isSome fId (fparams.getD #[]) t
-| `(class funtype $id $params* $[:= $[$fId:ident]? $fparams*]? : $t) =>
-  mkFuntypeDecl true id params false (fId.getD none) (fparams.getD #[]) t
-| `(class funtype $id $params* $[:= $[export $fId:ident]? $fparams*]? : $t) =>
-  let fId := fId.getD none
-  mkFuntypeDecl true id params fId.isSome fId (fparams.getD #[]) t
+| `($mods:declModifiers $[$clsTk?:classTk]? funtype $id $params* 
+      $[$_w:whereTk $[$[$expTk???:exportTk]? $fId??:ident]? $fparams?*]? : $t) =>
+  let shouldExport := ((expTk???.getD none).getD none).isSome
+  mkFuntypeDecl (isClass := clsTk?.isSome) 
+    mods id params shouldExport (fId??.getD none) (fparams?.getD #[]) t
 | _ => Macro.throwUnsupported
